@@ -108,6 +108,9 @@ a,button,summary,input,textarea{touch-action:manipulation;-webkit-tap-highlight-
 img{display:block;max-width:100%;}
 ::selection{background:var(--cyan);color:var(--ink);}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
+/* Sections that receive focus after an in-page jump (see "in-page anchors"
+   in the script) are focusable only programmatically — no ring around them. */
+[tabindex="-1"]:focus{outline:none;}
 
 /* ============================================================
    1. BACKGROUND — just the real looping 4K space video, a
@@ -2049,6 +2052,68 @@ if(logoLink){
     window.scrollTo({top:0, behavior: reduceMotion ? 'auto' : 'smooth'});
   });
 }
+
+/* ---------------- in-page anchors, WITHOUT "#…" in the address bar ----------------
+   The site's address should read just "aistudiobudapest.com", never
+   "aistudiobudapest.com/#contact". Every href="#section" link is therefore
+   handled here: scroll to the section and leave the URL alone (the links stay
+   plain #anchors in the HTML, so they still work without JS). A visitor who
+   arrives WITH a fragment — an old shared link, or the browser keeping it
+   across the /alexstudio/index.html → / redirect — is scrolled to the section
+   once the page has loaded, then the fragment is erased (replaceState, so no
+   extra history entry). #top gets scrollTo(0) for the same moving-target
+   reason as the logo above. */
+(function(){
+  var root = document.documentElement;
+  var cleanUrl = location.pathname + location.search;
+  function idFromHash(){
+    try{ return decodeURIComponent(location.hash.slice(1)); }catch(e){ return ''; }
+  }
+  function stripHash(){
+    if(location.hash) history.replaceState(null, '', cleanUrl);
+  }
+  function jumpTo(id, smooth){
+    var el = id === 'top' ? null : document.getElementById(id);
+    if(id !== 'top' && !el) return false;
+    /* html{scroll-behavior:smooth} is what makes a plain scroll smooth; an
+       instant jump (arriving on the page) temporarily overrides it. */
+    var instant = !smooth || reduceMotion;
+    if(instant) root.style.scrollBehavior = 'auto';
+    if(id === 'top'){
+      window.scrollTo({top:0, behavior: instant ? 'auto' : 'smooth'});
+    } else {
+      el.scrollIntoView({block:'start', behavior: instant ? 'auto' : 'smooth'});
+      /* a native anchor also moves the keyboard/screen-reader position to the
+         target — keep that, since we cancel the native behaviour. */
+      if(!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+      el.focus({preventScroll:true});
+    }
+    if(instant) root.style.scrollBehavior = '';
+    return true;
+  }
+
+  document.addEventListener('click', function(e){
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if(!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if(id && jumpTo(id, true)) e.preventDefault();
+  });
+
+  function landOnHash(){
+    var id = idFromHash();
+    if(id && jumpTo(id, false)) stripHash();
+  }
+  if(location.hash.length > 1){
+    if(document.readyState === 'complete') landOnHash();
+    else window.addEventListener('load', landOnHash, {once:true});
+  }
+  /* hash typed into the address bar on an already-open page */
+  window.addEventListener('hashchange', function(){
+    var id = idFromHash();
+    if(id && jumpTo(id, true)) stripHash();
+  });
+})();
 
 window.addEventListener('resize', function(){
   /* Touch browsers fire resize for every URL-bar show/hide while scrolling
