@@ -5,7 +5,7 @@ export function BackButton() {
 
   return (
     <a
-      href="/alexstudio/index.html"
+      href="/"
       data-cursor
       aria-label={t.back.aria}
       className="fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface/90 px-4 py-2.5 font-body text-sm text-text-primary backdrop-blur-md transition-colors hover:bg-surface"

@@ -14,10 +14,10 @@ Typical turnaround: Esszencia 3–4 days, Presztízs 4–7 days, Prémium 7–12
 
 ## Pages
 
-- [Portfolio / main site](/alexstudio/index.html): live showcase of all three tiers, pricing, FAQ, contact form.
+- [Portfolio / main site](/): live showcase of all three tiers, pricing, FAQ, contact form.
 - [Esszencia demo](/esszencia/index.html): example one-page site (fictional hairdresser client).
 - [Presztízs demo](/presztizs/index.html): example two-page bilingual site (fictional barbershop client).
-- [Prémium demo](/index.html): example full React application (fictional restaurant client).
+- [Prémium demo](/premium/): example full React application (fictional restaurant client).
 
 ## Contact
 

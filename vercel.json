@@ -1,5 +1,8 @@
 {
   "redirects": [
-    { "source": "/", "destination": "/alexstudio/index.html", "permanent": false }
+    { "source": "/index.html", "destination": "/premium/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/alexstudio/index.html" }
   ]
 }
