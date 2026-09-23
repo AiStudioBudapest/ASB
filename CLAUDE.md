@@ -57,6 +57,8 @@ Le contrat réel avec chaque client se signe **en présentiel** (confirmé par l
 
 Les 3 sites démo (`esszencia`, `presztizs`, et le Prémium `src/`) ont chacun un bouton fixe en bas à gauche qui ramène vers `/alexstudio/index.html` — en hongrois par défaut, et réactif à la langue courante sur Presztízs (HU/EN) et Prémium (HU/EN/FR/ES/DE). Le Prémium (React) reçoit aussi `?embed=1` quand il est chargé dans la vignette de la vitrine alexstudio : ce flag saute l'écran de chargement et masque ce bouton retour (voir `src/App.tsx`, `isEmbedded`) — ne pas casser ce mécanisme lors de futures modifications du site Prémium.
 
+**Vidéo de fond du Prémium (Hero + Footer)** : auto-hébergée et allégée dans `public/media/` (`hero-1080.mp4` ~1,1 Mo, `hero-poster.jpg` = sa première image, URLs dans `src/data/video.ts`). L'original Pexels (8 Mo en 2560×1440, CDN externe) laissait le hero sur fond noir plusieurs secondes — **ne pas y revenir**. Le Hero passe `eager` + `poster` à `VideoBackground` : la vidéo se télécharge dès le montage (dans la vitrine alexstudio, l'iframe est hors écran et son `IntersectionObserver` ne se déclencherait qu'au scroll), le poster s'affiche instantanément, et l'observer relance `play()` à l'entrée dans le viewport (Chrome met en pause les vidéos muettes hors écran). Le Footer reste en chargement différé.
+
 ## Esszencia et Presztízs : deux fichiers HTML autonomes
 
 - Chaque site tient dans un seul fichier (HTML, CSS et JS intégrés, polices Google Fonts). Ce ne sont pas des composants React : les modifier directement dans leur fichier, sans les convertir, sans les importer dans `src/` et sans les sortir de `public/`.

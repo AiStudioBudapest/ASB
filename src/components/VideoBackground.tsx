@@ -5,6 +5,15 @@ interface VideoBackgroundProps {
   src: string
   className?: string
   flip?: boolean
+  /** Image shown instantly, until the first video frame is ready. */
+  poster?: string
+  /**
+   * Start loading right away instead of waiting to scroll near the viewport.
+   * For an above-the-fold video: inside the alexstudio showcase iframe the
+   * IntersectionObserver never fires while the iframe is offscreen, so the
+   * download would only begin once the visitor scrolls to it.
+   */
+  eager?: boolean
 }
 
 /**
@@ -16,26 +25,32 @@ interface VideoBackgroundProps {
  * Loading (and decoding) is deferred until the video is near the viewport —
  * the footer's copy would otherwise autoplay off-screen for the entire visit.
  */
-export function VideoBackground({ src, className, flip }: VideoBackgroundProps) {
+export function VideoBackground({ src, className, flip, poster, eager }: VideoBackgroundProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [inView, setInView] = useState(false)
+  const [inView, setInView] = useState(!!eager)
 
   useEffect(() => {
     const el = wrapperRef.current
     if (!el) return
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true)
-          observer.disconnect()
+        if (!entry.isIntersecting) return
+        if (eager) {
+          // Already loading. Chrome pauses muted autoplay videos while they're
+          // offscreen (as in the showcase iframe), so make sure it plays
+          // whenever it comes into view.
+          videoRef.current?.play().catch(() => {})
+          return
         }
+        setInView(true)
+        observer.disconnect()
       },
       { rootMargin: '200px' },
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [eager])
 
   useEffect(() => {
     if (!inView) return
@@ -87,7 +102,8 @@ export function VideoBackground({ src, className, flip }: VideoBackgroundProps) 
         muted
         loop
         playsInline
-        preload="none"
+        poster={poster}
+        preload={eager ? 'auto' : 'none'}
         className={`absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover ${
           flip ? 'scale-y-[-1]' : ''
         } ${className ?? ''}`}

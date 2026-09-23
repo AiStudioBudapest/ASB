@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { VideoBackground } from './VideoBackground'
-import { AMBIENCE_VIDEO } from '../data/video'
+import { AMBIENCE_POSTER, AMBIENCE_VIDEO } from '../data/video'
 import { useLanguage } from '../i18n/LanguageContext'
 
 interface HeroProps {
@@ -42,7 +42,7 @@ export function Hero({ ready }: HeroProps) {
       <h1 className="sr-only">{t.meta.title}</h1>
 
       <div className="absolute inset-0">
-        <VideoBackground src={AMBIENCE_VIDEO} />
+        <VideoBackground src={AMBIENCE_VIDEO} poster={AMBIENCE_POSTER} eager />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
       </div>
