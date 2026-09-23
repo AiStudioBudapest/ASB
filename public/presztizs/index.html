@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1F1F1F">
+<title>Teszt oldal</title>
+<meta name="description" content="Teszt oldal — minta weboldal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#1F1F1F;--dark-2:#2B2B2B;--brass:#B8874B;--brass-l:#D0A468;
+  --paper:#FAFAFA;--text:#2A2A2A;--muted:#6B6B6B;--line:#E2E2E2;--line-d:rgba(255,255,255,.14);
+  color-scheme:light;
+}
+:root:not([data-theme="light"]){color-scheme:light;}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+html,body{margin:0;padding:0;}
+body{background:var(--paper);color:var(--text);font-family:"Inter",Arial,Helvetica,sans-serif;
+  font-size:16px;line-height:1.65;font-weight:400;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:rgba(184,135,75,.18);}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
+h1,h2,h3{margin:0;line-height:1.2;font-weight:700;letter-spacing:-.01em;}
+h1{font-size:clamp(1.9rem,5vw,3rem);}
+h2{font-size:clamp(1.4rem,3vw,2rem);}
+h3{font-size:1.1rem;font-weight:600;}
+p{margin:0 0 14px;}p:last-child{margin-bottom:0;}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px;}
+.muted{color:var(--muted);}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--dark);color:#fff;
+  border-bottom:1px solid var(--line-d);box-shadow:0 calc(-1 * env(safe-area-inset-top,0px)) 0 var(--dark);}
+.head{display:flex;align-items:center;gap:14px;padding-block:14px;}
+.logo{text-decoration:none;font-weight:700;font-size:1.15rem;letter-spacing:.02em;}
+.logo small{display:block;font-size:.7rem;font-weight:400;letter-spacing:.24em;color:var(--brass);margin-top:1px;}
+nav{margin-left:auto;display:flex;align-items:center;gap:4px;}
+nav a{text-decoration:none;font-size:.92rem;color:#D8D8D8;padding:7px 12px;border-radius:4px;transition:color .2s,background .2s;}
+nav a:hover{color:#fff;background:rgba(255,255,255,.08);}
+nav a.on{color:var(--brass-l);}
+.lang{display:flex;border:1px solid var(--line-d);border-radius:999px;overflow:hidden;margin-left:10px;}
+.lang button{background:none;border:0;color:#C8C8C8;font-family:inherit;font-size:.74rem;
+  font-weight:600;letter-spacing:.08em;padding:6px 11px;cursor:pointer;transition:.2s;}
+.lang button[aria-pressed="true"]{background:var(--brass);color:#fff;}
+.btn{display:inline-block;text-decoration:none;border:0;cursor:pointer;text-align:center;
+  font-family:inherit;font-size:.92rem;font-weight:600;padding:11px 22px;border-radius:4px;
+  transition:background .22s,transform .22s,color .22s;}
+.btn-b{background:var(--brass);color:#fff;}
+.btn-b:hover{background:var(--brass-l);transform:translateY(-1px);}
+.btn-o{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);}
+.btn-o:hover{background:rgba(255,255,255,.1);}
+.burger{display:none;position:relative;width:44px;height:44px;padding:0;background:none;
+  border:1px solid var(--line-d);border-radius:6px;color:#fff;cursor:pointer;flex:none;}
+.burger span{position:absolute;left:12px;right:12px;height:2px;border-radius:2px;background:currentColor;
+  transition:transform .3s ease,opacity .2s ease;}
+.burger span:nth-child(1){top:14px;}
+.burger span:nth-child(2){top:20px;}
+.burger span:nth-child(3){top:26px;}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.back-home{position:fixed;left:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;
+  gap:7px;min-height:44px;padding:0 18px;border-radius:999px;background:var(--dark);color:#fff;
+  border:1px solid rgba(184,135,75,.5);text-decoration:none;font-size:.85rem;font-weight:600;
+  box-shadow:0 8px 22px rgba(0,0,0,.28);transition:background .2s,transform .2s;}
+.back-home:hover{background:var(--dark-2);transform:translateY(-1px);}
+.back-home svg{width:15px;height:15px;flex:none;}
+nav a.nav-cta{margin-left:8px;}
+@media(max-width:820px){
+  .head{flex-wrap:wrap;gap:10px;padding-block:10px;}
+  .lang{order:1;margin-left:auto;}
+  .lang button{min-height:44px;min-width:46px;padding:0 12px;font-size:.8rem;}
+  .burger{display:block;order:2;}
+  .logo{flex:1 1 0;min-width:0;}
+  .logo small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  nav{order:5;width:100%;margin-left:0;display:none;flex-direction:column;align-items:stretch;gap:0;
+    border-top:1px solid var(--line-d);padding:4px 0 14px;margin-top:2px;}
+  nav.open{display:flex;}
+  nav a{padding:14px 0;font-size:1rem;border-radius:0;border-bottom:1px solid var(--line-d);}
+  nav a.nav-cta{margin:14px 0 0;border:0;border-radius:4px;padding:15px 20px;}
+}
+
+.page{display:none;}
+.page.on{display:block;}
+main:not(:has(.page.on)) #p-home{display:block;}
+.page.enter{animation:fade .45s ease both;}
+section[id]{scroll-margin-top:80px;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.hero{background:linear-gradient(160deg,#2B2B2B 0%,#1F1F1F 60%,#171717 100%);color:#fff;padding:clamp(56px,9vw,96px) 0;}
+.hero .tag{display:inline-block;font-size:.7rem;letter-spacing:.22em;font-weight:600;color:var(--brass-l);text-transform:uppercase;
+  border:1px solid rgba(184,135,75,.5);border-radius:999px;padding:5px 14px;margin-bottom:18px;}
+.hero h1{margin-bottom:16px;}
+.hero p{max-width:52ch;color:#CFCFCF;font-size:1.05rem;}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;}
+.hero .meta{display:flex;gap:8px 26px;flex-wrap:wrap;margin-top:30px;font-size:.88rem;color:#B5B5B5;}
+.hero .meta span::before{content:"";display:inline-block;width:5px;height:5px;background:var(--brass);
+  border-radius:50%;margin-right:9px;vertical-align:middle;}
+
+section.band{padding:clamp(46px,7vw,80px) 0;}
+section.band + section.band{border-top:1px solid var(--line);}
+.eyebrow{font-size:.7rem;letter-spacing:.22em;font-weight:600;color:var(--brass);margin-bottom:10px;}
+.lead{font-size:1.05rem;color:var(--muted);max-width:60ch;margin-top:14px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,52px);align-items:start;}
+@media(max-width:820px){.two{grid-template-columns:1fr;}}
+
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px;}
+@media(max-width:820px){.svc{grid-template-columns:1fr;}}
+.card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px;
+  transition:box-shadow .25s,transform .25s;}
+.card:hover{box-shadow:0 6px 20px rgba(0,0,0,.07);transform:translateY(-2px);}
+.card h3{margin-bottom:6px;}
+.card .price{color:var(--brass);font-weight:600;margin-bottom:8px;}
+.card p{font-size:.94rem;color:var(--muted);}
+
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px;}
+@media(max-width:700px){.gal{grid-template-columns:repeat(2,1fr);}}
+.gal figure{margin:0;aspect-ratio:4/3;border-radius:6px;overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;color:#9C9C9C;font-size:.82rem;letter-spacing:.1em;
+  background:linear-gradient(150deg,#E9E6E1,#DCD8D2);transition:transform .3s ease;}
+.gal figure:hover{transform:scale(1.02);}
+
+.strip{background:var(--dark);color:#fff;padding:clamp(38px,6vw,60px) 0;text-align:center;}
+.strip h2{margin-bottom:12px;}
+.strip p{color:#C4C4C4;max-width:48ch;margin:0 auto 22px;}
+
+.rows{list-style:none;margin:16px 0 0;padding:0;}
+.rows li{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.95rem;}
+.rows li span:first-child{color:var(--muted);}
+.rows li span:last-child{text-align:right;}
+
+.formbox{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--muted);
+  margin-bottom:6px;text-transform:uppercase;}
+.field input,.field select,.field textarea{width:100%;font-family:inherit;font-size:1rem;padding:11px 13px;
+  color:var(--text);background:#FCFCFC;border:1px solid var(--line);border-radius:4px;transition:border-color .2s;}
+.field textarea{min-height:96px;resize:vertical;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brass);}
+.field select{-webkit-appearance:none;appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236B6B6B' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:12px 8px;}
+.field input[type="date"]{-webkit-appearance:none;appearance:none;display:block;}
+.field input[type="date"]::-webkit-date-and-time-value{text-align:left;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+@media(max-width:560px){.g2{grid-template-columns:1fr;}}
+.err{color:#B5352E;font-size:.86rem;min-height:1.2em;margin-bottom:10px;}
+.ok{background:#F2F7F0;border:1px solid #CADFC3;border-radius:5px;padding:16px 18px;margin-bottom:18px;
+  font-size:.95rem;animation:fade .35s ease both;}
+.ok strong{display:block;margin-bottom:3px;}
+
+.mapbox{border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+.mapbox svg{display:block;width:100%;height:auto;}
+
+footer{background:var(--dark);color:#B5B5B5;padding:32px 0;font-size:.88rem;}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+footer a{color:#E0E0E0;text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+
+[data-rev]{transition:transform .7s cubic-bezier(.2,.7,.2,1);}
+.js [data-rev]:not(.in){transform:translateY(18px);}
+
+/* téléphone : boutons et champs à la taille du pouce */
+@media(max-width:560px){
+  .btn{padding:14px 22px;font-size:.98rem;}
+  .field input,.field select{min-height:48px;}
+  .formbox{padding:18px;}
+  .eyebrow{font-size:.75rem;}
+  .hero .tag{font-size:.72rem;letter-spacing:.14em;}
+}
+@media(max-width:480px){
+  .hero .cta .btn{flex:1 1 100%;}
+}
+@media(max-width:360px){
+  .wrap{padding-inline:16px;}
+  .head{gap:8px;}
+  .lang button{min-width:40px;padding:0 10px;}
+  .logo small{letter-spacing:.14em;}
+}
+@media (pointer:coarse){
+  .btn{padding-block:14px;}
+  .field input,.field select{min-height:48px;}
+}
+@media (pointer:coarse) and (min-width:821px){
+  nav a{padding-block:12px;}
+  .lang button{min-height:40px;}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{animation:none!important;transition:none!important;}
+  [data-rev]{opacity:1!important;transform:none!important;}
+}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="/alexstudio/index.html" aria-label="Vissza a portfólióhoz">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+  <span data-i18n="backBtn">Vissza</span>
+</a>
+
+<header>
+  <div class="wrap head">
+    <a class="logo" href="#/">Teszt oldal<small data-i18n="brandsub">MINTA WEBOLDAL</small></a>
+    <div class="lang" role="group" aria-label="Nyelv / Language">
+      <button type="button" data-lang="hu" aria-pressed="true">HU</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menü megnyitása"><span></span><span></span><span></span></button>
+    <nav id="nav">
+      <a href="#/" data-nav="/" data-i18n="navHome">Főoldal</a>
+      <a href="#/kapcsolat" data-nav="/kapcsolat" data-i18n="navContact">Kapcsolat</a>
+      <a class="btn btn-b nav-cta" href="#/kapcsolat" data-i18n="navBook">Időpontfoglalás</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ FŐOLDAL / HOME ============ -->
+<div class="page" id="p-home">
+  <div class="hero">
+    <div class="wrap">
+      <span class="tag" data-i18n="heroTag">BUDAPEST IX. · RÁDAY UTCA</span>
+      <h1><span data-i18n="heroT1">Klasszikus borbélymunka,</span><br><span data-i18n="heroT2">felesleges hűhó nélkül</span></h1>
+      <p data-i18n="heroP">Hajvágás, szakállformázás és meleg törölközős borotválás.</p>
+      <div class="cta">
+        <a class="btn btn-b" href="#/kapcsolat" data-i18n="heroCta1">Időpontot foglalok</a>
+        <a class="btn btn-o" href="#szolgaltatasok" data-i18n="heroCta2">Szolgáltatások</a>
+      </div>
+      <div class="meta">
+        <span data-i18n="heroM1">Ráday utca 32.</span>
+        <span data-i18n="heroM2">Kedd–Szombat</span>
+        <span>+36 1 217 8890</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap two">
+      <div data-rev>
+        <div class="eyebrow" data-i18n="ebAbout">RÓLUNK</div>
+        <h2 data-i18n="aboutH">2014 óta a Ráday utcában</h2>
+        <p class="lead" data-i18n="aboutP1"></p>
+      </div>
+      <div data-rev>
+        <p class="muted" data-i18n="aboutP2"></p>
+        <p class="muted" data-i18n="aboutP3"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="szolgaltatasok">
+    <div class="wrap">
+      <div class="eyebrow" data-rev data-i18n="ebSvc">SZOLGÁLTATÁSOK</div>
+      <h2 data-rev data-i18n="svcH">Amit kínálunk</h2>
+      <div class="svc" id="svcGrid"></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="eyebrow" data-rev data-i18n="ebGal">GALÉRIA</div>
+      <h2 data-rev data-i18n="galH">A műhely</h2>
+      <div class="gal">
+        <figure data-rev data-i18n="photo">FOTÓ</figure>
+        <figure data-rev data-i18n="photo">FOTÓ</figure>
+        <figure data-rev data-i18n="photo">FOTÓ</figure>
+        <figure data-rev data-i18n="photo">FOTÓ</figure>
+        <figure data-rev data-i18n="photo">FOTÓ</figure>
+        <figure data-rev data-i18n="photo">FOTÓ</figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="wrap">
+      <h2 data-i18n="stripH">Foglaljon időpontot</h2>
+      <p data-i18n="stripP"></p>
+      <a class="btn btn-b" href="#/kapcsolat" data-i18n="navBook">Időpontfoglalás</a>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap two">
+      <div data-rev>
+        <div class="eyebrow" data-i18n="ebHours">NYITVATARTÁS</div>
+        <h2 data-i18n="hoursH">Mikor várjuk</h2>
+        <ul class="rows" id="hoursHome"></ul>
+      </div>
+      <div data-rev>
+        <div class="eyebrow" data-i18n="ebReach">ELÉRHETŐSÉG</div>
+        <h2 data-i18n="reachH">Hol talál minket</h2>
+        <ul class="rows" id="reachHome"></ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ KAPCSOLAT / CONTACT ============ -->
+<div class="page" id="p-contact">
+  <div class="hero" style="padding:clamp(40px,6vw,64px) 0">
+    <div class="wrap">
+      <span class="tag" data-i18n="navContact">KAPCSOLAT</span>
+      <h1 data-i18n="conH">Időpontfoglalás és elérhetőség</h1>
+      <p data-i18n="conP"></p>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap two">
+      <div>
+        <div class="eyebrow" data-i18n="ebBook">ONLINE FOGLALÁS</div>
+        <h2 style="margin-bottom:18px" data-i18n="bookH">Kérjen időpontot</h2>
+        <div id="bookOk"></div>
+        <div class="formbox">
+          <form id="bookForm" novalidate>
+            <div class="field"><label for="bSvc" data-i18n="fSvc">Szolgáltatás</label><select id="bSvc"></select></div>
+            <div class="g2">
+              <div class="field"><label for="bDate" data-i18n="fDate">Dátum</label><input type="date" id="bDate"></div>
+              <div class="field"><label for="bTime" data-i18n="fTime">Időpont</label><select id="bTime"></select></div>
+            </div>
+            <div class="g2">
+              <div class="field"><label for="bName" data-i18n="fName">Név</label><input type="text" id="bName"></div>
+              <div class="field"><label for="bPhone" data-i18n="fPhone">Telefon</label><input type="tel" id="bPhone"></div>
+            </div>
+            <div class="err" id="bookErr" role="alert"></div>
+            <button class="btn btn-b" type="submit" style="width:100%" data-i18n="bookBtn">Foglalás elküldése</button>
+          </form>
+        </div>
+        <p class="muted" style="font-size:.86rem;margin-top:12px" data-i18n="bookNote"></p>
+      </div>
+
+      <div>
+        <div class="eyebrow" data-i18n="ebMsg">ÜZENET</div>
+        <h2 style="margin-bottom:18px" data-i18n="msgH">Írjon nekünk</h2>
+        <div id="msgOk"></div>
+        <div class="formbox">
+          <form id="msgForm" novalidate>
+            <div class="field"><label for="mName" data-i18n="fName">Név</label><input type="text" id="mName"></div>
+            <div class="field"><label for="mMail" data-i18n="fMail">E-mail</label><input type="email" id="mMail"></div>
+            <div class="field"><label for="mText" data-i18n="fMsg">Üzenet</label><textarea id="mText"></textarea></div>
+            <div class="err" id="msgErr" role="alert"></div>
+            <button class="btn btn-b" type="submit" style="width:100%" data-i18n="msgBtn">Üzenet küldése</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap two">
+      <div>
+        <h2 style="margin-bottom:14px" data-i18n="ebReach2">Elérhetőség</h2>
+        <ul class="rows" id="reachCon"></ul>
+        <h2 style="margin:28px 0 14px" data-i18n="hoursH2">Nyitvatartás</h2>
+        <ul class="rows" id="hoursCon"></ul>
+      </div>
+      <div>
+        <div class="mapbox" aria-hidden="true">
+          <svg viewBox="0 0 420 300" role="presentation">
+            <rect width="420" height="300" fill="#EDEAE5"/>
+            <g stroke="#DAD5CD" stroke-width="14" fill="none"><path d="M-10 90h440M-10 210h440M130 -10v320M300 -10v320"/></g>
+            <path d="M-10 250C80 235 170 245 250 225s110-40 190-30" stroke="#CFE0E6" stroke-width="26" fill="none"/>
+            <circle cx="216" cy="150" r="9" fill="#B8874B"/>
+            <circle cx="216" cy="150" r="18" fill="none" stroke="#B8874B" stroke-opacity=".45"/>
+            <text x="234" y="155" fill="#4A4A4A" font-family="Inter,Arial,sans-serif" font-size="13">Ráday u. 32.</text>
+          </svg>
+        </div>
+        <p class="muted" style="font-size:.88rem;margin-top:12px" data-i18n="mapNote"></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span data-i18n="footL">© 2026 Teszt oldal · Minta weboldal</span>
+    <span><span data-i18n="footBy">Weboldal:</span> <a href="mailto:aistudiobudapest@gmail.com">AiStudio Budapest</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+document.documentElement.classList.add("js");
+
+var T={
+ hu:{
+  backBtn:"Vissza", backAria:"Vissza a portfólióhoz",
+  brandsub:"MINTA WEBOLDAL", navHome:"Főoldal", navContact:"Kapcsolat", navBook:"Időpontfoglalás",
+  menuOpen:"Menü megnyitása", menuClose:"Menü bezárása",
+  heroTag:"BUDAPEST IX. · RÁDAY UTCA",
+  heroT1:"Klasszikus borbélymunka,", heroT2:"felesleges hűhó nélkül",
+  heroP:"Hajvágás, szakállformázás és meleg törölközős borotválás. Két szék, két borbély, és annyi idő, amennyi a rendes munkához kell.",
+  heroCta1:"Időpontot foglalok", heroCta2:"Szolgáltatások",
+  heroM1:"Ráday utca 32.", heroM2:"Kedd–Szombat",
+  ebAbout:"RÓLUNK", aboutH:"2014 óta a Ráday utcában",
+  aboutP1:"Kétszékes borbélyműhely vagyunk, ahol nem futószalagon dolgozunk. Egy vendégre negyven-ötven perc jut, mert egy jó fazon és egy rendes szakállkontúr ennyit kíván.",
+  aboutP2:"Klasszikus technikákkal dolgozunk: kés, olló, meleg törölköző. A használt termékeket megmutatjuk, és megmondjuk, mit érdemes otthon is használni — és mit nem.",
+  aboutP3:"Bejelentkezés online vagy telefonon. Ha késik, szóljon, és igyekszünk beilleszteni.",
+  ebSvc:"SZOLGÁLTATÁSOK", svcH:"Amit kínálunk",
+  ebGal:"GALÉRIA", galH:"A műhely", photo:"FOTÓ",
+  stripH:"Foglaljon időpontot",
+  stripP:"Válasszon szolgáltatást és időpontot, a többit intézzük mi. Telefonon is állunk rendelkezésre.",
+  ebHours:"NYITVATARTÁS", hoursH:"Mikor várjuk", hoursH2:"Nyitvatartás",
+  ebReach:"ELÉRHETŐSÉG", reachH:"Hol talál minket", ebReach2:"Elérhetőség",
+  conH:"Időpontfoglalás és elérhetőség",
+  conP:"Foglaljon online néhány kattintással, vagy hívjon minket nyitvatartási időben.",
+  ebBook:"ONLINE FOGLALÁS", bookH:"Kérjen időpontot", bookBtn:"Foglalás elküldése",
+  bookNote:"A foglalást telefonon visszaigazoljuk. Lemondás legkésőbb 2 órával az időpont előtt.",
+  ebMsg:"ÜZENET", msgH:"Írjon nekünk", msgBtn:"Üzenet küldése",
+  fSvc:"Szolgáltatás", fDate:"Dátum", fTime:"Időpont", fName:"Név", fPhone:"Telefon",
+  fMail:"E-mail", fMsg:"Üzenet",
+  errBook:"Kérjük, adja meg a nevét, telefonszámát és a dátumot.",
+  errMsg:"Kérjük, töltse ki a mezőket és adjon meg érvényes e-mail-címet.",
+  okBookT:"Foglalási kérését megkaptuk.", okBookB:"Munkatársunk telefonon visszaigazolja a következő időpontot: ",
+  okMsgT:"Köszönjük az üzenetet.", okMsgB:"Egy munkanapon belül válaszolunk a megadott e-mail-címre.",
+  mapNote:"M3 metró, Kálvin tér — 4 perc séta. A Ráday utcában fizetős parkolás.",
+  footL:"© 2026 Teszt oldal · Minta weboldal", footBy:"Weboldal:",
+  svc:[["Hajvágás","6 500 Ft","Konzultáció, mosás, vágás géppel és ollóval, beszárítás és formázás."],
+       ["Szakállformázás","4 500 Ft","Kontúrozás késsel, hosszúság igazítása, forró törölköző és olaj."],
+       ["Borotválás","5 500 Ft","Klasszikus késes borotválás, meleg törölközővel és arcpakolással."],
+       ["Haj és szakáll","9 900 Ft","A két leggyakoribb szolgáltatás együtt, kedvezőbb áron."],
+       ["Gyermek hajvágás","4 000 Ft","10 éves korig, türelemmel és a szükséges szünetekkel."],
+       ["Kontúrigazítás","2 500 Ft","Két hajvágás között, nyak és halánték felfrissítése."]],
+  hours:[["Kedd – Péntek","10:00 – 19:00"],["Szombat","9:00 – 15:00"],["Hétfő, Vasárnap","Zárva"]],
+  reach:[["Cím","1092 Budapest, Ráday utca 32."],["Telefon","+36 1 217 8890"],
+         ["E-mail","info@bastyaborbely.hu"],["Metró","M3 Kálvin tér, 4 perc séta"]],
+  reach2:[["Cím","1092 Budapest, Ráday utca 32."],["Telefon","+36 1 217 8890"],["E-mail","info@bastyaborbely.hu"]]
+ },
+ en:{
+  backBtn:"Back", backAria:"Back to portfolio",
+  brandsub:"SAMPLE WEBSITE", navHome:"Home", navContact:"Contact", navBook:"Book now",
+  menuOpen:"Open menu", menuClose:"Close menu",
+  heroTag:"BUDAPEST IX. · RÁDAY STREET",
+  heroT1:"Classic barbering,", heroT2:"without the fuss",
+  heroP:"Haircuts, beard shaping and hot towel shaves. Two chairs, two barbers, and as much time as the job actually takes.",
+  heroCta1:"Book an appointment", heroCta2:"Services",
+  heroM1:"32 Ráday Street", heroM2:"Tuesday–Saturday",
+  ebAbout:"ABOUT US", aboutH:"On Ráday Street since 2014",
+  aboutP1:"We are a two-chair barbershop that does not work on a conveyor belt. Each guest gets forty to fifty minutes, because a good cut and a clean beard line take that long.",
+  aboutP2:"We work with classic tools: blade, scissors, hot towel. We show you the products we use and tell you which ones are worth buying for home — and which are not.",
+  aboutP3:"Book online or by phone. If you are running late, call us and we will try to fit you in.",
+  ebSvc:"SERVICES", svcH:"What we offer",
+  ebGal:"GALLERY", galH:"The shop", photo:"PHOTO",
+  stripH:"Book your appointment",
+  stripP:"Pick a service and a time, we take care of the rest. You can also reach us by phone.",
+  ebHours:"OPENING HOURS", hoursH:"When to find us", hoursH2:"Opening hours",
+  ebReach:"CONTACT", reachH:"Where to find us", ebReach2:"Contact details",
+  conH:"Booking and contact",
+  conP:"Book online in a few clicks, or call us during opening hours.",
+  ebBook:"ONLINE BOOKING", bookH:"Request an appointment", bookBtn:"Send booking request",
+  bookNote:"We confirm every booking by phone. Cancellations at least 2 hours before your slot.",
+  ebMsg:"MESSAGE", msgH:"Write to us", msgBtn:"Send message",
+  fSvc:"Service", fDate:"Date", fTime:"Time", fName:"Name", fPhone:"Phone",
+  fMail:"Email", fMsg:"Message",
+  errBook:"Please give your name, phone number and a date.",
+  errMsg:"Please fill in the fields and give a valid email address.",
+  okBookT:"We have received your request.", okBookB:"We will call you to confirm the following slot: ",
+  okMsgT:"Thank you for your message.", okMsgB:"We reply within one working day to the email address you gave.",
+  mapNote:"Metro M3, Kálvin tér — a 4-minute walk. Paid street parking on Ráday Street.",
+  footL:"© 2026 Teszt oldal · Sample website", footBy:"Website:",
+  svc:[["Haircut","6 500 Ft","Consultation, wash, clipper and scissor cut, blow dry and styling."],
+       ["Beard shaping","4 500 Ft","Blade lining, length adjustment, hot towel and oil."],
+       ["Shave","5 500 Ft","Classic straight razor shave with hot towel and face treatment."],
+       ["Hair and beard","9 900 Ft","Our two most popular services together, at a better price."],
+       ["Children's haircut","4 000 Ft","Up to age 10, with patience and as many breaks as needed."],
+       ["Line-up","2 500 Ft","Between haircuts — neck and temples freshened up."]],
+  hours:[["Tuesday – Friday","10:00 – 19:00"],["Saturday","9:00 – 15:00"],["Monday, Sunday","Closed"]],
+  reach:[["Address","32 Ráday Street, 1092 Budapest"],["Phone","+36 1 217 8890"],
+         ["Email","info@bastyaborbely.hu"],["Metro","M3 Kálvin tér, 4-minute walk"]],
+  reach2:[["Address","32 Ráday Street, 1092 Budapest"],["Phone","+36 1 217 8890"],["Email","info@bastyaborbely.hu"]]
+ }
+};
+
+var lang="hu";
+try{ var sv=localStorage.getItem("tb_lang"); if(sv==="hu"||sv==="en") lang=sv; }catch(e){}
+function t(k){ return T[lang][k]; }
+function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n;}
+function clear(n){while(n.firstChild)n.removeChild(n.firstChild);}
+
+function rows(node,data){
+  if(!node) return; clear(node);
+  data.forEach(function(r){
+    var li=el("li"); li.appendChild(el("span",null,r[0])); li.appendChild(el("span",null,r[1])); node.appendChild(li);
+  });
+}
+function services(){
+  var g=document.getElementById("svcGrid"); clear(g);
+  t("svc").forEach(function(s){
+    var c=el("div","card"); c.setAttribute("data-rev","");
+    c.appendChild(el("h3",null,s[0]));
+    c.appendChild(el("div","price",s[1]));
+    c.appendChild(el("p",null,s[2]));
+    g.appendChild(c);
+  });
+  var sel=document.getElementById("bSvc"), keep=sel.selectedIndex; clear(sel);
+  t("svc").forEach(function(s){ sel.appendChild(el("option",null,s[0]+" — "+s[1])); });
+  sel.selectedIndex = keep>0 ? keep : 0;
+}
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i18n]").forEach(function(n){
+    var v=T[lang][n.getAttribute("data-i18n")];
+    if(typeof v==="string") n.textContent=v;
+  });
+  var backLink=document.querySelector(".back-home");
+  if(backLink) backLink.setAttribute("aria-label", T[lang].backAria);
+  document.querySelectorAll(".lang button").forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-lang")===lang ? "true":"false");
+  });
+  services();
+  rows(document.getElementById("hoursHome"),t("hours"));
+  rows(document.getElementById("hoursCon"),t("hours"));
+  rows(document.getElementById("reachHome"),t("reach"));
+  rows(document.getElementById("reachCon"),t("reach2"));
+  setMenu(navEl.classList.contains("open"));
+  reveal();
+}
+
+/* oldalváltás / routing */
+var ROUTES={"/":"p-home","/kapcsolat":"p-contact"};
+var firstRoute=true;
+function route(){
+  var raw=location.hash.replace(/^#/,""), anchor=null;
+  if(raw && raw.charAt(0)!=="/"){ anchor=document.getElementById(raw); raw="/"; }
+  var h=raw||"/";
+  if(!ROUTES[h]) h="/";
+  document.querySelectorAll(".page").forEach(function(p){
+    var on=p.id===ROUTES[h];
+    p.classList.toggle("on",on);
+    p.classList.toggle("enter",on&&!firstRoute);
+  });
+  firstRoute=false;
+  document.querySelectorAll("nav a[data-nav]").forEach(function(a){
+    a.classList.toggle("on",a.getAttribute("data-nav")===h);
+  });
+  setMenu(false);
+  if(anchor) anchor.scrollIntoView({block:"start"}); else window.scrollTo(0,0);
+  reveal();
+}
+window.addEventListener("hashchange",route);
+
+/* menu mobile */
+var navEl=document.getElementById("nav"), burgerEl=document.getElementById("burger");
+function setMenu(open){
+  navEl.classList.toggle("open",open);
+  burgerEl.setAttribute("aria-expanded",open?"true":"false");
+  burgerEl.setAttribute("aria-label",open?t("menuClose"):t("menuOpen"));
+}
+burgerEl.addEventListener("click",function(e){
+  e.stopPropagation();
+  setMenu(!navEl.classList.contains("open"));
+});
+document.addEventListener("click",function(e){
+  if(navEl.classList.contains("open") && !navEl.contains(e.target) && !burgerEl.contains(e.target)) setMenu(false);
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape" && navEl.classList.contains("open")){ setMenu(false); burgerEl.focus(); }
+});
+navEl.querySelectorAll("a").forEach(function(a){ a.addEventListener("click",function(){ setMenu(false); }); });
+
+/* ancres internes : défilement vers la section, sans repasser par le routeur */
+document.addEventListener("click",function(e){
+  var a=e.target.closest ? e.target.closest('a[href^="#"]') : null;
+  if(!a) return;
+  var id=a.getAttribute("href").slice(1);
+  if(!id || id.charAt(0)==="/") return;
+  var target=document.getElementById(id);
+  if(!target) return;
+  e.preventDefault();
+  setMenu(false);
+  target.scrollIntoView({block:"start"});
+});
+document.querySelectorAll(".lang button").forEach(function(b){
+  b.addEventListener("click",function(){
+    lang=b.getAttribute("data-lang");
+    try{ localStorage.setItem("tb_lang",lang); }catch(e){}
+    applyLang();
+  });
+});
+
+/* megjelenés görgetéskor */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+},{threshold:.12,rootMargin:"0px 0px -6% 0px"});
+function reveal(){
+  var pg=document.querySelector(".page.on"); if(!pg) return;
+  pg.querySelectorAll("[data-rev]").forEach(function(n){
+    if(n.getBoundingClientRect().top < window.innerHeight*.92) n.classList.add("in");
+    else io.observe(n);
+  });
+}
+
+/* űrlapok */
+var tm=document.getElementById("bTime");
+for(var h=10;h<=18;h++){ ["00","30"].forEach(function(m){ tm.appendChild(el("option",null,h+":"+m)); }); }
+tm.value="14:00";
+var today=new Date().toISOString().slice(0,10);
+var bd=document.getElementById("bDate"); bd.min=today; bd.value=today;
+
+function okBox(target,title,text){
+  var n=document.getElementById(target); clear(n);
+  var d=el("div","ok"); d.appendChild(el("strong",null,title));
+  d.appendChild(document.createTextNode(text)); n.appendChild(d);
+}
+
+document.getElementById("bookForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var err=document.getElementById("bookErr");
+  var name=document.getElementById("bName").value.trim();
+  var phone=document.getElementById("bPhone").value.trim();
+  var date=document.getElementById("bDate").value;
+  if(!name||!phone||!date){ err.textContent=t("errBook"); return; }
+  err.textContent="";
+  okBox("bookOk",t("okBookT"),t("okBookB")+date+" "+tm.value);
+  this.reset(); bd.value=today; tm.value="14:00"; services();
+  document.getElementById("bookOk").scrollIntoView({block:"nearest",behavior:"smooth"});
+});
+
+document.getElementById("msgForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var err=document.getElementById("msgErr");
+  var n=document.getElementById("mName").value.trim();
+  var m=document.getElementById("mMail").value.trim();
+  var x=document.getElementById("mText").value.trim();
+  if(!n||!x||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){ err.textContent=t("errMsg"); return; }
+  err.textContent="";
+  okBox("msgOk",t("okMsgT"),t("okMsgB"));
+  this.reset();
+});
+
+applyLang();
+route();
+})();
+</script>
+</body>
+</html>

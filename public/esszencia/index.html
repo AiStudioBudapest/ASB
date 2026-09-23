@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Teszt oldal</title>
+<meta name="description" content="Teszt oldal — minta weboldal fodrászat számára, Budapest XIV. kerület.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#191C20;
+  --muted:#6E747C;
+  --line:#E7E9EC;
+  --accent:#3C5A72;
+  --accent-d:#2E4658;
+  --bg:#FFFFFF;
+  --soft:#F6F7F8;
+  color-scheme:light;
+}
+:root:not([data-theme="light"]){color-scheme:light;}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"Inter",-apple-system,Arial,sans-serif;
+  font-size:16px;line-height:1.7;font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:rgba(60,90,114,.14);
+}
+a{color:var(--accent);}
+img,svg{display:block;max-width:100%;}
+.wrap{max-width:720px;margin:0 auto;padding:0 24px;}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:min(52vh,420px);min-height:300px;overflow:hidden;background:#D9D3CB;}
+.hero svg{position:absolute;inset:0;width:100%;height:100%;}
+.hero .veil{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(20,24,28,.28) 0%,rgba(20,24,28,.12) 42%,rgba(20,24,28,.72) 100%);
+}
+.hero .inner{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;
+  padding-bottom:34px;color:#fff;text-align:center;
+}
+.hero h1{margin:0;font-size:clamp(1.8rem,6vw,2.6rem);font-weight:600;letter-spacing:-.015em;}
+.hero .sub{
+  margin-top:10px;font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(255,255,255,.82);
+}
+
+/* ---------- sections ---------- */
+section{padding:48px 0;border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:0;}
+h2{
+  margin:0 0 24px;font-size:.7rem;font-weight:600;letter-spacing:.24em;
+  color:var(--muted);text-transform:uppercase;
+}
+p{margin:0 0 14px;}
+p:last-child{margin-bottom:0;}
+.intro p:first-child{font-size:1.1rem;line-height:1.72;}
+.intro p + p{color:var(--muted);font-size:.98rem;}
+
+.cta{
+  margin-top:30px;background:var(--soft);border:1px solid var(--line);border-radius:6px;
+  padding:24px;text-align:center;
+}
+.cta .k{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);}
+.btn{
+  display:inline-block;margin-top:14px;background:var(--accent);color:#fff;text-decoration:none;
+  padding:14px 32px;font-size:1rem;font-weight:500;border-radius:4px;transition:background .2s ease;
+}
+.btn:hover{background:var(--accent-d);}
+.cta .note{display:block;margin-top:12px;font-size:.85rem;color:var(--muted);}
+.nw{white-space:nowrap;}
+
+/* ---------- listes ---------- */
+.list{list-style:none;margin:0;padding:0;}
+.list li{display:flex;align-items:baseline;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);}
+.list li:last-child{border-bottom:0;}
+.list .name{flex:0 0 auto;}
+.list .dots{flex:1 1 auto;border-bottom:1px dotted #C9CDD3;transform:translateY(-4px);}
+.list .val{flex:0 0 auto;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap;}
+.list .val strong{color:var(--ink);font-weight:500;}
+.note{font-size:.86rem;color:var(--muted);margin-top:18px;}
+
+/* ---------- images ---------- */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.shot{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:#E4DFD8;}
+.shot svg{position:absolute;inset:0;width:100%;height:100%;}
+.caption{margin-top:12px;font-size:.84rem;color:var(--muted);}
+@media(max-width:560px){.pair{grid-template-columns:1fr;}}
+
+/* ---------- infos ---------- */
+.info{list-style:none;margin:0;padding:0;}
+.info li{display:flex;gap:18px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.97rem;}
+.info li:last-child{border-bottom:0;}
+.info .k{flex:0 0 118px;color:var(--muted);font-size:.7rem;letter-spacing:.16em;
+  text-transform:uppercase;padding-top:5px;}
+
+footer{background:var(--soft);padding:32px 0;text-align:center;font-size:.85rem;color:var(--muted);}
+footer p{margin:0 0 6px;}
+footer p:last-child{margin-bottom:0;}
+footer a{color:var(--muted);}
+
+@media(max-width:520px){
+  section{padding:38px 0;}
+  h2{font-size:.75rem;margin-bottom:20px;}
+  .hero .sub{font-size:.72rem;letter-spacing:.2em;}
+  .intro p:first-child{font-size:1.05rem;}
+  .cta{padding:22px 18px;}
+  .cta .k{font-size:.72rem;letter-spacing:.18em;}
+  .cta .btn{display:block;padding:16px 20px;font-size:1.05rem;}
+  .list .name{flex:1 1 auto;min-width:0;}
+  .list .dots{display:none;}
+  .list .val{text-align:right;}
+  .info li{flex-direction:column;gap:2px;}
+  .info .k{flex:none;padding-top:0;font-size:.72rem;}
+  .info a{display:inline-block;padding:10px 0;margin:-8px 0;}
+}
+.back-home{position:fixed;left:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;
+  gap:7px;min-height:44px;padding:0 18px;border-radius:999px;background:#fff;color:var(--ink);
+  border:1px solid var(--line);text-decoration:none;font-size:.85rem;font-weight:600;
+  box-shadow:0 8px 22px rgba(0,0,0,.16);transition:transform .2s,box-shadow .2s;}
+.back-home:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.2);}
+.back-home svg{width:15px;height:15px;flex:none;color:var(--accent);}
+</style>
+</head>
+<body>
+
+<a class="back-home" href="/alexstudio/index.html" aria-label="Vissza a portfólióhoz">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+  <span>Vissza</span>
+</a>
+
+<div class="hero">
+  <svg viewBox="0 0 900 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#F3EFE9"/><stop offset="100%" stop-color="#DDD6CC"/>
+      </linearGradient>
+      <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#C2B8AB"/><stop offset="100%" stop-color="#8F857A"/>
+      </linearGradient>
+      <linearGradient id="mir" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#EFF3F5"/><stop offset="55%" stop-color="#C9D2D8"/><stop offset="100%" stop-color="#9FAAB3"/>
+      </linearGradient>
+      <radialGradient id="pool" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFF3DE" stop-opacity=".85"/><stop offset="100%" stop-color="#FFF3DE" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="sf" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>
+      <filter id="gn"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter>
+      <radialGradient id="vg" cx="50%" cy="46%" r="70%">
+        <stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".38"/>
+      </radialGradient>
+    </defs>
+
+    <rect width="900" height="520" fill="url(#wall)"/>
+    <rect y="352" width="900" height="168" fill="url(#floor)"/>
+
+    <!-- fénypászmák -->
+    <ellipse cx="200" cy="120" rx="220" ry="150" fill="url(#pool)"/>
+    <ellipse cx="700" cy="90" rx="180" ry="120" fill="url(#pool)" opacity=".7"/>
+
+    <!-- tükrök -->
+    <g>
+      <rect x="88" y="96" width="150" height="212" rx="74" fill="#B7AFA4" opacity=".5" filter="url(#sf)"/>
+      <rect x="92" y="92" width="142" height="204" rx="70" fill="url(#mir)"/>
+      <rect x="104" y="104" width="118" height="180" rx="58" fill="#fff" opacity=".22"/>
+
+      <rect x="376" y="82" width="150" height="222" rx="74" fill="#B7AFA4" opacity=".5" filter="url(#sf)"/>
+      <rect x="380" y="78" width="142" height="214" rx="70" fill="url(#mir)"/>
+      <rect x="392" y="90" width="118" height="190" rx="58" fill="#fff" opacity=".22"/>
+
+      <rect x="664" y="96" width="150" height="212" rx="74" fill="#B7AFA4" opacity=".5" filter="url(#sf)"/>
+      <rect x="668" y="92" width="142" height="204" rx="70" fill="url(#mir)"/>
+      <rect x="680" y="104" width="118" height="180" rx="58" fill="#fff" opacity=".22"/>
+    </g>
+
+    <!-- pult -->
+    <rect x="40" y="300" width="820" height="16" rx="4" fill="#A9A093"/>
+    <rect x="40" y="300" width="820" height="5" fill="#C6BDB0"/>
+
+    <!-- flakonok -->
+    <g>
+      <rect x="150" y="272" width="13" height="30" rx="4" fill="#4E5A62"/>
+      <rect x="170" y="266" width="11" height="36" rx="4" fill="#7E8B93"/>
+      <rect x="440" y="270" width="14" height="32" rx="4" fill="#3C5A72"/>
+      <rect x="462" y="278" width="10" height="24" rx="4" fill="#93A0A8"/>
+      <rect x="726" y="268" width="12" height="34" rx="4" fill="#5A6870"/>
+    </g>
+
+    <!-- székek -->
+    <g>
+      <ellipse cx="168" cy="468" rx="86" ry="20" fill="#6E655B" opacity=".45" filter="url(#sf)"/>
+      <rect x="126" y="332" width="86" height="104" rx="30" fill="#2C3238"/>
+      <rect x="134" y="340" width="70" height="46" rx="22" fill="#3A424A"/>
+      <rect x="160" y="436" width="18" height="30" fill="#8B8378"/>
+      <ellipse cx="169" cy="470" rx="42" ry="9" fill="#5C544B"/>
+
+      <ellipse cx="452" cy="486" rx="96" ry="22" fill="#6E655B" opacity=".45" filter="url(#sf)"/>
+      <rect x="404" y="336" width="96" height="118" rx="34" fill="#242A30"/>
+      <rect x="413" y="345" width="78" height="52" rx="24" fill="#333B43"/>
+      <rect x="443" y="454" width="20" height="32" fill="#8B8378"/>
+      <ellipse cx="453" cy="488" rx="46" ry="10" fill="#5C544B"/>
+
+      <ellipse cx="742" cy="468" rx="86" ry="20" fill="#6E655B" opacity=".45" filter="url(#sf)"/>
+      <rect x="700" y="332" width="86" height="104" rx="30" fill="#2C3238"/>
+      <rect x="708" y="340" width="70" height="46" rx="22" fill="#3A424A"/>
+      <rect x="734" y="436" width="18" height="30" fill="#8B8378"/>
+      <ellipse cx="743" cy="470" rx="42" ry="9" fill="#5C544B"/>
+    </g>
+
+    <rect width="900" height="520" fill="url(#vg)"/>
+    <rect width="900" height="520" filter="url(#gn)" opacity=".07" style="mix-blend-mode:overlay"/>
+  </svg>
+  <div class="veil"></div>
+  <div class="inner">
+    <div class="wrap">
+      <h1>Teszt oldal</h1>
+      <div class="sub">Fodrászat · Budapest XIV.</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="intro">
+    <p>Női és férfi hajvágás, festés és melírozás Zuglóban, két székkel és annyi idővel, amennyi a rendes munkához kell.</p>
+    <p>2009 óta ugyanazon a helyen dolgozunk, a Fogarasi úton. Minőségi festékekkel dolgozunk, és a hajvágás előtt mindig egyeztetünk, hogy tényleg az legyen, amit szeretne.</p>
+    <div class="cta">
+      <span class="k">Időpontfoglalás telefonon</span>
+      <a class="btn" href="tel:+3613334455">+36 1 333 4455</a>
+      <span class="note"><span class="nw">Kedd–péntek 9:00–18:00,</span> <span class="nw">szombat 9:00–14:00</span></span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Szolgáltatások</h2>
+    <ul class="list">
+      <li><span class="name">Női hajvágás, mosás, szárítás</span><span class="dots"></span><span class="val"><strong>7 500 Ft</strong>-tól</span></li>
+      <li><span class="name">Férfi hajvágás</span><span class="dots"></span><span class="val"><strong>4 500 Ft</strong></span></li>
+      <li><span class="name">Gyermek hajvágás</span><span class="dots"></span><span class="val"><strong>3 000 Ft</strong></span></li>
+      <li><span class="name">Tőfestés</span><span class="dots"></span><span class="val"><strong>9 000 Ft</strong>-tól</span></li>
+      <li><span class="name">Teljes festés</span><span class="dots"></span><span class="val"><strong>13 000 Ft</strong>-tól</span></li>
+      <li><span class="name">Melírozás</span><span class="dots"></span><span class="val"><strong>16 000 Ft</strong>-tól</span></li>
+      <li><span class="name">Alkalmi frizura</span><span class="dots"></span><span class="val"><strong>12 000 Ft</strong>-tól</span></li>
+    </ul>
+    <p class="note">Az árak tájékoztató jellegűek, a haj hosszától és állapotától függően változhatnak.</p>
+  </section>
+
+  <section>
+    <h2>A szalon</h2>
+    <div class="pair">
+      <div class="shot">
+        <svg viewBox="0 0 600 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="w2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F4F1EC"/><stop offset="100%" stop-color="#DCD6CD"/>
+            </linearGradient>
+            <linearGradient id="c2" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#B49C7E"/><stop offset="100%" stop-color="#8A7458"/>
+            </linearGradient>
+            <radialGradient id="l2" cx="30%" cy="20%" r="70%">
+              <stop offset="0%" stop-color="#FFF6E6" stop-opacity=".9"/><stop offset="100%" stop-color="#FFF6E6" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="s2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+            <filter id="g2"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter>
+            <radialGradient id="v2" cx="50%" cy="46%" r="70%">
+              <stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".34"/>
+            </radialGradient>
+          </defs>
+          <rect width="600" height="450" fill="url(#w2)"/>
+          <ellipse cx="180" cy="90" rx="230" ry="170" fill="url(#l2)"/>
+          <rect y="300" width="600" height="150" fill="url(#c2)"/>
+          <rect y="300" width="600" height="7" fill="#D3C3A6"/>
+          <!-- tükör -->
+          <rect x="356" y="40" width="180" height="248" rx="90" fill="#AEA79C" opacity=".45" filter="url(#s2)"/>
+          <rect x="360" y="36" width="172" height="240" rx="86" fill="#D4DCE2"/>
+          <rect x="376" y="52" width="140" height="208" rx="70" fill="#fff" opacity=".28"/>
+          <!-- eszközök -->
+          <g>
+            <rect x="60" y="262" width="96" height="14" rx="7" fill="#2E353B"/>
+            <rect x="150" y="256" width="34" height="26" rx="8" fill="#3C5A72"/>
+            <path d="M70 250 l40 -26 M70 250 l40 22" stroke="#8E9AA3" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <circle cx="70" cy="250" r="7" fill="#5D6771"/>
+            <rect x="212" y="238" width="18" height="44" rx="6" fill="#5A6870"/>
+            <rect x="240" y="246" width="15" height="36" rx="6" fill="#93A0A8"/>
+            <rect x="266" y="232" width="20" height="50" rx="7" fill="#3C5A72"/>
+          </g>
+          <ellipse cx="300" cy="330" rx="260" ry="26" fill="#6E5F49" opacity=".28" filter="url(#s2)"/>
+          <rect width="600" height="450" fill="url(#v2)"/>
+          <rect width="600" height="450" filter="url(#g2)" opacity=".07" style="mix-blend-mode:overlay"/>
+        </svg>
+      </div>
+      <div class="shot">
+        <svg viewBox="0 0 600 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="w3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#EDE8E1"/><stop offset="100%" stop-color="#CFC7BC"/>
+            </linearGradient>
+            <linearGradient id="ch3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#39414A"/><stop offset="100%" stop-color="#1E242A"/>
+            </linearGradient>
+            <linearGradient id="win3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFFDF6"/><stop offset="100%" stop-color="#D8E4EA"/>
+            </linearGradient>
+            <filter id="s3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>
+            <filter id="g3"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3"/><feColorMatrix type="saturate" values="0"/></filter>
+            <radialGradient id="v3" cx="50%" cy="46%" r="70%">
+              <stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".34"/>
+            </radialGradient>
+          </defs>
+          <rect width="600" height="450" fill="url(#w3)"/>
+          <!-- ablak -->
+          <rect x="330" y="26" width="230" height="256" rx="8" fill="url(#win3)"/>
+          <g stroke="#B6AFA4" stroke-width="7" fill="none"><path d="M445 26 v256 M330 152 h230"/></g>
+          <rect x="330" y="26" width="230" height="256" rx="8" fill="none" stroke="#A79F94" stroke-width="8"/>
+          <ellipse cx="250" cy="200" rx="200" ry="180" fill="#FFF6E6" opacity=".35" filter="url(#s3)"/>
+          <!-- padló -->
+          <rect y="330" width="600" height="120" fill="#A99E90"/>
+          <rect y="330" width="600" height="6" fill="#C3B8A8"/>
+          <!-- szék -->
+          <ellipse cx="196" cy="412" rx="112" ry="24" fill="#6C6154" opacity=".45" filter="url(#s3)"/>
+          <rect x="128" y="150" width="136" height="176" rx="52" fill="url(#ch3)"/>
+          <rect x="142" y="164" width="108" height="76" rx="36" fill="#454E58"/>
+          <rect x="184" y="326" width="26" height="62" fill="#8A8176"/>
+          <ellipse cx="197" cy="392" rx="60" ry="13" fill="#5C5449"/>
+          <!-- növény -->
+          <rect x="504" y="322" width="52" height="46" rx="6" fill="#8E7B62"/>
+          <path d="M530 322 q-34 -46 -6 -78 M530 322 q30 -40 10 -70 M530 322 q-12 -54 14 -76" stroke="#5E7A54" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <rect width="600" height="450" fill="url(#v3)"/>
+          <rect width="600" height="450" filter="url(#g3)" opacity=".07" style="mix-blend-mode:overlay"/>
+        </svg>
+      </div>
+    </div>
+    <p class="caption">A szalon a Fogarasi úti megállótól két percre található, a ház előtt ingyenes parkolás.</p>
+  </section>
+
+  <section>
+    <h2>Nyitvatartás</h2>
+    <ul class="list">
+      <li><span class="name">Kedd – Péntek</span><span class="dots"></span><span class="val"><strong>9:00 – 18:00</strong></span></li>
+      <li><span class="name">Szombat</span><span class="dots"></span><span class="val"><strong>9:00 – 14:00</strong></span></li>
+      <li><span class="name">Hétfő, Vasárnap</span><span class="dots"></span><span class="val">Zárva</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Kapcsolat</h2>
+    <ul class="info">
+      <li><span class="k">Cím</span><span>1148 Budapest, Fogarasi út 24.</span></li>
+      <li><span class="k">Telefon</span><span><a href="tel:+3613334455">+36 1 333 4455</a></span></li>
+      <li><span class="k">E-mail</span><span><a href="mailto:szalon@example.hu">szalon@example.hu</a></span></li>
+      <li><span class="k">Megközelítés</span><span>62-es és 69-es villamos, Fogarasi út megálló</span></li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Teszt oldal · Minta weboldal</p>
+    <p>A képek illusztrációk. Weboldal: <a href="mailto:aistudiobudapest@gmail.com">AiStudio Budapest</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

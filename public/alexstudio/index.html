@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07080a">
+<title>AiStudioBudapest — Prémium Webdesign Portfólió</title>
+<meta name="description" content="AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.">
+<style>
+/* Fonts self-hosted under /alexstudio/fonts/ instead of loaded from
+   Google's CDN: fonts.googleapis.com/fonts.gstatic.com would otherwise see
+   every visitor's IP address on every page load, for a resource that has
+   nothing to do with the page's own functionality — an easy, unnecessary
+   third-party data exposure to drop entirely (also dropped Poppins here —
+   it was in the original Google Fonts request via an unused --wordmark
+   variable, a leftover from an earlier text-logo design, but nothing on
+   the page actually renders with it — no point self-hosting a font
+   nothing uses). Hanken Grotesk ships one variable-weight file per subset
+   (weight 300–700 in a single file), so it's declared with a weight
+   *range*; Prata is a static single weight. Two files each (latin +
+   latin-ext) because Hungarian's ő/ű (and the accented HU/FR/ES/DE text
+   elsewhere on this page) live outside the plain latin (Latin-1) block. */
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;
+  src:url('/alexstudio/fonts/hanken-grotesk-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;
+  src:url('/alexstudio/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Prata';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/alexstudio/fonts/prata-400-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Prata';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/alexstudio/fonts/prata-400-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+/* ============================================================
+   0. TOKENS — fluid unit system (six responsive tiers)
+   ============================================================
+   --u drives every calc(N*var(--u)) dimension on the page, so the
+   whole composition scales as one locked unit rather than reflowing
+   piecemeal. --dw/--dh are the *native* render resolution used for
+   the live-prototype iframes before they are scaled down to fit
+   their frame (see .frame-shell). --gutter/--vshift are tuned per
+   tier so the three-slot composition stays intentional instead of
+   degrading into a generic stack. */
+:root{
+  --dw:1440; --dh:900; --dh-px:calc(var(--dh) * 1px); --dw-px:calc(var(--dw) * 1px);
+  --u:clamp(0.62px, 0.62vw, 1.05px);
+  --gutter:calc(40 * var(--u));
+  --vshift:0px;
+  --mx:50%; --my:50%;
+
+  --ink:#07080a; --panel:#0d0f13; --panel-2:#12151b; --line:rgba(255,255,255,.12);
+  /* --muted-2 only reaches ~3.9:1 against --ink — below the 4.5:1 WCAG AA
+     floor for normal-size text. Fine for form placeholders (transient,
+     backed by a real <label>), never for text that's actually read —
+     use --muted (7.8:1) for that instead. */
+  --text:#f2f3f5; --muted:#9aa2ad; --muted-2:#666e79;
+  --cyan:#7fe9de; --cyan-soft:rgba(127,233,222,.16);
+  --white:#fbfbfa;
+
+  --serif:'Prata', Georgia, serif;
+  --sans:'Hanken Grotesk', system-ui, sans-serif;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+  --ease-soft:cubic-bezier(.22,.61,.36,1);
+  --ease-bounce:cubic-bezier(.34,1.56,.64,1);
+  color-scheme:dark;
+}
+
+/* Tier 2 — desktop / laptop */
+@media (max-width:1439px){
+  :root{ --gutter:calc(34 * var(--u)); }
+}
+/* Tier 3 — small laptop */
+@media (max-width:1180px){
+  :root{ --u:clamp(0.6px, 0.72vw, 0.95px); --gutter:calc(30 * var(--u)); }
+}
+/* Tier 4 — tablet landscape */
+@media (max-width:980px){
+  :root{ --u:clamp(0.58px, 0.82vw, 0.9px); --gutter:calc(26 * var(--u)); --vshift:calc(-6 * var(--u)); }
+}
+/* Tier 5 — tablet portrait / mobile landscape */
+@media (max-width:760px){
+  :root{ --u:clamp(0.62px, 1.05vw, 0.98px); --gutter:calc(18 * var(--u)); --vshift:calc(-10 * var(--u)); }
+}
+/* Tier 6 — mobile portrait */
+@media (max-width:479px){
+  :root{ --u:clamp(0.68px, 1.5vw, 1.05px); --gutter:calc(14 * var(--u)); --vshift:calc(-14 * var(--u)); }
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink); color:var(--text); font-family:var(--sans);
+  font-size:calc(16 * var(--u)); line-height:1.6; font-weight:400;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; min-height:100svh;
+}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;}
+img{display:block;max-width:100%;}
+::selection{background:var(--cyan);color:var(--ink);}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
+
+/* ============================================================
+   1. BACKGROUND — just the real looping 4K space video, a
+      neutral dark vignette for legibility, twinkling stars and
+      a small cursor-tracked glow. No grids, no colour tint.
+   ============================================================ */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#050608;}
+.bg-video-wrap{position:absolute;inset:0;opacity:.7;filter:saturate(1.15) brightness(.78) contrast(1.05);}
+/* Two copies of the same clip so the loop restart can be hidden: see the
+   crossfade logic in the script below. Each video sits at opacity 0 until
+   it's the active one — .bg-video-wrap carries the shared dimming/filter
+   look so the two videos blend into each other during a crossfade instead
+   of each separately darkening/lightening as they fade. */
+.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;}
+.bg-video.active{opacity:1;}
+.bg-video.fading{transition:opacity 1.4s linear;}
+/* This tint sits on the fixed (viewport-relative, not page-relative) space
+   background, so its gradient re-applies at every scroll position — the
+   bottom ~45% of whatever's currently on screen was getting up to 88%
+   black, which is also right where content sections' scroll-reveal (see
+   --rp in onScrollFrame()) actually plays out, so the "fading in" was
+   fighting near-total darkness the whole time. Lightened across the board
+   so the lower half of the viewport stays legible and the reveal is
+   actually visible while it happens. */
+.bg-tint{position:absolute;inset:0;background:
+  linear-gradient(180deg, rgba(5,6,8,.32) 0%, rgba(5,6,8,.4) 55%, rgba(4,5,7,.56) 100%);
+}
+.spotlight{
+  position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;
+  background:radial-gradient(220px circle at var(--mx) var(--my), rgba(127,233,222,.06), transparent 60%);
+  transition:opacity .4s var(--ease);
+}
+body.mouse-active .spotlight{opacity:1;}
+.grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px 160px;
+}
+.particles{position:fixed;inset:0;z-index:2;pointer-events:none;}
+.particles i{position:absolute;border-radius:50%;background:#fff;opacity:.15;
+  animation:twinkle 5s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(1);}50%{opacity:.9;transform:scale(1.6);}}
+
+/* ============================================================
+   2. NAV
+   ============================================================ */
+header.nav{
+  position:fixed;top:0;left:0;right:0;z-index:40;
+  display:flex;align-items:center;gap:calc(28 * var(--u));
+  padding:calc(22 * var(--u)) var(--gutter);
+}
+.logo{display:flex;align-items:center;}
+.logo img{height:calc(100 * var(--u));width:auto;display:block;}
+.nav-links{display:flex;gap:calc(6 * var(--u));margin-left:auto;}
+.nav-links a{
+  font-size:calc(13 * var(--u));letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  padding:calc(9 * var(--u)) calc(14 * var(--u));border-radius:999px;transition:color .25s var(--ease),background .25s var(--ease);
+}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.06);}
+.nav-links a.active{color:var(--ink);background:var(--white);}
+.nav-cta{
+  font-size:calc(12 * var(--u));letter-spacing:.08em;font-weight:600;text-transform:uppercase;
+  padding:calc(11 * var(--u)) calc(20 * var(--u));border-radius:999px;border:1px solid var(--line);
+  transition:border-color .25s var(--ease),background .25s var(--ease);white-space:nowrap;
+}
+.nav-cta:hover{border-color:var(--cyan);background:var(--cyan-soft);}
+
+.lang-switch{position:relative;}
+.lang-btn{
+  display:flex;align-items:center;gap:calc(6*var(--u));background:none;border:1px solid var(--line);
+  border-radius:999px;padding:calc(9*var(--u)) calc(14*var(--u));font-family:inherit;
+  font-size:calc(12*var(--u));letter-spacing:.06em;color:var(--text);cursor:pointer;
+  transition:border-color .25s var(--ease),background .25s var(--ease);
+}
+.lang-btn:hover,.lang-switch.open .lang-btn{border-color:var(--cyan);background:var(--cyan-soft);}
+.lang-chevron{width:calc(11*var(--u));height:calc(11*var(--u));transition:transform .25s var(--ease);}
+.lang-switch.open .lang-chevron{transform:rotate(180deg);}
+.lang-menu{
+  position:absolute;top:calc(100% + 10px);right:0;min-width:calc(150*var(--u));
+  background:var(--panel);border:1px solid var(--line);border-radius:calc(14*var(--u));
+  padding:calc(6*var(--u));box-shadow:0 20px 50px -18px rgba(0,0,0,.7);
+  opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);
+}
+.lang-switch.open .lang-menu{opacity:1;transform:none;pointer-events:auto;}
+.lang-option{
+  display:block;width:100%;text-align:left;background:none;border:0;border-radius:calc(9*var(--u));
+  padding:calc(9*var(--u)) calc(12*var(--u));font-family:inherit;font-size:calc(13.5*var(--u));
+  color:var(--muted);cursor:pointer;transition:color .2s var(--ease),background .2s var(--ease);
+}
+.lang-option:hover{color:var(--text);background:rgba(255,255,255,.06);}
+.lang-option.active{color:var(--cyan);}
+.lang-switch-mobile{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(8*var(--u));margin-top:calc(6*var(--u));}
+.lang-switch-mobile button{
+  background:none;border:1px solid var(--line);border-radius:999px;padding:calc(9*var(--u)) calc(16*var(--u));
+  font-family:var(--sans);font-size:calc(13*var(--u));letter-spacing:.04em;color:var(--muted);cursor:pointer;
+}
+.lang-switch-mobile button.active{color:var(--cyan);border-color:var(--cyan);}
+.burger{display:none;position:relative;width:calc(40*var(--u));height:calc(40*var(--u));border:1px solid var(--line);border-radius:8px;flex:none;}
+.burger span{position:absolute;left:calc(11*var(--u));right:calc(11*var(--u));height:1.5px;background:var(--text);transition:transform .3s var(--ease),opacity .2s;}
+.burger span:nth-child(1){top:calc(14*var(--u));}
+.burger span:nth-child(2){top:calc(19.5*var(--u));}
+.burger span:nth-child(3){top:calc(25*var(--u));}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(calc(5.5*var(--u))) rotate(45deg);}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(calc(-5.5*var(--u))) rotate(-45deg);}
+
+.mnav{
+  position:fixed;inset:0;z-index:39;background:rgba(6,7,9,.98);backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(26*var(--u));
+  opacity:0;pointer-events:none;transition:opacity .35s var(--ease);
+}
+.mnav.open{opacity:1;pointer-events:auto;}
+.mnav a{font-family:var(--serif);font-size:calc(30*var(--u));color:var(--text);}
+.mnav .nav-cta{margin-top:calc(10*var(--u));}
+
+@media (max-width:820px){
+  .nav-links{display:none;}
+  .burger{display:block;order:3;}
+  .nav-cta{display:none;}
+  .lang-switch{display:none;}
+  /* --u caps out at ~1.05px on both desktop and mobile widths (it's a
+     vw-driven clamp with a low ceiling), so a --u-sized logo ends up
+     almost the same absolute height everywhere — fine on a wide desktop
+     nav, way too dominant on a narrow phone screen. Sized down here
+     directly instead of trying to stretch --u itself to cover both. */
+  .logo img{height:calc(48*var(--u));}
+}
+
+/* ============================================================
+   3. HERO — the very first thing you see: a tagline over the
+      space video. The three-project showcase lives further down.
+   ============================================================ */
+.hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:calc(170*var(--u)) var(--gutter) calc(60*var(--u));}
+.eyebrow-wrap{display:flex;align-items:center;gap:calc(12*var(--u));margin-bottom:calc(10*var(--u));}
+.eyebrow-wrap .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);}
+.eyebrow{font-size:calc(12*var(--u));letter-spacing:.32em;text-transform:uppercase;color:var(--cyan);font-weight:600;}
+
+.tagline{
+  font-family:var(--serif);font-weight:400;letter-spacing:.01em;
+  font-size:calc(58*var(--u));line-height:1.15;max-width:18ch;margin:0;color:var(--white);
+}
+
+/* Scroll-scrubbed letter shatter: --p (0-1) is set on .tagline once per
+   scroll frame in onScrollFrame(); every .letter reads it straight through
+   calc()/clamp(), so the whole effect tracks the scrollbar exactly — no
+   per-letter JS, nothing to step or lag behind. --ex/--ey/--er/--ed are
+   fixed per letter at split time (random flight vector + stagger delay);
+   --p is the only thing that ever changes. .word keeps line-wrapping
+   working normally since it, not the letters, is what wraps. */
+.word{display:inline-block;}
+.word:not(:last-child)::after{content:'\00a0';display:inline-block;}
+.letter{
+  display:inline-block;will-change:transform,opacity;
+  --lp:clamp(0, calc((var(--p,0) - var(--ed,0)) * 1.6), 1);
+  transform:
+    translate(calc(var(--ex,0px) * var(--lp)), calc(var(--ey,0px) * var(--lp)))
+    rotate(calc(var(--er,0deg) * var(--lp)))
+    scale(calc(1 - var(--lp) * .4));
+  opacity:calc(1 - var(--lp));
+}
+.hero-sub{margin-top:calc(20*var(--u));color:var(--muted);font-size:calc(16*var(--u));max-width:42ch;}
+
+.scroll-arrow{display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--u));
+  margin-top:calc(48*var(--u));text-decoration:none;color:var(--muted);}
+.scroll-arrow-label{font-size:calc(13*var(--u));letter-spacing:.18em;text-transform:uppercase;}
+.scroll-arrow-chevrons{display:flex;flex-direction:column;align-items:center;height:calc(38*var(--u));}
+.scroll-arrow-chevrons span{width:calc(22*var(--u));height:calc(22*var(--u));margin-top:calc(-11*var(--u));
+  border-right:3px solid var(--cyan);border-bottom:3px solid var(--cyan);transform:rotate(45deg);
+  animation:chevronBob 1.6s ease-in-out infinite;}
+.scroll-arrow-chevrons span:nth-child(2){animation-delay:.22s;}
+.scroll-arrow-chevrons span:nth-child(3){animation-delay:.44s;}
+/* translate() after rotate(45deg) happens in the rotated coordinate
+   space — equal x/y magnitudes are what land as pure vertical motion on
+   screen (a 45°-rotated diagonal translate cancels out horizontally);
+   unequal values here would drift sideways instead of dropping straight
+   down. */
+@keyframes chevronBob{
+  0%{opacity:0;transform:rotate(45deg) translate(-12px,-12px);}
+  40%{opacity:1;}
+  75%{opacity:1;}
+  100%{opacity:0;transform:rotate(45deg) translate(16px,16px);}
+}
+@media (prefers-reduced-motion:reduce){
+  .scroll-arrow-chevrons span{animation:none!important;opacity:.7;}
+}
+.scroll-cue{margin-top:calc(56*var(--u));width:calc(28*var(--u));height:calc(44*var(--u));
+  border:1.5px solid var(--line);border-radius:999px;position:relative;flex:none;}
+.scroll-cue span{position:absolute;top:calc(8*var(--u));left:50%;width:4px;height:8px;border-radius:2px;
+  background:var(--cyan);transform:translateX(-50%);animation:scrollcue 1.8s ease-in-out infinite;}
+@keyframes scrollcue{0%{opacity:1;transform:translate(-50%,0);}70%{opacity:0;transform:translate(-50%,14px);}100%{opacity:0;transform:translate(-50%,14px);}}
+
+.hero.enter .eyebrow-wrap,.hero.enter .tagline,.hero.enter .hero-sub,.hero.enter .scroll-cue{
+  opacity:0;transform:translateY(calc(14*var(--u)));}
+.hero.enter.run .eyebrow-wrap{opacity:1;transform:none;transition:opacity .7s var(--ease) .1s,transform .7s var(--ease) .1s;}
+.hero.enter.run .tagline{opacity:1;transform:none;transition:opacity .9s var(--ease) .25s,transform .9s var(--ease) .25s;}
+.hero.enter.run .hero-sub{opacity:1;transform:none;transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;}
+.hero.enter.run .scroll-cue{opacity:1;transform:none;transition:opacity .8s var(--ease) .7s,transform .8s var(--ease) .7s;}
+
+/* ============================================================
+   4. SHOWCASE — the three-slot cinematic switcher
+   ============================================================ */
+.stage{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(60*var(--u));
+  transform:translateY(var(--vshift));perspective:calc(2400*var(--u));
+}
+.showcase{padding-top:calc(60*var(--u));}
+
+.headline{
+  font-family:var(--serif);font-weight:400;text-transform:uppercase;letter-spacing:.02em;
+  font-size:calc(84*var(--u));line-height:1;text-align:center;margin:0;color:var(--white);
+}
+.headline .mask{display:inline-block;overflow:hidden;vertical-align:top;padding-top:.15em;margin-top:-.15em;}
+.headline .mask span{display:inline-block;}
+
+.rule{width:calc(72*var(--u));height:2px;margin:calc(22*var(--u)) auto calc(20*var(--u));
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--white),var(--cyan),transparent);
+  transform:scaleX(0);transform-origin:50% 50%;}
+
+.composition{
+  position:relative;width:100%;max-width:calc(1360*var(--u));
+  display:grid;grid-template-columns:1fr minmax(0,calc(760*var(--u))) 1fr;align-items:center;
+  gap:calc(8*var(--u));transition:transform .6s var(--ease-soft);will-change:transform;
+}
+
+/* --- side project buttons --- */
+.side{
+  position:relative;justify-self:stretch;display:flex;flex-direction:column;align-items:center;gap:calc(14*var(--u));
+  padding:calc(6*var(--u));border-radius:calc(20*var(--u));perspective:calc(900*var(--u));
+  transition:transform .5s var(--ease-soft);
+}
+.side.left{justify-self:start;transform:translateX(calc(-14*var(--u)));}
+.side.right{justify-self:end;transform:translateX(calc(14*var(--u)));}
+.side:hover,.side:focus-visible{transform:translateX(0) scale(1.035);}
+.side:hover .frame-shell,.side:focus-visible .frame-shell{filter:brightness(1.12);box-shadow:0 30px 70px -20px rgba(0,0,0,.7),0 0 0 1px rgba(127,233,222,.35);}
+
+.side .frame-shell{width:calc(320*var(--u));}
+.side .side-label{
+  font-family:var(--serif);font-size:calc(19*var(--u));letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);transition:color .3s var(--ease);
+}
+.side:hover .side-label,.side:focus-visible .side-label{color:var(--text);}
+
+/* --- center featured preview --- */
+.center-col{display:flex;flex-direction:column;align-items:center;}
+.stack{position:relative;width:100%;perspective:calc(1400*var(--u));cursor:pointer;}
+.tilt{transform-style:preserve-3d;transition:transform .6s var(--ease-soft);}
+
+/* orbiting rings behind the featured preview — purely decorative */
+.orbit-ring{
+  position:absolute;top:50%;left:50%;width:calc(880*var(--u));height:calc(880*var(--u));
+  transform:translate(-50%,-50%);border:1px dashed rgba(127,233,222,.16);border-radius:50%;
+  animation:spin 90s linear infinite;pointer-events:none;z-index:-1;
+}
+.orbit-ring.b{width:calc(1160*var(--u));height:calc(1160*var(--u));border-color:rgba(255,255,255,.07);animation-duration:130s;animation-direction:reverse;}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+.enter-hint{
+  position:absolute;bottom:calc(16*var(--u));left:50%;z-index:5;pointer-events:none;
+  transform:translate(-50%,6px);opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease);
+  background:rgba(5,6,8,.72);backdrop-filter:blur(6px);border:1px solid rgba(127,233,222,.45);
+  color:var(--text);font-size:calc(11*var(--u));letter-spacing:.14em;text-transform:uppercase;
+  padding:calc(8*var(--u)) calc(18*var(--u));border-radius:999px;white-space:nowrap;
+}
+.stack:hover .enter-hint,.stack:focus-within .enter-hint{opacity:1;transform:translate(-50%,0);}
+
+/* --- shared browser-chrome mockup --- */
+.frame-shell{
+  position:relative;width:100%;border-radius:calc(14*var(--u));overflow:hidden;
+  background:var(--panel);border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 40px 90px -24px rgba(0,0,0,.75), 0 2px 0 rgba(255,255,255,.06) inset;
+  transition:box-shadow .5s var(--ease), filter .4s var(--ease), transform .5s var(--ease-soft);
+  animation:levitate 7s ease-in-out infinite;
+}
+.side.left .frame-shell{animation-duration:8.5s;animation-delay:-2.2s;}
+.side.right .frame-shell{animation-duration:6.4s;animation-delay:-4.6s;}
+@keyframes levitate{
+  0%,100%{ translate:0 0; rotate:0deg; }
+  50%{ translate:0 -9px; rotate:.5deg; }
+}
+.frame-bar{
+  display:flex;align-items:center;gap:calc(6*var(--u));
+  padding:calc(9*var(--u)) calc(12*var(--u));background:linear-gradient(180deg,#17191f,#111318);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.frame-bar i{width:calc(8*var(--u));height:calc(8*var(--u));border-radius:50%;background:#3a3d44;}
+.frame-bar .url{
+  margin-left:calc(10*var(--u));flex:1;height:calc(18*var(--u));border-radius:999px;background:rgba(255,255,255,.05);
+  font-size:calc(10*var(--u));color:var(--muted);display:flex;align-items:center;padding:0 calc(12*var(--u));
+  letter-spacing:.03em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.frame-view{position:relative;width:100%;aspect-ratio:16/10.2;overflow:hidden;background:#0b0d10;}
+.frame-view iframe{
+  position:absolute;top:0;left:0;border:0;pointer-events:none;
+  width:var(--dw-px);height:var(--dh-px);
+  transform:scale(var(--scale,1));transform-origin:top left;
+}
+.frame-sheen{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 26%);
+}
+.frame-glow{position:absolute;inset:-6%;z-index:-1;border-radius:calc(22*var(--u));
+  background:radial-gradient(60% 60% at 50% 30%, rgba(127,233,222,.20), transparent 70%);
+  filter:blur(28px);opacity:.8;pointer-events:none;transition:opacity .4s var(--ease);
+}
+.stack:hover .frame-glow{opacity:1;}
+
+/* project sits as an absolutely-stacked child so all three iframes stay
+   mounted at all times (no reload => no flash) and simply resize/move
+   between the center and side treatments */
+.projects{position:relative;}
+.project{width:100%;}
+
+.description{
+  max-width:52ch;text-align:center;margin:calc(26*var(--u)) auto 0;color:var(--muted);
+  font-size:calc(15.5*var(--u));line-height:1.75;
+}
+.cta-row{display:flex;align-items:center;justify-content:center;gap:calc(16*var(--u));margin-top:calc(28*var(--u));flex-wrap:wrap;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:calc(8*var(--u));
+  background:var(--white);color:var(--ink);font-weight:600;font-size:calc(13*var(--u));
+  letter-spacing:.06em;text-transform:uppercase;padding:calc(15*var(--u)) calc(30*var(--u));border-radius:999px;
+  box-shadow:0 14px 30px -10px rgba(255,255,255,.25);transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+}
+.btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 20px 40px -10px rgba(255,255,255,.35);}
+.btn-secondary{
+  font-size:calc(13*var(--u));letter-spacing:.06em;text-transform:uppercase;color:var(--text);
+  padding:calc(15*var(--u)) calc(24*var(--u));border-radius:999px;border:1px solid var(--line);
+  transition:border-color .3s var(--ease),background .3s var(--ease);
+}
+.btn-secondary:hover{border-color:var(--cyan);background:var(--cyan-soft);}
+
+.cookie-banner{position:fixed;left:calc(20*var(--u));right:calc(20*var(--u));bottom:calc(20*var(--u));z-index:80;
+  max-width:calc(640*var(--u));margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:calc(16*var(--u));
+  background:var(--panel);border:1px solid var(--line);border-radius:calc(16*var(--u));
+  padding:calc(20*var(--u)) calc(24*var(--u));box-shadow:0 24px 60px -20px rgba(0,0,0,.7);}
+.cookie-banner[hidden]{display:none;}
+.cookie-banner p{margin:0;flex:1 1 260px;color:var(--muted);font-size:calc(13.5*var(--u));line-height:1.6;}
+.cookie-banner-actions{display:flex;gap:calc(10*var(--u));flex:0 0 auto;}
+.cookie-banner .btn-primary,.cookie-banner .btn-secondary{padding:calc(11*var(--u)) calc(18*var(--u));font-size:calc(11.5*var(--u));}
+@media (max-width:560px){.cookie-banner{left:calc(12*var(--u));right:calc(12*var(--u));bottom:calc(12*var(--u));}}
+
+.meta-row{display:flex;align-items:center;gap:calc(14*var(--u));margin-top:calc(34*var(--u));
+  font-size:calc(11.5*var(--u));letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  transition:opacity .22s ease;}
+.meta-row .dash{width:calc(20*var(--u));height:1px;background:var(--line);}
+.meta-row .index{color:var(--cyan);font-variant-numeric:tabular-nums;}
+
+/* ============================================================
+   5. ENTRANCE ANIMATION for the showcase (runs once, the first
+      time it scrolls into view — see IntersectionObserver in the
+      script — and is also replayed for the headline on every
+      project switch)
+   ============================================================ */
+.enter .headline .mask span{transform:translateY(110%);}
+.enter.run .headline .mask span{transform:translateY(0);transition:transform .9s var(--ease) var(--d,0s);}
+.enter .rule{transform:scaleX(0);}
+.enter.run .rule{transform:scaleX(1);transition:transform .8s var(--ease) .35s;}
+.enter .description,.enter .cta-row,.enter .meta-row{opacity:0;transform:translateY(calc(10*var(--u)));}
+.enter.run .description{opacity:1;transform:none;transition:opacity .7s var(--ease) .55s,transform .7s var(--ease) .55s;}
+.enter.run .cta-row{opacity:1;transform:none;transition:opacity .7s var(--ease) .68s,transform .7s var(--ease) .68s;}
+.enter.run .meta-row{opacity:1;transform:none;transition:opacity .7s var(--ease) .8s,transform .7s var(--ease) .8s;}
+.enter .stack{opacity:0;transform:scale(.94);}
+.enter.run .stack{opacity:1;transform:none;transition:opacity 1s var(--ease) .3s,transform 1s var(--ease) .3s;}
+.enter .side{opacity:0;}
+.enter .side.left{transform:translateX(calc(-46*var(--u)));}
+.enter .side.right{transform:translateX(calc(46*var(--u)));}
+.enter.run .side{opacity:1;transition:opacity .9s var(--ease) .45s,transform .9s var(--ease) .45s;}
+.enter.run .side.left{transform:translateX(calc(-14*var(--u)));}
+.enter.run .side.right{transform:translateX(calc(14*var(--u)));}
+.bg,.grain{opacity:0;transition:opacity 1.3s var(--ease);}
+body.ready .bg,body.ready .grain{opacity:1;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .enter *,.enter{transition:none!important;transform:none!important;opacity:1!important;}
+  .bg,.grain{transition:none!important;opacity:1!important;}
+  .particles i{animation:none!important;}
+  .bg-video{display:none!important;}
+  .composition,.side,.frame-shell,.tilt{transition:none!important;}
+  .frame-shell{animation:none!important;}
+  .orbit-ring{animation:none!important;}
+  .scroll-cue span{animation:none!important;}
+  .spotlight{display:none!important;}
+  .cursor-dot,.cursor-ring{display:none!important;}
+}
+
+/* ============================================================
+   6. CUSTOM CURSOR — dot + lagging ring, grows on interactive
+      targets. Fine pointers only (see script), hidden otherwise.
+   ============================================================ */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:80;opacity:0;}
+.cursor-dot{width:6px;height:6px;background:var(--cyan);transition:opacity .3s ease;}
+.cursor-ring{width:32px;height:32px;border:1px solid rgba(127,233,222,.7);
+  transition:width .35s var(--ease),height .35s var(--ease),opacity .3s ease,background-color .3s ease;}
+.cursor-ring.active{width:56px;height:56px;background:rgba(127,233,222,.12);}
+body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
+@media (pointer:fine){
+  body.cursor-ready,body.cursor-ready a,body.cursor-ready button{cursor:none;}
+}
+@media (pointer:coarse){ .cursor-dot,.cursor-ring{display:none!important;} }
+
+/* ============================================================
+   7. HYPERSPACE WARP — full-screen flash played when a project
+      is opened, so the switch reads as diving into the site.
+   ============================================================ */
+#warp{position:fixed;inset:0;z-index:95;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at var(--wx,50%) var(--wy,50%), #fff 0%, rgba(127,233,222,.85) 20%, rgba(5,6,8,0) 68%);
+  transition:opacity .55s ease;}
+#warp.active{opacity:1;}
+#warp::after{content:"";position:absolute;inset:0;opacity:0;
+  background:repeating-conic-gradient(from 0deg at var(--wx,50%) var(--wy,50%), rgba(255,255,255,.55) 0deg .6deg, transparent .6deg 6deg);
+  mix-blend-mode:screen;transition:opacity .6s ease .1s;}
+#warp.active::after{opacity:.85;}
+
+/* ============================================================
+   7b. SCROLLYTELLING — a thin top progress rail, a scroll-linked
+   background zoom + hero parallax (driven in the script), an
+   extra rotation layered onto the orbit rings, and a staggered
+   reveal-on-scroll for every section below the fold.
+   ============================================================ */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:50;background:rgba(255,255,255,.05);pointer-events:none;}
+.scroll-progress span{display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,var(--cyan),var(--white));box-shadow:0 0 12px rgba(127,233,222,.55);}
+.orbit-wrap{position:absolute;inset:0;pointer-events:none;z-index:-1;will-change:transform;}
+
+/* Continuously scroll-driven, not a one-shot triggered transition: --rp
+   (0-1) is recomputed every scroll frame in onScrollFrame() from each
+   element's own position in the viewport, so it fades/lifts in exact step
+   with the scrollbar (and back out if you scroll back up past it) instead
+   of playing a fixed-duration transition once a threshold is crossed. */
+.band-reveal{
+  opacity:var(--rp,0);
+  transform:translateY(calc((1 - var(--rp,0)) * 28 * var(--u)));
+  will-change:opacity,transform;
+}
+@media (prefers-reduced-motion:reduce){
+  .band-reveal{opacity:1!important;transform:none!important;}
+}
+
+/* ============================================================
+   8. SUPPORTING SECTIONS
+   ============================================================ */
+section.band{position:relative;z-index:2;padding:calc(90*var(--u)) var(--gutter);border-top:1px solid var(--line);}
+.band-head{max-width:calc(640*var(--u));margin:0 auto calc(48*var(--u));text-align:center;}
+.band-head .eyebrow{display:block;margin-bottom:calc(12*var(--u));}
+.band-head h2{font-family:var(--serif);font-weight:400;font-size:calc(38*var(--u));margin:0;text-transform:uppercase;letter-spacing:.02em;}
+.band-head p{color:var(--muted);margin-top:calc(14*var(--u));font-size:calc(15*var(--u));}
+
+.services-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));}
+@media (max-width:820px){.services-grid{grid-template-columns:1fr;}}
+.service-card{padding:calc(28*var(--u));border:1px solid var(--line);border-radius:calc(14*var(--u));background:rgba(255,255,255,.02);
+  transition:transform .35s var(--ease),border-color .35s var(--ease);}
+.service-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}
+.service-card .n{font-family:var(--serif);color:var(--cyan);font-size:calc(13*var(--u));}
+.service-card h3{font-family:var(--serif);font-weight:400;font-size:calc(21*var(--u));margin:calc(10*var(--u)) 0 calc(10*var(--u));}
+.service-card p{color:var(--muted);font-size:calc(14*var(--u));margin:0;}
+
+.pricing-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));align-items:stretch;}
+@media (max-width:820px){.pricing-grid{grid-template-columns:1fr;}}
+.pricing-card{display:flex;flex-direction:column;padding:calc(32*var(--u)) calc(28*var(--u));
+  border:1px solid var(--line);border-radius:calc(14*var(--u));background:rgba(255,255,255,.02);
+  transition:transform .35s var(--ease),border-color .35s var(--ease);}
+.pricing-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}
+.pricing-card.featured{border-color:rgba(127,233,222,.55);background:linear-gradient(180deg,rgba(127,233,222,.07),rgba(127,233,222,.015));}
+.pricing-card h3{font-family:var(--serif);font-weight:400;font-size:calc(22*var(--u));margin:0;text-transform:uppercase;letter-spacing:.03em;}
+.pricing-card .price{font-family:var(--serif);font-weight:400;font-size:calc(30*var(--u));color:var(--cyan);margin:calc(12*var(--u)) 0 calc(6*var(--u));}
+.pricing-card .maint{display:flex;flex-direction:column;align-items:flex-start;gap:calc(2*var(--u));
+  color:var(--cyan);background:var(--cyan-soft);border:1px solid rgba(127,233,222,.35);
+  border-radius:calc(14*var(--u));padding:calc(9*var(--u)) calc(16*var(--u));margin:0 0 calc(24*var(--u));}
+.pricing-card .maint-rate{font-size:calc(14.5*var(--u));font-weight:600;letter-spacing:.015em;}
+.pricing-card .maint-note{font-size:calc(12.5*var(--u));font-weight:500;letter-spacing:.01em;opacity:.82;}
+.pricing-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(13*var(--u));}
+.pricing-card li{position:relative;padding-left:calc(22*var(--u));color:var(--muted);font-size:calc(14.5*var(--u));line-height:1.5;}
+.pricing-card li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;
+  background:var(--cyan-soft);box-shadow:inset 0 0 0 1px rgba(127,233,222,.55);}
+.pricing-note{max-width:calc(560*var(--u));margin:calc(28*var(--u)) auto 0;text-align:center;color:var(--muted);font-size:calc(13*var(--u));}
+
+.about{max-width:calc(760*var(--u));margin:0 auto;text-align:center;}
+.about p{color:var(--muted);font-size:calc(16*var(--u));line-height:1.85;}
+.about p+p{margin-top:calc(16*var(--u));}
+
+.faq-list{max-width:calc(760*var(--u));margin:0 auto;display:flex;flex-direction:column;gap:calc(12*var(--u));}
+.faq-item{border:1px solid var(--line);border-radius:calc(14*var(--u));background:rgba(255,255,255,.02);
+  overflow:hidden;transition:border-color .3s var(--ease);}
+.faq-item.open{border-color:rgba(127,233,222,.4);}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:calc(16*var(--u));
+  padding:calc(20*var(--u)) calc(24*var(--u));background:none;border:0;cursor:pointer;text-align:left;
+  font-family:var(--serif);font-weight:400;font-size:calc(17*var(--u));color:var(--text);}
+.faq-q:hover{color:var(--cyan);}
+.faq-icon{position:relative;width:calc(20*var(--u));height:calc(20*var(--u));flex:none;}
+.faq-icon::before,.faq-icon::after{content:"";position:absolute;top:50%;left:50%;background:var(--cyan);
+  transform:translate(-50%,-50%);transition:transform .35s var(--ease);}
+.faq-icon::before{width:100%;height:1.5px;}
+.faq-icon::after{width:1.5px;height:100%;}
+.faq-item.open .faq-icon::after{transform:translate(-50%,-50%) rotate(90deg) scaleX(0);}
+.faq-a-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease);}
+.faq-item.open .faq-a-wrap{grid-template-rows:1fr;}
+.faq-a{overflow:hidden;}
+.faq-a p{margin:0;padding:0 calc(24*var(--u)) calc(22*var(--u));color:var(--muted);font-size:calc(14.5*var(--u));line-height:1.7;}
+@media (prefers-reduced-motion:reduce){
+  .faq-a-wrap{transition:none;}
+  .faq-icon::before,.faq-icon::after{transition:none;}
+}
+
+.contact{max-width:calc(640*var(--u));margin:0 auto;text-align:center;}
+.contact-links{display:flex;flex-direction:column;align-items:center;gap:calc(18*var(--u));margin-top:calc(14*var(--u));}
+.contact .mail{
+  display:inline-flex;align-items:center;gap:calc(10*var(--u));
+  font-family:var(--serif);font-size:calc(22*var(--u));color:var(--text);border-bottom:1px solid var(--line);
+  padding-bottom:calc(6*var(--u));transition:border-color .3s var(--ease),color .3s var(--ease);
+}
+.contact .mail:hover{color:var(--cyan);border-color:var(--cyan);}
+.phone-row{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(14*var(--u)) calc(28*var(--u));}
+.contact .mail.phone{font-size:calc(17*var(--u));}
+
+.form-divider{display:flex;align-items:center;gap:calc(14*var(--u));margin:calc(44*var(--u)) 0 calc(28*var(--u));
+  color:var(--muted);font-size:calc(13*var(--u));letter-spacing:.04em;}
+.form-divider::before,.form-divider::after{content:"";flex:1;height:1px;background:var(--line);}
+
+.contact-form{display:flex;flex-direction:column;gap:calc(14*var(--u));text-align:left;}
+.contact-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:calc(14*var(--u));}
+@media (max-width:560px){.contact-form .form-row{grid-template-columns:1fr;}}
+/* Visually hidden but still reachable by screen readers/AI agents parsing
+   the DOM — the contact form relies on placeholder text for its visual
+   look, but a placeholder alone is not a real accessible label (it
+   vanishes once typing starts, and isn't reliably exposed by every
+   assistive tech), so each field also gets one of these, linked via
+   for/id. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.contact-form input,.contact-form textarea{
+  width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:calc(10*var(--u));
+  padding:calc(13*var(--u)) calc(16*var(--u));font-family:var(--sans);font-size:calc(15*var(--u));color:var(--text);
+  transition:border-color .25s var(--ease),background .25s var(--ease);
+}
+.contact-form textarea{resize:vertical;min-height:calc(110*var(--u));}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--muted-2);}
+.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--cyan);background:rgba(127,233,222,.05);}
+.contact-form .form-submit{border:0;cursor:pointer;font-family:inherit;align-self:center;margin-top:calc(4*var(--u));min-width:calc(180*var(--u));justify-content:center;}
+.contact-form .form-submit:disabled{opacity:.6;cursor:default;transform:none!important;}
+.form-status{margin:0;text-align:center;font-size:calc(13.5*var(--u));min-height:1.4em;transition:color .25s var(--ease);}
+.form-status.ok{color:var(--cyan);}
+.form-status.err{color:#f0a7a7;}
+
+footer.site-foot{position:relative;z-index:2;padding:calc(30*var(--u)) var(--gutter);border-top:1px solid var(--line);
+  display:flex;flex-direction:column;gap:calc(10*var(--u));
+  font-size:calc(12*var(--u));color:var(--muted);}
+.site-foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:calc(10*var(--u));}
+/* Legal-document links are deliberately plain Hungarian text, not
+   data-i18n — Adatvédelem/ÁSZF/Impresszum/Cookie live only in Hungarian
+   (see public/alexstudio/adatvedelem.html etc.), regardless of which UI
+   language the visitor has picked, so translating the link labels would
+   promise a translation that doesn't exist behind them. */
+.site-foot-legal{font-size:calc(11*var(--u));}
+footer.site-foot a{color:var(--muted);}
+footer.site-foot a:hover{color:var(--cyan);}
+
+/* ============================================================
+   9. RESPONSIVE — tiers 4–6 recompose the composition deliberately
+   ============================================================ */
+@media (max-width:1180px){
+  .headline{font-size:calc(70*var(--u));}
+  .side .frame-shell{width:calc(240*var(--u));}
+  .tagline{font-size:calc(48*var(--u));}
+}
+@media (max-width:980px){
+  .composition{grid-template-columns:calc(120*var(--u)) 1fr calc(120*var(--u));gap:calc(4*var(--u));}
+  .side .frame-shell{width:calc(150*var(--u));}
+  .side .side-label{font-size:calc(14*var(--u));}
+  .side.left{transform:translateX(calc(-30*var(--u)));}
+  .side.right{transform:translateX(calc(30*var(--u)));}
+  .enter.run .side.left{transform:translateX(calc(-30*var(--u)));}
+  .enter.run .side.right{transform:translateX(calc(30*var(--u)));}
+  .headline{font-size:calc(58*var(--u));}
+}
+@media (max-width:760px){
+  .stage{padding-top:calc(150*var(--u));}
+  .showcase{padding-top:calc(70*var(--u));}
+  .composition{grid-template-columns:calc(64*var(--u)) 1fr calc(64*var(--u));}
+  .side .frame-shell{width:calc(84*var(--u));border-radius:calc(10*var(--u));}
+  .side .frame-bar{display:none;}
+  .side .side-label{font-size:calc(11*var(--u));letter-spacing:.05em;}
+  .side.left{transform:translateX(calc(-44*var(--u)));}
+  .side.right{transform:translateX(calc(44*var(--u)));}
+  .enter.run .side.left{transform:translateX(calc(-44*var(--u)));}
+  .enter.run .side.right{transform:translateX(calc(44*var(--u)));}
+  .headline{font-size:calc(46*var(--u));letter-spacing:0;}
+  .tagline{font-size:calc(38*var(--u));max-width:15ch;}
+  .description{font-size:calc(14.5*var(--u));max-width:34ch;}
+  .cta-row{gap:calc(12*var(--u));}
+  .enter-hint{display:none;}
+}
+@media (max-width:479px){
+  .headline{font-size:calc(40*var(--u));}
+  .side .frame-shell{width:calc(58*var(--u));}
+  .composition{grid-template-columns:calc(46*var(--u)) 1fr calc(46*var(--u));}
+  .rule{width:calc(52*var(--u));}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="bg-video-wrap" id="bgVideoWrap">
+    <video class="bg-video" id="bgVideo" muted playsinline preload="none"></video>
+    <video class="bg-video" id="bgVideo2" muted playsinline preload="none"></video>
+  </div>
+  <span class="bg-tint"></span>
+</div>
+<div class="spotlight" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="particles" aria-hidden="true" id="particles"></div>
+<div id="warp" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true" id="scrollProgress"><span></span></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Dormant unless ANALYTICS_ENABLED is flipped to true in the script below
+     (see the "cookie consent" section) — the site currently loads no
+     non-essential cookies/trackers, so there is nothing to ask consent
+     for yet; this stays hidden and inert until that changes. -->
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie-hozzájárulás" hidden>
+  <p data-i18n="cookieBannerText">Sütiket használunk a weboldal működésének elemzésére. Az "Elfogadom" gombbal hozzájárulsz, az "Elutasítom" gombbal csak a feltétlenül szükséges (nyelvi beállítás) tárolás marad aktív.</p>
+  <div class="cookie-banner-actions">
+    <button type="button" class="btn-secondary" id="cookieReject" data-i18n="cookieReject">Elutasítom</button>
+    <button type="button" class="btn-primary" id="cookieAccept" data-i18n="cookieAccept">Elfogadom</button>
+  </div>
+</div>
+
+<header class="nav">
+  <a class="logo" href="#top"><img src="/alexstudio/logo.png" alt="AiStudioBudapest" /></a>
+  <nav class="nav-links" aria-label="Fő navigáció" data-i18n-aria="navAriaPrimary">
+    <a href="#showcase" class="active" data-i18n="navProjects">Projektek</a>
+    <a href="#pricing" data-i18n="navPricing">Árak</a>
+    <a href="#services" data-i18n="navServices">Szolgáltatások</a>
+    <a href="#about" data-i18n="navAbout">Rólunk</a>
+    <a href="#faq" data-i18n="navFaq">GYIK</a>
+    <a href="#contact" data-i18n="navContact">Kapcsolat</a>
+  </nav>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" data-i18n-aria="langAria" aria-label="Nyelv kiválasztása">
+      <span id="langBtnLabel">HU</span>
+      <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="lang-menu" id="langMenu" role="menu"></div>
+  </div>
+  <a class="nav-cta" href="#contact" data-i18n="navCta">Projekt indítása</a>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menü megnyitása">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mnav" id="mnav">
+  <a href="#top" data-i18n="navProjects">Projektek</a>
+  <a href="#pricing" data-i18n="navPricing">Árak</a>
+  <a href="#services" data-i18n="navServices">Szolgáltatások</a>
+  <a href="#about" data-i18n="navAbout">Rólunk</a>
+  <a href="#faq" data-i18n="navFaq">GYIK</a>
+  <a href="#contact" data-i18n="navContact">Kapcsolat</a>
+  <a class="nav-cta" href="#contact" data-i18n="navCta">Projekt indítása</a>
+  <div class="lang-switch-mobile" id="langSwitchMobile" role="group" data-i18n-aria="langAria" aria-label="Nyelv kiválasztása"></div>
+</div>
+
+<section class="hero enter" id="top">
+  <div class="eyebrow-wrap">
+    <span class="dot"></span>
+    <span class="eyebrow" data-i18n="heroEyebrow">Webdesign</span>
+  </div>
+  <h1 class="tagline">Prémium webdesign, amely az ambiciózus márkákat pályára állítja.</h1>
+  <p class="hero-sub" data-i18n="heroSub">Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.</p>
+  <div class="scroll-cue" aria-hidden="true"><span></span></div>
+</section>
+
+<main id="showcase" class="stage showcase enter">
+  <div class="eyebrow-wrap">
+    <span class="dot"></span>
+    <span class="eyebrow" data-i18n="showcaseEyebrow">Kiemelt munkák</span>
+  </div>
+
+  <div class="headline-group" id="headlineGroup">
+    <h1 class="headline" id="headline" aria-live="polite">
+      <span class="mask"><span style="--d:.05s">PRÉMIUM</span></span>
+    </h1>
+    <div class="rule"></div>
+  </div>
+
+  <div class="composition">
+    <button type="button" class="side left" id="sideLeft" data-key="esszencia" aria-label="ESSZENCIA megtekintése">
+      <span class="side-label">ESSZENCIA</span>
+      <span class="preview-slot" data-slot-for="esszencia"></span>
+    </button>
+
+    <div class="center-col">
+      <div class="stack" id="stack" title="Belépés az oldalra" data-i18n-title="stackTitle">
+        <span class="orbit-wrap" id="orbitWrap" aria-hidden="true">
+          <span class="orbit-ring"></span>
+          <span class="orbit-ring b"></span>
+        </span>
+        <div class="tilt" id="tilt">
+          <div class="preview-slot center" id="centerSlot" data-slot-for="premium"></div>
+        </div>
+        <span class="enter-hint" aria-hidden="true" data-i18n="enterHint">Belépés az oldalra ↗</span>
+      </div>
+    </div>
+
+    <button type="button" class="side right" id="sideRight" data-key="presztizs" aria-label="PRESZTÍZS megtekintése">
+      <span class="side-label">PRESZTÍZS</span>
+      <span class="preview-slot" data-slot-for="presztizs"></span>
+    </button>
+  </div>
+
+  <p class="description" id="description">Teljes körű prémium webes élmény, amely több oldalt, magával ragadó vizuális világot, egyedi interakciókat és markáns digitális arculatot egyesít.</p>
+
+  <div class="cta-row">
+    <a class="btn-primary" id="viewProject" href="/index.html" aria-label="Projekt megtekintése: PRÉMIUM" data-i18n="ctaViewProject">Projekt megtekintése ↗</a>
+    <a class="btn-secondary" href="#contact" data-i18n="ctaWorkTogether">Dolgozzunk együtt</a>
+  </div>
+
+  <div class="meta-row">
+    <span class="dash"></span>
+    <span class="index" id="metaIndex">03 / 03</span>
+    <span id="metaCategory">PRÉMIUM WEBOLDAL</span>
+    <span class="dash"></span>
+  </div>
+
+  <a href="#pricing" class="scroll-arrow" aria-label="Görgess az árak megtekintéséhez" data-i18n-aria="scrollArrowAria">
+    <span class="scroll-arrow-label" data-i18n="scrollArrowLabel">Árak</span>
+    <span class="scroll-arrow-chevrons" aria-hidden="true"><span></span><span></span><span></span></span>
+  </a>
+</main>
+
+<!-- Persistent live-preview iframes. They are moved between slots by the
+     switcher script — never destroyed, never re-sourced — so no project
+     preview ever reloads or flashes when the featured project changes. -->
+<div class="projects" aria-hidden="true">
+  <div class="project" data-project="esszencia">
+    <div class="frame-shell"><span class="frame-glow"></span>
+      <div class="frame-bar"><i></i><i></i><i></i><span class="url">esszencia — egyoldalas weboldal</span></div>
+      <div class="frame-view"><iframe src="/esszencia/index.html" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
+    </div>
+  </div>
+  <div class="project" data-project="presztizs">
+    <div class="frame-shell"><span class="frame-glow"></span>
+      <div class="frame-bar"><i></i><i></i><i></i><span class="url">presztízs — üzleti weboldal</span></div>
+      <div class="frame-view"><iframe src="/presztizs/index.html" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
+    </div>
+  </div>
+  <div class="project" data-project="premium">
+    <div class="frame-shell"><span class="frame-glow"></span>
+      <div class="frame-bar"><i></i><i></i><i></i><span class="url">prémium — teljes élmény</span></div>
+      <div class="frame-view"><iframe src="/index.html?embed=1" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
+    </div>
+  </div>
+</div>
+
+<section class="band" id="pricing">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="pricingEyebrow">Csomagok és árak</span>
+    <h2 data-i18n="pricingH2">Három szint, egyértelmű árakkal</h2>
+    <p data-i18n="pricingP">Válaszd a vállalkozásodhoz illő szintet — mindegyik rögzített tartalommal, nem induló ártól.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card band-reveal">
+      <h3>Esszencia</h3>
+      <div class="price">149&nbsp;900&nbsp;Ft</div>
+      <p class="maint" id="pricingEsszMaint"><span class="maint-rate">+ 15&nbsp;000&nbsp;Ft/hó karbantartás</span><span class="maint-note">az indulástól</span></p>
+      <ul id="pricingEsszList">
+        <li>1 oldalas weboldal</li>
+        <li>Bemutatkozás és elérhetőségek</li>
+        <li>Nyitvatartás és fotók</li>
+      </ul>
+    </div>
+    <div class="pricing-card band-reveal">
+      <h3>Presztízs</h3>
+      <div class="price">199&nbsp;900&nbsp;Ft</div>
+      <p class="maint" id="pricingPresztMaint"><span class="maint-rate">+ 25&nbsp;000&nbsp;Ft/hó karbantartás</span><span class="maint-note">(1 hét ingyenes)</span></p>
+      <ul id="pricingPresztList">
+        <li>Minden, ami az Esszenciában</li>
+        <li>2 oldalas weboldal</li>
+        <li>Online időpontfoglalás</li>
+        <li>Fotógaléria</li>
+        <li>Kapcsolati űrlap</li>
+      </ul>
+    </div>
+    <div class="pricing-card band-reveal featured">
+      <h3>Prémium</h3>
+      <div class="price">349&nbsp;900&nbsp;Ft</div>
+      <p class="maint" id="pricingPremMaint"><span class="maint-rate">+ 35&nbsp;000&nbsp;Ft/hó karbantartás</span><span class="maint-note">(2 hét ingyenes)</span></p>
+      <ul id="pricingPremList">
+        <li>Minden, ami a Presztízsben</li>
+        <li>5 vagy több oldal</li>
+        <li>Több szolgáltatás bemutatása</li>
+        <li>Blog</li>
+        <li>Vendégértékelések</li>
+        <li>Egyedi dizájn és animációk</li>
+      </ul>
+    </div>
+  </div>
+  <p class="pricing-note band-reveal" data-i18n="pricingMaintNote">A havi karbantartás fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.</p>
+</section>
+
+<section class="band" id="services">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="servicesEyebrow">Amit építünk</span>
+    <h2 data-i18n="servicesH2">Három szint, egy színvonal</h2>
+    <p data-i18n="servicesP">Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="service1Title">Egyoldalas weboldalak</h3><p data-i18n="service1Desc">Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást, és hívásokká alakítja a látogatókat.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="service2Title">Üzleti weboldalak</h3><p data-i18n="service2Desc">Több szekcióból álló oldalak szolgáltatásokkal, galériákkal, foglalási folyamattal és igény esetén kétnyelvű tartalommal.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="service3Title">Prémium élmények</h3><p data-i18n="service3Desc">Teljesen egyedi, animált, több oldalas digitális élmények azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat.</p></div>
+  </div>
+</section>
+
+<section class="band" id="about">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="aboutEyebrow">Rólunk</span>
+    <h2>AiStudioBudapest</h2>
+  </div>
+  <div class="about">
+    <p class="band-reveal" data-i18n="aboutText">Alex és Theo vagyunk, két fiatal vállalkozó, akiket a digitális technológia és a webdesign iránti szenvedély hajt. Modern, nagy teljesítményű weboldalakat készítünk a legújabb mesterséges intelligencia technológiák felhasználásával, hogy segítsünk a vállalkozásoknak javítani online jelenlétüket és növelni üzletüket.</p>
+  </div>
+</section>
+
+<section class="band" id="faq">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="faqEyebrow">GYIK</span>
+    <h2 data-i18n="faqH2">Kérdések és válaszok</h2>
+    <p data-i18n="faqP">Még bizonytalan vagy valamiben? Íme, amit a legtöbben kérdeznek egy projekt indítása előtt.</p>
+  </div>
+  <!-- Static Hungarian fallback, replaced by renderFaq() on load/language
+       change — kept here (same markup shape JS builds) so the content
+       still exists for no-JS visitors, screen readers hitting this before
+       scripts run, and crawlers/AI agents that don't execute JS at all. -->
+  <div class="faq-list" id="faqList">
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Mennyi ideig tart egy projekt?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Az Esszencia jellemzően 3–4 nap alatt elkészül, a Presztízs 4–7 nap, a Prémium 7–12 nap alatt — attól függően, milyen gyorsan érkezik vissza a tartalom és a visszajelzés.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Mi van benne az árban?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>A tervezés, a fejlesztés és az első kör tartalom feltöltése a megadott szöveg, fotók és elérhetőségek alapján. Az indulás utáni módosításokat egy opcionális havi karbantartási csomag fedezi.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Frissíthetem magam a tartalmat indulás után?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Az Esszenciánál és a Presztízsnél bármikor kérhetők kisebb szöveg- vagy fotómódosítások. A Prémium teljesen egyedi felépítése miatt ott a módosítások jellemzően rajtunk keresztül mennek, hogy a dizájn épségben maradjon.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Ti intézitek a tárhelyet és a domain nevet?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Igen — a nulláról beállítjuk a tárhelyet és a domain nevet, vagy dolgozunk egy már meglévő domaineddel is.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Mi van, ha később több oldalra vagy funkcióra lesz szükségem?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Minden szint bővíthető. Amint tudjuk, mire van szükséged — egy extra oldalra, egy új szekcióra, egy funkcióra —, azt külön árazzuk, nem kötünk az eredeti tartalomhoz.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Vállaltok folyamatos karbantartást?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="contact">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="contactEyebrow">Kapcsolat</span>
+    <h2 data-i18n="contactH2">Építsünk valami prémiumot</h2>
+    <p data-i18n="contactP">Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.</p>
+  </div>
+  <div class="contact band-reveal">
+    <div class="contact-links">
+      <a class="mail" href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a>
+      <div class="phone-row">
+        <a class="mail phone" href="tel:+36309476955">+36 30 947 6955</a>
+        <a class="mail phone" href="tel:+36703682482">+36 70 368 2482</a>
+      </div>
+    </div>
+
+    <div class="form-divider"><span data-i18n="formDivider">Van egy konkrétabb kérdésed?</span></div>
+
+    <form class="contact-form" id="contactForm" action="https://formsubmit.co/ajax/aistudiobudapest@gmail.com" method="POST">
+      <input type="hidden" name="_subject" id="formSubjectInput" value="Új üzenet az AiStudioBudapest oldalról">
+      <div class="form-row">
+        <div>
+          <label class="sr-only" for="formNameInput" data-i18n="formName">Neved</label>
+          <input type="text" id="formNameInput" name="name" placeholder="Neved" autocomplete="name" required data-i18n-placeholder="formName">
+        </div>
+        <div>
+          <label class="sr-only" for="formEmailInput" data-i18n="formEmail">E-mail címed</label>
+          <input type="email" id="formEmailInput" name="email" placeholder="E-mail címed" autocomplete="email" required data-i18n-placeholder="formEmail">
+        </div>
+      </div>
+      <label class="sr-only" for="formMessageInput" data-i18n="formMessage">Mesélj a projektedről vagy a kérdésedről…</label>
+      <textarea id="formMessageInput" name="message" placeholder="Mesélj a projektedről vagy a kérdésedről…" rows="4" required data-i18n-placeholder="formMessage"></textarea>
+      <button type="submit" class="btn-primary form-submit">
+        <span class="form-submit-label" data-i18n="formSubmit">Üzenet küldése</span>
+      </button>
+      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="site-foot-row">
+    <span>© 2026 AiStudioBudapest</span>
+    <span><a href="#top" data-i18n="navProjects">Projektek</a> · <a href="#pricing" data-i18n="navPricing">Árak</a> · <a href="#services" data-i18n="navServices">Szolgáltatások</a> · <a href="#about" data-i18n="navAbout">Rólunk</a> · <a href="#faq" data-i18n="navFaq">GYIK</a> · <a href="#contact" data-i18n="navContact">Kapcsolat</a></span>
+  </div>
+  <div class="site-foot-row site-foot-legal">
+    <span><a href="/alexstudio/impresszum.html">Impresszum</a> · <a href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a> · <a href="/alexstudio/aszf.html">ÁSZF</a> · <a href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ----------------------------------------------------------
+   Project data — the single source of truth for the switcher.
+   Replace `.url` for each project once real domains exist. Name/url/
+   index never change with language (proper nouns + routes); category/
+   description/urlLabel are looked up per-language from PROJECT_I18N
+   below (see projectText()).
+---------------------------------------------------------- */
+var ORDER = ['esszencia','presztizs','premium'];
+var PROJECTS = {
+  esszencia:{ name:'ESSZENCIA', index:1, url:'/esszencia/index.html' },
+  presztizs:{ name:'PRESZTÍZS', index:2, url:'/presztizs/index.html' },
+  premium:{ name:'PRÉMIUM', index:3, url:'/index.html' }
+};
+
+var PROJECT_I18N = {
+  esszencia:{
+    hu:{ category:'EGYOLDALAS WEBOLDAL', description:'Elegáns, konverzióra optimalizált egyoldalas megoldás, amely világosan és igényesen mutatja be a vállalkozást, arculatát és szolgáltatásait.', urlLabel:'esszencia — egyoldalas weboldal' },
+    en:{ category:'ONE-PAGE WEBSITE', description:'An elegant and conversion-focused one-page experience designed to present a business, its identity and its services with clarity and sophistication.', urlLabel:'esszencia — one-page website' },
+    fr:{ category:'SITE UNE PAGE', description:'Une expérience élégante et optimisée pour la conversion, qui présente une entreprise, son identité et ses services avec clarté et raffinement.', urlLabel:'esszencia — site une page' },
+    es:{ category:'SITIO DE UNA PÁGINA', description:'Una experiencia elegante y orientada a la conversión, diseñada para presentar un negocio, su identidad y sus servicios con claridad y sofisticación.', urlLabel:'esszencia — sitio de una página' },
+    de:{ category:'ONE-PAGE-WEBSITE', description:'Eine elegante, konversionsorientierte One-Page-Erfahrung, die ein Unternehmen, seine Identität und seine Leistungen klar und anspruchsvoll präsentiert.', urlLabel:'esszencia — one-page-website' }
+  },
+  presztizs:{
+    hu:{ category:'ÜZLETI WEBOLDAL', description:'Igényes, több szekcióból álló weboldal azoknak a vállalkozásoknak, amelyek erősebb online jelenlétet szeretnének — szolgáltatásokkal, galériával, foglalással és kapcsolatfelvétellel.', urlLabel:'presztízs — üzleti weboldal' },
+    en:{ category:'BUSINESS WEBSITE', description:'A sophisticated multi-section website designed for businesses that want a stronger digital presence, with services, gallery, booking and contact experiences.', urlLabel:'presztízs — business website' },
+    fr:{ category:'SITE PROFESSIONNEL', description:'Un site à plusieurs sections, pensé pour les entreprises qui veulent une présence numérique plus forte — services, galerie, réservation et prise de contact.', urlLabel:'presztízs — site professionnel' },
+    es:{ category:'SITIO EMPRESARIAL', description:'Un sitio sofisticado de varias secciones para negocios que buscan una presencia digital más sólida, con servicios, galería, reservas y contacto.', urlLabel:'presztízs — sitio empresarial' },
+    de:{ category:'BUSINESS-WEBSITE', description:'Eine anspruchsvolle, mehrteilige Website für Unternehmen, die eine stärkere digitale Präsenz wollen — mit Leistungen, Galerie, Buchung und Kontakt.', urlLabel:'presztízs — business-website' }
+  },
+  premium:{
+    hu:{ category:'PRÉMIUM WEBOLDAL', description:'Teljes körű prémium webes élmény, amely több oldalt, magával ragadó vizuális világot, egyedi interakciókat és markáns digitális arculatot egyesít.', urlLabel:'prémium — teljes élmény' },
+    en:{ category:'PREMIUM WEBSITE', description:'A complete premium web experience combining multiple pages, immersive visuals, custom interactions and a distinctive digital identity.', urlLabel:'prémium — full experience' },
+    fr:{ category:'SITE PRÉMIUM', description:'Une expérience web prémium complète, combinant plusieurs pages, des visuels immersifs, des interactions sur mesure et une identité numérique marquante.', urlLabel:'prémium — expérience complète' },
+    es:{ category:'SITIO PRÉMIUM', description:'Una experiencia web prémium completa que combina varias páginas, visuales envolventes, interacciones a medida y una identidad digital distintiva.', urlLabel:'prémium — experiencia completa' },
+    de:{ category:'PREMIUM-WEBSITE', description:'Ein vollständiges Premium-Weberlebnis mit mehreren Seiten, mitreißenden Visuals, individuellen Interaktionen und einer markanten digitalen Identität.', urlLabel:'prémium — komplettes erlebnis' }
+  }
+};
+function projectText(key){ return PROJECT_I18N[key][currentLang] || PROJECT_I18N[key].hu; }
+
+/* ----------------------------------------------------------
+   i18n — Hungarian is the primary/default language; English, French,
+   Spanish and German are the secondary ones (see LANGS order, which
+   also drives the switcher menu). Everything the visitor can read,
+   including aria-labels and JS-generated strings, comes from here —
+   see applyLang() further down for how it's applied. Faithful,
+   idiomatic translations rather than literal ones; pricing stays in
+   Ft (Hungarian forint) in every language since this is a Hungarian
+   business quoting real Hungarian prices, not a currency conversion.
+---------------------------------------------------------- */
+var LANGS = ['hu','en','fr','es','de'];
+var LANG_NAMES = { hu:'Magyar', en:'English', fr:'Français', es:'Español', de:'Deutsch' };
+var LANG_STORAGE_KEY = 'aistudio_lang';
+
+var T = {
+hu:{
+  metaTitle:'AiStudioBudapest — Prémium Webdesign Portfólió',
+  metaDesc:'AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.',
+  navAriaPrimary:'Fő navigáció', navProjects:'Projektek', navPricing:'Árak', navServices:'Szolgáltatások',
+  navAbout:'Rólunk', navFaq:'GYIK', navContact:'Kapcsolat', navCta:'Projekt indítása',
+  burgerOpen:'Menü megnyitása', burgerClose:'Menü bezárása', langAria:'Nyelv kiválasztása',
+  heroEyebrow:'Webdesign',
+  heroTagline:'Prémium webdesign, amely az ambiciózus márkákat pályára állítja.',
+  heroSub:'Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.',
+  showcaseEyebrow:'Kiemelt munkák',
+  stackTitle:'Belépés az oldalra', enterHint:'Belépés az oldalra ↗',
+  ctaViewProject:'Projekt megtekintése ↗', ctaWorkTogether:'Dolgozzunk együtt',
+  ariaView:function(name){ return name + ' megtekintése'; },
+  ariaViewProject:function(name){ return 'Projekt megtekintése: ' + name; },
+  scrollArrowLabel:'Árak', scrollArrowAria:'Görgess az árak megtekintéséhez',
+  pricingEyebrow:'Csomagok és árak', pricingH2:'Három szint, egyértelmű árakkal',
+  pricingP:'Válaszd a vállalkozásodhoz illő szintet — mindegyik rögzített tartalommal, nem induló ártól.',
+  pricingEsszFeatures:['1 oldalas weboldal','Bemutatkozás és elérhetőségek','Nyitvatartás és fotók'],
+  pricingPresztFeatures:['Minden, ami az Esszenciában','2 oldalas weboldal','Online időpontfoglalás','Fotógaléria','Kapcsolati űrlap'],
+  pricingPremFeatures:['Minden, ami a Presztízsben','5 vagy több oldal','Több szolgáltatás bemutatása','Blog','Vendégértékelések','Egyedi dizájn és animációk'],
+  pricingEsszMaint:{rate:'+ 15 000 Ft/hó karbantartás', note:'az indulástól'},
+  pricingPresztMaint:{rate:'+ 25 000 Ft/hó karbantartás', note:'(1 hét ingyenes)'},
+  pricingPremMaint:{rate:'+ 35 000 Ft/hó karbantartás', note:'(2 hét ingyenes)'},
+  pricingMaintNote:'A havi karbantartás fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.',
+  servicesEyebrow:'Amit építünk', servicesH2:'Három szint, egy színvonal',
+  servicesP:'Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.',
+  service1Title:'Egyoldalas weboldalak', service1Desc:'Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást, és hívásokká alakítja a látogatókat.',
+  service2Title:'Üzleti weboldalak', service2Desc:'Több szekcióból álló oldalak szolgáltatásokkal, galériákkal, foglalási folyamattal és igény esetén kétnyelvű tartalommal.',
+  service3Title:'Prémium élmények', service3Desc:'Teljesen egyedi, animált, több oldalas digitális élmények azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat.',
+  aboutEyebrow:'Rólunk',
+  aboutText:'Alex és Theo vagyunk, két fiatal vállalkozó, akiket a digitális technológia és a webdesign iránti szenvedély hajt. Modern, nagy teljesítményű weboldalakat készítünk a legújabb mesterséges intelligencia technológiák felhasználásával, hogy segítsünk a vállalkozásoknak javítani online jelenlétüket és növelni üzletüket.',
+  faqEyebrow:'GYIK', faqH2:'Kérdések és válaszok',
+  faqP:'Még bizonytalan vagy valamiben? Íme, amit a legtöbben kérdeznek egy projekt indítása előtt.',
+  faqItems:[
+    {q:'Mennyi ideig tart egy projekt?', a:'Az Esszencia jellemzően 3–4 nap alatt elkészül, a Presztízs 4–7 nap, a Prémium 7–12 nap alatt — attól függően, milyen gyorsan érkezik vissza a tartalom és a visszajelzés.'},
+    {q:'Mi van benne az árban?', a:'A tervezés, a fejlesztés és az első kör tartalom feltöltése a megadott szöveg, fotók és elérhetőségek alapján. Az indulás utáni módosításokat egy opcionális havi karbantartási csomag fedezi.'},
+    {q:'Frissíthetem magam a tartalmat indulás után?', a:'Az Esszenciánál és a Presztízsnél bármikor kérhetők kisebb szöveg- vagy fotómódosítások. A Prémium teljesen egyedi felépítése miatt ott a módosítások jellemzően rajtunk keresztül mennek, hogy a dizájn épségben maradjon.'},
+    {q:'Ti intézitek a tárhelyet és a domain nevet?', a:'Igen — a nulláról beállítjuk a tárhelyet és a domain nevet, vagy dolgozunk egy már meglévő domaineddel is.'},
+    {q:'Mi van, ha később több oldalra vagy funkcióra lesz szükségem?', a:'Minden szint bővíthető. Amint tudjuk, mire van szükséged — egy extra oldalra, egy új szekcióra, egy funkcióra —, azt külön árazzuk, nem kötünk az eredeti tartalomhoz.'},
+    {q:'Vállaltok folyamatos karbantartást?', a:'Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.'}
+  ],
+  contactEyebrow:'Kapcsolat', contactH2:'Építsünk valami prémiumot',
+  contactP:'Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.',
+  formDivider:'Van egy konkrétabb kérdésed?', formName:'Neved', formEmail:'E-mail címed',
+  formMessage:'Mesélj a projektedről vagy a kérdésedről…', formSubmit:'Üzenet küldése', formSending:'Küldés…',
+  formSuccess:'Köszönjük — hamarosan jelentkezünk.', formError:'Hiba történt — kérjük, írj közvetlenül e-mailben.',
+  formSubject:'Új üzenet az AiStudioBudapest oldalról',
+  cookieBannerText:'Sütiket használunk a weboldal működésének elemzésére. Az "Elfogadom" gombbal hozzájárulsz, az "Elutasítom" gombbal csak a feltétlenül szükséges (nyelvi beállítás) tárolás marad aktív.',
+  cookieAccept:'Elfogadom', cookieReject:'Elutasítom'
+},
+en:{
+  metaTitle:'AiStudioBudapest — Premium Web Design Portfolio',
+  metaDesc:'AiStudioBudapest — I design and build premium websites. Explore three live prototypes: Esszencia, Presztízs, Prémium.',
+  navAriaPrimary:'Primary', navProjects:'Projects', navPricing:'Pricing', navServices:'Services',
+  navAbout:'About', navFaq:'FAQ', navContact:'Contact', navCta:'Start a project',
+  burgerOpen:'Open menu', burgerClose:'Close menu', langAria:'Choose language',
+  heroEyebrow:'Web Design',
+  heroTagline:'Premium web design, built to send ambitious brands into orbit.',
+  heroSub:'Three tiers of craft, from a focused one-page site to a fully custom premium experience — scroll down to explore them live.',
+  showcaseEyebrow:'Selected Work',
+  stackTitle:'Enter the site', enterHint:'Enter the site ↗',
+  ctaViewProject:'View project ↗', ctaWorkTogether:"Let's work together",
+  ariaView:function(name){ return 'View ' + name; },
+  ariaViewProject:function(name){ return 'View project: ' + name; },
+  scrollArrowLabel:'See pricing', scrollArrowAria:'Scroll to see pricing',
+  pricingEyebrow:'Formulas & pricing', pricingH2:'Three tiers, one price each',
+  pricingP:'Pick the level that fits the business — each one is a fixed scope, not a starting-from price.',
+  pricingEsszFeatures:['1-page website','Introduction and contact details','Opening hours and photos'],
+  pricingPresztFeatures:['Everything in Esszencia','2-page website','Online appointment booking','Photo gallery','Contact form'],
+  pricingPremFeatures:['Everything in Presztízs','5 or more pages','Multiple services presented','Blog','Guest reviews','Custom design and animations'],
+  pricingEsszMaint:{rate:'+ 15,000 Ft/month maintenance', note:'from launch'},
+  pricingPresztMaint:{rate:'+ 25,000 Ft/month maintenance', note:'(1 week free)'},
+  pricingPremMaint:{rate:'+ 35,000 Ft/month maintenance', note:'(2 weeks free)'},
+  pricingMaintNote:'Monthly maintenance covers hosting, the domain name, updates, backups and small fixes.',
+  servicesEyebrow:'What I build', servicesH2:'Three tiers, one standard',
+  servicesP:'Every project is designed and coded from scratch to fit the ambition — and the budget — of the business behind it.',
+  service1Title:'One-page websites', service1Desc:'A focused, elegant single page that presents a business clearly and converts visitors into calls.',
+  service2Title:'Business websites', service2Desc:'Multi-section sites with services, galleries, booking flows and bilingual content where needed.',
+  service3Title:'Premium experiences', service3Desc:'Fully custom, animated, multi-page digital experiences for brands that want to lead their category.',
+  aboutEyebrow:'About',
+  aboutText:'We are Alex and Theo, two young entrepreneurs passionate about digital technology and web design. We create modern, high-performance websites using the latest artificial intelligence technologies to help businesses improve their online presence and grow their business.',
+  faqEyebrow:'FAQ', faqH2:'Questions, answered',
+  faqP:"Still unsure about something? Here's what people usually ask before starting a project.",
+  faqItems:[
+    {q:'How long does a project take?', a:'Esszencia typically ships in 3–4 days, Presztízs in 4–7 days, and Prémium in 7–12 days — it depends on how quickly content and feedback come back to us.'},
+    {q:"What's included in the price?", a:'Design, development, and the first round of content using the text, photos and contact details you provide. Changes after launch are covered by an optional monthly maintenance plan.'},
+    {q:'Can I update the content myself after launch?', a:"For Esszencia and Presztízs, small text or photo changes can be requested anytime. Prémium's fully custom build usually goes through us so the design stays intact."},
+    {q:'Do you handle hosting and the domain name?', a:'Yes — we can set up hosting and a domain name for you from scratch, or work with a domain you already own.'},
+    {q:'What if I need more pages or features later?', a:'Every tier can grow. Once we know what you need — an extra page, a new section, a feature — we quote it separately rather than locking you into the original scope.'},
+    {q:'Do you offer ongoing maintenance?', a:"Yes — you'll find the exact monthly rates next to the prices above. It covers hosting, the domain name, updates, backups and small fixes."}
+  ],
+  contactEyebrow:'Contact', contactH2:"Let's build something premium",
+  contactP:"Tell me about your business and I'll recommend the right tier — Esszencia, Presztízs, or Prémium.",
+  formDivider:'Have a more specific request?', formName:'Your name', formEmail:'Your email',
+  formMessage:'Tell us about your project or question…', formSubmit:'Send message', formSending:'Sending…',
+  formSuccess:"Thanks — we'll get back to you soon.", formError:'Something went wrong — please email us directly instead.',
+  formSubject:'New message from the AiStudioBudapest site',
+  cookieBannerText:'We use cookies to analyze how the site is used. Accept to allow this, or decline to keep only the strictly necessary (language preference) storage active.',
+  cookieAccept:'Accept', cookieReject:'Decline'
+},
+fr:{
+  metaTitle:'AiStudioBudapest — Portfolio Webdesign Premium',
+  metaDesc:'AiStudioBudapest — je conçois et développe des sites web premium. Découvrez trois prototypes en direct : Esszencia, Presztízs, Prémium.',
+  navAriaPrimary:'Navigation principale', navProjects:'Projets', navPricing:'Tarifs', navServices:'Services',
+  navAbout:'À propos', navFaq:'FAQ', navContact:'Contact', navCta:'Démarrer un projet',
+  burgerOpen:'Ouvrir le menu', burgerClose:'Fermer le menu', langAria:'Choisir la langue',
+  heroEyebrow:'Webdesign',
+  heroTagline:'Un webdesign premium, conçu pour propulser les marques ambitieuses en orbite.',
+  heroSub:"Trois niveaux de savoir-faire, du site une page à l'expérience premium entièrement sur mesure — défilez pour les découvrir en direct.",
+  showcaseEyebrow:'Travaux sélectionnés',
+  stackTitle:'Entrer sur le site', enterHint:'Entrer sur le site ↗',
+  ctaViewProject:'Voir le projet ↗', ctaWorkTogether:'Travaillons ensemble',
+  ariaView:function(name){ return 'Voir ' + name; },
+  ariaViewProject:function(name){ return 'Voir le projet : ' + name; },
+  scrollArrowLabel:'Voir les tarifs', scrollArrowAria:'Défiler pour voir les tarifs',
+  pricingEyebrow:'Formules et tarifs', pricingH2:'Trois niveaux, un tarif clair chacun',
+  pricingP:"Choisissez le niveau adapté à l'entreprise — chacun a un contenu fixe, pas un tarif « à partir de ».",
+  pricingEsszFeatures:['Site web 1 page','Présentation et coordonnées','Horaires et photos'],
+  pricingPresztFeatures:["Tout ce qu'il y a dans Esszencia",'Site web 2 pages','Prise de rendez-vous en ligne','Galerie photo','Formulaire de contact'],
+  pricingPremFeatures:["Tout ce qu'il y a dans Presztízs",'5 pages ou plus','Présentation de plusieurs services','Blog','Avis clients','Design et animations sur mesure'],
+  pricingEsszMaint:{rate:'+ 15 000 Ft/mois d\'entretien', note:'dès le lancement'},
+  pricingPresztMaint:{rate:'+ 25 000 Ft/mois d\'entretien', note:'(1 semaine offerte)'},
+  pricingPremMaint:{rate:'+ 35 000 Ft/mois d\'entretien', note:'(2 semaines offertes)'},
+  pricingMaintNote:"L'entretien mensuel couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections.",
+  servicesEyebrow:'Ce que je construis', servicesH2:'Trois niveaux, une seule exigence',
+  servicesP:"Chaque projet est conçu et codé à partir de zéro pour correspondre à l'ambition — et au budget — de l'entreprise concernée.",
+  service1Title:'Sites une page', service1Desc:'Une page unique, focalisée et élégante, qui présente clairement une entreprise et transforme les visiteurs en appels.',
+  service2Title:'Sites professionnels', service2Desc:'Sites à plusieurs sections avec services, galeries, prise de rendez-vous et contenu bilingue si besoin.',
+  service3Title:'Expériences premium', service3Desc:'Expériences numériques entièrement sur mesure, animées et multi-pages, pour les marques qui veulent dominer leur catégorie.',
+  aboutEyebrow:'À propos',
+  aboutText:"Nous sommes Alex et Theo, deux jeunes entrepreneurs passionnés de technologie numérique et de webdesign. Nous créons des sites modernes et performants grâce aux dernières technologies d'intelligence artificielle, pour aider les entreprises à améliorer leur présence en ligne et à développer leur activité.",
+  faqEyebrow:'FAQ', faqH2:'Questions fréquentes',
+  faqP:"Encore une hésitation ? Voici ce qu'on nous demande le plus souvent avant de démarrer un projet.",
+  faqItems:[
+    {q:'Combien de temps prend un projet ?', a:"L'Esszencia est généralement livré en 3 à 4 jours, le Presztízs en 4 à 7 jours, et le Prémium en 7 à 12 jours — selon la rapidité à laquelle le contenu et les retours nous parviennent."},
+    {q:"Qu'est-ce qui est inclus dans le prix ?", a:'La conception, le développement et la première mise en place du contenu à partir du texte, des photos et des coordonnées fournis. Les modifications après le lancement sont couvertes par un forfait de maintenance mensuel optionnel.'},
+    {q:'Puis-je modifier le contenu moi-même après le lancement ?', a:"Pour l'Esszencia et le Presztízs, de petites modifications de texte ou de photos peuvent être demandées à tout moment. Pour le Prémium, entièrement sur mesure, les modifications passent généralement par nous afin de préserver le design."},
+    {q:'Vous occupez-vous de l’hébergement et du nom de domaine ?', a:"Oui — nous pouvons configurer l'hébergement et un nom de domaine de A à Z, ou travailler avec un domaine que vous possédez déjà."},
+    {q:"Et si j'ai besoin de plus de pages ou de fonctionnalités plus tard ?", a:'Chaque formule peut évoluer. Une fois que nous savons ce dont vous avez besoin — une page en plus, une nouvelle section, une fonctionnalité — nous la chiffrons séparément, sans vous enfermer dans le périmètre initial.'},
+    {q:'Proposez-vous une maintenance continue ?', a:"Oui — vous trouverez les tarifs mensuels exacts à côté des prix plus haut. Cela couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections."}
+  ],
+  contactEyebrow:'Contact', contactH2:'Construisons quelque chose de premium',
+  contactP:"Parlez-moi de votre entreprise, et je vous recommanderai la formule adaptée — Esszencia, Presztízs ou Prémium.",
+  formDivider:'Une demande plus précise ?', formName:'Votre nom', formEmail:'Votre e-mail',
+  formMessage:'Parlez-nous de votre projet ou de votre question…', formSubmit:'Envoyer le message', formSending:'Envoi…',
+  formSuccess:'Merci — nous revenons vers vous bientôt.', formError:'Une erreur est survenue — écrivez-nous directement par e-mail.',
+  formSubject:'Nouveau message du site AiStudioBudapest',
+  cookieBannerText:"Nous utilisons des cookies pour analyser l'utilisation du site. Acceptez pour les autoriser, ou refusez pour ne garder que le stockage strictement nécessaire (préférence de langue).",
+  cookieAccept:'Accepter', cookieReject:'Refuser'
+},
+es:{
+  metaTitle:'AiStudioBudapest — Portafolio de Diseño Web Prémium',
+  metaDesc:'AiStudioBudapest — diseño y desarrollo sitios web prémium. Descubre los tres prototipos en vivo: Esszencia, Presztízs, Prémium.',
+  navAriaPrimary:'Navegación principal', navProjects:'Proyectos', navPricing:'Precios', navServices:'Servicios',
+  navAbout:'Nosotros', navFaq:'Preguntas', navContact:'Contacto', navCta:'Iniciar un proyecto',
+  burgerOpen:'Abrir menú', burgerClose:'Cerrar menú', langAria:'Elegir idioma',
+  heroEyebrow:'Diseño web',
+  heroTagline:'Diseño web prémium, hecho para poner en órbita a las marcas ambiciosas.',
+  heroSub:'Tres niveles de artesanía digital, desde un sitio de una página hasta una experiencia prémium totalmente a medida — desplázate para descubrirlos en vivo.',
+  showcaseEyebrow:'Trabajos destacados',
+  stackTitle:'Entrar al sitio', enterHint:'Entrar al sitio ↗',
+  ctaViewProject:'Ver proyecto ↗', ctaWorkTogether:'Trabajemos juntos',
+  ariaView:function(name){ return 'Ver ' + name; },
+  ariaViewProject:function(name){ return 'Ver proyecto: ' + name; },
+  scrollArrowLabel:'Ver precios', scrollArrowAria:'Desplázate para ver los precios',
+  pricingEyebrow:'Planes y precios', pricingH2:'Tres niveles, un precio claro cada uno',
+  pricingP:'Elige el nivel adecuado para tu negocio — cada uno con un alcance fijo, no un precio "desde".',
+  pricingEsszFeatures:['Sitio web de 1 página','Presentación y datos de contacto','Horario y fotos'],
+  pricingPresztFeatures:['Todo lo de Esszencia','Sitio web de 2 páginas','Reserva de citas en línea','Galería de fotos','Formulario de contacto'],
+  pricingPremFeatures:['Todo lo de Presztízs','5 páginas o más','Presentación de varios servicios','Blog','Reseñas de clientes','Diseño y animaciones a medida'],
+  pricingEsszMaint:{rate:'+ 15 000 Ft/mes de mantenimiento', note:'desde el lanzamiento'},
+  pricingPresztMaint:{rate:'+ 25 000 Ft/mes de mantenimiento', note:'(1 semana gratis)'},
+  pricingPremMaint:{rate:'+ 35 000 Ft/mes de mantenimiento', note:'(2 semanas gratis)'},
+  pricingMaintNote:'El mantenimiento mensual cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.',
+  servicesEyebrow:'Lo que construimos', servicesH2:'Tres niveles, un mismo estándar',
+  servicesP:'Cada proyecto se diseña y programa desde cero para ajustarse a la ambición — y el presupuesto — del negocio detrás de él.',
+  service1Title:'Sitios de una página', service1Desc:'Una página única, enfocada y elegante, que presenta un negocio con claridad y convierte visitantes en llamadas.',
+  service2Title:'Sitios empresariales', service2Desc:'Sitios de varias secciones con servicios, galerías, reservas y contenido bilingüe cuando se necesite.',
+  service3Title:'Experiencias prémium', service3Desc:'Experiencias digitales totalmente a medida, animadas y de varias páginas, para marcas que quieren liderar su categoría.',
+  aboutEyebrow:'Nosotros',
+  aboutText:'Somos Alex y Theo, dos jóvenes emprendedores apasionados por la tecnología digital y el diseño web. Creamos sitios web modernos y de alto rendimiento usando las últimas tecnologías de inteligencia artificial, para ayudar a los negocios a mejorar su presencia en línea y hacer crecer su actividad.',
+  faqEyebrow:'Preguntas frecuentes', faqH2:'Preguntas y respuestas',
+  faqP:'¿Aún tienes dudas? Esto es lo que la gente suele preguntar antes de empezar un proyecto.',
+  faqItems:[
+    {q:'¿Cuánto tiempo lleva un proyecto?', a:'Esszencia normalmente se entrega en 3 a 4 días, Presztízs en 4 a 7 días, y Prémium en 7 a 12 días — depende de la rapidez con la que recibamos el contenido y los comentarios.'},
+    {q:'¿Qué incluye el precio?', a:'El diseño, el desarrollo y la primera carga de contenido con el texto, las fotos y los datos de contacto que nos proporciones. Los cambios después del lanzamiento se cubren con un plan de mantenimiento mensual opcional.'},
+    {q:'¿Puedo actualizar el contenido yo mismo después del lanzamiento?', a:'En Esszencia y Presztízs se pueden pedir pequeños cambios de texto o fotos en cualquier momento. Al ser Prémium totalmente a medida, los cambios normalmente pasan por nosotros para que el diseño se mantenga intacto.'},
+    {q:'¿Se encargan del hosting y del dominio?', a:'Sí — podemos configurar el hosting y un dominio desde cero, o trabajar con uno que ya tengas.'},
+    {q:'¿Y si más adelante necesito más páginas o funciones?', a:'Cada nivel puede crecer. En cuanto sepamos qué necesitas — una página extra, una nueva sección, una función — lo presupuestamos aparte, sin atarte al alcance original.'},
+    {q:'¿Ofrecen mantenimiento continuo?', a:'Sí — encontrarás las tarifas mensuales exactas junto a los precios más arriba. Esto cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.'}
+  ],
+  contactEyebrow:'Contacto', contactH2:'Construyamos algo prémium',
+  contactP:'Cuéntame sobre tu negocio y te recomendaré el nivel adecuado — Esszencia, Presztízs o Prémium.',
+  formDivider:'¿Tienes una solicitud más concreta?', formName:'Tu nombre', formEmail:'Tu correo electrónico',
+  formMessage:'Cuéntanos sobre tu proyecto o tu pregunta…', formSubmit:'Enviar mensaje', formSending:'Enviando…',
+  formSuccess:'Gracias — te responderemos pronto.', formError:'Algo salió mal — escríbenos directamente por correo, por favor.',
+  formSubject:'Nuevo mensaje del sitio AiStudioBudapest',
+  cookieBannerText:'Usamos cookies para analizar el uso del sitio. Acepta para permitirlo, o rechaza para mantener solo el almacenamiento estrictamente necesario (preferencia de idioma).',
+  cookieAccept:'Aceptar', cookieReject:'Rechazar'
+},
+de:{
+  metaTitle:'AiStudioBudapest — Premium-Webdesign-Portfolio',
+  metaDesc:'AiStudioBudapest — ich gestalte und entwickle Premium-Websites. Entdecke drei Live-Prototypen: Esszencia, Presztízs, Prémium.',
+  navAriaPrimary:'Hauptnavigation', navProjects:'Projekte', navPricing:'Preise', navServices:'Leistungen',
+  navAbout:'Über uns', navFaq:'FAQ', navContact:'Kontakt', navCta:'Projekt starten',
+  burgerOpen:'Menü öffnen', burgerClose:'Menü schließen', langAria:'Sprache wählen',
+  heroEyebrow:'Webdesign',
+  heroTagline:'Premium-Webdesign, das ambitionierte Marken in die Umlaufbahn schickt.',
+  heroSub:'Drei Stufen handwerklicher Qualität, von der fokussierten One-Page-Website bis zum vollständig individuellen Premium-Erlebnis — scrolle nach unten, um sie live zu entdecken.',
+  showcaseEyebrow:'Ausgewählte Arbeiten',
+  stackTitle:'Zur Website', enterHint:'Zur Website ↗',
+  ctaViewProject:'Projekt ansehen ↗', ctaWorkTogether:'Lass uns zusammenarbeiten',
+  ariaView:function(name){ return name + ' ansehen'; },
+  ariaViewProject:function(name){ return 'Projekt ansehen: ' + name; },
+  scrollArrowLabel:'Preise ansehen', scrollArrowAria:'Scrollen, um die Preise zu sehen',
+  pricingEyebrow:'Pakete und Preise', pricingH2:'Drei Stufen, jede mit klarem Preis',
+  pricingP:'Wähle die Stufe, die zum Unternehmen passt — jede mit festem Leistungsumfang, kein „ab"-Preis.',
+  pricingEsszFeatures:['1-seitige Website','Vorstellung und Kontaktdaten','Öffnungszeiten und Fotos'],
+  pricingPresztFeatures:['Alles aus Esszencia','2-seitige Website','Online-Terminbuchung','Fotogalerie','Kontaktformular'],
+  pricingPremFeatures:['Alles aus Presztízs','5 oder mehr Seiten','Vorstellung mehrerer Leistungen','Blog','Kundenbewertungen','Individuelles Design und Animationen'],
+  pricingEsszMaint:{rate:'+ 15.000 Ft/Monat Wartung', note:'ab dem Start'},
+  pricingPresztMaint:{rate:'+ 25.000 Ft/Monat Wartung', note:'(1 Woche kostenlos)'},
+  pricingPremMaint:{rate:'+ 35.000 Ft/Monat Wartung', note:'(2 Wochen kostenlos)'},
+  pricingMaintNote:'Die monatliche Wartung deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.',
+  servicesEyebrow:'Was wir bauen', servicesH2:'Drei Stufen, ein Qualitätsstandard',
+  servicesP:'Jedes Projekt wird von Grund auf entworfen und programmiert, passend zum Anspruch — und zum Budget — des dahinterstehenden Unternehmens.',
+  service1Title:'One-Page-Websites', service1Desc:'Eine fokussierte, elegante Einzelseite, die ein Unternehmen klar präsentiert und Besucher in Anrufe verwandelt.',
+  service2Title:'Business-Websites', service2Desc:'Mehrteilige Seiten mit Leistungen, Galerien, Buchungsabläufen und bei Bedarf zweisprachigen Inhalten.',
+  service3Title:'Premium-Erlebnisse', service3Desc:'Vollständig individuelle, animierte, mehrseitige digitale Erlebnisse für Marken, die ihre Kategorie anführen wollen.',
+  aboutEyebrow:'Über uns',
+  aboutText:'Wir sind Alex und Theo, zwei junge Unternehmer mit Leidenschaft für digitale Technologie und Webdesign. Wir erstellen moderne, leistungsstarke Websites mit den neuesten Technologien der künstlichen Intelligenz, um Unternehmen zu helfen, ihre Online-Präsenz zu verbessern und ihr Geschäft auszubauen.',
+  faqEyebrow:'FAQ', faqH2:'Fragen und Antworten',
+  faqP:'Noch unsicher bei etwas? Das wird uns vor Projektbeginn am häufigsten gefragt.',
+  faqItems:[
+    {q:'Wie lange dauert ein Projekt?', a:'Esszencia ist meist in 3–4 Tagen fertig, Presztízs in 4–7 Tagen, Prémium in 7–12 Tagen — abhängig davon, wie schnell Inhalte und Feedback bei uns eingehen.'},
+    {q:'Was ist im Preis enthalten?', a:'Design, Entwicklung und die erste Inhaltsrunde mit den von dir bereitgestellten Texten, Fotos und Kontaktdaten. Änderungen nach dem Launch deckt ein optionales monatliches Wartungspaket ab.'},
+    {q:'Kann ich Inhalte nach dem Launch selbst aktualisieren?', a:'Bei Esszencia und Presztízs können jederzeit kleine Text- oder Fotoänderungen angefragt werden. Bei der vollständig individuellen Prémium-Umsetzung laufen Änderungen meist über uns, damit das Design intakt bleibt.'},
+    {q:'Kümmert ihr euch um Hosting und Domainnamen?', a:'Ja — wir richten Hosting und eine Domain von Grund auf für dich ein, oder arbeiten mit einer bereits vorhandenen Domain.'},
+    {q:'Was, wenn ich später mehr Seiten oder Funktionen brauche?', a:'Jede Stufe kann wachsen. Sobald wir wissen, was gebraucht wird — eine zusätzliche Seite, ein neuer Abschnitt, eine Funktion —, kalkulieren wir das separat, ohne dich an den ursprünglichen Umfang zu binden.'},
+    {q:'Bietet ihr laufende Wartung an?', a:'Ja — die genauen monatlichen Preise findest du weiter oben neben den Preisen. Das deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.'}
+  ],
+  contactEyebrow:'Kontakt', contactH2:'Lass uns etwas Premium bauen',
+  contactP:'Erzähl mir von deinem Unternehmen, und ich empfehle dir die passende Stufe — Esszencia, Presztízs oder Prémium.',
+  formDivider:'Eine konkretere Anfrage?', formName:'Dein Name', formEmail:'Deine E-Mail',
+  formMessage:'Erzähl uns von deinem Projekt oder deiner Frage…', formSubmit:'Nachricht senden', formSending:'Wird gesendet…',
+  formSuccess:'Danke — wir melden uns bald.', formError:'Etwas ist schiefgelaufen — schreib uns bitte direkt per E-Mail.',
+  formSubject:'Neue Nachricht von der AiStudioBudapest-Website',
+  cookieBannerText:'Wir verwenden Cookies, um die Nutzung der Website zu analysieren. Akzeptiere, um dies zuzulassen, oder lehne ab, damit nur die unbedingt erforderliche Speicherung (Spracheinstellung) aktiv bleibt.',
+  cookieAccept:'Akzeptieren', cookieReject:'Ablehnen'
+}
+};
+
+function readStoredLang(){
+  try{
+    var v = localStorage.getItem(LANG_STORAGE_KEY);
+    if(v && LANGS.indexOf(v) !== -1) return v;
+  }catch(e){}
+  return 'hu';
+}
+var currentLang = readStoredLang();
+
+var SPACE_BG_VIDEO = 'https://videos.pexels.com/video-files/27303243/12116155_2560_1440_24fps.mp4';
+
+var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var featured = 'premium';
+var isAnimating = false;
+
+var hero = document.querySelector('.hero');
+var tagline = document.querySelector('.tagline');
+var stage = document.getElementById('showcase') || document.querySelector('.stage');
+var headlineGroup = document.getElementById('headlineGroup');
+var headline = document.getElementById('headline');
+var description = document.getElementById('description');
+var viewProject = document.getElementById('viewProject');
+var metaIndex = document.getElementById('metaIndex');
+var metaCategory = document.getElementById('metaCategory');
+var metaRow = document.querySelector('.meta-row');
+var centerSlot = document.getElementById('centerSlot');
+var sideLeft = document.getElementById('sideLeft');
+var sideRight = document.getElementById('sideRight');
+var tilt = document.getElementById('tilt');
+var composition = document.querySelector('.composition');
+var stack = document.getElementById('stack');
+var warp = document.getElementById('warp');
+var orbitWrap = document.getElementById('orbitWrap');
+var scrollProgressBar = document.querySelector('#scrollProgress span');
+var burger = document.getElementById('burger');
+var mnav = document.getElementById('mnav');
+var revealEls = [];
+var CASCADE_GRIDS = ['services-grid', 'pricing-grid'];
+
+var projectEls = {};
+document.querySelectorAll('.project').forEach(function(p){
+  projectEls[p.getAttribute('data-project')] = p;
+});
+
+/* ---------------- hero tagline: split into letters for the scroll
+   shatter effect. Grouped by word (see .word in CSS) so normal line
+   wrapping still happens at word boundaries, not mid-word. Each letter
+   gets a random flight vector + stagger delay baked in once, up front —
+   from here on, driving the effect is just one CSS custom property
+   (--p) updated per scroll frame; see onScrollFrame(). Callable again
+   on every language change (see applyLang()), since the tagline text
+   itself changes — a fresh set of random vectors each time is fine,
+   this only runs on an explicit language switch, never per frame. */
+function splitTagline(text){
+  if(!tagline || reduceMotion){ if(tagline) tagline.textContent = text; return; }
+  var taglineWords = text.split(' ').filter(Boolean);
+  var totalLetters = taglineWords.reduce(function(n,w){ return n + w.length; }, 0);
+  var letterIdx = 0;
+  var taglineFrag = document.createDocumentFragment();
+  taglineWords.forEach(function(word){
+    var wordEl = document.createElement('span');
+    wordEl.className = 'word';
+    word.split('').forEach(function(ch){
+      var letterEl = document.createElement('span');
+      letterEl.className = 'letter';
+      letterEl.textContent = ch;
+      var angle = Math.random() * Math.PI * 2;
+      var dist = 70 + Math.random() * 160;
+      letterEl.style.setProperty('--ex', (Math.cos(angle) * dist).toFixed(1) + 'px');
+      letterEl.style.setProperty('--ey', (Math.sin(angle) * dist - 40).toFixed(1) + 'px');
+      letterEl.style.setProperty('--er', ((Math.random() * 2 - 1) * 220).toFixed(0) + 'deg');
+      letterEl.style.setProperty('--ed', (0.35 * (letterIdx / Math.max(1, totalLetters - 1))).toFixed(3));
+      letterIdx++;
+      wordEl.appendChild(letterEl);
+    });
+    taglineFrag.appendChild(wordEl);
+  });
+  tagline.textContent = '';
+  tagline.appendChild(taglineFrag);
+  /* --p lives on .tagline itself (set per scroll frame in onScrollFrame),
+     not on the letters being replaced here, so it survives this swap
+     untouched — no need to re-seed it. */
+}
+/* First split happens inside applyLang(currentLang), called once
+   everything else below is set up — see the initial-mount block. */
+
+/* ---------------- space background video: crossfade loop ----------------
+   A native `loop` restart snaps straight back to frame 0 the instant the
+   clip ends — motion/lighting jump in one frame, which reads as "a clip
+   repeating" rather than an ambient, endless scene. Two copies of the same
+   clip take turns instead: while one plays, the other sits primed at its
+   own frame 0; a few seconds before the visible one ends, the idle copy
+   starts playing underneath and a short opacity crossfade dissolves from
+   one to the other. By the time the first copy would have visibly jumped,
+   viewers are already looking at the second one, mid-scene — no cut ever
+   reaches the screen. The two copies then swap roles forever. */
+var bgVideoWrap = document.getElementById('bgVideoWrap');
+var bgVideo = document.getElementById('bgVideo');
+var bgVideo2 = document.getElementById('bgVideo2');
+if(bgVideoWrap && bgVideo && bgVideo2){
+  if(reduceMotion){
+    bgVideoWrap.remove();
+    bgVideoWrap = null;
+  } else {
+    var BG_CROSSFADE_S = 1.4;
+    var bgActive = bgVideo;
+    var bgIdle = bgVideo2;
+    var bgSwapping = false;
+
+    [bgVideo, bgVideo2].forEach(function(v){
+      v.preload = 'auto';
+      v.src = SPACE_BG_VIDEO;
+      v.addEventListener('timeupdate', function(){
+        if(v !== bgActive || bgSwapping) return;
+        var d = v.duration;
+        if(!d || !isFinite(d) || d - v.currentTime > BG_CROSSFADE_S) return;
+        bgSwapping = true;
+        bgIdle.currentTime = 0;
+        bgIdle.play().catch(function(){});
+        bgActive.classList.add('fading');
+        bgIdle.classList.add('fading');
+        bgIdle.classList.add('active');
+        bgActive.classList.remove('active');
+        var justFinished = bgActive;
+        setTimeout(function(){
+          justFinished.pause();
+          justFinished.currentTime = 0;
+          justFinished.classList.remove('fading');
+          bgIdle.classList.remove('fading');
+          var tmp = bgActive; bgActive = bgIdle; bgIdle = tmp;
+          bgSwapping = false;
+        }, BG_CROSSFADE_S * 1000);
+      });
+    });
+
+    var tryPlayBg = function(){ bgActive.play().catch(function(){}); };
+    bgActive.classList.add('active');
+    bgActive.addEventListener('canplay', tryPlayBg, {once:true});
+    tryPlayBg();
+  }
+}
+
+/* Move the actual DOM node for `key` into `targetEl`, keeping its iframe's
+   live state (playing video, scroll position, everything) intact.
+
+   Uses moveBefore() where supported: a real, state-preserving move — the
+   iframe's browsing context survives untouched. appendChild() looks like
+   the same "just reparent it" move, but browsers actually tear down and
+   reload an iframe's document when it's removed-and-reinserted this way
+   (confirmed live: a marker written into each iframe's window vanished
+   after a single swap with the old appendChild-based mount). That reload
+   is what showed up as the frame briefly going black mid-flight — the
+   video/page was reloading, not just being repositioned. moveBefore()
+   (Chrome 133+) is the platform's own fix for exactly this; appendChild
+   is kept only as a fallback for browsers that lack it, so this degrades
+   to the old (reload-on-swap) behaviour there rather than breaking.
+
+   Also deliberately does NOT rescale here: mount() is always called 2-3
+   times in a row (one project per slot) while the other slots are still
+   being shuffled, so measuring mid-sequence catches the grid in a
+   transient layout — e.g. the moment a side slot has just been emptied
+   but not yet refilled, its track is briefly narrower, and the center
+   column opportunistically grows into that gap. A width measured in that
+   instant gets baked into --scale and never re-measured until the next
+   click repeats the same mistake, which is what made the featured iframe
+   drift out of frame the more you clicked. Callers must call rescaleAll()
+   once every mount() in the batch has completed, so every measurement
+   sees the composition at rest. */
+function mount(key, targetEl){
+  var node = projectEls[key];
+  if(!node) return;
+  if(targetEl.moveBefore){
+    targetEl.moveBefore(node, null);
+  } else {
+    targetEl.appendChild(node);
+  }
+}
+
+function scaleFrame(node){
+  var shell = node.querySelector('.frame-shell');
+  var view = node.querySelector('.frame-view');
+  if(!shell || !view) return;
+  var w = shell.getBoundingClientRect().width;
+  var scale = w / 1440;
+  view.style.setProperty('--scale', scale.toFixed(4));
+}
+
+function rescaleAll(){
+  Object.keys(projectEls).forEach(function(k){ scaleFrame(projectEls[k]); });
+}
+
+function headlineMarkup(name){
+  return '<span class="mask"><span>'+name+'</span></span>';
+}
+
+/* ----------------------------------------------------------
+   rotate(fromSide) — a real 3-position carousel, not a fixed
+   left/right reassignment. Clicking the right card always spins
+   the composition the same way: right becomes center, center
+   slides out to the left, and left wraps all the way around to
+   the right. Clicking the left card spins it the other way. Two
+   of the three projects are always mid-flight on every click,
+   never just the clicked one.
+---------------------------------------------------------- */
+function rotate(fromSide){
+  if(isAnimating) return;
+  var curLeft = sideLeft.getAttribute('data-key');
+  var curRight = sideRight.getAttribute('data-key');
+  var curCenter = featured;
+  var next, newLeft, newRight;
+  if(fromSide === 'right'){
+    next = curRight;
+    newLeft = curCenter;
+    newRight = curLeft;
+  } else {
+    next = curLeft;
+    newRight = curCenter;
+    newLeft = curRight;
+  }
+  show(next, newLeft, newRight);
+}
+
+/* ----------------------------------------------------------
+   show(next, newLeft, newRight) — cinematic FLIP transition via
+   the Web Animations API: each of the three shells arcs upward
+   as it swaps places (like weightless objects trading orbits),
+   with a slight rotateY that banks into its own direction of
+   travel so it reads as a 3D turn rather than a flat slide. No
+   blur/dimming — every shell stays fully lit and legible for the
+   whole flight, so nothing reads as "going black".
+---------------------------------------------------------- */
+function show(next, newLeft, newRight){
+  if(!PROJECTS[next] || next === featured || isAnimating) return;
+
+  if(reduceMotion){
+    applyContent(next);
+    mount(next, centerSlot);
+    mount(newLeft, sideLeft.querySelector('.preview-slot'));
+    mount(newRight, sideRight.querySelector('.preview-slot'));
+    applySideMeta(newLeft, newRight);
+    rescaleAll();
+    return;
+  }
+
+  isAnimating = true;
+  var oldCenter = featured;
+
+  /* Reset every shell to a clean, untransformed baseline before we
+     measure anything. Two things could otherwise still be sitting on a
+     shell at this point: a finished-but-uncancelled WAAPI flight from
+     an earlier swap, and — far more often, since the card you just
+     clicked was under the cursor — a live hover-tilt transform from
+     attachSideTilt(). Baking either into the FIRST measurement below
+     made the flight start from a skewed 3D pose, so the shell
+     warped/popped the instant it took off instead of gliding. Clearing
+     them here (transition off, so the reset itself doesn't animate)
+     happens in the same tick as the click, before any paint — it reads
+     as the tilt letting go, not as a glitch. */
+  ORDER.forEach(function(k){
+    var shell = projectEls[k].querySelector('.frame-shell');
+    shell.getAnimations().forEach(function(a){ a.cancel(); });
+    shell.style.transition = 'none';
+    shell.style.transform = '';
+    shell.style.animationPlayState = 'paused';
+  });
+
+  /* FIRST */
+  var firstRects = {};
+  ORDER.forEach(function(k){
+    firstRects[k] = projectEls[k].querySelector('.frame-shell').getBoundingClientRect();
+  });
+
+  /* fade the text that is about to change, replay the headline reveal.
+     This only ever touches headlineGroup (headline + rule) — never
+     stage — so the stack/side stay fully visible throughout and the
+     WAAPI flight below is what the user actually sees, instead of
+     the whole composition blinking out like a page reload. */
+  description.style.transition = 'opacity .22s ease';
+  description.style.opacity = '0';
+  metaRow.style.opacity = '0';
+  headlineGroup.classList.remove('run');
+  headlineGroup.classList.add('enter');
+  void headlineGroup.offsetWidth;
+
+  setTimeout(function(){
+    applyContent(next);
+    description.style.opacity = '1';
+    metaRow.style.opacity = '1';
+    void headline.offsetWidth;
+    headlineGroup.classList.add('run');
+  }, 220);
+
+  /* LAST */
+  mount(next, centerSlot);
+  mount(newLeft, sideLeft.querySelector('.preview-slot'));
+  mount(newRight, sideRight.querySelector('.preview-slot'));
+  applySideMeta(newLeft, newRight);
+  rescaleAll();
+
+  /* INVERT + PLAY, via WAAPI so we can shape a real arc mid-flight.
+     Every project has one of three roles every time: the one becoming
+     featured (incoming), the one that was featured a moment ago
+     (outgoing, to a side), and the one wrapping all the way around
+     from one side to the other (the longest trip — given the biggest
+     lift so it visibly arcs over rather than cutting through the other
+     two, which are moving at the same time). Direction of the 3D bank
+     (swoosh) follows each shell's own travel direction, not a single
+     global flag, so the long wrap always banks the right way too. */
+  var pending = ORDER.length;
+  ORDER.forEach(function(k){
+    var shell = projectEls[k].querySelector('.frame-shell');
+    shell.style.transition = 'none';
+    shell.style.willChange = 'transform';
+    var last = shell.getBoundingClientRect();
+    var first = firstRects[k];
+    var dx = first.left - last.left;
+    var dy = first.top - last.top;
+    var sx = first.width / (last.width || 1);
+    var sy = first.height / (last.height || 1);
+    var role = (k === next) ? 'incoming' : (k === oldCenter ? 'outgoing' : 'wrapping');
+    var arc = role === 'incoming' ? -78 : (role === 'wrapping' ? -100 : -46);
+    var swooshMag = role === 'incoming' ? 20 : (role === 'wrapping' ? 14 : 11);
+    var movingRight = dx < 0;
+    var swoosh = movingRight ? swooshMag : -swooshMag;
+    var midScale = role === 'incoming' ? 1.045 : 1;
+
+    var frames = [
+      { transform:'translate('+dx+'px,'+dy+'px) scale('+sx+','+sy+') rotateY('+swoosh+'deg)' },
+      { transform:'translate('+(dx*0.5)+'px,'+(dy*0.5+arc)+'px) scale('+(((sx+1)/2)*midScale)+','+(((sy+1)/2)*midScale)+') rotateY('+(swoosh*0.4)+'deg)', offset:0.55 },
+      { transform:'translate(0px,0px) scale(1,1) rotateY(0deg)' }
+    ];
+    var anim = shell.animate(frames, { duration:1150, easing:'cubic-bezier(.16,1,.3,1)', fill:'forwards' });
+    anim.onfinish = function(){
+      shell.style.transform = '';
+      shell.style.transition = '';
+      shell.style.willChange = '';
+      shell.style.animationPlayState = '';
+      pending -= 1;
+      if(pending <= 0){
+        isAnimating = false;
+        headlineGroup.classList.remove('enter','run');
+      }
+    };
+  });
+}
+
+function applyContent(next){
+  featured = next;
+  headline.innerHTML = headlineMarkup(PROJECTS[next].name);
+  description.textContent = projectText(next).description;
+  viewProject.href = PROJECTS[next].url;
+  viewProject.setAttribute('aria-label', T[currentLang].ariaViewProject(PROJECTS[next].name));
+  metaIndex.textContent = String(PROJECTS[next].index).padStart(2,'0') + ' / 03';
+  metaCategory.textContent = projectText(next).category;
+}
+
+function applySideMeta(newLeft, newRight){
+  sideLeft.setAttribute('data-key', newLeft);
+  sideLeft.setAttribute('aria-label', T[currentLang].ariaView(PROJECTS[newLeft].name));
+  sideLeft.querySelector('.side-label').textContent = PROJECTS[newLeft].name;
+
+  sideRight.setAttribute('data-key', newRight);
+  sideRight.setAttribute('aria-label', T[currentLang].ariaView(PROJECTS[newRight].name));
+  sideRight.querySelector('.side-label').textContent = PROJECTS[newRight].name;
+}
+
+/* ----------------------------------------------------------
+   i18n rendering — pricing feature lists, FAQ items and the per-project
+   frame-bar labels are generated from T[currentLang]/PROJECT_I18N here
+   rather than trusted as static HTML, so there is exactly one source of
+   truth for every language (the HTML's own Hungarian text is only ever
+   a no-JS fallback). data-i18n / data-i18n-title / data-i18n-placeholder
+   / data-i18n-aria elements are handled generically in applyLang().
+---------------------------------------------------------- */
+function renderList(ul, items){
+  if(!ul) return;
+  ul.innerHTML = '';
+  items.forEach(function(text){
+    var li = document.createElement('li');
+    li.textContent = text;
+    ul.appendChild(li);
+  });
+}
+function renderPricing(){
+  var t = T[currentLang];
+  renderList(document.getElementById('pricingEsszList'), t.pricingEsszFeatures);
+  renderList(document.getElementById('pricingPresztList'), t.pricingPresztFeatures);
+  renderList(document.getElementById('pricingPremList'), t.pricingPremFeatures);
+  renderMaint(document.getElementById('pricingEsszMaint'), t.pricingEsszMaint);
+  renderMaint(document.getElementById('pricingPresztMaint'), t.pricingPresztMaint);
+  renderMaint(document.getElementById('pricingPremMaint'), t.pricingPremMaint);
+}
+/* Two-line maintenance badge (rate + free-trial/condition note) instead of
+   one data-i18n string: letting the rate+note run together as one sentence
+   left the line wrap landing wherever the pill happened to run out of
+   width — most often splitting the parenthetical itself, e.g. "(1 hét" /
+   "ingyenes)", with the closing paren stranded alone on its own line. Each
+   language now supplies {rate, note} as two pre-split phrases, always
+   rendered on two dedicated lines, so a line only ever breaks between the
+   two clauses, never inside one. */
+function renderMaint(el, data){
+  if(!el || !data) return;
+  el.innerHTML = '';
+  var rate = document.createElement('span'); rate.className = 'maint-rate'; rate.textContent = data.rate;
+  var note = document.createElement('span'); note.className = 'maint-note'; note.textContent = data.note;
+  el.appendChild(rate); el.appendChild(note);
+}
+function renderFaq(){
+  var list = document.getElementById('faqList');
+  if(!list) return;
+  list.innerHTML = '';
+  T[currentLang].faqItems.forEach(function(item){
+    var wrap = document.createElement('div');
+    wrap.className = 'faq-item band-reveal';
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'faq-q'; btn.setAttribute('aria-expanded', 'false');
+    var qSpan = document.createElement('span'); qSpan.textContent = item.q;
+    var iconSpan = document.createElement('span'); iconSpan.className = 'faq-icon'; iconSpan.setAttribute('aria-hidden', 'true');
+    btn.appendChild(qSpan); btn.appendChild(iconSpan);
+    var aWrap = document.createElement('div'); aWrap.className = 'faq-a-wrap';
+    var aInner = document.createElement('div'); aInner.className = 'faq-a';
+    var aP = document.createElement('p'); aP.textContent = item.a;
+    aInner.appendChild(aP); aWrap.appendChild(aInner);
+    wrap.appendChild(btn); wrap.appendChild(aWrap);
+    list.appendChild(wrap);
+  });
+}
+function renderFrameBarLabels(){
+  ORDER.forEach(function(key){
+    var el = projectEls[key];
+    var urlSpan = el && el.querySelector('.frame-bar .url');
+    if(urlSpan) urlSpan.textContent = projectText(key).urlLabel;
+  });
+}
+function renderLangMenus(){
+  var menu = document.getElementById('langMenu');
+  var mobile = document.getElementById('langSwitchMobile');
+  if(menu){
+    menu.innerHTML = '';
+    LANGS.forEach(function(code){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'lang-option' + (code === currentLang ? ' active' : '');
+      b.setAttribute('data-lang', code); b.setAttribute('role', 'menuitem');
+      b.textContent = LANG_NAMES[code];
+      menu.appendChild(b);
+    });
+  }
+  if(mobile){
+    mobile.innerHTML = '';
+    LANGS.forEach(function(code){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = code === currentLang ? 'active' : '';
+      b.setAttribute('data-lang', code);
+      b.textContent = code.toUpperCase();
+      mobile.appendChild(b);
+    });
+  }
+  var btnLabel = document.getElementById('langBtnLabel');
+  if(btnLabel) btnLabel.textContent = currentLang.toUpperCase();
+}
+
+/* Applies `lang` everywhere: simple text/attribute swaps via the
+   data-i18n* attributes, then the pieces that need real rendering
+   (pricing, FAQ, frame-bar labels, tagline letters, the currently
+   featured project's description/category/aria-labels). Called once on
+   load and again on every language switch — see the lang menu click
+   handler further down. */
+function applyLang(lang){
+  if(!T[lang]) lang = 'hu';
+  currentLang = lang;
+  try{ localStorage.setItem(LANG_STORAGE_KEY, lang); }catch(e){}
+
+  document.documentElement.lang = lang;
+  document.title = T[lang].metaTitle;
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if(metaDesc) metaDesc.setAttribute('content', T[lang].metaDesc);
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var v = T[lang][el.getAttribute('data-i18n')];
+    if(typeof v === 'string') el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(function(el){
+    var v = T[lang][el.getAttribute('data-i18n-title')];
+    if(typeof v === 'string') el.setAttribute('title', v);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+    var v = T[lang][el.getAttribute('data-i18n-placeholder')];
+    if(typeof v === 'string') el.setAttribute('placeholder', v);
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+    var v = T[lang][el.getAttribute('data-i18n-aria')];
+    if(typeof v === 'string') el.setAttribute('aria-label', v);
+  });
+
+  var subjectInput = document.getElementById('formSubjectInput');
+  if(subjectInput) subjectInput.value = T[lang].formSubject;
+
+  splitTagline(T[lang].heroTagline);
+  renderPricing();
+  renderFaq();
+  refreshRevealEls();
+  renderFrameBarLabels();
+  renderLangMenus();
+
+  applyContent(featured);
+  applySideMeta(sideLeft.getAttribute('data-key'), sideRight.getAttribute('data-key'));
+  burger.setAttribute('aria-label', mnav.classList.contains('open') ? T[lang].burgerClose : T[lang].burgerOpen);
+}
+
+/* initial mount: premium centered, esszencia left, presztizs right */
+mount('premium', centerSlot);
+mount('esszencia', sideLeft.querySelector('.preview-slot'));
+mount('presztizs', sideRight.querySelector('.preview-slot'));
+rescaleAll();
+applyLang(currentLang);
+
+/* ---------------- language switcher: desktop dropdown + mobile button
+   row, both populated by renderLangMenus() inside applyLang(). Delegated
+   clicks (menus are regenerated on every language change, same reasoning
+   as the FAQ accordion above). ---------------- */
+var langSwitch = document.getElementById('langSwitch');
+var langBtn = document.getElementById('langBtn');
+var langMenu = document.getElementById('langMenu');
+var langSwitchMobile = document.getElementById('langSwitchMobile');
+if(langBtn){
+  langBtn.addEventListener('click', function(){
+    var open = langSwitch.classList.toggle('open');
+    langBtn.setAttribute('aria-expanded', String(open));
+  });
+}
+if(langMenu){
+  langMenu.addEventListener('click', function(e){
+    var opt = e.target.closest('[data-lang]');
+    if(!opt) return;
+    applyLang(opt.getAttribute('data-lang'));
+    langSwitch.classList.remove('open');
+    langBtn.setAttribute('aria-expanded', 'false');
+  });
+}
+document.addEventListener('click', function(e){
+  if(langSwitch && langSwitch.classList.contains('open') && !langSwitch.contains(e.target)){
+    langSwitch.classList.remove('open');
+    langBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && langSwitch && langSwitch.classList.contains('open')){
+    langSwitch.classList.remove('open');
+    langBtn.setAttribute('aria-expanded', 'false');
+    langBtn.focus();
+  }
+});
+if(langSwitchMobile){
+  langSwitchMobile.addEventListener('click', function(e){
+    var opt = e.target.closest('[data-lang]');
+    if(!opt) return;
+    applyLang(opt.getAttribute('data-lang'));
+  });
+}
+
+sideLeft.addEventListener('click', function(){ rotate('left'); });
+sideRight.addEventListener('click', function(){ rotate('right'); });
+
+/* ---------------- logo: back to top. A plain href="#top" mostly works,
+   but #top is the hero section itself, and the hero gets its own
+   scroll-linked transform (translateY/scale, set every frame in
+   onScrollFrame() above) — the browser's native smooth-scroll-to-fragment
+   targets that box while it keeps moving under the animation, and lands
+   short of scrollY 0 instead of exactly at it. That left the tagline
+   letters partway through their shatter effect (--p never quite reaching
+   0) until you scrolled the rest of the way by hand. Scrolling the window
+   directly sidesteps the moving target. */
+var logoLink = document.querySelector('.logo');
+if(logoLink){
+  logoLink.addEventListener('click', function(e){
+    if(e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    window.scrollTo({top:0, behavior: reduceMotion ? 'auto' : 'smooth'});
+  });
+}
+
+window.addEventListener('resize', function(){
+  requestAnimationFrame(rescaleAll);
+});
+
+/* ----------------------------------------------------------
+   enterSite(url) — "diving into" the featured site: the whole
+   stack rushes toward the viewer while the rest of the page
+   fades away and a hyperspace flash fires, then we navigate in
+   the same tab (so the transition is actually visible).
+---------------------------------------------------------- */
+function enterSite(url){
+  if(reduceMotion){ window.location.href = url; return; }
+  if(isAnimating) return;
+  isAnimating = true;
+
+  var rect = stack.getBoundingClientRect();
+  warp.style.setProperty('--wx', (rect.left + rect.width/2) + 'px');
+  warp.style.setProperty('--wy', (rect.top + rect.height/2) + 'px');
+
+  [document.querySelector('header.nav'), stage.querySelector('.eyebrow-wrap'), headline,
+   document.querySelector('.rule'), description, document.querySelector('.cta-row'), metaRow]
+    .forEach(function(el){ if(el){ el.style.transition = 'opacity .35s ease'; el.style.opacity = '0'; } });
+  [sideLeft, sideRight].forEach(function(el){
+    el.style.transition = 'opacity .4s ease, transform .5s ease';
+    el.style.opacity = '0';
+    el.style.transform += ' scale(.92)';
+  });
+
+  requestAnimationFrame(function(){ warp.classList.add('active'); });
+
+  var scale = Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.2;
+  stack.style.position = 'relative';
+  stack.style.zIndex = '60';
+  stack.style.transformOrigin = '50% 50%';
+  stack.style.transition = 'transform .85s cubic-bezier(.7,0,.88,1), filter .85s ease';
+  stack.style.transform = 'scale(' + scale.toFixed(3) + ')';
+  stack.style.filter = 'brightness(1.7)';
+
+  setTimeout(function(){
+    window.location.href = url;
+  }, 780);
+}
+
+viewProject.addEventListener('click', function(e){
+  if(e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  e.preventDefault();
+  enterSite(PROJECTS[featured].url);
+});
+
+stack.addEventListener('click', function(){
+  enterSite(PROJECTS[featured].url);
+});
+
+/* enterSite() fades the nav/hero/side cards to 0, scales the stack up to
+   fill the screen and flashes the warp overlay, then navigates away 780ms
+   later — it never puts any of that back, because the page was expected
+   to be replaced. That assumption breaks when the browser restores this
+   exact page from the back/forward cache after the visitor hits Back on
+   the site they landed on: bfcache resurrects the DOM (and any inline
+   styles) exactly as it was left, mid-warp, with isAnimating still stuck
+   true — nav gone, hero invisible, the stack a giant washed-out blur,
+   input dead. `pageshow` fires on every load, including bfcache restores
+   (where `persisted` is true), so unconditionally clearing everything
+   enterSite() touches here is a cheap, safe reset either way. */
+window.addEventListener('pageshow', function(){
+  isAnimating = false;
+  warp.classList.remove('active');
+  [document.querySelector('header.nav'), stage.querySelector('.eyebrow-wrap'), headline,
+   document.querySelector('.rule'), description, document.querySelector('.cta-row'), metaRow]
+    .forEach(function(el){ if(el){ el.style.opacity = ''; el.style.transition = ''; } });
+  [sideLeft, sideRight].forEach(function(el){
+    el.style.opacity = ''; el.style.transform = ''; el.style.transition = '';
+  });
+  stack.style.position = ''; stack.style.zIndex = ''; stack.style.transformOrigin = '';
+  stack.style.transition = ''; stack.style.transform = ''; stack.style.filter = '';
+});
+
+/* ---------------- mouse effects: center tilt, whole-scene parallax,
+   background spotlight ---------------- */
+if(!reduceMotion){
+  var rafId = null, tx = 0, ty = 0;
+  function applyTilt(){
+    tilt.style.transform = 'rotateX('+ty+'deg) rotateY('+tx+'deg)';
+    composition.style.transform = 'rotateX('+(-ty*0.35)+'deg) rotateY('+(tx*0.35)+'deg)';
+    rafId = null;
+  }
+  window.addEventListener('pointermove', function(e){
+    var cx = window.innerWidth/2, cy = window.innerHeight/2;
+    tx = ((e.clientX - cx) / cx) * 4;   /* max ~4deg */
+    ty = -((e.clientY - cy) / cy) * 3;  /* max ~3deg */
+    document.documentElement.style.setProperty('--mx', ((e.clientX/window.innerWidth)*100).toFixed(2)+'%');
+    document.documentElement.style.setProperty('--my', ((e.clientY/window.innerHeight)*100).toFixed(2)+'%');
+    document.body.classList.add('mouse-active');
+    if(rafId === null) rafId = requestAnimationFrame(applyTilt);
+  }, {passive:true});
+  window.addEventListener('pointerleave', function(){
+    tx = 0; ty = 0;
+    document.body.classList.remove('mouse-active');
+    if(rafId === null) rafId = requestAnimationFrame(applyTilt);
+  });
+} else {
+  tilt.style.transform = 'none';
+}
+
+/* ---------------- local 3D tilt on the side cards ---------------- */
+function attachSideTilt(sideEl){
+  if(reduceMotion) return;
+  var raf = null, curRx = 0, curRy = 0;
+  function apply(){
+    if(!isAnimating){
+      var shell = sideEl.querySelector('.frame-shell');
+      if(shell) shell.style.transform = 'rotateX('+curRx+'deg) rotateY('+curRy+'deg)';
+    }
+    raf = null;
+  }
+  sideEl.addEventListener('pointermove', function(e){
+    if(isAnimating) return;
+    var r = sideEl.getBoundingClientRect();
+    var px = (e.clientX - r.left) / r.width;
+    var py = (e.clientY - r.top) / r.height;
+    curRy = (px - 0.5) * 18;
+    curRx = (0.5 - py) * 14;
+    if(raf === null) raf = requestAnimationFrame(apply);
+  }, {passive:true});
+  sideEl.addEventListener('pointerleave', function(){
+    curRx = 0; curRy = 0;
+    if(isAnimating) return;
+    var shell = sideEl.querySelector('.frame-shell');
+    if(shell) shell.style.transform = 'rotateX(0deg) rotateY(0deg)';
+  });
+}
+attachSideTilt(sideLeft);
+attachSideTilt(sideRight);
+
+/* ---------------- custom cursor: dot + lagging ring ---------------- */
+(function(){
+  var fine = window.matchMedia('(pointer: fine)').matches;
+  if(!fine || reduceMotion) return;
+  var dot = document.getElementById('cursorDot');
+  var ring = document.getElementById('cursorRing');
+  document.body.classList.add('cursor-ready');
+  var mx = -100, my = -100, rx = -100, ry = -100, shown = false;
+  window.addEventListener('mousemove', function(e){
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = 'translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
+    if(!shown){ shown = true; document.body.classList.add('cursor-visible'); }
+  });
+  window.addEventListener('mouseover', function(e){
+    var t = e.target.closest && e.target.closest('a, button, [data-cursor]');
+    ring.classList.toggle('active', Boolean(t));
+  });
+  (function loop(){
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.transform = 'translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ---------------- mobile menu ---------------- */
+function setMenu(open){
+  mnav.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  burger.setAttribute('aria-label', open ? T[currentLang].burgerClose : T[currentLang].burgerOpen);
+}
+burger.addEventListener('click', function(e){
+  e.stopPropagation();
+  setMenu(!mnav.classList.contains('open'));
+});
+mnav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setMenu(false); }); });
+document.addEventListener('click', function(e){
+  if(mnav.classList.contains('open') && !mnav.contains(e.target) && !burger.contains(e.target)) setMenu(false);
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && mnav.classList.contains('open')){ setMenu(false); burger.focus(); }
+});
+
+/* ---------------- twinkling starfield ---------------- */
+if(!reduceMotion){
+  var field = document.getElementById('particles');
+  for(var i=0;i<40;i++){
+    var s = document.createElement('i');
+    var size = (1 + Math.random()*2).toFixed(1);
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*100)+'%';
+    s.style.animationDelay = (Math.random()*5).toFixed(2)+'s';
+    s.style.animationDuration = (3+Math.random()*5).toFixed(2)+'s';
+    field.appendChild(s);
+  }
+}
+
+/* ---------------- reveal-on-scroll targets: every section below the fold
+   fades/lifts in as it's scrolled into view, and back out if you scroll
+   back past it — see the --rp loop inside onScrollFrame() below. Service
+   cards sit side by side (same scroll position), so without help they'd
+   all reveal in lockstep; --ro gives each one a later start (a scroll
+   distance, not a time delay) so they cascade in left-to-right instead.
+   revealEls/CASCADE_GRIDS themselves are declared up with the other
+   top-level element refs (applyLang(), called during initial setup
+   below, needs refreshRevealEls() — and therefore CASCADE_GRIDS — to
+   already exist; var assignments aren't hoisted with a value the way
+   function declarations are). Re-queried here rather than a one-time
+   snapshot because the FAQ items are regenerated from T[currentLang] on
+   every language change — see renderFaq() — and each fresh batch needs
+   to join the reveal system too, or newly-rendered FAQ items would just
+   sit at their default CSS opacity instead of scroll-revealing like
+   everything else. */
+function refreshRevealEls(){
+  revealEls = Array.prototype.slice.call(document.querySelectorAll('.band-reveal'));
+  revealEls.forEach(function(el){
+    var inCascadeGrid = el.parentElement && CASCADE_GRIDS.some(function(c){ return el.parentElement.classList.contains(c); });
+    var i = inCascadeGrid ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+    el.__revealOffset = i * 45;
+  });
+  if(reduceMotion){
+    revealEls.forEach(function(el){ el.style.setProperty('--rp', 1); });
+  }
+}
+refreshRevealEls();
+
+/* ----------------------------------------------------------
+   Scrollytelling — one rAF-throttled scroll handler drives every
+   scroll-linked effect together: the top progress rail, the hero
+   parallax fade as it's scrolled past, a slow background-video
+   zoom that deepens the further you travel, an extra spin layered
+   onto the orbit rings, and every .band-reveal section fading/
+   lifting in below the fold. Everything reads scroll position
+   directly each frame (no CSS transition on these), so it all
+   stays glued to the scrollbar instead of lagging behind it.
+---------------------------------------------------------- */
+if(!reduceMotion){
+  var scrollRafId = null;
+  function onScrollFrame(){
+    var sy = window.scrollY;
+    var vh = window.innerHeight;
+    var docH = document.documentElement.scrollHeight - vh;
+
+    if(scrollProgressBar) scrollProgressBar.style.width = (docH > 0 ? Math.min(100, sy / docH * 100) : 0).toFixed(2) + '%';
+
+    var heroP = Math.min(1, Math.max(0, sy / vh));
+    hero.style.opacity = String(Math.max(0, 1 - heroP * 1.25));
+    hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px) scale(' + (1 - heroP * 0.05).toFixed(3) + ')';
+    if(tagline) tagline.style.setProperty('--p', heroP.toFixed(4));
+
+    if(bgVideoWrap){
+      var zoomP = Math.min(1, sy / (vh * 2.4));
+      bgVideoWrap.style.transform = 'scale(' + (1 + zoomP * 0.16).toFixed(3) + ')';
+    }
+
+    if(orbitWrap) orbitWrap.style.transform = 'rotate(' + (sy * 0.025).toFixed(2) + 'deg)';
+
+    var revealStart = vh * 0.88;
+    var revealEnd = vh * 0.5;
+    /* A section positioned less than (vh - revealEnd) above the very
+       bottom of the document can never be scrolled high enough in the
+       viewport to reach rp 1 — there's no more page left below it to
+       scroll through. Without this, the last band on the page (contact)
+       gets stuck half-revealed forever once you hit the bottom. Once
+       you've scrolled as far as the page allows, nothing above should
+       still be waiting to "finish" appearing. */
+    var atBottom = docH > 0 && sy >= docH - 1;
+    revealEls.forEach(function(el){
+      var top = el.getBoundingClientRect().top - (el.__revealOffset || 0);
+      var rp = atBottom ? 1 : (revealStart - top) / (revealStart - revealEnd);
+      rp = rp < 0 ? 0 : (rp > 1 ? 1 : rp);
+      el.style.setProperty('--rp', rp.toFixed(4));
+    });
+
+    scrollRafId = null;
+  }
+  function requestScrollFrame(){ if(scrollRafId === null) scrollRafId = requestAnimationFrame(onScrollFrame); }
+  window.addEventListener('scroll', requestScrollFrame, {passive:true});
+  window.addEventListener('resize', requestScrollFrame);
+  requestScrollFrame();
+}
+
+/* ---------------- hero entrance: fades in immediately on load ---------------- */
+requestAnimationFrame(function(){
+  document.body.classList.add('ready');
+  if(reduceMotion){
+    hero.classList.remove('enter');
+  } else {
+    hero.classList.add('run');
+    setTimeout(function(){ hero.classList.remove('enter','run'); }, 1600);
+  }
+});
+
+/* ---------------- showcase entrance: plays once, the first time
+   it scrolls into view ---------------- */
+var showcaseRevealed = false;
+function revealShowcase(){
+  if(showcaseRevealed) return;
+  showcaseRevealed = true;
+  if(reduceMotion){
+    stage.classList.remove('enter');
+    return;
+  }
+  stage.classList.add('run');
+  setTimeout(function(){ stage.classList.remove('enter','run'); }, 2000);
+}
+if('IntersectionObserver' in window && !reduceMotion){
+  var showcaseObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        revealShowcase();
+        showcaseObserver.disconnect();
+      }
+    });
+  }, { threshold:0.2 });
+  showcaseObserver.observe(stage);
+} else {
+  revealShowcase();
+}
+
+/* ---------------- FAQ accordion: one open at a time, height animated via
+   the .faq-a-wrap grid-rows CSS transition above — this handler only ever
+   toggles the .open class, never touches inline styles or measures
+   scrollHeight, so it stays smooth without any JS-driven animation.
+   Delegated on the list container (not bound per-item) because the items
+   themselves are regenerated from T[currentLang].faqItems on every
+   language change — see renderFaq() — so a per-element listener would be
+   silently lost each time. */
+var faqList = document.getElementById('faqList');
+if(faqList){
+  faqList.addEventListener('click', function(e){
+    var btn = e.target.closest('.faq-q');
+    if(!btn) return;
+    var item = btn.closest('.faq-item');
+    var isOpen = item.classList.contains('open');
+    faqList.querySelectorAll('.faq-item.open').forEach(function(open){
+      if(open !== item){ open.classList.remove('open'); open.querySelector('.faq-q').setAttribute('aria-expanded','false'); }
+    });
+    item.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
+}
+
+/* ---------------- contact form: submits via fetch to FormSubmit's AJAX
+   endpoint so the visitor never leaves the page — a plain HTML POST would
+   redirect to FormSubmit's own confirmation page instead. Note for future
+   maintenance: the very first message sent to a given address must be
+   confirmed once (FormSubmit emails a confirmation link) before delivery
+   starts working. ---------------- */
+var contactForm = document.getElementById('contactForm');
+if(contactForm){
+  var formStatus = document.getElementById('formStatus');
+  var submitBtn = contactForm.querySelector('.form-submit');
+  var submitLabel = contactForm.querySelector('.form-submit-label');
+  contactForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitLabel.textContent = T[currentLang].formSending;
+    formStatus.textContent = '';
+    formStatus.className = 'form-status';
+
+    fetch(contactForm.action, {
+      method: 'POST',
+      body: new FormData(contactForm),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res){
+      if(!res.ok) throw new Error('bad status');
+      return res.json();
+    }).then(function(){
+      formStatus.textContent = T[currentLang].formSuccess;
+      formStatus.className = 'form-status ok';
+      contactForm.reset();
+      submitLabel.textContent = T[currentLang].formSubmit;
+      submitBtn.disabled = false;
+    }).catch(function(){
+      formStatus.textContent = T[currentLang].formError;
+      formStatus.className = 'form-status err';
+      submitLabel.textContent = T[currentLang].formSubmit;
+      submitBtn.disabled = false;
+    });
+  });
+}
+
+/* ---------------- cookie consent (dormant) ----------------
+   The site currently loads no non-essential cookies or trackers — see
+   public/alexstudio/cookie-tajekoztato.html — so there is nothing to ask
+   visitors to consent to, and showing a banner anyway would just be UI
+   noise implying tracking that doesn't exist. This is wired up and ready
+   for the day that changes: flip ANALYTICS_ENABLED to true, and load the
+   actual analytics/marketing script gated behind aistudioHasConsent() (or
+   inside the accept handler below) — everything else (the banner, the
+   stored choice, the reject path) already works. */
+var ANALYTICS_ENABLED = false;
+var COOKIE_CONSENT_KEY = 'aistudio_cookie_consent';
+function aistudioHasConsent(){
+  try{ return localStorage.getItem(COOKIE_CONSENT_KEY) === 'granted'; }catch(e){ return false; }
+}
+if(ANALYTICS_ENABLED){
+  var cookieBanner = document.getElementById('cookieBanner');
+  var storedConsent = null;
+  try{ storedConsent = localStorage.getItem(COOKIE_CONSENT_KEY); }catch(e){}
+  if(cookieBanner && !storedConsent){
+    cookieBanner.hidden = false;
+    document.getElementById('cookieAccept').addEventListener('click', function(){
+      try{ localStorage.setItem(COOKIE_CONSENT_KEY, 'granted'); }catch(e){}
+      cookieBanner.hidden = true;
+      // TODO once real analytics exists: load/initialize it here.
+    });
+    document.getElementById('cookieReject').addEventListener('click', function(){
+      try{ localStorage.setItem(COOKIE_CONSENT_KEY, 'denied'); }catch(e){}
+      cookieBanner.hidden = true;
+    });
+  }
+}
+
+})();
+</script>
+</body>
+</html>

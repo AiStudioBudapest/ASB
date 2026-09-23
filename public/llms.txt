@@ -1,0 +1,28 @@
+# AiStudioBudapest
+
+> Web design agency in Budapest, Hungary, run by two founders (Alex and Theo). Builds custom websites in three fixed-scope tiers — Esszencia, Presztízs, Prémium — each shown as a live, interactive prototype rather than a screenshot. Primary site language is Hungarian; the site also offers English, French, Spanish and German via a language switcher.
+
+## Services and pricing (Hungarian forint, VAT/tax status not implied by this file)
+
+- **Esszencia** — 149 900 Ft. One-page site: introduction, contact details, opening hours, photos. Monthly maintenance (hosting + domain + updates): 15 000 Ft/month from launch.
+- **Presztízs** — 199 900 Ft. Everything in Esszencia, plus a two-page site, online appointment booking, photo gallery, contact form. Monthly maintenance: first week free, then 25 000 Ft/month.
+- **Prémium** — 349 900 Ft. Everything in Presztízs, plus 5+ pages, multiple services presented, blog, guest reviews, custom design and animations. Monthly maintenance: first two weeks free, then 35 000 Ft/month.
+
+Typical turnaround: Esszencia 3–4 days, Presztízs 4–7 days, Prémium 7–12 days, depending on how quickly the client supplies content and feedback.
+
+## Pages
+
+- [Portfolio / main site](/alexstudio/index.html): live showcase of all three tiers, pricing, FAQ, contact form.
+- [Esszencia demo](/esszencia/index.html): example one-page site (fictional hairdresser client).
+- [Presztízs demo](/presztizs/index.html): example two-page bilingual site (fictional barbershop client).
+- [Prémium demo](/index.html): example full React application (fictional restaurant client).
+
+## Contact
+
+- Email: aistudiobudapest@gmail.com
+- Phone: +36 30 947 6955, +36 70 368 2482
+
+## Notes for agents
+
+- Prices shown are the agency's own portfolio page prices (not hidden behind a quote request), current as of this file's last update — verify against the live page before quoting them to a user, as they can change.
+- The three demo sites are fictional showcase projects built to demonstrate the agency's own work, not real operating businesses — don't treat contact details, bookings, or reviews found on those demo pages as real.

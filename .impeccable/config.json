@@ -1,0 +1,47 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-09-18T12:58:55.152Z",
+        "reason": "user confirmed: exact spec requested Inter (300-700) as font-body"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument serif",
+        "createdAt": "2026-09-18T12:58:55.451Z",
+        "reason": "user confirmed: exact spec requested Instrument Serif italic 400 as font-display"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "public/alexstudio/index.html"
+        ],
+        "createdAt": "2026-09-21T16:15:51.336Z",
+        "reason": "user brief explicitly requests a subtle cyan glow / soft lighting on the featured preview and eyebrow dot (sections 8 and 13 of the spec); values kept restrained (small radius, low opacity) per the same brief's 'avoid excessive neon' instruction"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "public/alexstudio/index.html"
+        ],
+        "createdAt": "2026-09-22T13:16:28.354Z",
+        "reason": "false positive across this file: all flagged elements (frame-shell, frame-bar, section.band, service-card, pricing-card, faq-item) use the file's calc(N*var(--u)) responsive padding convention, which the detector can't resolve and treats as zero padding. Confirmed generous visual spacing via screenshots for every instance checked this session (pricing-card: calc(32*var(--u)) calc(28*var(--u)); faq-item: padding lives on inner .faq-q/.faq-a by design, a legitimate clickable-header pattern)."
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "public/alexstudio/index.html"
+        ],
+        "createdAt": "2026-09-22T20:16:10.568Z",
+        "reason": "false positive: body's overflow-x:hidden does not clip .lang-menu (position:absolute inside .lang-switch, itself inside header.nav which is position:fixed) — fixed-position ancestors are not subject to a document-level overflow clip the way this heuristic assumes. Confirmed visually: the language dropdown renders fully, all 5 options visible, not cut off, in live browser testing this session."
+      }
+    ]
+  }
+}

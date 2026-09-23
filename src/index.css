@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: 30 8% 4%;
+  --surface: 30 7% 9%;
+  --text: 40 30% 95%;
+  --muted: 30 8% 55%;
+  --stroke: 30 7% 15%;
+  --accent: 38 45% 62%;
+  --accent-2: 42 65% 74%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: hsl(var(--bg));
+  scroll-behavior: auto;
+}
+
+html.lenis {
+  height: auto;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: hsl(var(--bg));
+  color: hsl(var(--text));
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+#root {
+  position: relative;
+  overflow-x: clip;
+}
+
+::selection {
+  background: hsl(var(--accent));
+  color: hsl(var(--bg));
+}
+
+:focus-visible {
+  outline: 1px solid hsl(var(--accent));
+  outline-offset: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--bg));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--stroke));
+  border-radius: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+}
+
+.accent-gradient {
+  background-image: linear-gradient(90deg, hsl(var(--accent)) 0%, hsl(var(--accent-2)) 100%);
+}
+
+.accent-gradient-animated {
+  background-image: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--accent-2)), hsl(var(--accent)));
+  background-size: 200% 200%;
+}
+
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+@media (pointer: fine) {
+  .cursor-ready,
+  .cursor-ready a,
+  .cursor-ready button {
+    cursor: none;
+  }
+}
+
+.underline-fade {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.underline-fade:hover {
+  background-size: 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

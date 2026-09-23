@@ -1,0 +1,32 @@
+# AiStudioBudapest — public portfolio/marketing site.
+# Everything here is meant to be found and read, by people, search
+# engines, and AI agents/assistants alike — nothing is disallowed.
+
+User-agent: *
+Allow: /
+
+# Listed explicitly (not required — the wildcard rule above already
+# covers them — but stated on purpose so it's obvious these are welcome).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
