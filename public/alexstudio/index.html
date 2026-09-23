@@ -43,7 +43,7 @@
    tier so the three-slot composition stays intentional instead of
    degrading into a generic stack. */
 :root{
-  --dw:1440; --dh:900; --dh-px:calc(var(--dh) * 1px); --dw-px:calc(var(--dw) * 1px);
+  --dw:1440; --dh:918; /* 918 = 1440 × 10.2/16, must match .frame-view's aspect-ratio or a black band shows under the iframe */ --dh-px:calc(var(--dh) * 1px); --dw-px:calc(var(--dw) * 1px);
   --u:clamp(0.62px, 0.62vw, 1.05px);
   --gutter:calc(40 * var(--u));
   --vshift:0px;
@@ -1500,11 +1500,16 @@ function mount(key, targetEl){
 }
 
 function scaleFrame(node){
-  var shell = node.querySelector('.frame-shell');
   var view = node.querySelector('.frame-view');
-  if(!shell || !view) return;
-  var w = shell.getBoundingClientRect().width;
-  var scale = w / 1440;
+  if(!view) return;
+  /* clientWidth is the layout width: unlike getBoundingClientRect() it
+     ignores ancestor transforms. The centered card sits inside .stack, which
+     is scale(.94) during the entrance animation — measuring the rect then
+     baked a ~6% too small zoom that stayed forever, leaving black bands on
+     the right and bottom of the iframe. clientWidth is rounded to an integer,
+     so add half a pixel: the iframe then always covers the view (any
+     sub-pixel overflow is clipped by .frame-view's overflow:hidden). */
+  var scale = (view.clientWidth + 0.5) / 1440;
   view.style.setProperty('--scale', scale.toFixed(4));
 }
 

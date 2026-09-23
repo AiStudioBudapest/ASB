@@ -24,7 +24,14 @@
          indicator with nothing real behind it. Lives inside #root, so
          React's first render replaces it automatically; nothing to clean
          up manually. -->
+    <script>
+      // Inside the alexstudio showcase (?embed=1) the page is a thumbnail, so
+      // its own scrollbar would show up as a dark bar down the right edge.
+      if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');
+    </script>
     <style>
+      html.embed{scrollbar-width:none;}
+      html.embed::-webkit-scrollbar{display:none;}
       html,body{background:hsl(30 8% 4%);margin:0;}
       #initial-loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:hsl(30 8% 4%);}
       #initial-loader .spinner{width:22px;height:22px;border-radius:50%;
