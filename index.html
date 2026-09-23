@@ -13,21 +13,25 @@
     <title>Teszt Oldal — Restaurant Gastronomique, Paris</title>
     <!-- Matches src/index.css's --bg/--accent exactly (hsl(), not a hand
          converted hex, so there's zero chance of a mismatched flash once
-         that stylesheet loads) and a tiny pulsing dot — shown the instant
-         the HTML parses, well before the JS bundle downloads/parses/mounts
-         React and LoadingScreen takes over. Without this, a full-page
-         navigation here (as opposed to the alexstudio embed, which skips
-         LoadingScreen via ?embed=1) sat on a bare black tab for a few
-         seconds with nothing on it while the bundle loaded — this fills
-         that gap with something alive instead of a dead screen. Lives
-         inside #root, so React's first render replaces it automatically;
-         nothing to clean up manually. -->
+         that stylesheet loads) and a small loading spinner — shown the
+         instant the HTML parses, well before the JS bundle downloads/
+         parses/mounts React and LoadingScreen takes over. Without this, a
+         full-page navigation here (as opposed to the alexstudio embed,
+         which skips LoadingScreen via ?embed=1) sat on a bare black tab
+         for a few seconds with nothing on it while the bundle loaded —
+         this fills that gap. A spinner, not a pulsing status dot: it
+         reads unambiguously as "loading", rather than as a fake liveness
+         indicator with nothing real behind it. Lives inside #root, so
+         React's first render replaces it automatically; nothing to clean
+         up manually. -->
     <style>
       html,body{background:hsl(30 8% 4%);margin:0;}
       #initial-loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:hsl(30 8% 4%);}
-      #initial-loader .dot{width:8px;height:8px;border-radius:50%;background:hsl(38 45% 62%);animation:initial-loader-pulse 1.1s ease-in-out infinite;}
-      @keyframes initial-loader-pulse{0%,100%{opacity:.25;transform:scale(.85);}50%{opacity:1;transform:scale(1.15);}}
-      @media (prefers-reduced-motion: reduce){#initial-loader .dot{animation:none;opacity:.7;}}
+      #initial-loader .spinner{width:22px;height:22px;border-radius:50%;
+        border:2px solid hsl(38 45% 62% / .25);border-top-color:hsl(38 45% 62%);
+        animation:initial-loader-spin .8s linear infinite;}
+      @keyframes initial-loader-spin{to{transform:rotate(360deg);}}
+      @media (prefers-reduced-motion: reduce){#initial-loader .spinner{animation:none;}}
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,7 +41,7 @@
     />
   </head>
   <body>
-    <div id="root"><div id="initial-loader" aria-hidden="true"><span class="dot"></span></div></div>
+    <div id="root"><div id="initial-loader" aria-hidden="true"><span class="spinner"></span></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
