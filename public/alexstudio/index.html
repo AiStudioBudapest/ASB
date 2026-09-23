@@ -562,9 +562,15 @@ body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
    (0-1) is recomputed every scroll frame in onScrollFrame() from each
    element's own position in the viewport, so it fades/lifts in exact step
    with the scrollbar (and back out if you scroll back up past it) instead
-   of playing a fixed-duration transition once a threshold is crossed. */
+   of playing a fixed-duration transition once a threshold is crossed.
+   --rp-floor is the least opaque an element ever gets (it used to fade from
+   fully transparent, which left everything in the lower half of the screen
+   see-through — too faint to read while scrolling). Raise it for a subtler
+   reveal, lower it for a more dramatic one; the distance over which it fades
+   is revealStart/revealEnd in onScrollFrame(). */
 .band-reveal{
-  opacity:var(--rp,0);
+  --rp-floor:.4;
+  opacity:calc(var(--rp-floor) + (1 - var(--rp-floor)) * var(--rp,0));
   transform:translateY(calc((1 - var(--rp,0)) * 28 * var(--u)));
   will-change:opacity,transform;
 }
@@ -2399,8 +2405,12 @@ if(!reduceMotion){
 
     if(orbitWrap) orbitWrap.style.transform = 'rotate(' + (sy * 0.025).toFixed(2) + 'deg)';
 
-    var revealStart = vh * 0.88;
-    var revealEnd = vh * 0.5;
+    /* An element starts revealing as its top edge enters the bottom of the
+       screen and is fully opaque once it has risen to ~68% of the way down
+       (it used to need the middle of the screen, so the whole lower half was
+       still half-transparent). */
+    var revealStart = vh * 0.95;
+    var revealEnd = vh * 0.68;
     /* A section positioned less than (vh - revealEnd) above the very
        bottom of the document can never be scrolled high enough in the
        viewport to reach rp 1 — there's no more page left below it to
