@@ -1,5 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/alexstudio/index.html" }
+  "redirects": [
+    { "source": "/", "destination": "/alexstudio/index.html", "permanent": false }
   ]
 }
