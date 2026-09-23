@@ -35,7 +35,10 @@ h2{font-family:var(--serif);font-weight:400;font-size:22px;margin:40px 0 12px;co
 p,li{color:var(--text);}
 ul{padding-left:20px;}
 .muted{color:var(--muted);}
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px;}
+/* The table scrolls inside its own box on narrow screens instead of stretching
+   the whole page sideways (mobile browsers then zoom the page out). */
+.table-scroll{overflow-x:auto;margin:12px 0;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;margin:0;font-size:14.5px;}
 th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
 th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;}
 .status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-left:8px;}
@@ -63,10 +66,12 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
   <p>Ez a tájékoztató pontosan leírja, mit tárolunk a böngésződben — se többet, se kevesebbet, mint amit a kód ténylegesen csinál.</p>
 
   <h2>Amit ma használunk</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Görgethető táblázat">
   <table>
     <tr><th>Név</th><th>Típus</th><th>Cél</th><th>Élettartam</th><th>Hozzájárulás?</th></tr>
     <tr><td><code>aistudio_lang</code></td><td>localStorage (nem cookie)</td><td>Megjegyzi, melyik nyelvet választottad</td><td>Amíg nem törlöd a böngésződben</td><td>Nem szükséges — ez az oldal alapvető működéséhez kell, sosem hagyja el az eszközödet</td></tr>
   </table>
+  </div>
   <p class="muted">Ez technikailag nem is „süti” (cookie) a szó szoros értelmében — a böngésző <code>localStorage</code> nevű helyi tárolójában van, amit a szerver nem lát, csak a te böngésződ olvassa vissza.</p>
 
   <h2>Amit NEM használunk <span class="status off">jelenleg kikapcsolva</span></h2>

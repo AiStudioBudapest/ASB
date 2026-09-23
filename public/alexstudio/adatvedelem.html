@@ -36,7 +36,10 @@ h3{font-size:16px;margin:24px 0 8px;color:var(--text);}
 p,li{color:var(--text);}
 ul{padding-left:20px;}
 .muted{color:var(--muted);}
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px;}
+/* The table scrolls inside its own box on narrow screens instead of stretching
+   the whole page sideways (mobile browsers then zoom the page out). */
+.table-scroll{overflow-x:auto;margin:12px 0;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;margin:0;font-size:14.5px;}
 th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
 th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em;}
 .todo{border:1px dashed rgba(127,233,222,.5);background:rgba(127,233,222,.06);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:14px;}
@@ -82,11 +85,13 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
   <p>Nincs látogatottság-elemző (pl. Google Analytics), nincs hirdetési pixel (pl. Meta Pixel), nincs profilalkotás, nincs eladás vagy továbbítás harmadik félnek marketingcélra. Ezt a weboldal teljes forráskódjának átvizsgálásával ellenőriztük, nem csak állítjuk.</p>
 
   <h2>3. Harmadik felek, akikhez adat juthat el</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Görgethető táblázat">
   <table>
     <tr><th>Szolgáltató</th><th>Mire használjuk</th><th>Milyen adat</th></tr>
     <tr><td>FormSubmit.co</td><td>Kapcsolatfelvételi űrlap továbbítása e-mailre</td><td>Név, e-mail cím, üzenet</td></tr>
     <tr><td>Pexels (Canva Inc.)</td><td>A háttérben lejátszott videó betöltése</td><td>IP-cím és böngésző-adatok a videó lekérésekor (technikai jellegű, a videószolgáltatás működéséhez szükséges)</td></tr>
   </table>
+  </div>
   <p class="muted">A betűtípusokat (Hanken Grotesk, Prata) a saját szerverünkről szolgáljuk ki, nem külső szolgáltatótól — ez tudatos döntés, hogy minél kevesebb adat jusson el harmadik félhez azok közül, amik a puszta oldalbetöltéshez nem szükségesek.</p>
   <p>A weboldalon három élő prototípus (Esszencia, Presztízs, Prémium) is megtekinthető beágyazott ablakban — ezek saját demóoldalak, amelyek szintén betöltenek egy háttérvideót és saját nyelvi beállítást tárolnak a böngésződben, de nem küldenek adatot sehova (a bennük lévő foglalási/kapcsolati űrlapok kizárólag demonstrációs céllal működnek, nem valós adatgyűjtésre).</p>
 

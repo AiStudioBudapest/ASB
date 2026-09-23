@@ -90,7 +90,12 @@
 
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-html{scroll-behavior:smooth;}
+/* Long single words (German "Dienstleistungen", e-mail addresses…) must wrap
+   rather than stretch the page sideways on a narrow screen. */
+h1,h2,h3,.faq-q,.pricing-card li,.mail{overflow-wrap:anywhere;}
+/* text-size-adjust: stops iOS/Android from inflating text on rotation,
+   which read as a random "zoom" on phones. */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 body{
   background:var(--ink); color:var(--text); font-family:var(--sans);
   font-size:calc(16 * var(--u)); line-height:1.6; font-weight:400;
@@ -98,6 +103,8 @@ body{
 }
 a{color:inherit;text-decoration:none;}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;}
+/* No 300ms tap delay / double-tap zoom, no grey tap flash on touch screens. */
+a,button,summary,input,textarea{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
 img{display:block;max-width:100%;}
 ::selection{background:var(--cyan);color:var(--ink);}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
@@ -107,7 +114,9 @@ img{display:block;max-width:100%;}
       neutral dark vignette for legibility, twinkling stars and
       a small cursor-tracked glow. No grids, no colour tint.
    ============================================================ */
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#050608;}
+/* The poster is the video's first frame: visible instantly while the clip
+   loads, and the permanent backdrop for prefers-reduced-motion (video removed). */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#050608 url('/media/space-poster.jpg') center/cover no-repeat;}
 .bg-video-wrap{position:absolute;inset:0;opacity:.7;filter:saturate(1.15) brightness(.78) contrast(1.05);}
 /* Two copies of the same clip so the loop restart can be hidden: see the
    crossfade logic in the script below. Each video sits at opacity 0 until
@@ -209,15 +218,18 @@ header.nav{
 .mnav{
   position:fixed;inset:0;z-index:39;background:rgba(6,7,9,.98);backdrop-filter:blur(10px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(26*var(--u));
-  opacity:0;pointer-events:none;transition:opacity .35s var(--ease);
+  opacity:0;pointer-events:none;
+  /* visibility (not just opacity) while closed: a fixed full-screen
+     backdrop-filter layer is otherwise kept alive and composited every frame. */
+  visibility:hidden;transition:opacity .35s var(--ease),visibility 0s linear .35s;
 }
-.mnav.open{opacity:1;pointer-events:auto;}
+.mnav.open{opacity:1;pointer-events:auto;visibility:visible;transition-delay:0s;}
 .mnav a{font-family:var(--serif);font-size:calc(30*var(--u));color:var(--text);}
 .mnav .nav-cta{margin-top:calc(10*var(--u));}
 
 @media (max-width:820px){
   .nav-links{display:none;}
-  .burger{display:block;order:3;}
+  .burger{display:block;order:3;margin-left:auto;} /* .nav-links (which had margin-left:auto) is hidden here, so push the burger to the right edge itself */
   .nav-cta{display:none;}
   .lang-switch{display:none;}
   /* --u caps out at ~1.05px on both desktop and mobile widths (it's a
@@ -234,7 +246,11 @@ header.nav{
    ============================================================ */
 .hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;
-  padding:calc(170*var(--u)) var(--gutter) calc(60*var(--u));}
+  padding:calc(170*var(--u)) var(--gutter) calc(60*var(--u));
+  /* Scrolling shatters the tagline letters far past the screen edges
+     (--ex up to ~230px). Even invisible, those boxes widen the page and make
+     mobile browsers zoom out / scroll sideways, so they are clipped here. */
+  overflow-x:clip;}
 .eyebrow-wrap{display:flex;align-items:center;gap:calc(12*var(--u));margin-bottom:calc(10*var(--u));}
 .eyebrow-wrap .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);}
 .eyebrow{font-size:calc(12*var(--u));letter-spacing:.32em;text-transform:uppercase;color:var(--cyan);font-weight:600;}
@@ -306,6 +322,13 @@ header.nav{
 .stage{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(60*var(--u));
   transform:translateY(var(--vshift));perspective:calc(2400*var(--u));
+  /* The decorative orbit rings are wider than a phone (up to ~1200px). Left
+     unclipped they widen the page: mobile browsers then grow the layout
+     viewport to fit them (the whole site suddenly looks zoomed out) and let
+     you scroll sideways. body{overflow-x:hidden} does not stop that on
+     mobile, so the overflow is contained at its source. clip (unlike
+     hidden) leaves overflow-y alone. */
+  overflow-x:clip;
 }
 .showcase{padding-top:calc(60*var(--u));}
 
@@ -334,15 +357,22 @@ header.nav{
 }
 .side.left{justify-self:start;transform:translateX(calc(-14*var(--u)));}
 .side.right{justify-self:end;transform:translateX(calc(14*var(--u)));}
-.side:hover,.side:focus-visible{transform:translateX(0) scale(1.035);}
-.side:hover .frame-shell,.side:focus-visible .frame-shell{filter:brightness(1.12);box-shadow:0 30px 70px -20px rgba(0,0,0,.7),0 0 0 1px rgba(127,233,222,.35);}
+/* Hover styles only where hover exists: on touch a tap leaves :hover stuck on
+   the card, which then keeps its lifted/brightened look after it rotates. */
+.side:focus-visible{transform:translateX(0) scale(1.035);}
+.side:focus-visible .frame-shell{filter:brightness(1.12);box-shadow:0 30px 70px -20px rgba(0,0,0,.7),0 0 0 1px rgba(127,233,222,.35);}
+@media (hover:hover){
+  .side:hover{transform:translateX(0) scale(1.035);}
+  .side:hover .frame-shell{filter:brightness(1.12);box-shadow:0 30px 70px -20px rgba(0,0,0,.7),0 0 0 1px rgba(127,233,222,.35);}
+}
 
 .side .frame-shell{width:calc(320*var(--u));}
 .side .side-label{
   font-family:var(--serif);font-size:calc(19*var(--u));letter-spacing:.08em;text-transform:uppercase;
   color:var(--muted);transition:color .3s var(--ease);
 }
-.side:hover .side-label,.side:focus-visible .side-label{color:var(--text);}
+.side:focus-visible .side-label{color:var(--text);}
+@media (hover:hover){.side:hover .side-label{color:var(--text);}}
 
 /* --- center featured preview --- */
 .center-col{display:flex;flex-direction:column;align-items:center;}
@@ -545,14 +575,15 @@ body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
 section.band{position:relative;z-index:2;padding:calc(90*var(--u)) var(--gutter);border-top:1px solid var(--line);}
 .band-head{max-width:calc(640*var(--u));margin:0 auto calc(48*var(--u));text-align:center;}
 .band-head .eyebrow{display:block;margin-bottom:calc(12*var(--u));}
-.band-head h2{font-family:var(--serif);font-weight:400;font-size:calc(38*var(--u));margin:0;text-transform:uppercase;letter-spacing:.02em;}
+.band-head h2{font-family:var(--serif);font-weight:400;font-size:calc(38*var(--u));margin:0;text-transform:uppercase;letter-spacing:.02em;
+  overflow-wrap:anywhere;}
 .band-head p{color:var(--muted);margin-top:calc(14*var(--u));font-size:calc(15*var(--u));}
 
 .services-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));}
 @media (max-width:820px){.services-grid{grid-template-columns:1fr;}}
 .service-card{padding:calc(28*var(--u));border:1px solid var(--line);border-radius:calc(14*var(--u));background:rgba(255,255,255,.02);
   transition:transform .35s var(--ease),border-color .35s var(--ease);}
-.service-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}
+@media (hover:hover){.service-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}}
 .service-card .n{font-family:var(--serif);color:var(--cyan);font-size:calc(13*var(--u));}
 .service-card h3{font-family:var(--serif);font-weight:400;font-size:calc(21*var(--u));margin:calc(10*var(--u)) 0 calc(10*var(--u));}
 .service-card p{color:var(--muted);font-size:calc(14*var(--u));margin:0;}
@@ -562,7 +593,7 @@ section.band{position:relative;z-index:2;padding:calc(90*var(--u)) var(--gutter)
 .pricing-card{display:flex;flex-direction:column;padding:calc(32*var(--u)) calc(28*var(--u));
   border:1px solid var(--line);border-radius:calc(14*var(--u));background:rgba(255,255,255,.02);
   transition:transform .35s var(--ease),border-color .35s var(--ease);}
-.pricing-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}
+@media (hover:hover){.pricing-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}}
 .pricing-card.featured{border-color:rgba(127,233,222,.55);background:linear-gradient(180deg,rgba(127,233,222,.07),rgba(127,233,222,.015));}
 .pricing-card h3{font-family:var(--serif);font-weight:400;font-size:calc(22*var(--u));margin:0;text-transform:uppercase;letter-spacing:.03em;}
 .pricing-card .price{font-family:var(--serif);font-weight:400;font-size:calc(30*var(--u));color:var(--cyan);margin:calc(12*var(--u)) 0 calc(6*var(--u));}
@@ -693,10 +724,41 @@ footer.site-foot a:hover{color:var(--cyan);}
   .enter-hint{display:none;}
 }
 @media (max-width:479px){
+  /* "AIUDIOBUDAPEST" in 40px uppercase Prata is ~460px wide: wider than a
+     phone. This single unbreakable word was what stretched the whole page
+     sideways; cap the size by viewport width so it always fits. */
+  .band-head h2{font-size:min(calc(38*var(--u)), 7.4vw);}
+  /* side cards peek in from the edges, but far enough that their label
+     ("ESSZENCIA" / "PRESZTÍZS") is fully on screen instead of cut in half */
+  .side.left,.enter.run .side.left{transform:translateX(calc(-20*var(--u)));}
+  .side.right,.enter.run .side.right{transform:translateX(calc(20*var(--u)));}
+  .side .side-label{font-size:calc(9.5*var(--u));letter-spacing:.03em;}
   .headline{font-size:calc(40*var(--u));}
   .side .frame-shell{width:calc(58*var(--u));}
   .composition{grid-template-columns:calc(46*var(--u)) 1fr calc(46*var(--u));}
   .rule{width:calc(52*var(--u));}
+}
+
+/* ============================================================
+   10. PHONE / TABLET PERFORMANCE — keep every frame cheap
+   ============================================================ */
+/* Touch devices and phones: things that force the GPU to redo full-screen
+   work on every frame while the space video plays underneath. */
+@media (max-width:820px), (pointer:coarse){
+  /* a full-screen mix-blend-mode layer over a playing video is one of the
+     most expensive things a mobile GPU can be asked to do, for a 5% noise. */
+  .grain{display:none;}
+  /* a live CSS filter on a playing video is re-run every frame; plain
+     opacity gives (almost) the same dimming for free. */
+  .bg-video-wrap{filter:none;opacity:.55;}
+}
+/* Phones: the decorative extras cost far more than they add on a small
+   screen. The orbit rings alone are two ~1000px rotating layers (tens of MB
+   of GPU texture) that are mostly off-screen anyway; the floating "levitate"
+   loop keeps three iframe layers animating non-stop. */
+@media (max-width:820px){
+  .orbit-wrap,.frame-glow{display:none;}
+  .frame-shell{animation:none;}
 }
 </style>
 </head>
@@ -838,19 +900,19 @@ footer.site-foot a:hover{color:var(--cyan);}
   <div class="project" data-project="esszencia">
     <div class="frame-shell"><span class="frame-glow"></span>
       <div class="frame-bar"><i></i><i></i><i></i><span class="url">esszencia — egyoldalas weboldal</span></div>
-      <div class="frame-view"><iframe src="/esszencia/index.html" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
+      <div class="frame-view"><iframe data-src="/esszencia/index.html" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
     </div>
   </div>
   <div class="project" data-project="presztizs">
     <div class="frame-shell"><span class="frame-glow"></span>
       <div class="frame-bar"><i></i><i></i><i></i><span class="url">presztízs — üzleti weboldal</span></div>
-      <div class="frame-view"><iframe src="/presztizs/index.html" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
+      <div class="frame-view"><iframe data-src="/presztizs/index.html" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
     </div>
   </div>
   <div class="project" data-project="premium">
     <div class="frame-shell"><span class="frame-glow"></span>
       <div class="frame-bar"><i></i><i></i><i></i><span class="url">prémium — teljes élmény</span></div>
-      <div class="frame-view"><iframe src="/index.html?embed=1" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
+      <div class="frame-view"><iframe data-src="/index.html?embed=1" title="" tabindex="-1"></iframe><span class="frame-sheen"></span></div>
     </div>
   </div>
 </div>
@@ -1330,9 +1392,20 @@ function readStoredLang(){
 }
 var currentLang = readStoredLang();
 
-var SPACE_BG_VIDEO = 'https://videos.pexels.com/video-files/27303243/12116155_2560_1440_24fps.mp4';
+/* Pexels space clip, re-encoded and self-hosted (was a 10.6 MB 2560x1440
+   file streamed twice — one <video> per crossfade copy — which is what made
+   phones stutter). 1080p ~1.4 MB for desktop, 720p ~0.65 MB for phones and small tablets. */
+var SPACE_BG_VIDEO = window.matchMedia('(max-width:820px)').matches
+  ? '/media/space-720.mp4' : '/media/space-1080.mp4';
 
 var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* Viewport height cached for the scroll loop. Mobile browsers fire `resize`
+   every time the URL bar collapses/expands (height-only, mid-scroll); reading
+   window.innerHeight live made every reveal threshold twitch while scrolling.
+   Only refreshed on real width changes (rotation) — see the resize handlers. */
+var viewH = window.innerHeight;
+var lastViewW = window.innerWidth;
+var isCoarse = window.matchMedia('(pointer:coarse)').matches;
 var featured = 'premium';
 var isAnimating = false;
 
@@ -1842,6 +1915,28 @@ mount('presztizs', sideRight.querySelector('.preview-slot'));
 rescaleAll();
 applyLang(currentLang);
 
+/* Live preview iframes start loading here (their src lives in data-src).
+   Each is a whole website with its own scripts, fonts and video: on a
+   phone/tablet, starting all three at once competes with the hero and the
+   background video for bandwidth and CPU, so they wait until the page itself
+   has finished loading and the browser is idle. Desktop starts immediately. */
+(function(){
+  var frames = document.querySelectorAll('.project iframe[data-src]');
+  function loadFrames(){
+    frames.forEach(function(f){
+      f.setAttribute('src', f.getAttribute('data-src'));
+      f.removeAttribute('data-src');
+    });
+  }
+  if(!window.matchMedia('(max-width:1024px), (pointer:coarse)').matches){ loadFrames(); return; }
+  function whenIdle(){
+    if(window.requestIdleCallback) window.requestIdleCallback(loadFrames, {timeout:2500});
+    else setTimeout(loadFrames, 1200);
+  }
+  if(document.readyState === 'complete') whenIdle();
+  else window.addEventListener('load', whenIdle, {once:true});
+})();
+
 /* ---------------- language switcher: desktop dropdown + mobile button
    row, both populated by renderLangMenus() inside applyLang(). Delegated
    clicks (menus are regenerated on every language change, same reasoning
@@ -1908,6 +2003,12 @@ if(logoLink){
 }
 
 window.addEventListener('resize', function(){
+  /* Touch browsers fire resize for every URL-bar show/hide while scrolling
+     (height only). The iframe zoom depends on width alone, so skip those. */
+  var w = window.innerWidth;
+  if(isCoarse && w === lastViewW) return;
+  lastViewW = w;
+  viewH = window.innerHeight;
   requestAnimationFrame(rescaleAll);
 });
 
@@ -1994,6 +2095,7 @@ if(!reduceMotion){
     rafId = null;
   }
   window.addEventListener('pointermove', function(e){
+    if(e.pointerType && e.pointerType !== 'mouse') return; /* touch/pen: no cursor tilt or spotlight */
     var cx = window.innerWidth/2, cy = window.innerHeight/2;
     tx = ((e.clientX - cx) / cx) * 4;   /* max ~4deg */
     ty = -((e.clientY - cy) / cy) * 3;  /* max ~3deg */
@@ -2023,7 +2125,7 @@ function attachSideTilt(sideEl){
     raf = null;
   }
   sideEl.addEventListener('pointermove', function(e){
-    if(isAnimating) return;
+    if(isAnimating || (e.pointerType && e.pointerType !== 'mouse')) return;
     var r = sideEl.getBoundingClientRect();
     var px = (e.clientX - r.left) / r.width;
     var py = (e.clientY - r.top) / r.height;
@@ -2087,7 +2189,8 @@ document.addEventListener('keydown', function(e){
 /* ---------------- twinkling starfield ---------------- */
 if(!reduceMotion){
   var field = document.getElementById('particles');
-  for(var i=0;i<40;i++){
+  var starCount = window.innerWidth <= 820 ? 16 : 40; /* each star is its own animated layer */
+  for(var i=0;i<starCount;i++){
     var s = document.createElement('i');
     var size = (1 + Math.random()*2).toFixed(1);
     s.style.width = size+'px';
@@ -2141,21 +2244,44 @@ refreshRevealEls();
 ---------------------------------------------------------- */
 if(!reduceMotion){
   var scrollRafId = null;
+  /* Two strict phases per frame — all layout READS first, then all WRITES.
+     The old loop wrote --rp on each section and then read the next one's
+     getBoundingClientRect(), which forces the browser to redo style + layout
+     once per section per frame (a dozen-plus forced layouts on every scroll
+     tick — the main cause of scroll jank on phones). Reading everything up
+     front costs at most one layout; writes are also skipped when a value
+     hasn't changed, so once the hero is scrolled past or a section is fully
+     revealed it costs nothing per frame. */
+  var lastHeroP = -1, lastZoomP = -1;
   function onScrollFrame(){
+    scrollRafId = null;
     var sy = window.scrollY;
-    var vh = window.innerHeight;
-    var docH = document.documentElement.scrollHeight - vh;
+    var vh = viewH;
 
+    /* --- reads --- */
+    var docH = document.documentElement.scrollHeight - vh;
+    var tops = new Array(revealEls.length);
+    for(var i = 0; i < revealEls.length; i++){
+      tops[i] = revealEls[i].getBoundingClientRect().top - (revealEls[i].__revealOffset || 0);
+    }
+
+    /* --- writes --- */
     if(scrollProgressBar) scrollProgressBar.style.width = (docH > 0 ? Math.min(100, sy / docH * 100) : 0).toFixed(2) + '%';
 
     var heroP = Math.min(1, Math.max(0, sy / vh));
-    hero.style.opacity = String(Math.max(0, 1 - heroP * 1.25));
-    hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px) scale(' + (1 - heroP * 0.05).toFixed(3) + ')';
-    if(tagline) tagline.style.setProperty('--p', heroP.toFixed(4));
+    if(heroP !== lastHeroP){
+      lastHeroP = heroP;
+      hero.style.opacity = String(Math.max(0, 1 - heroP * 1.25));
+      hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px) scale(' + (1 - heroP * 0.05).toFixed(3) + ')';
+      if(tagline) tagline.style.setProperty('--p', heroP.toFixed(4));
+    }
 
     if(bgVideoWrap){
       var zoomP = Math.min(1, sy / (vh * 2.4));
-      bgVideoWrap.style.transform = 'scale(' + (1 + zoomP * 0.16).toFixed(3) + ')';
+      if(zoomP !== lastZoomP){
+        lastZoomP = zoomP;
+        bgVideoWrap.style.transform = 'scale(' + (1 + zoomP * 0.16).toFixed(3) + ')';
+      }
     }
 
     if(orbitWrap) orbitWrap.style.transform = 'rotate(' + (sy * 0.025).toFixed(2) + 'deg)';
@@ -2170,14 +2296,15 @@ if(!reduceMotion){
        you've scrolled as far as the page allows, nothing above should
        still be waiting to "finish" appearing. */
     var atBottom = docH > 0 && sy >= docH - 1;
-    revealEls.forEach(function(el){
-      var top = el.getBoundingClientRect().top - (el.__revealOffset || 0);
-      var rp = atBottom ? 1 : (revealStart - top) / (revealStart - revealEnd);
+    for(var j = 0; j < revealEls.length; j++){
+      var rp = atBottom ? 1 : (revealStart - tops[j]) / (revealStart - revealEnd);
       rp = rp < 0 ? 0 : (rp > 1 ? 1 : rp);
-      el.style.setProperty('--rp', rp.toFixed(4));
-    });
-
-    scrollRafId = null;
+      var rpStr = rp.toFixed(4);
+      if(revealEls[j].__rp !== rpStr){
+        revealEls[j].__rp = rpStr;
+        revealEls[j].style.setProperty('--rp', rpStr);
+      }
+    }
   }
   function requestScrollFrame(){ if(scrollRafId === null) scrollRafId = requestAnimationFrame(onScrollFrame); }
   window.addEventListener('scroll', requestScrollFrame, {passive:true});
