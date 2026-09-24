@@ -1849,12 +1849,22 @@ function parlFrame(t){
     if(t - Parl.p3Chk > 1000){ Parl.p3Chk = t; p3Size(false); }
     if(!(idle && t - Parl.lastDraw < 30)){
       Parl.lastDraw = t;
-      Parl.p3d.render(t, c.prog, {mx: Parl.msx, my: Parl.msy, dim: c.dim, appear: Parl.p3Appear});
+      try{
+        Parl.p3d.render(t, c.prog, {mx: Parl.msx, my: Parl.msy, dim: c.dim, appear: Parl.p3Appear});
+      }catch(err){
+        /* any failure in the 3D scene: give the background back to the photo and the video */
+        Parl.p3d = null; document.getElementById('p3dCanvas').style.opacity = '0';
+        parlCanvas.classList.add('on'); if(Parl.mode === 'img') parlImg.classList.add('on');
+        if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(e2){} }
+      }
       /* very slow GPU: lower the render resolution, twice at most */
       if(++Parl.p3Frames > 40 && !idle){
         if(dt > .04) Parl.p3Slow++;
         if(Parl.p3Frames % 90 === 0){
-          if(Parl.p3Slow > 45 && Parl.p3Cap > .8){ Parl.p3Cap = Parl.p3Cap > 1 ? 1 : .8; p3Size(true); }
+          if(Parl.p3Slow > 45){
+            if(Parl.p3d.degrade && Parl.p3d.degrade()){ /* one quality tier down: reflections/MSAA, then bloom */ }
+            else if(Parl.p3Cap > .8){ Parl.p3Cap = Parl.p3Cap > 1 ? 1 : .8; p3Size(true); }
+          }
           Parl.p3Slow = 0;
         }
       }
@@ -1898,12 +1908,15 @@ function parlLoad3D(){
   var go = function(){
     import('/alexstudio/parliament3d.js').then(function(mod){
       var cv = document.getElementById('p3dCanvas');
-      var api = mod.createParliament(cv, {mobile: isCoarse || window.innerWidth <= 820});
+      var api = mod.createParliament(cv, {mobile: isCoarse || window.innerWidth <= 820, photo: parlImg});
       cv.addEventListener('webglcontextlost', function(e){
         e.preventDefault(); Parl.p3d = null; cv.style.opacity = '0';
+        if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
         parlCanvas.classList.add('on'); if(Parl.mode === 'img') parlImg.classList.add('on');
       });
       Parl.p3d = api; Parl.p3Appear = 0; p3Size(true);
+      /* the 3D scene has its own opaque night sky: stop decoding the two space videos */
+      if(bgVideoWrap){ try{ bgVideo.pause(); bgVideo2.pause(); }catch(e){} }
       if(/[?&]p3d=1/.test(location.search)) window.__p3d = api;
       parlCanvas.classList.remove('on'); parlImg.classList.remove('on');
       parlKick();
