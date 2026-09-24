@@ -148,6 +148,7 @@ img{display:block;max-width:100%;}
 .bg-parl{position:absolute;left:0;top:0;width:100%;height:100vh;opacity:0;transition:opacity 1.6s var(--ease);}
 .bg-parl.on{opacity:1;}
 /* Also the texture source, and the fallback when WebGL is unavailable. */
+.bg-p3d{position:absolute;left:0;top:0;width:100%;height:100vh;opacity:0;pointer-events:none;}
 .bg-parl-img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;opacity:0;pointer-events:none;}
 .bg-parl-img.on{opacity:.92;}
 .spotlight{
@@ -816,6 +817,7 @@ footer.site-foot a:hover{color:var(--cyan);}
     <video class="bg-video" id="bgVideo2" muted playsinline preload="none"></video>
   </div>
   <canvas class="bg-parl" id="parlCanvas"></canvas>
+  <canvas class="bg-p3d" id="p3dCanvas"></canvas>
   <img class="bg-parl-img" id="parlImg" src="/alexstudio/parlement.jpg" alt="" width="2400" height="1138" decoding="async">
   <span class="bg-tint"></span>
 </div>
@@ -1639,7 +1641,8 @@ var Parl = {
   cam: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
   tgt: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
   mx: 0, my: 0, mouse: false, msx: 0, msy: 0, lx: .5, ly: .5,
-  running: false, lastT: 0, lastDraw: 0, active: 0, frames: 0, slow: 0, lost: false, ys: []
+  running: false, lastT: 0, lastDraw: 0, active: 0, frames: 0, slow: 0, lost: false, ys: [],
+  p3d: null, p3Appear: 0, p3Chk: 0, p3W: 0, p3H: 0, p3Cap: isCoarse ? 1.15 : 1.5, p3Frames: 0, p3Slow: 0
 };
 function parlClamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
 
@@ -1840,7 +1843,23 @@ function parlFrame(t){
   Parl.msy += (Parl.my / Math.max(1, Parl.H) * 2 - 1 - Parl.msy) * (Parl.mouse ? k : 0);
   if(moving) Parl.active = t;
   var idle = t - Parl.active > 1600;
-  if(Parl.mode === 'gl'){
+  if(Parl.p3d){
+    Parl.p3Appear = Math.min(1, Parl.p3Appear + dt * .8);
+    /* safety net for missed resize events (rotation, browser zoom, devtools) */
+    if(t - Parl.p3Chk > 1000){ Parl.p3Chk = t; p3Size(false); }
+    if(!(idle && t - Parl.lastDraw < 30)){
+      Parl.lastDraw = t;
+      Parl.p3d.render(t, c.prog, {mx: Parl.msx, my: Parl.msy, dim: c.dim, appear: Parl.p3Appear});
+      /* very slow GPU: lower the render resolution, twice at most */
+      if(++Parl.p3Frames > 40 && !idle){
+        if(dt > .04) Parl.p3Slow++;
+        if(Parl.p3Frames % 90 === 0){
+          if(Parl.p3Slow > 45 && Parl.p3Cap > .8){ Parl.p3Cap = Parl.p3Cap > 1 ? 1 : .8; p3Size(true); }
+          Parl.p3Slow = 0;
+        }
+      }
+    }
+  } else if(Parl.mode === 'gl'){
     /* idle = only the river shimmer and the drift move: 24 fps is plenty */
     if(!(idle && t - Parl.lastDraw < 40)){
       Parl.lastDraw = t; parlDraw(t);
@@ -1859,6 +1878,39 @@ function parlKick(){
   if(Parl.running || Parl.mode === 'off' || document.hidden) return;
   Parl.running = true; requestAnimationFrame(parlFrame);
 }
+/* The real 3D Parliament (scene3d/parliament3d.js, one self-contained file
+   built by `npm run build:3d`) is loaded once the page is idle and then takes
+   over from the photo above; if anything fails, the photo stays. */
+function p3Size(force){
+  var cv = document.getElementById('p3dCanvas');
+  if(!Parl.p3d || !cv) return;
+  var w = cv.clientWidth, h = cv.clientHeight;
+  if(!force){
+    if(w === Parl.p3W && h === Parl.p3H) return;
+    if(isCoarse && Math.abs(w - Parl.p3W) < 2 && Math.abs(h - Parl.p3H) < 160) return;
+  }
+  Parl.p3W = w; Parl.p3H = h;
+  Parl.p3d.resize(w, h, Math.min(window.devicePixelRatio || 1, Parl.p3Cap));
+}
+function parlLoad3D(){
+  if(reduceMotion || Parl.p3Tried || (navigator.connection && navigator.connection.saveData)) return;
+  Parl.p3Tried = true;
+  var go = function(){
+    import('/alexstudio/parliament3d.js').then(function(mod){
+      var cv = document.getElementById('p3dCanvas');
+      var api = mod.createParliament(cv, {mobile: isCoarse || window.innerWidth <= 820});
+      cv.addEventListener('webglcontextlost', function(e){
+        e.preventDefault(); Parl.p3d = null; cv.style.opacity = '0';
+        parlCanvas.classList.add('on'); if(Parl.mode === 'img') parlImg.classList.add('on');
+      });
+      Parl.p3d = api; Parl.p3Appear = 0; p3Size(true);
+      if(/[?&]p3d=1/.test(location.search)) window.__p3d = api;
+      parlCanvas.classList.remove('on'); parlImg.classList.remove('on');
+      parlKick();
+    }).catch(function(){});
+  };
+  if(window.requestIdleCallback) requestIdleCallback(go, {timeout: 5000}); else setTimeout(go, 2000);
+}
 function parlStart(){
   if(!parlImg.naturalWidth) return;
   Parl.IW = parlImg.naturalWidth; Parl.IH = parlImg.naturalHeight;
@@ -1872,11 +1924,12 @@ function parlStart(){
   }
   if(reduceMotion) return;
   parlAim(window.scrollY, viewH, document.documentElement.scrollHeight - viewH);
+  parlLoad3D();
 }
 if(parlCanvas && parlImg){
   parlCanvas.addEventListener('webglcontextlost', function(e){ e.preventDefault(); Parl.lost = true; parlCanvas.classList.remove('on'); });
   parlCanvas.addEventListener('webglcontextrestored', function(){ Parl.u = {}; Parl.mode = 'off'; parlStart(); });
-  window.addEventListener('resize', function(){ parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
+  window.addEventListener('resize', function(){ p3Size(false); parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
   document.addEventListener('visibilitychange', function(){ if(!document.hidden){ Parl.lastT = 0; parlKick(); } });
   if(!reduceMotion){
     window.addEventListener('pointermove', function(e){
