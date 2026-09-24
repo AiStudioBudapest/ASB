@@ -700,37 +700,44 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
 .contact-links{display:flex;flex-direction:column;align-items:center;gap:calc(18*var(--u));margin-top:calc(14*var(--u));}
 .contact .mail{
   display:inline-flex;align-items:center;gap:calc(10*var(--u));
-  font-family:var(--serif);font-size:calc(22*var(--u));color:var(--text);border-bottom:1px solid var(--line);
+  font-family:var(--serif);font-size:calc(22*var(--u));color:var(--text);border-bottom:1px solid rgba(255,255,255,.4);
   padding-bottom:calc(6*var(--u));transition:border-color .3s var(--ease),color .3s var(--ease);
 }
 .contact .mail:hover{color:var(--cyan);border-color:var(--cyan);}
 .phone-row{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(14*var(--u)) calc(28*var(--u));}
 .contact .mail.phone{font-size:calc(17*var(--u));}
 
-.form-divider{display:flex;align-items:center;gap:calc(14*var(--u));margin:calc(44*var(--u)) 0 calc(28*var(--u));
-  color:var(--muted);font-size:calc(13*var(--u));letter-spacing:.04em;}
-.form-divider::before,.form-divider::after{content:"";flex:1;height:1px;background:var(--line);}
+.form-divider{display:flex;align-items:center;gap:calc(14*var(--u));margin:calc(44*var(--u)) 0 calc(24*var(--u));
+  color:#d5dce5;font-size:calc(14.5*var(--u));font-weight:500;letter-spacing:.03em;}
+.form-divider::before,.form-divider::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.28);}
 
-.contact-form{display:flex;flex-direction:column;gap:calc(14*var(--u));text-align:left;}
-.contact-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:calc(14*var(--u));}
+/* The form is a solid glass card, cyan-edged, with high-contrast fields: it used to be near-transparent
+   inputs (3% white, 12% border, dim placeholders) that vanished into the lit Parliament behind. */
+.contact-form{display:flex;flex-direction:column;gap:calc(18*var(--u));text-align:left;
+  padding:calc(32*var(--u));border:1px solid rgba(127,233,222,.4);border-radius:calc(18*var(--u));
+  background:rgba(6,8,16,.86);box-shadow:0 26px 60px -26px rgba(0,0,0,.85),0 0 40px -12px rgba(127,233,222,.25);}
+@media (max-width:560px){.contact-form{padding:calc(24*var(--u)) calc(18*var(--u));}}
+.contact-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:calc(18*var(--u));}
 @media (max-width:560px){.contact-form .form-row{grid-template-columns:1fr;}}
-/* Visually hidden but still reachable by screen readers/AI agents parsing
-   the DOM — the contact form relies on placeholder text for its visual
-   look, but a placeholder alone is not a real accessible label (it
-   vanishes once typing starts, and isn't reliably exposed by every
-   assistive tech), so each field also gets one of these, linked via
-   for/id. */
+/* Still used for anything that must stay invisible but readable by screen readers / AI agents. */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.contact-form .field-label{display:block;margin:0 0 calc(8*var(--u));font-size:calc(12.5*var(--u));font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:#e6ecf3;text-shadow:none;}
 .contact-form input,.contact-form textarea{
-  width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:calc(10*var(--u));
-  padding:calc(13*var(--u)) calc(16*var(--u));font-family:var(--sans);font-size:calc(15*var(--u));color:var(--text);
-  transition:border-color .25s var(--ease),background .25s var(--ease);
+  width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.38);border-radius:calc(11*var(--u));
+  padding:calc(14*var(--u)) calc(16*var(--u));font-family:var(--sans);font-size:max(16px,calc(15.5*var(--u)));color:#fff;
+  transition:border-color .25s var(--ease),background .25s var(--ease),box-shadow .25s var(--ease);
 }
-.contact-form textarea{resize:vertical;min-height:calc(110*var(--u));}
-.contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--muted-2);}
-.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--cyan);background:rgba(127,233,222,.05);}
-.contact-form .form-submit{border:0;cursor:pointer;font-family:inherit;align-self:center;margin-top:calc(4*var(--u));min-width:calc(180*var(--u));justify-content:center;}
+.contact-form textarea{resize:vertical;min-height:calc(130*var(--u));}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:#b4bdc9;opacity:1;}
+@media (hover:hover){.contact-form input:hover,.contact-form textarea:hover{border-color:rgba(255,255,255,.6);}}
+.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--cyan);background:rgba(127,233,222,.12);
+  box-shadow:0 0 0 3px rgba(127,233,222,.28);}
+.contact-form .form-submit{border:0;cursor:pointer;font-family:inherit;align-self:stretch;margin-top:calc(6*var(--u));
+  justify-content:center;padding:calc(18*var(--u)) calc(30*var(--u));font-size:calc(14*var(--u));
+  background:var(--cyan);color:#04121a;box-shadow:0 16px 36px -12px rgba(127,233,222,.55);}
+.contact-form .form-submit:hover{box-shadow:0 22px 44px -12px rgba(127,233,222,.7);}
 .contact-form .form-submit:disabled{opacity:.6;cursor:default;transform:none!important;}
 .form-status{margin:0;text-align:center;font-size:calc(13.5*var(--u));min-height:1.4em;transition:color .25s var(--ease);}
 .form-status.ok{color:var(--cyan);}
@@ -1123,15 +1130,15 @@ footer.site-foot a:hover{color:var(--cyan);}
       <input type="hidden" name="_subject" id="formSubjectInput" value="Új üzenet az AiStudioBudapest oldalról">
       <div class="form-row">
         <div>
-          <label class="sr-only" for="formNameInput" data-i18n="formName">Neved</label>
+          <label class="field-label" for="formNameInput" data-i18n="formName">Neved</label>
           <input type="text" id="formNameInput" name="name" placeholder="Neved" autocomplete="name" required data-i18n-placeholder="formName">
         </div>
         <div>
-          <label class="sr-only" for="formEmailInput" data-i18n="formEmail">E-mail címed</label>
+          <label class="field-label" for="formEmailInput" data-i18n="formEmail">E-mail címed</label>
           <input type="email" id="formEmailInput" name="email" placeholder="E-mail címed" autocomplete="email" required data-i18n-placeholder="formEmail">
         </div>
       </div>
-      <label class="sr-only" for="formMessageInput" data-i18n="formMessage">Mesélj a projektedről vagy a kérdésedről…</label>
+      <label class="field-label" for="formMessageInput" data-i18n="formMessageLabel">Üzeneted</label>
       <textarea id="formMessageInput" name="message" placeholder="Mesélj a projektedről vagy a kérdésedről…" rows="4" required data-i18n-placeholder="formMessage"></textarea>
       <button type="submit" class="btn-primary form-submit">
         <span class="form-submit-label" data-i18n="formSubmit">Üzenet küldése</span>
@@ -1256,7 +1263,7 @@ hu:{
   contactEyebrow:'Kapcsolat', contactH2:'Építsünk valami prémiumot',
   contactP:'Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.',
   formDivider:'Van egy konkrétabb kérdésed?', formName:'Neved', formEmail:'E-mail címed',
-  formMessage:'Mesélj a projektedről vagy a kérdésedről…', formSubmit:'Üzenet küldése', formSending:'Küldés…',
+  formMessage:'Mesélj a projektedről vagy a kérdésedről…', formMessageLabel:'Üzeneted', formSubmit:'Üzenet küldése', formSending:'Küldés…',
   formSuccess:'Köszönjük — hamarosan jelentkezünk.', formError:'Hiba történt — kérjük, írj közvetlenül e-mailben.',
   formSubject:'Új üzenet az AiStudioBudapest oldalról',
   cookieBannerText:'Sütiket használunk a weboldal működésének elemzésére. Az "Elfogadom" gombbal hozzájárulsz, az "Elutasítom" gombbal csak a feltétlenül szükséges (nyelvi beállítás) tárolás marad aktív.',
@@ -1309,7 +1316,7 @@ en:{
   contactEyebrow:'Contact', contactH2:"Let's build something premium",
   contactP:"Tell me about your business and I'll recommend the right tier — Esszencia, Presztízs, or Prémium.",
   formDivider:'Have a more specific request?', formName:'Your name', formEmail:'Your email',
-  formMessage:'Tell us about your project or question…', formSubmit:'Send message', formSending:'Sending…',
+  formMessage:'Tell us about your project or question…', formMessageLabel:'Your message', formSubmit:'Send message', formSending:'Sending…',
   formSuccess:"Thanks — we'll get back to you soon.", formError:'Something went wrong — please email us directly instead.',
   formSubject:'New message from the AiStudioBudapest site',
   cookieBannerText:'We use cookies to analyze how the site is used. Accept to allow this, or decline to keep only the strictly necessary (language preference) storage active.',
@@ -1362,7 +1369,7 @@ fr:{
   contactEyebrow:'Contact', contactH2:'Construisons quelque chose de premium',
   contactP:"Parlez-moi de votre entreprise, et je vous recommanderai la formule adaptée — Esszencia, Presztízs ou Prémium.",
   formDivider:'Une demande plus précise ?', formName:'Votre nom', formEmail:'Votre e-mail',
-  formMessage:'Parlez-nous de votre projet ou de votre question…', formSubmit:'Envoyer le message', formSending:'Envoi…',
+  formMessage:'Parlez-nous de votre projet ou de votre question…', formMessageLabel:'Votre message', formSubmit:'Envoyer le message', formSending:'Envoi…',
   formSuccess:'Merci — nous revenons vers vous bientôt.', formError:'Une erreur est survenue — écrivez-nous directement par e-mail.',
   formSubject:'Nouveau message du site AiStudioBudapest',
   cookieBannerText:"Nous utilisons des cookies pour analyser l'utilisation du site. Acceptez pour les autoriser, ou refusez pour ne garder que le stockage strictement nécessaire (préférence de langue).",
@@ -1415,7 +1422,7 @@ es:{
   contactEyebrow:'Contacto', contactH2:'Construyamos algo prémium',
   contactP:'Cuéntame sobre tu negocio y te recomendaré el nivel adecuado — Esszencia, Presztízs o Prémium.',
   formDivider:'¿Tienes una solicitud más concreta?', formName:'Tu nombre', formEmail:'Tu correo electrónico',
-  formMessage:'Cuéntanos sobre tu proyecto o tu pregunta…', formSubmit:'Enviar mensaje', formSending:'Enviando…',
+  formMessage:'Cuéntanos sobre tu proyecto o tu pregunta…', formMessageLabel:'Tu mensaje', formSubmit:'Enviar mensaje', formSending:'Enviando…',
   formSuccess:'Gracias — te responderemos pronto.', formError:'Algo salió mal — escríbenos directamente por correo, por favor.',
   formSubject:'Nuevo mensaje del sitio AiStudioBudapest',
   cookieBannerText:'Usamos cookies para analizar el uso del sitio. Acepta para permitirlo, o rechaza para mantener solo el almacenamiento estrictamente necesario (preferencia de idioma).',
@@ -1468,7 +1475,7 @@ de:{
   contactEyebrow:'Kontakt', contactH2:'Lass uns etwas Premium bauen',
   contactP:'Erzähl mir von deinem Unternehmen, und ich empfehle dir die passende Stufe — Esszencia, Presztízs oder Prémium.',
   formDivider:'Eine konkretere Anfrage?', formName:'Dein Name', formEmail:'Deine E-Mail',
-  formMessage:'Erzähl uns von deinem Projekt oder deiner Frage…', formSubmit:'Nachricht senden', formSending:'Wird gesendet…',
+  formMessage:'Erzähl uns von deinem Projekt oder deiner Frage…', formMessageLabel:'Deine Nachricht', formSubmit:'Nachricht senden', formSending:'Wird gesendet…',
   formSuccess:'Danke — wir melden uns bald.', formError:'Etwas ist schiefgelaufen — schreib uns bitte direkt per E-Mail.',
   formSubject:'Neue Nachricht von der AiStudioBudapest-Website',
   cookieBannerText:'Wir verwenden Cookies, um die Nutzung der Website zu analysieren. Akzeptiere, um dies zuzulassen, oder lehne ab, damit nur die unbedingt erforderliche Speicherung (Spracheinstellung) aktiv bleibt.',
@@ -1858,6 +1865,7 @@ function parlFrame(t){
   if(moving) Parl.active = t;
   var idle = t - Parl.active > 1600;
   if(Parl.p3d){
+    if(Parl.p3lost) return; /* GL context lost (tab in the background, GPU reset): the restore handler restarts the loop */
     Parl.p3Appear = Math.min(1, Parl.p3Appear + dt * .8);
     /* safety net for missed resize events (rotation, browser zoom, devtools) */
     if(t - Parl.p3Chk > 1000){ Parl.p3Chk = t; p3Size(false); }
@@ -1924,21 +1932,54 @@ function parlFallback(){
   if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
   if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto, {once: true});
 }
+/* One reload, at most once a minute, as the very last resort (a lost GL context that never comes back). */
+function parlReloadOnce(){
+  try{
+    var k = 'aistudio_p3_reload', t = +sessionStorage.getItem(k) || 0;
+    if(Date.now() - t < 60000) return;
+    sessionStorage.setItem(k, String(Date.now()));
+  }catch(err){}
+  location.reload();
+}
+/* A failed dynamic import is remembered by the browser for that URL, so the retries use a different query string. */
+function parlImport(tries){
+  return import('/alexstudio/parliament3d.js' + (tries ? '?r=' + tries : '')).catch(function(err){
+    if(tries >= 2) throw err;
+    return new Promise(function(res){ setTimeout(res, 1200 * (tries + 1)); }).then(function(){ return parlImport(tries + 1); });
+  });
+}
 function parlLoad3D(){
   if(Parl.p3Tried) return;
   Parl.p3Tried = true;
-  var arm = function(){ setTimeout(function(){ if(Parl.p3d) return; if(document.hidden){ arm(); return; } parlFallback(); }, 9000); };
+  /* The 3D scene takes over whenever it is ready, even after the photo fallback has started, so this timeout is only
+     for a genuinely stuck load (slow first visit: ~5 MB of files and a scene to build). Until then the visitor sees the
+     space video, never the old photo. */
+  var arm = function(){ setTimeout(function(){ if(Parl.p3d) return; if(document.hidden){ arm(); return; } parlFallback(); }, 30000); };
   arm();
   /* let the first frame paint before the (synchronous) scene build */
   (function(){ setTimeout(function(){
-    import('/alexstudio/parliament3d.js').then(function(mod){
+    parlImport(0).then(function(mod){
       return mod.loadParliament(document.getElementById('p3dCanvas'), {mobile: (isCoarse || window.innerWidth <= 820) && !/[?&]p3d=hq/.test(location.search), base: '/alexstudio/tex/'});
     }).then(function(api){
       var cv = document.getElementById('p3dCanvas');
+      /* Mobile browsers (and desktop ones after a GPU reset) drop the GL context when the tab goes to the background.
+         It used to switch to the photo for good, so the visitor came back to the old look until a manual refresh.
+         Now: keep the scene, show the space video meanwhile, and carry on when the context is restored. */
       cv.addEventListener('webglcontextlost', function(e){
-        e.preventDefault(); Parl.p3d = null; cv.style.opacity = '0'; Parl.fellBack = false; parlFallback();
+        e.preventDefault(); Parl.p3lost = true; cv.style.opacity = '0';
+        if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
+        clearTimeout(Parl.p3lostT);
+        Parl.p3lostT = setTimeout(function(){ if(Parl.p3lost) parlReloadOnce(); }, 6000);
       });
-      Parl.p3d = api; Parl.p3Appear = 0; p3Size(true);
+      cv.addEventListener('webglcontextrestored', function(){
+        clearTimeout(Parl.p3lostT); Parl.p3lost = false; Parl.p3Appear = 0; Parl.lastT = 0;
+        if(bgVideoWrap){ try{ bgVideo.pause(); bgVideo2.pause(); }catch(err){} }
+        try{ p3Size(true); }catch(err){ parlReloadOnce(); return; }
+        parlKick();
+      });
+      Parl.p3d = api; Parl.p3Appear = 0;
+      try{ p3Size(true); }catch(err){ Parl.p3d = null; parlFallback(); return; }
+      Parl.mode = '3d'; /* also when the photo fallback had started or had failed to start: the loop must run */
       /* no fly-in from the top if the page was opened part-way down */
       Object.keys(Parl.tgt).forEach(function(k){ Parl.cam[k] = Parl.tgt[k]; });
       /* the 3D scene has its own opaque night sky: stop decoding the two space videos */
@@ -2376,10 +2417,22 @@ applyLang(currentLang);
       f.removeAttribute('data-src');
     });
   }
-  if(!window.matchMedia('(max-width:1024px), (pointer:coarse)').matches){ loadFrames(); return; }
+  /* The Parliament comes first: the three demo sites (each with its own scripts, fonts and video) started at the same
+     time as the 3D scene's ~5 MB and made a first visit slow. They now wait until the scene is up (or has given up,
+     or 12 s have passed). */
+  function afterParliament(cb){
+    var waited = 0;
+    (function poll(){
+      if(Parl.p3d || Parl.mode !== '3d' || waited >= 12000){ setTimeout(cb, 300); return; }
+      waited += 250; setTimeout(poll, 250);
+    })();
+  }
+  if(!window.matchMedia('(max-width:1024px), (pointer:coarse)').matches){ afterParliament(loadFrames); return; }
   function whenIdle(){
-    if(window.requestIdleCallback) window.requestIdleCallback(loadFrames, {timeout:2500});
-    else setTimeout(loadFrames, 1200);
+    afterParliament(function(){
+      if(window.requestIdleCallback) window.requestIdleCallback(loadFrames, {timeout:2500});
+      else setTimeout(loadFrames, 1200);
+    });
   }
   if(document.readyState === 'complete') whenIdle();
   else window.addEventListener('load', whenIdle, {once:true});
@@ -2583,6 +2636,7 @@ stack.addEventListener('click', function(){
    (where `persisted` is true), so unconditionally clearing everything
    enterSite() touches here is a cheap, safe reset either way. */
 window.addEventListener('pageshow', function(){
+  if(Parl.p3d && !Parl.p3lost){ Parl.lastT = 0; parlKick(); }
   isAnimating = false;
   warp.classList.remove('active');
   [document.querySelector('header.nav'), stage.querySelector('.eyebrow-wrap'), headline,
