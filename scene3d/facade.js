@@ -24,8 +24,8 @@ export function buildBuilding(mats, opts) {
     const pos = g.attributes.position, col = new Float32Array(pos.count * 3);
     const y0 = h.circle ? h.cy - h.r : h.y0, hh = h.circle ? h.r * 2 : archTop(h.hw, h.spring, h.k);
     for (let i = 0; i < pos.count; i++) {
-      const v = Math.min(1, Math.max(0, (pos.getY(i) - y0) / hh)), f = k * (.82 - .34 * v);
-      col[i * 3] = f; col[i * 3 + 1] = f * .46; col[i * 3 + 2] = f * .12;
+      const v = Math.min(1, Math.max(0, (pos.getY(i) - y0) / hh)), f = k * (1.15 - .42 * v);
+      col[i * 3] = f; col[i * 3 + 1] = f * .47; col[i * 3 + 2] = f * .12;
     }
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     return g;
@@ -106,7 +106,6 @@ export function buildBuilding(mats, opts) {
       { cx: W * .12, y0: 24.4, hw: .4, spring: 2.4, k: 1.6 }, { cx: W * .37, y0: 24.4, hw: .4, spring: 2.4, k: 1.6 }
     ];
     wall(t, W, 30, holes);
-    box('dark', t, W * .42, 3.0, .25, 0, 2.6, -.5);
     stringCourse(t, W, 10.7); stringCourse(t, W, 19.6);
     cornice(t, W, 29.4, 0);
     parapet(t, W, 30.2, .1);

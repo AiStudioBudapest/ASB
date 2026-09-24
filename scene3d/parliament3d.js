@@ -304,9 +304,9 @@ const REFLECT_SHADER = {
       vec2 n=vec2(a*.6+c*.4,b*.6+c*.3);
       float amp=.0018+.0022*clamp(dist/200.,0.,2.);
       vec2 uv=vUv.xy/vUv.w+n*amp;
-      vec3 refl=(texture2D(tDiffuse,uv+vec2(.0014,0.)).rgb+texture2D(tDiffuse,uv-vec2(.0014,0.)).rgb+texture2D(tDiffuse,uv+vec2(0.,.0014)).rgb+texture2D(tDiffuse,uv-vec2(0.,.0014)).rgb)*.25;
+      vec3 refl=clamp((texture2D(tDiffuse,uv+vec2(.0014,0.)).rgb+texture2D(tDiffuse,uv-vec2(.0014,0.)).rgb+texture2D(tDiffuse,uv+vec2(0.,.0014)).rgb+texture2D(tDiffuse,uv-vec2(0.,.0014)).rgb)*.25,0.,12.);
       float fres=.05+.95*pow(1.-clamp(V.y,0.,1.),4.);
-      vec3 deep=vec3(.003,.006,.017);
+      vec3 deep=vec3(.006,.010,.024);
       vec3 col=mix(deep,refl*.9,clamp(fres*1.7+.14,0.,1.));
       float glint=pow(max(0.,dot(normalize(vec3(n.x*.35,1.,n.y*.35)),V)),70.);
       col+=vec3(1.,.72,.42)*glint*.10;
@@ -317,10 +317,17 @@ const REFLECT_SHADER = {
 };
 
 /* ------------------------------------------------------------------ lens: aberration, vignette, grain, cool shadows */
-const GRADE_SHADER = {
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVig: { value: .5 }, uGrain: { value: .018 }, uCA: { value: .0016 } },
+/* NaN / Inf guard right after the scene render: one bad pixel would otherwise spread through the bloom blur and blacken the screen */
+const SANITIZE_SHADER = {
+  uniforms: { tDiffuse: { value: null } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime,uVig,uGrain,uCA; varying vec2 vUv;
+  fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+    void main(){ vec4 c=texture2D(tDiffuse,vUv); if(any(isnan(c.rgb))||any(isinf(c.rgb))) c.rgb=vec3(0.); gl_FragColor=vec4(clamp(c.rgb,0.,24.),1.); }`
+};
+const GRADE_SHADER = {
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVig: { value: .5 }, uGrain: { value: .018 }, uCA: { value: .0016 }, uFlash: { value: 0 } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime,uVig,uGrain,uCA,uFlash; varying vec2 vUv;
     void main(){
       vec2 c=vUv-.5; float r2=dot(c,c); vec2 off=c*r2*uCA*8.;
       vec3 col=vec3(texture2D(tDiffuse,vUv+off).r,texture2D(tDiffuse,vUv).g,texture2D(tDiffuse,vUv-off).b);
@@ -329,6 +336,7 @@ const GRADE_SHADER = {
       col=mix(col,col*vec3(.90,.98,1.12),smoothstep(.30,0.,l));
       float g=fract(sin(dot(vUv*1000.+fract(uTime)*97.,vec2(12.9898,78.233)))*43758.5453);
       col+=(g-.5)*uGrain*(.25+.75*smoothstep(1.,.0,l));
+      col=mix(col,vec3(2.8,1.9,.95),uFlash);
       gl_FragColor=vec4(max(col,0.),1.);
     }`
 };
@@ -411,17 +419,18 @@ function buildExterior(mobile, reflect, ctx) {
   /* ---------- ground: square (back), promenade, quay, river ---------- */
   const groundGeo = new THREE.PlaneGeometry(3200, 1500);
   groundGeo.rotateX(-Math.PI / 2);
-  const ground = new THREE.Mesh(groundGeo, tiledMaterial(ctx.sets.paving, 3200 / 1.5, 1500 / 1.5, { color: 0xc8ccd8, envMapIntensity: .8, emissive: 0x1a1108, emissiveIntensity: 1 }, 1.2)); ground.position.set(0, -.06, -710); ground.receiveShadow = false; g.add(ground); /* z -1460 .. 40 */
-  const quay = new THREE.Mesh(new THREE.BoxGeometry(3200, 2.6, 3), new THREE.MeshStandardMaterial({ color: 0x252b3e, roughness: 1, emissive: 0x07090f }));
+  const ground = new THREE.Mesh(groundGeo, tiledMaterial(ctx.sets.paving, 3200 / 1.5, 1500 / 1.5, { color: 0xd8dae4, envMapIntensity: .9, emissive: 0x3a2410, emissiveIntensity: 1 }, 1.2)); ground.position.set(0, -.06, -710); ground.receiveShadow = false; g.add(ground); /* z -1460 .. 40 */
+  const quay = new THREE.Mesh(new THREE.BoxGeometry(3200, 2.6, 3), new THREE.MeshStandardMaterial({ color: 0x5a5a68, roughness: .9, emissive: 0x2a1a0c }));
   quay.position.set(0, -1.3, 40.5); g.add(quay);
-  /* lit promenade band in front of the building */
-  const promGeo = new THREE.PlaneGeometry(300, 16); promGeo.rotateX(-Math.PI / 2);
-  const prom = new THREE.Mesh(promGeo, new THREE.MeshBasicMaterial({ map: glow, color: 0x8a5a1c, transparent: true, opacity: .55, depthWrite: false, fog: false }));
-  prom.position.set(0, .02, 32); g.add(prom);
-  /* Kossuth square glow */
-  const sqGeo = new THREE.PlaneGeometry(190, 130); sqGeo.rotateX(-Math.PI / 2);
-  const sq = new THREE.Mesh(sqGeo, new THREE.MeshBasicMaterial({ map: glow, color: 0x6b4514, transparent: true, opacity: .5, depthWrite: false, fog: false }));
-  sq.position.set(0, .02, -110); g.add(sq);
+  /* lit promenade in front of the river front and lit Kossuth square behind: floodlit paving */
+  const litPave = (w, d, x, z) => {
+    const geo = new THREE.PlaneGeometry(w, d); geo.rotateX(-Math.PI / 2);
+    const m = new THREE.Mesh(geo, tiledMaterial(ctx.sets.paving, w / 1.5, d / 1.5, { color: 0xf0d2a0, envMapIntensity: .9, emissive: 0x5a3812, emissiveIntensity: 1 }, 1.2));
+    m.position.set(x, .03, z); m.receiveShadow = false; g.add(m); return m;
+  };
+  litPave(320, 17, 0, 31.5);
+  litPave(200, 140, 0, -120);
+  const sq = null; void sq;
 
   /* river: dark water that glows gold under the floodlit facade */
   const waterMat = new THREE.ShaderMaterial({
@@ -883,7 +892,7 @@ const PATH_C = [
   [5.75, [38, 2.8, 142], [6, 28, 24], 52],
   [6.0, [-6, 30, 214], [0, 46, 0], 40]
 ];
-const CUT1 = 4.63, CUT2 = 5.72, CUTW = .07;
+const CUT1 = 4.63, CUT2 = 5.72, CUTW = .1;
 
 function cr(p0, p1, p2, p3, u) {
   const u2 = u * u, u3 = u2 * u;
@@ -976,6 +985,7 @@ export function createParliament(canvas, opts) {
     composer = new EffectComposer(renderer, rt);
     composer.setPixelRatio(state.dpr); composer.setSize(state.W, state.H);
     composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(new ShaderPass(SANITIZE_SHADER));
     bloom = new UnrealBloomPass(new THREE.Vector2(state.W, state.H), .3, .55, 1.0);
     composer.addPass(bloom);
     grade = new ShaderPass(GRADE_SHADER);
@@ -993,6 +1003,16 @@ export function createParliament(canvas, opts) {
     if (composer) { composer.setPixelRatio(dpr); composer.setSize(w, h); } else buildComposer();
   }
 
+  /* self-healing: a frame whose sampled pixels are ALL black means something went wrong on this GPU */
+  const guard = { n: 0, bad: 0, buf: new Uint8Array(4) };
+  function blackFrame() {
+    const gl = renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
+    for (let iy = 1; iy <= 4; iy++) for (let ix = 1; ix <= 5; ix++) {
+      gl.readPixels(Math.floor(w * ix / 6), Math.floor(h * iy / 5), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, guard.buf);
+      if (guard.buf[0] + guard.buf[1] + guard.buf[2] > 6) return false;
+    }
+    return true;
+  }
   function render(now, prog, o) {
     o = o || {};
     const t = now / 1000, dt = Math.min(.05, state.last ? t - state.last : .016); state.last = t;
@@ -1008,7 +1028,7 @@ export function createParliament(canvas, opts) {
       fade = smooth(0, CUTW, dc);
     }
     if (interior !== state.inInterior || state.first !== true) {
-      state.inInterior = interior; state.first = true; ext.group.visible = !interior; inn.group.visible = interior;
+      state.inInterior = interior; state.first = true; ext.group.visible = !interior; inn.group.visible = interior; renderer.shadowMap.needsUpdate = true;
       scene.environment = interior ? envRoom : envSky; scene.environmentIntensity = interior ? .04 : .7;
     }
     if (ext.reflector) ext.reflector.visible = tier >= 2 && flags.reflect && !interior && pose.p.y < 260;
@@ -1024,7 +1044,8 @@ export function createParliament(canvas, opts) {
     camera.fov = pose.fov * clamp(1 + (1.3 - asp) * .6, 1, 1.6);
     camera.updateProjectionMatrix();
     /* exposure carries the section's dim and the cut fade (to black) */
-    renderer.toneMappingExposure = clamp(1.45 - (o.dim || 0) * .9, .45, 2) * (interior ? .9 : 1) * fade;
+    const flash = 1 - fade;
+    renderer.toneMappingExposure = clamp(1.45 - (o.dim || 0) * .9, .45, 2) * (interior ? .9 : 1) * (composer ? 1 : 1 + flash * 6);
     canvas.style.opacity = String(state.dbg || o.appear === undefined ? 1 : o.appear);
 
     ext.update(t, dt, !interior);
@@ -1053,12 +1074,28 @@ export function createParliament(canvas, opts) {
     } else meteorMesh.visible = false;
 
     state.info = { prog: prog, interior: interior, fade: fade, tier: tier, p: camera.position.toArray().map(Math.round), fov: Math.round(camera.fov) };
-    if (composer) { grade.uniforms.uTime.value = t; grade.uniforms.uVig.value = interior ? .4 : .55; bloom.strength = interior ? .34 : .3; bloom.threshold = interior ? 1.2 : 1.0; composer.render(dt); }
+    if (composer) { grade.uniforms.uTime.value = t; grade.uniforms.uFlash.value = flash; grade.uniforms.uVig.value = interior ? .4 : .55; bloom.strength = interior ? .34 : .3; bloom.threshold = interior ? 1.2 : 1.0; composer.render(dt); }
     else renderer.render(scene, camera);
+    if (!state.dbg && ++guard.n % 45 === 0) {
+      if (blackFrame()) {
+        if (++guard.bad >= 2) { guard.bad = 0; if (tier > 0) { tier--; applyTier(); buildComposer(); } else throw new Error('black frames'); }
+      } else guard.bad = 0;
+    }
+  }
+
+  /* compile every shader (both scenes, all passes) and draw one frame of each before the page shows the canvas,
+     so nothing stalls or flashes black the first time a section is reached */
+  async function warm() {
+    ext.group.visible = true; inn.group.visible = true;
+    camera.position.set(0, 26, 190); camera.lookAt(0, 80, 0); camera.updateMatrixWorld();
+    try { await renderer.compileAsync(scene, camera); } catch (e) { try { renderer.compile(scene, camera); } catch (e2) { /* first frame compiles them */ } }
+    state.first = false;
+    [0, 5, 0].forEach((pr) => render(performance.now(), pr, { appear: 0 }));
+    state.last = 0;
   }
 
   return {
-    render, resize,
+    render, resize, warm,
     debug(d) { state.dbg = d; },
     info() { return state.info; },
     /* called by the page when the GPU is too slow: reflections + MSAA first, then bloom */
@@ -1093,5 +1130,7 @@ export async function loadAssets(base, mobile) {
 export async function loadParliament(canvas, opts) {
   opts = opts || {};
   const assets = await loadAssets(opts.base || '/alexstudio/tex/', !!opts.mobile);
-  return createParliament(canvas, Object.assign({}, opts, { assets }));
+  const api = createParliament(canvas, Object.assign({}, opts, { assets }));
+  try { await api.warm(); } catch (e) { /* the loop will compile on demand */ }
+  return api;
 }
