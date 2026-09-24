@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" class="is-loading">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#07080a">
 <title>AiStudioBudapest — Prémium Webdesign Portfólió</title>
 <meta name="description" content="AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.">
+<link rel="preload" as="image" href="/alexstudio/logo.png" fetchpriority="high">
 <link rel="preload" as="image" href="/alexstudio/poster-d.jpg" media="(min-width:821px)" fetchpriority="high">
 <link rel="preload" as="image" href="/alexstudio/poster-m.jpg" media="(max-width:820px)" fetchpriority="high">
 <script>
@@ -127,6 +128,24 @@ img{display:block;max-width:100%;}
 /* Sections that receive focus after an in-page jump (see "in-page anchors"
    in the script) are focusable only programmatically — no ring around them. */
 [tabindex="-1"]:focus{outline:none;}
+
+/* ============================================================
+   0. LOADING SCREEN — the logo, centred, until the 3D Parliament is ready (see aisLoaderHide in the inline script
+      right after <body>). Pure CSS so it is on screen from the very first paint.
+   ============================================================ */
+html.is-loading{overflow:hidden;}
+#loader{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 42%,#111b30 0%,#070a14 52%,#03050b 100%);
+  transition:opacity .9s ease,visibility 0s linear .9s;}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-inner{display:flex;flex-direction:column;align-items:center;gap:calc(34*var(--u,1px));animation:loaderIn .9s ease both;}
+.loader-logo{width:min(56vw,360px);height:auto;filter:drop-shadow(0 0 34px rgba(243,213,138,.28));animation:loaderBreath 3s ease-in-out infinite;}
+.loader-bar{width:min(46vw,190px);height:2px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden;}
+.loader-bar span{display:block;width:42%;height:100%;border-radius:2px;background:linear-gradient(90deg,transparent,#7fe9de,#f3d58a,transparent);animation:loaderBar 1.5s ease-in-out infinite;}
+@keyframes loaderIn{from{opacity:0;transform:translateY(8px) scale(.98);}to{opacity:1;transform:none;}}
+@keyframes loaderBreath{0%,100%{opacity:.92;transform:scale(1);}50%{opacity:1;transform:scale(1.025);}}
+@keyframes loaderBar{0%{transform:translateX(-110%);}100%{transform:translateX(260%);}}
+@media (prefers-reduced-motion:reduce){.loader-inner,.loader-logo,.loader-bar span{animation:none!important;}.loader-bar span{width:100%;}}
 
 /* ============================================================
    1. BACKGROUND — the 3D Parliament, nothing else. There is no space video any more (visitors saw it for a few
@@ -269,18 +288,23 @@ header.nav{
    ============================================================ */
 .hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;
-  padding:calc(170*var(--u)) var(--gutter) calc(60*var(--u));
+  padding:calc(150*var(--u)) var(--gutter) calc(60*var(--u) + 26vh); /* content sits high: the Parliament is the star of the first screen */
   /* Scrolling shatters the tagline letters far past the screen edges
      (--ex up to ~230px). Even invisible, those boxes widen the page and make
      mobile browsers zoom out / scroll sideways, so they are clipped here. */
   overflow-x:clip;}
+/* soft dark halo behind the hero text so white type stays crisp over the lit facade */
+.hero::before{content:"";position:absolute;left:50%;top:34%;width:min(96vw,980px);height:62%;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse at center,rgba(3,5,11,.46) 0%,rgba(3,5,11,.22) 46%,rgba(3,5,11,0) 72%);pointer-events:none;z-index:-1;}
+.hero .eyebrow{color:#fff;}
+.hero .tagline,.hero .hero-sub,.hero .eyebrow{text-shadow:0 2px 22px rgba(0,0,0,.85),0 0 3px rgba(0,0,0,.6);}
 .eyebrow-wrap{display:flex;align-items:center;gap:calc(12*var(--u));margin-bottom:calc(10*var(--u));}
 .eyebrow-wrap .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);}
 .eyebrow{font-size:calc(12*var(--u));letter-spacing:.32em;text-transform:uppercase;color:var(--cyan);font-weight:600;}
 
 .tagline{
   font-family:var(--serif);font-weight:400;letter-spacing:.01em;
-  font-size:calc(58*var(--u));line-height:1.15;max-width:18ch;margin:0;color:var(--white);
+  font-size:calc(62*var(--u));line-height:1.15;max-width:18ch;margin:0;color:#fff;
 }
 
 /* Scroll-scrubbed letter shatter: --p (0-1) is set on .tagline once per
@@ -301,7 +325,7 @@ header.nav{
     scale(calc(1 - var(--lp) * .4));
   opacity:calc(1 - var(--lp));
 }
-.hero-sub{margin-top:calc(20*var(--u));color:var(--muted);font-size:calc(16*var(--u));max-width:42ch;}
+.hero-sub{margin-top:calc(22*var(--u));color:#fff;font-weight:500;font-size:calc(18*var(--u));line-height:1.6;max-width:42ch;}
 
 .scroll-arrow{display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--u));
   margin-top:calc(48*var(--u));text-decoration:none;color:var(--muted);}
@@ -327,7 +351,7 @@ header.nav{
   .scroll-arrow-chevrons span{animation:none!important;opacity:.7;}
 }
 .scroll-cue{margin-top:calc(56*var(--u));width:calc(28*var(--u));height:calc(44*var(--u));
-  border:1.5px solid var(--line);border-radius:999px;position:relative;flex:none;}
+  border:1.5px solid rgba(255,255,255,.65);border-radius:999px;position:relative;flex:none;}
 .scroll-cue span{position:absolute;top:calc(8*var(--u));left:50%;width:4px;height:8px;border-radius:2px;
   background:var(--cyan);transform:translateX(-50%);animation:scrollcue 1.8s ease-in-out infinite;}
 @keyframes scrollcue{0%{opacity:1;transform:translate(-50%,0);}70%{opacity:0;transform:translate(-50%,14px);}100%{opacity:0;transform:translate(-50%,14px);}}
@@ -647,15 +671,18 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
 /* Optional add-on (professional photographer), shown under the three tiers:
    dashed border + camera icon so it reads as "extra, on top of any tier". */
 .pricing-addon{max-width:calc(1100*var(--u));margin:calc(20*var(--u)) auto 0;display:flex;align-items:center;gap:calc(26*var(--u));
-  padding:calc(24*var(--u)) calc(30*var(--u));border:1px dashed rgba(127,233,222,.5);border-radius:calc(14*var(--u));
-  background:rgba(127,233,222,.03);}
-.addon-icon{flex:none;width:calc(54*var(--u));height:calc(54*var(--u));display:grid;place-items:center;border-radius:50%;
-  background:var(--cyan-soft);box-shadow:inset 0 0 0 1px rgba(127,233,222,.5);color:var(--cyan);}
+  padding:calc(26*var(--u)) calc(32*var(--u));border:1.5px dashed rgba(127,233,222,.85);border-radius:calc(16*var(--u));
+  /* was a 3% cyan wash: nearly invisible over the lit Parliament. Now a dark glass panel (82%, a touch more solid than the
+     68% price cards but still see-through) with a cyan tint and a soft glow. */
+  background:linear-gradient(135deg,rgba(127,233,222,.13),rgba(127,233,222,.04)),rgba(6,8,16,.82);
+  box-shadow:0 18px 50px -24px rgba(0,0,0,.85),0 0 40px -16px rgba(127,233,222,.35);}
+.addon-icon{flex:none;width:calc(58*var(--u));height:calc(58*var(--u));display:grid;place-items:center;border-radius:50%;
+  background:rgba(127,233,222,.16);box-shadow:inset 0 0 0 1.5px rgba(127,233,222,.75),0 0 24px -6px rgba(127,233,222,.5);color:var(--cyan);}
 .addon-icon svg{width:calc(25*var(--u));height:calc(25*var(--u));}
 .addon-body{flex:1;min-width:0;}
 .addon-tag{display:block;font-size:calc(11.5*var(--u));letter-spacing:.24em;text-transform:uppercase;color:var(--cyan);font-weight:600;}
-.pricing-addon h3{font-family:var(--serif);font-weight:400;font-size:calc(22*var(--u));margin:calc(4*var(--u)) 0 calc(6*var(--u));text-transform:uppercase;letter-spacing:.03em;}
-.pricing-addon p{margin:0;color:var(--muted);font-size:calc(14.5*var(--u));line-height:1.6;max-width:62ch;}
+.pricing-addon h3{font-family:var(--serif);font-weight:400;font-size:calc(23*var(--u));margin:calc(4*var(--u)) 0 calc(7*var(--u));text-transform:uppercase;letter-spacing:.03em;color:#fff;}
+.pricing-addon p{margin:0;color:#d3dae4;font-size:calc(15*var(--u));line-height:1.6;max-width:62ch;}
 .addon-cta{flex:none;display:flex;flex-direction:column;align-items:center;gap:calc(10*var(--u));}
 .addon-price{font-family:var(--serif);font-size:calc(22*var(--u));color:var(--cyan);white-space:nowrap;}
 @media (max-width:820px){
@@ -690,52 +717,73 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
   .faq-icon::before,.faq-icon::after{transition:none;}
 }
 
-.contact{max-width:calc(640*var(--u));margin:0 auto;text-align:center;}
-.contact-links{display:flex;flex-direction:column;align-items:center;gap:calc(18*var(--u));margin-top:calc(14*var(--u));}
+.contact{max-width:calc(700*var(--u));margin:0 auto;text-align:center;}
+.contact-links{display:flex;flex-direction:column;align-items:center;gap:calc(14*var(--u));margin-top:calc(6*var(--u));}
+.phone-row{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(12*var(--u));}
+/* e-mail and phone numbers as glass pills with an icon */
 .contact .mail{
-  display:inline-flex;align-items:center;gap:calc(10*var(--u));
-  font-family:var(--serif);font-size:calc(22*var(--u));color:var(--text);border-bottom:1px solid rgba(255,255,255,.4);
-  padding-bottom:calc(6*var(--u));transition:border-color .3s var(--ease),color .3s var(--ease);
+  display:inline-flex;align-items:center;gap:calc(12*var(--u));
+  padding:calc(13*var(--u)) calc(24*var(--u));border-radius:999px;border:1px solid rgba(255,255,255,.24);
+  background:rgba(8,11,20,.74);color:#fff;font-family:var(--sans);font-weight:500;font-size:calc(16*var(--u));letter-spacing:.01em;
+  transition:border-color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease),transform .3s var(--ease);
 }
-.contact .mail:hover{color:var(--cyan);border-color:var(--cyan);}
-.phone-row{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(14*var(--u)) calc(28*var(--u));}
-.contact .mail.phone{font-size:calc(17*var(--u));}
+.contact .mail:not(.phone){font-size:calc(18*var(--u));padding:calc(15*var(--u)) calc(28*var(--u));}
+.contact .mail .ico{width:calc(19*var(--u));height:calc(19*var(--u));color:var(--cyan);flex:none;}
+@media (hover:hover){.contact .mail:hover{border-color:var(--cyan);background:rgba(127,233,222,.1);box-shadow:0 14px 34px -14px rgba(127,233,222,.6);transform:translateY(-2px);}}
 
-.form-divider{display:flex;align-items:center;gap:calc(14*var(--u));margin:calc(44*var(--u)) 0 calc(24*var(--u));
-  color:#d5dce5;font-size:calc(14.5*var(--u));font-weight:500;letter-spacing:.03em;}
-.form-divider::before,.form-divider::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.28);}
-
-/* The form is a solid glass card, cyan-edged, with high-contrast fields: it used to be near-transparent
-   inputs (3% white, 12% border, dim placeholders) that vanished into the lit Parliament behind. */
-.contact-form{display:flex;flex-direction:column;gap:calc(18*var(--u));text-align:left;
-  padding:calc(32*var(--u));border:1px solid rgba(127,233,222,.4);border-radius:calc(18*var(--u));
-  background:rgba(6,8,16,.86);box-shadow:0 26px 60px -26px rgba(0,0,0,.85),0 0 40px -12px rgba(127,233,222,.25);}
-@media (max-width:560px){.contact-form{padding:calc(24*var(--u)) calc(18*var(--u));}}
-.contact-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:calc(18*var(--u));}
-@media (max-width:560px){.contact-form .form-row{grid-template-columns:1fr;}}
+/* The form: a deep glass card with a cyan-to-gold hairline border, an icon in every field, generous spacing,
+   high-contrast white type and one bright call-to-action. Readable first, pretty second: nothing is lower than
+   ~7:1 contrast. */
+.contact-form{position:relative;isolation:isolate;margin-top:calc(44*var(--u));text-align:left;display:flex;flex-direction:column;gap:calc(22*var(--u));
+  padding:calc(44*var(--u)) calc(44*var(--u)) calc(38*var(--u));border-radius:calc(26*var(--u));
+  background:linear-gradient(155deg,rgba(17,26,44,.95) 0%,rgba(7,10,20,.95) 55%,rgba(14,16,28,.95) 100%);
+  box-shadow:0 44px 90px -32px rgba(0,0,0,.92),0 0 80px -24px rgba(127,233,222,.3);}
+.contact-form::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+  background:linear-gradient(140deg,rgba(127,233,222,.9),rgba(127,233,222,.12) 36%,rgba(255,196,120,.14) 64%,rgba(255,196,120,.7));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);}
+@media (max-width:560px){.contact-form{padding:calc(30*var(--u)) calc(20*var(--u)) calc(26*var(--u));border-radius:calc(22*var(--u));gap:calc(18*var(--u));}}
+.form-title{margin:0;text-align:center;font-family:var(--serif);font-weight:400;font-size:calc(27*var(--u));letter-spacing:.01em;color:#fff;
+  text-transform:none;text-shadow:none;padding-bottom:calc(18*var(--u));position:relative;}
+.form-title::after{content:"";position:absolute;left:50%;bottom:0;width:calc(56*var(--u));height:2px;transform:translateX(-50%);border-radius:2px;
+  background:linear-gradient(90deg,var(--cyan),#f3d58a);}
+.contact-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:calc(20*var(--u));}
+@media (max-width:560px){.contact-form .form-row{grid-template-columns:1fr;gap:calc(18*var(--u));}}
 /* Still used for anything that must stay invisible but readable by screen readers / AI agents. */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0;}
-.contact-form .field-label{display:block;margin:0 0 calc(8*var(--u));font-size:calc(12.5*var(--u));font-weight:600;
-  letter-spacing:.09em;text-transform:uppercase;color:#e6ecf3;text-shadow:none;}
+.contact-form .field-label{display:block;margin:0 0 calc(9*var(--u));font-size:calc(12.5*var(--u));font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:#e4eaf2;text-shadow:none;}
+.input-wrap{position:relative;}
+.input-wrap .ico{position:absolute;left:calc(17*var(--u));top:50%;transform:translateY(-50%);width:calc(19*var(--u));height:calc(19*var(--u));
+  color:rgba(127,233,222,.8);pointer-events:none;transition:color .25s var(--ease);}
+.input-wrap.area .ico{top:calc(21*var(--u));transform:none;}
+.input-wrap:focus-within .ico{color:var(--cyan);}
 .contact-form input,.contact-form textarea{
-  width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.38);border-radius:calc(11*var(--u));
-  padding:calc(14*var(--u)) calc(16*var(--u));font-family:var(--sans);font-size:max(16px,calc(15.5*var(--u)));color:#fff;
+  width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.22);border-radius:calc(14*var(--u));
+  padding:calc(15*var(--u)) calc(16*var(--u)) calc(15*var(--u)) calc(50*var(--u));font-family:var(--sans);font-size:max(16px,calc(15.5*var(--u)));
+  color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.05) inset;
   transition:border-color .25s var(--ease),background .25s var(--ease),box-shadow .25s var(--ease);
 }
-.contact-form textarea{resize:vertical;min-height:calc(130*var(--u));}
-.contact-form input::placeholder,.contact-form textarea::placeholder{color:#b4bdc9;opacity:1;}
-@media (hover:hover){.contact-form input:hover,.contact-form textarea:hover{border-color:rgba(255,255,255,.6);}}
-.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--cyan);background:rgba(127,233,222,.12);
-  box-shadow:0 0 0 3px rgba(127,233,222,.28);}
-.contact-form .form-submit{border:0;cursor:pointer;font-family:inherit;align-self:stretch;margin-top:calc(6*var(--u));
-  justify-content:center;padding:calc(18*var(--u)) calc(30*var(--u));font-size:calc(14*var(--u));
-  background:var(--cyan);color:#04121a;box-shadow:0 16px 36px -12px rgba(127,233,222,.55);}
-.contact-form .form-submit:hover{box-shadow:0 22px 44px -12px rgba(127,233,222,.7);}
-.contact-form .form-submit:disabled{opacity:.6;cursor:default;transform:none!important;}
-.form-status{margin:0;text-align:center;font-size:calc(13.5*var(--u));min-height:1.4em;transition:color .25s var(--ease);}
+.contact-form textarea{resize:vertical;min-height:calc(150*var(--u));line-height:1.55;}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:#aeb8c5;opacity:1;}
+@media (hover:hover){.contact-form input:hover,.contact-form textarea:hover{border-color:rgba(255,255,255,.5);}}
+.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--cyan);background:rgba(127,233,222,.09);
+  box-shadow:0 0 0 4px rgba(127,233,222,.17),0 12px 30px -14px rgba(127,233,222,.5);}
+.contact-form .form-submit{position:relative;overflow:hidden;border:0;cursor:pointer;font-family:inherit;align-self:stretch;margin-top:calc(8*var(--u));
+  display:inline-flex;align-items:center;justify-content:center;gap:calc(12*var(--u));padding:calc(19*var(--u)) calc(30*var(--u));border-radius:999px;
+  font-size:calc(14*var(--u));font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#04121a;
+  background:linear-gradient(100deg,#7fe9de 0%,#a9f2cb 52%,#f3d58a 100%);box-shadow:0 20px 44px -16px rgba(127,233,222,.7);}
+.contact-form .form-submit .arrow{width:calc(20*var(--u));height:calc(20*var(--u));flex:none;transition:transform .3s var(--ease);}
+.contact-form .form-submit::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+  transform:translateX(-120%);transition:transform .7s var(--ease);pointer-events:none;}
+@media (hover:hover){.contact-form .form-submit:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 26px 50px -16px rgba(127,233,222,.85);}
+  .contact-form .form-submit:hover:not(:disabled) .arrow{transform:translateX(5px);}
+  .contact-form .form-submit:hover:not(:disabled)::after{transform:translateX(120%);}}
+.contact-form .form-submit:disabled{opacity:.65;cursor:default;transform:none!important;}
+.form-status{margin:0;text-align:center;font-size:calc(14*var(--u));min-height:1.4em;transition:color .25s var(--ease);}
 .form-status.ok{color:var(--cyan);}
-.form-status.err{color:#f0a7a7;}
+.form-status.err{color:#f4b4b4;}
 
 footer.site-foot{position:relative;z-index:2;padding:calc(30*var(--u)) var(--gutter);border-top:1px solid var(--line);
   display:flex;flex-direction:column;gap:calc(10*var(--u));
@@ -819,9 +867,43 @@ footer.site-foot a:hover{color:var(--cyan);}
   .orbit-wrap,.frame-glow{display:none;}
   .frame-shell{animation:none;}
 }
+/* Phones: the hero text sits at the top so the Parliament shows underneath it (the camera is raised to match). */
+@media (max-width:820px){
+  .hero{justify-content:flex-start;padding:calc(112*var(--u)) var(--gutter) calc(40*var(--u));}
+  .hero .tagline{font-size:calc(36*var(--u));}
+  .hero-sub{font-size:calc(16.5*var(--u));margin-top:calc(16*var(--u));}
+  .scroll-cue{margin-top:calc(26*var(--u));}
+  .hero::before{top:30%;height:56%;}
+}
 </style>
 </head>
 <body>
+
+<div id="loader" role="status" aria-live="polite" aria-label="AiStudioBudapest">
+  <div class="loader-inner">
+    <img class="loader-logo" src="/alexstudio/logo.png" alt="AiStudioBudapest" width="580" height="303" decoding="async" fetchpriority="high">
+    <div class="loader-bar" aria-hidden="true"><span></span></div>
+  </div>
+</div>
+<script>
+/* Loading screen controller. The site calls aisLoaderHide() once the 3D scene is ready (or has given up); it stays on
+   screen for at least 1.2 s so the logo never just flashes, and a 14 s failsafe guarantees it can never trap the visitor. */
+(function(){
+  var el = document.getElementById('loader'), t0 = Date.now(), MIN = 1200;
+  window.aisLoaderDone = false;
+  window.aisLoaderHide = function(){
+    if(window.aisLoaderDone) return;
+    window.aisLoaderDone = true;
+    setTimeout(function(){
+      el.classList.add('done'); el.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('is-loading');
+      if(window.aisHeroEnter) window.aisHeroEnter();
+      setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 1300);
+    }, Math.max(0, MIN - (Date.now() - t0)));
+  };
+  setTimeout(window.aisLoaderHide, 14000);
+})();
+</script>
 
 <div class="bg" aria-hidden="true">
   <div class="bg-poster" id="bgPoster"></div>
@@ -1105,31 +1187,36 @@ footer.site-foot a:hover{color:var(--cyan);}
   </div>
   <div class="contact band-reveal">
     <div class="contact-links">
-      <a class="mail" href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a>
+      <a class="mail" href="mailto:aistudiobudapest@gmail.com"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7.5 8.5 6 8.5-6"/></svg><span>aistudiobudapest@gmail.com</span></a>
       <div class="phone-row">
-        <a class="mail phone" href="tel:+36309476955">+36 30 947 6955</a>
-        <a class="mail phone" href="tel:+36703682482">+36 70 368 2482</a>
+        <a class="mail phone" href="tel:+36309476955"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 5.1 5.1l1.4-2.3L19 14.5V18a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+36 30 947 6955</span></a>
+        <a class="mail phone" href="tel:+36703682482"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 5.1 5.1l1.4-2.3L19 14.5V18a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+36 70 368 2482</span></a>
       </div>
     </div>
 
-    <div class="form-divider"><span data-i18n="formDivider">Van egy konkrétabb kérdésed?</span></div>
-
     <form class="contact-form" id="contactForm" action="https://formsubmit.co/ajax/aistudiobudapest@gmail.com" method="POST">
       <input type="hidden" name="_subject" id="formSubjectInput" value="Új üzenet az AiStudioBudapest oldalról">
+      <h3 class="form-title" data-i18n="formDivider">Van egy konkrétabb kérdésed?</h3>
       <div class="form-row">
         <div>
           <label class="field-label" for="formNameInput" data-i18n="formName">Neved</label>
-          <input type="text" id="formNameInput" name="name" placeholder="Neved" autocomplete="name" required data-i18n-placeholder="formName">
+          <div class="input-wrap"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c.8-3.6 3.7-5.5 7.5-5.5s6.7 1.9 7.5 5.5"/></svg>
+            <input type="text" id="formNameInput" name="name" placeholder="Neved" autocomplete="name" required data-i18n-placeholder="formName"></div>
         </div>
         <div>
           <label class="field-label" for="formEmailInput" data-i18n="formEmail">E-mail címed</label>
-          <input type="email" id="formEmailInput" name="email" placeholder="E-mail címed" autocomplete="email" required data-i18n-placeholder="formEmail">
+          <div class="input-wrap"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7.5 8.5 6 8.5-6"/></svg>
+            <input type="email" id="formEmailInput" name="email" placeholder="E-mail címed" autocomplete="email" required data-i18n-placeholder="formEmail"></div>
         </div>
       </div>
-      <label class="field-label" for="formMessageInput" data-i18n="formMessageLabel">Üzeneted</label>
-      <textarea id="formMessageInput" name="message" placeholder="Mesélj a projektedről vagy a kérdésedről…" rows="4" required data-i18n-placeholder="formMessage"></textarea>
+      <div>
+        <label class="field-label" for="formMessageInput" data-i18n="formMessageLabel">Üzeneted</label>
+        <div class="input-wrap area"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4H6.5A2.5 2.5 0 0 1 4 13.5z"/></svg>
+          <textarea id="formMessageInput" name="message" placeholder="Mesélj a projektedről vagy a kérdésedről…" rows="5" required data-i18n-placeholder="formMessage"></textarea></div>
+      </div>
       <button type="submit" class="btn-primary form-submit">
         <span class="form-submit-label" data-i18n="formSubmit">Üzenet küldése</span>
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
       <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
     </form>
@@ -1859,6 +1946,7 @@ function parlFallback(){
   Parl.fellBack = true;
   if(Parl.mode === '3d') Parl.mode = 'off';
   Parl.posterOff = true; posterHide(true); /* the photo fallback draws its own Parliament: no second one underneath */
+  if(window.aisLoaderHide) window.aisLoaderHide();
   if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto, {once: true});
 }
 /* One reload, at most once a minute, as the very last resort (a lost GL context that never comes back). */
@@ -1908,6 +1996,7 @@ function parlLoad3D(){
       Parl.p3d = api; Parl.p3Appear = 0;
       try{ p3Size(true); }catch(err){ Parl.p3d = null; parlFallback(); return; }
       Parl.mode = '3d'; /* also when the photo fallback had started or had failed to start: the loop must run */
+      if(window.aisLoaderHide) window.aisLoaderHide(); /* the scene is ready: reveal the site */
       /* no fly-in from the top if the page was opened part-way down */
       Object.keys(Parl.tgt).forEach(function(k){ Parl.cam[k] = Parl.tgt[k]; });
       if(/[?&]p3d=1/.test(location.search)) window.__p3d = api;
@@ -1944,6 +2033,7 @@ if(parlCanvas && parlImg){
   }
   if(reduceMotion || (navigator.connection && navigator.connection.saveData)){
     Parl.posterOff = true; posterHide(true);
+    if(document.readyState === 'complete') window.aisLoaderHide && window.aisLoaderHide(); else window.addEventListener('load', function(){ window.aisLoaderHide && window.aisLoaderHide(); }, {once: true});
     if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto);
   } else {
     Parl.mode = '3d'; parlSize(true);
@@ -2802,14 +2892,21 @@ if(!reduceMotion){
 }
 
 /* ---------------- hero entrance: fades in immediately on load ---------------- */
-requestAnimationFrame(function(){
-  document.body.classList.add('ready');
+var heroEntered = false;
+function startHeroEntrance(){
+  if(heroEntered) return;
+  heroEntered = true;
   if(reduceMotion){
     hero.classList.remove('enter');
   } else {
     hero.classList.add('run');
     setTimeout(function(){ hero.classList.remove('enter','run'); }, 1600);
   }
+}
+window.aisHeroEnter = startHeroEntrance; /* called by the loading screen as it fades out */
+requestAnimationFrame(function(){
+  document.body.classList.add('ready');
+  if(window.aisLoaderDone || !document.getElementById('loader')) startHeroEntrance();
 });
 
 /* ---------------- showcase entrance: plays once, the first time
