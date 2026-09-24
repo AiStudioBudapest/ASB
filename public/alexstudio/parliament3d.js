@@ -16093,15 +16093,13 @@ function Od(e, t) {
 			n < .9 && (b.t.y += 40 * Zu((.9 - n) / .4, 0, 1) * (1 - Qu(0, .7, i))), w = Qu(4.1, 4.45, i) * +(i < 4.64), w = Math.max(w, Qu(5.3, 5.38, i) * (1 - Qu(5.68, 5.76, i)));
 		}
 		let F = N ? +!!f : i <= vd ? 0 : i < yd ? 1 : 2;
-		F !== j.zone && (j.zone >= 0 && E && j.capZone === j.zone && j.capAge < 6 && (j.mix = 1), j.zone = F), j.mix = Math.max(0, j.mix - d / .8), (f !== x.inInterior || x.first !== !0) && (x.inInterior = f, x.first = !0, _.group.visible = !f, v.group.visible = f, r.shadowMap.needsUpdate = !0, s.environment = f ? g : m, s.environmentIntensity = f ? .04 : .7), _.reflector && (_.reflector.visible = a >= 2 && o.reflect && !f && b.p.y < 260), _.water && (_.water.visible = !(_.reflector && _.reflector.visible));
-		let L = l.mx || 0, te = l.my || 0;
-		c.position.copy(b.p);
-		let ne = (1 - w) * (f ? .5 : 1);
-		c.position.x += Math.sin(u * .17) * 1.6 * ne + L * 3.2 * (f ? .25 : 1) * (1 - w), c.position.y += Math.sin(u * .13) * .7 * ne - te * 1.6 * (f ? .25 : 1) * (1 - w), c.position.z += Math.cos(u * .11) * 1.4 * ne, c.lookAt(b.t);
-		let re = x.W / x.H;
-		c.fov = b.fov * Zu(1 + (1.3 - re) * .6, 1, 1.6), c.updateProjectionMatrix();
-		let R = E ? 0 : (1 - p) ** 1.4;
-		if (r.toneMappingExposure = Zu(1.45 - M * .9, .45, 2) * (f ? .9 : 1) * (E ? 1 : 1 + R * 6), e.style.opacity = String(x.dbg || l.appear === void 0 ? 1 : l.appear), _.update(u, d, !f), v.update(u, d), !f && !n) {
+		F !== j.zone && (j.zone >= 0 && E && j.capZone === j.zone && j.capAge < 6 && (j.mix = 1), j.zone = F), j.mix = Math.max(0, j.mix - d / .8), (f !== x.inInterior || x.first !== !0) && (x.inInterior = f, x.first = !0, _.group.visible = !f, v.group.visible = f, r.shadowMap.needsUpdate = !0, s.environment = f ? g : m, s.environmentIntensity = f ? .04 : .7), _.reflector && (_.reflector.visible = a >= 2 && o.reflect && !f && b.p.y < 260), _.water && (_.water.visible = !(_.reflector && _.reflector.visible)), c.position.copy(b.p);
+		let L = (1 - w) * (f ? .5 : 1);
+		c.position.x += Math.sin(u * .17) * 1.6 * L, c.position.y += Math.sin(u * .13) * .7 * L, c.position.z += Math.cos(u * .11) * 1.4 * L, c.lookAt(b.t);
+		let te = x.W / x.H;
+		c.fov = b.fov * Zu(1 + (1.3 - te) * .6, 1, 1.6), c.updateProjectionMatrix();
+		let ne = E ? 0 : (1 - p) ** 1.4;
+		if (r.toneMappingExposure = Zu(1.45 - M * .9, .45, 2) * (f ? .9 : 1) * (E ? 1 : 1 + ne * 6), e.style.opacity = String(x.dbg || l.appear === void 0 ? 1 : l.appear), _.update(u, d, !f), v.update(u, d), !f && !n) {
 			if (C -= d, C < 0 && !S) {
 				C = 6 + $() * 8;
 				let e = ($() - .5) * 1.6, t = .25 + $() * .3, n = new W();
@@ -16124,7 +16122,7 @@ function Od(e, t) {
 			tier: a,
 			p: c.position.toArray().map(Math.round),
 			fov: Math.round(c.fov)
-		}, E ? (k.enabled = j.mix > .001, k.uniforms.uMix.value = Qu(0, 1, j.mix), O.uniforms.uTime.value = u, O.uniforms.uFlash.value = R, O.uniforms.uFlashCol.value.setRGB(h[0], h[1], h[2]), O.uniforms.uVig.value = f ? .4 : .55, D.strength = f ? .34 : .3, D.threshold = f ? 1.2 : 1, E.render(d), j.mix <= .001 && !N && Math.min(Math.abs(i - vd), Math.abs(i - yd)) < .2 ? (r.copyFramebufferToTexture(A), j.capZone = F, j.capAge = 0) : j.capAge++) : r.render(s, c), !x.dbg && ++I.n % 45 == 0) {
+		}, E ? (k.enabled = j.mix > .001, k.uniforms.uMix.value = Qu(0, 1, j.mix), O.uniforms.uTime.value = u, O.uniforms.uFlash.value = ne, O.uniforms.uFlashCol.value.setRGB(h[0], h[1], h[2]), O.uniforms.uVig.value = f ? .4 : .55, D.strength = f ? .34 : .3, D.threshold = f ? 1.2 : 1, E.render(d), j.mix <= .001 && !N && Math.min(Math.abs(i - vd), Math.abs(i - yd)) < .2 ? (r.copyFramebufferToTexture(A), j.capZone = F, j.capAge = 0) : j.capAge++) : r.render(s, c), !x.dbg && ++I.n % 45 == 0) {
 			if (ee()) {
 				if (++I.bad >= 2) {
 					if (I.bad = 0, a > 0) a--, y(), P();

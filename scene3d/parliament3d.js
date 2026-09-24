@@ -1204,11 +1204,11 @@ export function createParliament(canvas, opts) {
     if (ext.reflector) ext.reflector.visible = tier >= 2 && flags.reflect && !interior && pose.p.y < 260;
     if (ext.water) ext.water.visible = !(ext.reflector && ext.reflector.visible);
     /* life: slow drift + mouse parallax */
-    const mx = o.mx || 0, my = o.my || 0;
     camera.position.copy(pose.p);
     const dm = (1 - calm) * (interior ? .5 : 1);
-    camera.position.x += Math.sin(t * .17) * 1.6 * dm + mx * 3.2 * (interior ? .25 : 1) * (1 - calm);
-    camera.position.y += Math.sin(t * .13) * .7 * dm - my * 1.6 * (interior ? .25 : 1) * (1 - calm);
+    /* the mouse has NO effect on the scene (user request): only the slow, autonomous drift moves the camera */
+    camera.position.x += Math.sin(t * .17) * 1.6 * dm;
+    camera.position.y += Math.sin(t * .13) * .7 * dm;
     camera.position.z += Math.cos(t * .11) * 1.4 * dm;
     camera.lookAt(pose.t);
     const asp = state.W / state.H;

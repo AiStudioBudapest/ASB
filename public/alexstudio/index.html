@@ -623,7 +623,9 @@ section.band{position:relative;z-index:2;padding:calc(90*var(--u)) var(--gutter)
    and the cards are darker glass, so nothing depends on what part of the
    building the camera happens to be showing. */
 section.band h2,section.band p,section.band .eyebrow,.stage .eyebrow{text-shadow:0 1px 16px rgba(3,4,10,.85),0 0 3px rgba(3,4,10,.6);}
-section.band .service-card,section.band .pricing-card,section.band .faq-item{background-color:rgba(6,8,16,.68);}
+section.band .service-card,section.band .faq-item{background-color:rgba(6,8,16,.68);}
+/* price cards: as opaque as the photographer option box (82%) but still a little see-through */
+section.band .pricing-card{background-color:rgba(6,8,16,.82);}
 section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px solid var(--line);border-radius:calc(14*var(--u));
   background:rgba(6,8,16,.66);color:#c3cad4;}
 .band-head{max-width:calc(640*var(--u));margin:0 auto calc(48*var(--u));text-align:center;}
@@ -647,7 +649,7 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
   border:1px solid var(--line);border-radius:calc(14*var(--u));background:rgba(255,255,255,.02);
   transition:transform .35s var(--ease),border-color .35s var(--ease);}
 @media (hover:hover){.pricing-card:hover{transform:translateY(-4px);border-color:rgba(127,233,222,.4);}}
-.pricing-card.featured{border-color:rgba(127,233,222,.55);background:linear-gradient(180deg,rgba(127,233,222,.07),rgba(127,233,222,.015));}
+.pricing-card.featured{border-color:rgba(127,233,222,.55);background:linear-gradient(180deg,rgba(127,233,222,.10),rgba(127,233,222,.03)),rgba(6,8,16,.82);}
 .pricing-card h3{font-family:var(--serif);font-weight:400;font-size:calc(22*var(--u));margin:0;text-transform:uppercase;letter-spacing:.03em;}
 .pricing-card .price{font-family:var(--serif);font-weight:400;font-size:calc(30*var(--u));color:var(--cyan);margin:calc(12*var(--u)) 0 calc(6*var(--u));}
 .pricing-card .maint{display:flex;flex-direction:column;align-items:flex-start;gap:calc(2*var(--u));
@@ -1879,7 +1881,7 @@ function parlFrame(t){
     if(!(idle && t - Parl.lastDraw < 30)){
       Parl.lastDraw = t;
       try{
-        Parl.p3d.render(t, c.prog, {mx: Parl.msx, my: Parl.msy, dim: c.dim, appear: Parl.p3Appear});
+        Parl.p3d.render(t, c.prog, {dim: c.dim, appear: Parl.p3Appear});
       }catch(err){
         /* any failure in the 3D scene: give the background back to the photo and the video */
         Parl.p3d = null; document.getElementById('p3dCanvas').style.opacity = '0'; Parl.fellBack = false; parlFallback();
@@ -2015,13 +2017,7 @@ if(parlCanvas && parlImg){
   parlCanvas.addEventListener('webglcontextrestored', function(){ Parl.u = {}; Parl.mode = 'off'; parlStartPhoto(); });
   window.addEventListener('resize', function(){ p3Size(false); parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
   document.addEventListener('visibilitychange', function(){ if(!document.hidden){ Parl.lastT = 0; parlKick(); } });
-  if(!reduceMotion){
-    window.addEventListener('pointermove', function(e){
-      if(e.pointerType && e.pointerType !== 'mouse') return;
-      Parl.mouse = true; Parl.mx = e.clientX; Parl.my = e.clientY; Parl.active = performance.now(); parlKick();
-    }, {passive: true});
-    document.addEventListener('mouseleave', function(){ Parl.mouse = false; });
-  }
+  /* No pointer tracking for the Parliament on purpose: the mouse must never move it (parallax, torch, tilt). Parl.mouse stays false. */
   if(reduceMotion || (navigator.connection && navigator.connection.saveData)){
     Parl.posterOff = true; posterHide(true);
     if(document.readyState === 'complete') window.aisLoaderHide && window.aisLoaderHide(); else window.addEventListener('load', function(){ window.aisLoaderHide && window.aisLoaderHide(); }, {once: true});
