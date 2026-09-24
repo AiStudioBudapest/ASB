@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#07080a">
 <title>AiStudioBudapest — Prémium Webdesign Portfólió</title>
 <meta name="description" content="AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.">
+<link rel="preload" as="image" href="/alexstudio/poster-d.jpg" media="(min-width:821px)" fetchpriority="high">
+<link rel="preload" as="image" href="/alexstudio/poster-m.jpg" media="(max-width:820px)" fetchpriority="high">
 <script>
 /* Fetch the 3D Parliament scene as early as possible — only for visitors who
    will actually get it (no reduced-motion, no data-saver). */
@@ -127,22 +129,15 @@ img{display:block;max-width:100%;}
 [tabindex="-1"]:focus{outline:none;}
 
 /* ============================================================
-   1. BACKGROUND — just the real looping 4K space video, a
-      neutral dark vignette for legibility, twinkling stars and
-      a small cursor-tracked glow. No grids, no colour tint.
+   1. BACKGROUND — the 3D Parliament, nothing else. There is no space video any more (visitors saw it for a few
+   seconds on every load and did not want it): until the live scene is ready the backdrop is a STILL FRAME OF THE
+   SAME 3D SCENE (poster-d.jpg / poster-m.jpg, rendered from the scene itself at the hero camera), and the canvas
+   fades in over it so the hand-over is invisible. Dark night blue underneath, never a starfield photo.
    ============================================================ */
-/* The poster is the video's first frame: visible instantly while the clip
-   loads, and the permanent backdrop for prefers-reduced-motion (video removed). */
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#050608 url('/media/space-poster.jpg') center/cover no-repeat;}
-.bg-video-wrap{position:absolute;inset:0;opacity:.7;filter:saturate(1.15) brightness(.78) contrast(1.05);}
-/* Two copies of the same clip so the loop restart can be hidden: see the
-   crossfade logic in the script below. Each video sits at opacity 0 until
-   it's the active one — .bg-video-wrap carries the shared dimming/filter
-   look so the two videos blend into each other during a crossfade instead
-   of each separately darkening/lightening as they fade. */
-.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;}
-.bg-video.active{opacity:1;}
-.bg-video.fading{transition:opacity 1.4s linear;}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#03050b;}
+.bg-poster{position:absolute;inset:0;background:#03050b url('/alexstudio/poster-d.jpg') center/cover no-repeat;transition:opacity .9s ease;}
+@media (max-width:820px){.bg-poster{background-image:url('/alexstudio/poster-m.jpg');}}
+.bg-poster.off{opacity:0;pointer-events:none;}
 /* This tint sits on the fixed (viewport-relative, not page-relative) space
    background, so its gradient re-applies at every scroll position — the
    bottom ~45% of whatever's currently on screen was getting up to 88%
@@ -535,7 +530,6 @@ body.ready .bg,body.ready .grain{opacity:1;}
   .enter *,.enter{transition:none!important;transform:none!important;opacity:1!important;}
   .bg,.grain{transition:none!important;opacity:1!important;}
   .particles i{animation:none!important;}
-  .bg-video{display:none!important;}
   .bg-parl{transition:none!important;}
   .composition,.side,.frame-shell,.tilt{transition:none!important;}
   .frame-shell{animation:none!important;}
@@ -816,9 +810,6 @@ footer.site-foot a:hover{color:var(--cyan);}
   /* a full-screen mix-blend-mode layer over a playing video is one of the
      most expensive things a mobile GPU can be asked to do, for a 5% noise. */
   .grain{display:none;}
-  /* a live CSS filter on a playing video is re-run every frame; plain
-     opacity gives (almost) the same dimming for free. */
-  .bg-video-wrap{filter:none;opacity:.55;}
 }
 /* Phones: the decorative extras cost far more than they add on a small
    screen. The orbit rings alone are two ~1000px rotating layers (tens of MB
@@ -833,10 +824,7 @@ footer.site-foot a:hover{color:var(--cyan);}
 <body>
 
 <div class="bg" aria-hidden="true">
-  <div class="bg-video-wrap" id="bgVideoWrap">
-    <video class="bg-video" id="bgVideo" muted playsinline preload="none"></video>
-    <video class="bg-video" id="bgVideo2" muted playsinline preload="none"></video>
-  </div>
+  <div class="bg-poster" id="bgPoster"></div>
   <canvas class="bg-parl" id="parlCanvas"></canvas>
   <canvas class="bg-p3d" id="p3dCanvas"></canvas>
   <img class="bg-parl-img" id="parlImg" src="/alexstudio/parlement.jpg" alt="" width="2400" height="1138" decoding="async">
@@ -1492,12 +1480,6 @@ function readStoredLang(){
 }
 var currentLang = readStoredLang();
 
-/* Pexels space clip, re-encoded and self-hosted (was a 10.6 MB 2560x1440
-   file streamed twice — one <video> per crossfade copy — which is what made
-   phones stutter). 1080p ~1.4 MB for desktop, 720p ~0.65 MB for phones and small tablets. */
-var SPACE_BG_VIDEO = window.matchMedia('(max-width:820px)').matches
-  ? '/media/space-720.mp4' : '/media/space-1080.mp4';
-
 var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* Viewport height cached for the scroll loop. Mobile browsers fire `resize`
    every time the URL bar collapses/expands (height-only, mid-scroll); reading
@@ -1579,62 +1561,6 @@ function splitTagline(text){
 }
 /* First split happens inside applyLang(currentLang), called once
    everything else below is set up — see the initial-mount block. */
-
-/* ---------------- space background video: crossfade loop ----------------
-   A native `loop` restart snaps straight back to frame 0 the instant the
-   clip ends — motion/lighting jump in one frame, which reads as "a clip
-   repeating" rather than an ambient, endless scene. Two copies of the same
-   clip take turns instead: while one plays, the other sits primed at its
-   own frame 0; a few seconds before the visible one ends, the idle copy
-   starts playing underneath and a short opacity crossfade dissolves from
-   one to the other. By the time the first copy would have visibly jumped,
-   viewers are already looking at the second one, mid-scene — no cut ever
-   reaches the screen. The two copies then swap roles forever. */
-var bgVideoWrap = document.getElementById('bgVideoWrap');
-var bgVideo = document.getElementById('bgVideo');
-var bgVideo2 = document.getElementById('bgVideo2');
-if(bgVideoWrap && bgVideo && bgVideo2){
-  if(reduceMotion){
-    bgVideoWrap.remove();
-    bgVideoWrap = null;
-  } else {
-    var BG_CROSSFADE_S = 1.4;
-    var bgActive = bgVideo;
-    var bgIdle = bgVideo2;
-    var bgSwapping = false;
-
-    [bgVideo, bgVideo2].forEach(function(v){
-      v.preload = 'auto';
-      v.src = SPACE_BG_VIDEO;
-      v.addEventListener('timeupdate', function(){
-        if(v !== bgActive || bgSwapping) return;
-        var d = v.duration;
-        if(!d || !isFinite(d) || d - v.currentTime > BG_CROSSFADE_S) return;
-        bgSwapping = true;
-        bgIdle.currentTime = 0;
-        bgIdle.play().catch(function(){});
-        bgActive.classList.add('fading');
-        bgIdle.classList.add('fading');
-        bgIdle.classList.add('active');
-        bgActive.classList.remove('active');
-        var justFinished = bgActive;
-        setTimeout(function(){
-          justFinished.pause();
-          justFinished.currentTime = 0;
-          justFinished.classList.remove('fading');
-          bgIdle.classList.remove('fading');
-          var tmp = bgActive; bgActive = bgIdle; bgIdle = tmp;
-          bgSwapping = false;
-        }, BG_CROSSFADE_S * 1000);
-      });
-    });
-
-    var tryPlayBg = function(){ bgActive.play().catch(function(){}); };
-    bgActive.classList.add('active');
-    bgActive.addEventListener('canplay', tryPlayBg, {once:true});
-    tryPlayBg();
-  }
-}
 
 /* ---------------- Parliament camera ----------------
    The Hungarian Parliament at night (one photo, /alexstudio/parlement.jpg) is
@@ -1851,6 +1777,8 @@ function parlDrawImg(){
   parlImg.style.width = m.dw.toFixed(1) + 'px'; parlImg.style.height = m.dh.toFixed(1) + 'px';
   parlImg.style.transform = 'translate3d(' + m.ox.toFixed(1) + 'px,' + m.oy.toFixed(1) + 'px,0)';
 }
+var bgPoster = document.getElementById('bgPoster');
+function posterHide(off){ if(bgPoster) bgPoster.classList.toggle('off', !!off); }
 function parlFrame(t){
   Parl.running = false;
   if(document.hidden || Parl.lost || Parl.mode === 'off') return;
@@ -1865,7 +1793,8 @@ function parlFrame(t){
   if(moving) Parl.active = t;
   var idle = t - Parl.active > 1600;
   if(Parl.p3d){
-    if(Parl.p3lost) return; /* GL context lost (tab in the background, GPU reset): the restore handler restarts the loop */
+    if(Parl.p3lost) return;
+    if(Parl.p3Appear >= 1 && !Parl.posterOff){ Parl.posterOff = true; posterHide(true); } /* the live scene fully covers it now */ /* GL context lost (tab in the background, GPU reset): the restore handler restarts the loop */
     Parl.p3Appear = Math.min(1, Parl.p3Appear + dt * .8);
     /* safety net for missed resize events (rotation, browser zoom, devtools) */
     if(t - Parl.p3Chk > 1000){ Parl.p3Chk = t; p3Size(false); }
@@ -1910,7 +1839,7 @@ function parlKick(){
 }
 /* The real 3D Parliament (scene3d/parliament3d.js, one self-contained file
    built by `npm run build:3d`) is the only Parliament a visitor should see: the
-   old photo is NOT shown while it loads (the space video is there meanwhile).
+   old photo is NOT shown while it loads (a still frame of the 3D scene is there meanwhile).
    The photo is only a fallback — reduced motion, data saver, no WebGL, an
    error, or a scene that takes more than ~9 s. */
 function p3Size(force){
@@ -1929,7 +1858,7 @@ function parlFallback(){
   if(Parl.p3d || Parl.fellBack) return;
   Parl.fellBack = true;
   if(Parl.mode === '3d') Parl.mode = 'off';
-  if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
+  Parl.posterOff = true; posterHide(true); /* the photo fallback draws its own Parliament: no second one underneath */
   if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto, {once: true});
 }
 /* One reload, at most once a minute, as the very last resort (a lost GL context that never comes back). */
@@ -1953,7 +1882,7 @@ function parlLoad3D(){
   Parl.p3Tried = true;
   /* The 3D scene takes over whenever it is ready, even after the photo fallback has started, so this timeout is only
      for a genuinely stuck load (slow first visit: ~5 MB of files and a scene to build). Until then the visitor sees the
-     space video, never the old photo. */
+     still of the scene, never the old photo or a space video. */
   var arm = function(){ setTimeout(function(){ if(Parl.p3d) return; if(document.hidden){ arm(); return; } parlFallback(); }, 30000); };
   arm();
   /* let the first frame paint before the (synchronous) scene build */
@@ -1964,16 +1893,15 @@ function parlLoad3D(){
       var cv = document.getElementById('p3dCanvas');
       /* Mobile browsers (and desktop ones after a GPU reset) drop the GL context when the tab goes to the background.
          It used to switch to the photo for good, so the visitor came back to the old look until a manual refresh.
-         Now: keep the scene, show the space video meanwhile, and carry on when the context is restored. */
+         Now: keep the scene, show its still frame meanwhile, and carry on when the context is restored. */
       cv.addEventListener('webglcontextlost', function(e){
         e.preventDefault(); Parl.p3lost = true; cv.style.opacity = '0';
-        if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
+        Parl.posterOff = false; posterHide(false); /* the still of the scene covers the gap until the context is back */
         clearTimeout(Parl.p3lostT);
         Parl.p3lostT = setTimeout(function(){ if(Parl.p3lost) parlReloadOnce(); }, 6000);
       });
       cv.addEventListener('webglcontextrestored', function(){
         clearTimeout(Parl.p3lostT); Parl.p3lost = false; Parl.p3Appear = 0; Parl.lastT = 0;
-        if(bgVideoWrap){ try{ bgVideo.pause(); bgVideo2.pause(); }catch(err){} }
         try{ p3Size(true); }catch(err){ parlReloadOnce(); return; }
         parlKick();
       });
@@ -1982,8 +1910,6 @@ function parlLoad3D(){
       Parl.mode = '3d'; /* also when the photo fallback had started or had failed to start: the loop must run */
       /* no fly-in from the top if the page was opened part-way down */
       Object.keys(Parl.tgt).forEach(function(k){ Parl.cam[k] = Parl.tgt[k]; });
-      /* the 3D scene has its own opaque night sky: stop decoding the two space videos */
-      if(bgVideoWrap){ try{ bgVideo.pause(); bgVideo2.pause(); }catch(e){} }
       if(/[?&]p3d=1/.test(location.search)) window.__p3d = api;
       parlCanvas.classList.remove('on'); parlImg.classList.remove('on');
       parlKick();
@@ -2017,6 +1943,7 @@ if(parlCanvas && parlImg){
     document.addEventListener('mouseleave', function(){ Parl.mouse = false; });
   }
   if(reduceMotion || (navigator.connection && navigator.connection.saveData)){
+    Parl.posterOff = true; posterHide(true);
     if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto);
   } else {
     Parl.mode = '3d'; parlSize(true);
@@ -2840,14 +2767,6 @@ if(!reduceMotion){
       hero.style.opacity = String(Math.max(0, 1 - heroP * 1.25));
       hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px) scale(' + (1 - heroP * 0.05).toFixed(3) + ')';
       if(tagline) tagline.style.setProperty('--p', heroP.toFixed(4));
-    }
-
-    if(bgVideoWrap){
-      var zoomP = Math.min(1, sy / (vh * 2.4));
-      if(zoomP !== lastZoomP){
-        lastZoomP = zoomP;
-        bgVideoWrap.style.transform = 'scale(' + (1 + zoomP * 0.16).toFixed(3) + ')';
-      }
     }
 
     if(orbitWrap) orbitWrap.style.transform = 'rotate(' + (sy * 0.025).toFixed(2) + 'deg)';
