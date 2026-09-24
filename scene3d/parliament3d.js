@@ -965,7 +965,7 @@ function buildInterior(mobile, ctx) {
 /* waypoints: [page progress, position, look-at, fov]; progress 0..6 = hero, vitrine,
    prix, services, à propos, FAQ, contact (see PARL_STOPS in the page). */
 const PATH_A = [
-  [0, [0, 12, 176], [0, 48, 0], 44], /* the first screen: camera low, the whole Parliament in frame (was [0,26,190] -> [0,100,0], dome only) */
+  [0, [0, 34, 300], [0, 111, 0], 44], /* the first screen: the whole Parliament in the lower half, the sky above it for the title (was [0,12,176] -> [0,48,0], building behind the text) */
   [1, [-172, 58, 190], [0, 40, 0], 44],
   [2, [-104, 17, 86], [-70, 31, 0], 46],
   [3, [12, 124, 88], [0, 56, -6], 48],

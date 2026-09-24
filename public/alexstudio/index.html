@@ -287,8 +287,8 @@ header.nav{
       space video. The three-project showcase lives further down.
    ============================================================ */
 .hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;
-  padding:calc(150*var(--u)) var(--gutter) calc(60*var(--u) + 26vh); /* content sits high: the Parliament is the star of the first screen */
+  align-items:center;justify-content:flex-start;text-align:center;
+  padding:calc(112*var(--u)) var(--gutter) calc(40*var(--u)); /* the text sits at the top, in the sky ABOVE the Parliament (never over it) */
   /* Scrolling shatters the tagline letters far past the screen edges
      (--ex up to ~230px). Even invisible, those boxes widen the page and make
      mobile browsers zoom out / scroll sideways, so they are clipped here. */
@@ -304,7 +304,7 @@ header.nav{
 
 .tagline{
   font-family:var(--serif);font-weight:400;letter-spacing:.01em;
-  font-size:calc(62*var(--u));line-height:1.15;max-width:18ch;margin:0;color:#fff;
+  font-size:calc(56*var(--u));line-height:1.15;max-width:18ch;margin:0;color:#fff;
 }
 
 /* Scroll-scrubbed letter shatter: --p (0-1) is set on .tagline once per
@@ -325,7 +325,7 @@ header.nav{
     scale(calc(1 - var(--lp) * .4));
   opacity:calc(1 - var(--lp));
 }
-.hero-sub{margin-top:calc(22*var(--u));color:#fff;font-weight:500;font-size:calc(18*var(--u));line-height:1.6;max-width:42ch;}
+.hero-sub{margin-top:calc(18*var(--u));color:#fff;font-weight:500;font-size:calc(17*var(--u));line-height:1.55;max-width:44ch;}
 
 .scroll-arrow{display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--u));
   margin-top:calc(48*var(--u));text-decoration:none;color:var(--muted);}
