@@ -15732,8 +15732,8 @@ var hd = [
 		5.2,
 		[
 			Yu,
-			4.5,
-			-9
+			2.7,
+			-9.5
 		],
 		[
 			Yu,
@@ -15743,46 +15743,74 @@ var hd = [
 		70
 	],
 	[
-		5.4,
+		5.36,
 		[
-			2000.4,
+			2000.1,
 			2.7,
-			-3.9
+			-4.6
 		],
 		[
 			Yu,
-			1.95,
+			2.1,
 			0
 		],
 		44
 	],
 	[
-		5.55,
+		5.42,
 		[
-			2003.3,
-			2.5,
-			-1.6
+			Yu,
+			2.7,
+			-3.7
 		],
 		[
 			Yu,
-			1.95,
+			2.1,
 			0
 		],
 		44
 	],
 	[
-		5.68,
+		5.5,
 		[
-			2003.4,
-			3.1,
-			1.5
+			2002.6,
+			2.7,
+			-2.6
 		],
 		[
 			Yu,
-			2,
+			2.1,
 			0
 		],
-		42
+		44
+	],
+	[
+		5.58,
+		[
+			2003.7,
+			2.7,
+			0
+		],
+		[
+			Yu,
+			2.1,
+			0
+		],
+		44
+	],
+	[
+		5.66,
+		[
+			2003.2,
+			2.7,
+			1.85
+		],
+		[
+			Yu,
+			2.1,
+			0
+		],
+		44
 	],
 	[
 		5.78,
@@ -15855,7 +15883,9 @@ var hd = [
 		],
 		40
 	]
-], vd = 4.63, yd = 5.86, bd = .06, xd = .05, Sd = [
+];
+gd.mono = !0, _d.mono = !0;
+var vd = 4.63, yd = 5.86, bd = .06, xd = .05, Sd = [
 	2.5,
 	1.35,
 	.42
@@ -15868,7 +15898,44 @@ function wd(e, t, n, r, i) {
 	let a = i * i, o = a * i;
 	return .5 * (2 * t + (-e + n) * i + (2 * e - 5 * t + 4 * n - r) * a + (-e + 3 * t - 3 * n + r) * o);
 }
-function Td(e, t, n) {
+function Td(e, t) {
+	let n = e.length, r = [], i = Array(n);
+	for (let i = 0; i < n - 1; i++) r[i] = (t[i + 1] - t[i]) / (e[i + 1] - e[i]);
+	i[0] = r[0], i[n - 1] = r[n - 2];
+	for (let t = 1; t < n - 1; t++) if (r[t - 1] * r[t] <= 0) i[t] = 0;
+	else {
+		let n = e[t] - e[t - 1], a = e[t + 1] - e[t];
+		i[t] = 3 * (n + a) / ((2 * a + n) / r[t - 1] + (a + 2 * n) / r[t]);
+	}
+	return i;
+}
+function Ed(e, t, n) {
+	let r = e.length;
+	if (!e.tan) {
+		let t = e.map((e) => e[0]);
+		e.tan = [
+			0,
+			1,
+			2,
+			3,
+			4,
+			5,
+			6
+		].map((n) => Td(t, e.map((e) => n < 3 ? e[1][n] : n < 6 ? e[2][n - 3] : e[3])));
+	}
+	let i = 0;
+	if (t <= e[0][0]) t = e[0][0];
+	else if (t >= e[r - 1][0]) t = e[r - 1][0], i = r - 2;
+	else for (; i < r - 2 && t > e[i + 1][0];) i++;
+	let a = e[i][0], o = e[i + 1][0] - a, s = (t - a) / o, c = s * s, l = c * s, u = 2 * l - 3 * c + 1, d = l - 2 * c + s, f = -2 * l + 3 * c, p = l - c, m = (e, t) => e < 3 ? t[1][e] : e < 6 ? t[2][e - 3] : t[3], h = [];
+	for (let t = 0; t < 7; t++) h[t] = u * m(t, e[i]) + d * o * e.tan[t][i] + f * m(t, e[i + 1]) + p * o * e.tan[t][i + 1];
+	n.p.set(h[0], h[1], h[2]), n.t.set(h[3], h[4], h[5]), n.fov = h[6];
+}
+function Dd(e, t, n) {
+	if (e.mono) {
+		Ed(e, t, n);
+		return;
+	}
 	let r = e.length;
 	if (t <= e[0][0]) {
 		n.p.set(...e[0][1]), n.t.set(...e[0][2]), n.fov = e[0][3];
@@ -15884,7 +15951,7 @@ function Td(e, t, n) {
 	for (let e = 0; e < 3; e++) n.p.setComponent(e, wd(o[1][e], s[1][e], c[1][e], l[1][e], a)), n.t.setComponent(e, wd(o[2][e], s[2][e], c[2][e], l[2][e], a));
 	n.fov = s[3] + (c[3] - s[3]) * a;
 }
-function Ed(e, t) {
+function Od(e, t) {
 	t ||= {};
 	let n = !!t.mobile, r = new Zl({
 		canvas: e,
@@ -16019,9 +16086,9 @@ function Ed(e, t) {
 		let f, p = 1, h = Sd, w = 0, M = l.dim || 0, N = x.dbg && x.dbg.prog === void 0;
 		if (N) b.p.set(...x.dbg.p), b.t.set(...x.dbg.t), b.fov = x.dbg.fov || 45, f = !!x.dbg.interior, _.door(x.dbg.door || 0);
 		else {
-			x.dbg && (i = x.dbg.prog, M = x.dbg.dim === void 0 ? .58 : x.dbg.dim), Td(i <= vd ? hd : i < yd ? gd : _d, i, b), f = i > vd && i < yd;
+			x.dbg && (i = x.dbg.prog, M = x.dbg.dim === void 0 ? .58 : x.dbg.dim), Dd(i <= vd ? hd : i < yd ? gd : _d, i, b), f = i > vd && i < yd;
 			let e = Math.abs(i - vd), t = Math.abs(i - yd);
-			e < t ? p = Qu(0, bd, e) : (p = Qu(0, xd, t), h = Cd), _.door(Qu(4.2, 4.46, i)), w = Qu(4.1, 4.45, i) * +(i < 4.64);
+			e < t ? p = Qu(0, bd, e) : (p = Qu(0, xd, t), h = Cd), _.door(Qu(4.2, 4.46, i)), w = Qu(4.1, 4.45, i) * +(i < 4.64), w = Math.max(w, Qu(5.3, 5.38, i) * (1 - Qu(5.68, 5.76, i)));
 		}
 		let F = N ? +!!f : i <= vd ? 0 : i < yd ? 1 : 2;
 		F !== j.zone && (j.zone >= 0 && E && j.capZone === j.zone && j.capAge < 6 && (j.mix = 1), j.zone = F), j.mix = Math.max(0, j.mix - d / .8), (f !== x.inInterior || x.first !== !0) && (x.inInterior = f, x.first = !0, _.group.visible = !f, v.group.visible = f, r.shadowMap.needsUpdate = !0, s.environment = f ? g : m, s.environmentIntensity = f ? .04 : .7), _.reflector && (_.reflector.visible = a >= 2 && o.reflect && !f && b.p.y < 260), _.water && (_.water.visible = !(_.reflector && _.reflector.visible));
@@ -16112,7 +16179,7 @@ function Ed(e, t) {
 		renderer: r
 	};
 }
-var Dd = {
+var kd = {
 	stone: [
 		"stone_c",
 		"stone_n",
@@ -16144,11 +16211,11 @@ var Dd = {
 		3
 	]
 };
-async function Od(t, n) {
+async function Ad(t, n) {
 	let r = new Ga(), i = (t, n) => r.loadAsync(t).then((t) => (t.wrapS = t.wrapT = e, t.colorSpace = n ? k : "", t.anisotropy = 8, t)), a = {};
-	await Promise.all(Object.keys(Dd).map(async (e) => {
+	await Promise.all(Object.keys(kd).map(async (e) => {
 		try {
-			let n = Dd[e], r = await Promise.all([
+			let n = kd[e], r = await Promise.all([
 				i(t + n[0] + ".jpg", !0),
 				i(t + n[1] + ".jpg", !1),
 				i(t + n[2] + ".jpg", !1)
@@ -16166,13 +16233,13 @@ async function Od(t, n) {
 	} catch {}
 	return a;
 }
-async function kd(e, t) {
+async function jd(e, t) {
 	t ||= {};
-	let n = await Od(t.base || "/alexstudio/tex/", !!t.mobile), r = Ed(e, Object.assign({}, t, { assets: n }));
+	let n = await Ad(t.base || "/alexstudio/tex/", !!t.mobile), r = Od(e, Object.assign({}, t, { assets: n }));
 	try {
 		await r.warm();
 	} catch {}
 	return r;
 }
 //#endregion
-export { Ed as createParliament, Od as loadAssets, kd as loadParliament };
+export { Od as createParliament, Ad as loadAssets, jd as loadParliament };

@@ -982,11 +982,14 @@ const PATH_I = [
   [4.66, [OFF, -6.2, -47.5], [OFF, -1, -26], 62],
   [4.85, [OFF, -3.0, -33], [OFF, 4, -12], 62],
   [5.0, [OFF, .7, -19], [OFF, 11, 4], 66],
-  [5.2, [OFF, 4.5, -9], [OFF, 20, 2], 70],
-  /* the Holy Crown: three long, calm shots around it (well clear of any cut) */
-  [5.4, [OFF + .4, 2.7, -3.9], [OFF, 1.95, 0], 44],
-  [5.55, [OFF + 3.3, 2.5, -1.6], [OFF, 1.95, 0], 44],
-  [5.68, [OFF + 3.4, 3.1, 1.5], [OFF, 2.0, 0], 42],
+  [5.2, [OFF, 2.7, -9.5], [OFF, 20, 2], 70],
+  /* the Holy Crown: the eye stays at ONE height (2.7 m) on a slow circle 3.7 m from it, same target, same lens — nothing
+     goes up or down, nothing zooms (interpolated with a monotone spline so it cannot dip between two equal heights) */
+  [5.36, [OFF + .1, 2.7, -4.6], [OFF, 2.1, 0], 44],
+  [5.42, [OFF, 2.7, -3.7], [OFF, 2.1, 0], 44],
+  [5.50, [OFF + 2.6, 2.7, -2.6], [OFF, 2.1, 0], 44],
+  [5.58, [OFF + 3.7, 2.7, 0], [OFF, 2.1, 0], 44],
+  [5.66, [OFF + 3.2, 2.7, 1.85], [OFF, 2.1, 0], 44],
   /* then up the hall toward the light of the oculus */
   [5.78, [OFF + 1.2, 9, 1.2], [OFF, 24, 0], 62],
   [5.85, [OFF, 29, .3], [OFF, 52, 0], 78]
@@ -996,6 +999,7 @@ const PATH_C = [
   [5.93, [12, 66, 122], [0, 50, 0], 50],
   [6.0, [-6, 30, 214], [0, 46, 0], 40]
 ];
+PATH_I.mono = true; PATH_C.mono = true;
 const CUT1 = 4.63, CUT2 = 5.86, CUT1W = .06, CUT2W = .05;
 const FLASH_WARM = [2.5, 1.35, .42], FLASH_COOL = [1.6, 2.0, 3.0];
 
@@ -1003,7 +1007,35 @@ function cr(p0, p1, p2, p3, u) {
   const u2 = u * u, u3 = u2 * u;
   return .5 * ((2 * p1) + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u2 + (-p0 + 3 * p1 - 3 * p2 + p3) * u3);
 }
+/* Fritsch-Butland monotone cubic: no overshoot between waypoints (a Catmull-Rom spline dips below a flat run before it rises). */
+function monoTangents(xs, ys) {
+  const n = xs.length, d = [], m = new Array(n);
+  for (let k = 0; k < n - 1; k++) d[k] = (ys[k + 1] - ys[k]) / (xs[k + 1] - xs[k]);
+  m[0] = d[0]; m[n - 1] = d[n - 2];
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] * d[i] <= 0) m[i] = 0;
+    else { const h0 = xs[i] - xs[i - 1], h1 = xs[i + 1] - xs[i]; m[i] = 3 * (h0 + h1) / ((2 * h1 + h0) / d[i - 1] + (h1 + 2 * h0) / d[i]); }
+  }
+  return m;
+}
+function sampleMono(path, prog, out) {
+  const n = path.length;
+  if (!path.tan) { /* 7 channels: position xyz, target xyz, fov */
+    const xs = path.map((w) => w[0]);
+    path.tan = [0, 1, 2, 3, 4, 5, 6].map((c) => monoTangents(xs, path.map((w) => (c < 3 ? w[1][c] : c < 6 ? w[2][c - 3] : w[3]))));
+  }
+  let k = 0;
+  if (prog <= path[0][0]) prog = path[0][0]; else if (prog >= path[n - 1][0]) { prog = path[n - 1][0]; k = n - 2; }
+  else while (k < n - 2 && prog > path[k + 1][0]) k++;
+  const x0 = path[k][0], h = path[k + 1][0] - x0, u = (prog - x0) / h, u2 = u * u, u3 = u2 * u;
+  const h00 = 2 * u3 - 3 * u2 + 1, h10 = u3 - 2 * u2 + u, h01 = -2 * u3 + 3 * u2, h11 = u3 - u2;
+  const val = (c, w) => (c < 3 ? w[1][c] : c < 6 ? w[2][c - 3] : w[3]);
+  const ch = [];
+  for (let c = 0; c < 7; c++) ch[c] = h00 * val(c, path[k]) + h10 * h * path.tan[c][k] + h01 * val(c, path[k + 1]) + h11 * h * path.tan[c][k + 1];
+  out.p.set(ch[0], ch[1], ch[2]); out.t.set(ch[3], ch[4], ch[5]); out.fov = ch[6];
+}
 function samplePath(path, prog, out) {
+  if (path.mono) { sampleMono(path, prog, out); return; }
   const n = path.length;
   if (prog <= path[0][0]) { out.p.set(...path[0][1]); out.t.set(...path[0][2]); out.fov = path[0][3]; return; }
   if (prog >= path[n - 1][0]) { out.p.set(...path[n - 1][1]); out.t.set(...path[n - 1][2]); out.fov = path[n - 1][3]; return; }
@@ -1153,6 +1185,7 @@ export function createParliament(canvas, opts) {
       if (d1 < d2) fade = smooth(0, CUT1W, d1); else { fade = smooth(0, CUT2W, d2); flashCol = FLASH_COOL; }
       ext.door(smooth(4.2, 4.46, prog));
       calm = smooth(4.1, 4.45, prog) * (prog < CUT1 + .01 ? 1 : 0); /* no sideways drift while flying through the door */
+      calm = Math.max(calm, smooth(5.3, 5.38, prog) * (1 - smooth(5.68, 5.76, prog))); /* nor around the crown: no bobbing, no mouse-driven zoom */
     }
     /* scene changes (outside -> the hall -> outside): dissolve from the last frame we drew instead of cutting */
     const zone = byPose ? (interior ? 1 : 0) : (prog <= CUT1 ? 0 : prog < CUT2 ? 1 : 2);
