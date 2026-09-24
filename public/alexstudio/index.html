@@ -6,6 +6,14 @@
 <meta name="theme-color" content="#07080a">
 <title>AiStudioBudapest — Prémium Webdesign Portfólió</title>
 <meta name="description" content="AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.">
+<script>
+/* Fetch the 3D Parliament scene as early as possible — only for visitors who
+   will actually get it (no reduced-motion, no data-saver). */
+(function(){try{
+  var rm = matchMedia('(prefers-reduced-motion: reduce)').matches, sd = navigator.connection && navigator.connection.saveData;
+  if(!rm && !sd){ var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = '/alexstudio/parliament3d.js'; document.head.appendChild(l); }
+}catch(e){}})();
+</script>
 <style>
 /* Fonts self-hosted under /alexstudio/fonts/ instead of loaded from
    Google's CDN: fonts.googleapis.com/fonts.gstatic.com would otherwise see
@@ -1853,9 +1861,7 @@ function parlFrame(t){
         Parl.p3d.render(t, c.prog, {mx: Parl.msx, my: Parl.msy, dim: c.dim, appear: Parl.p3Appear});
       }catch(err){
         /* any failure in the 3D scene: give the background back to the photo and the video */
-        Parl.p3d = null; document.getElementById('p3dCanvas').style.opacity = '0';
-        parlCanvas.classList.add('on'); if(Parl.mode === 'img') parlImg.classList.add('on');
-        if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(e2){} }
+        Parl.p3d = null; document.getElementById('p3dCanvas').style.opacity = '0'; Parl.fellBack = false; parlFallback();
       }
       /* very slow GPU: lower the render resolution, twice at most */
       if(++Parl.p3Frames > 40 && !idle){
@@ -1882,15 +1888,17 @@ function parlFrame(t){
   } else if(moving){
     parlDrawImg();
   }
-  if(Parl.mode === 'gl' || moving){ Parl.running = true; requestAnimationFrame(parlFrame); }
+  if(Parl.mode === 'gl' || Parl.p3d || moving){ Parl.running = true; requestAnimationFrame(parlFrame); }
 }
 function parlKick(){
   if(Parl.running || Parl.mode === 'off' || document.hidden) return;
   Parl.running = true; requestAnimationFrame(parlFrame);
 }
 /* The real 3D Parliament (scene3d/parliament3d.js, one self-contained file
-   built by `npm run build:3d`) is loaded once the page is idle and then takes
-   over from the photo above; if anything fails, the photo stays. */
+   built by `npm run build:3d`) is the only Parliament a visitor should see: the
+   old photo is NOT shown while it loads (the space video is there meanwhile).
+   The photo is only a fallback — reduced motion, data saver, no WebGL, an
+   error, or a scene that takes more than ~9 s. */
 function p3Size(force){
   var cv = document.getElementById('p3dCanvas');
   if(!Parl.p3d || !cv) return;
@@ -1902,29 +1910,41 @@ function p3Size(force){
   Parl.p3W = w; Parl.p3H = h;
   Parl.p3d.resize(w, h, Math.min(window.devicePixelRatio || 1, Parl.p3Cap));
 }
+function parlFallback(){
+  if(Parl.p3d || Parl.fellBack) return;
+  Parl.fellBack = true;
+  if(Parl.mode === '3d') Parl.mode = 'off';
+  if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
+  if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto, {once: true});
+}
 function parlLoad3D(){
-  if(reduceMotion || Parl.p3Tried || (navigator.connection && navigator.connection.saveData)) return;
+  if(Parl.p3Tried) return;
   Parl.p3Tried = true;
-  var go = function(){
-    import('/alexstudio/parliament3d.js').then(function(mod){
+  var imgReady = new Promise(function(res){
+    if(parlImg.complete) res(); else { parlImg.addEventListener('load', res); parlImg.addEventListener('error', res); }
+  });
+  var arm = function(){ setTimeout(function(){ if(Parl.p3d) return; if(document.hidden){ arm(); return; } parlFallback(); }, 9000); };
+  arm();
+  /* let the first frame paint before the (synchronous) scene build */
+  (function(){ setTimeout(function(){
+    Promise.all([import('/alexstudio/parliament3d.js'), imgReady]).then(function(r){
       var cv = document.getElementById('p3dCanvas');
-      var api = mod.createParliament(cv, {mobile: isCoarse || window.innerWidth <= 820, photo: parlImg});
+      var api = r[0].createParliament(cv, {mobile: isCoarse || window.innerWidth <= 820, photo: parlImg});
       cv.addEventListener('webglcontextlost', function(e){
-        e.preventDefault(); Parl.p3d = null; cv.style.opacity = '0';
-        if(bgVideoWrap){ try{ (bgActive || bgVideo).play().catch(function(){}); }catch(err){} }
-        parlCanvas.classList.add('on'); if(Parl.mode === 'img') parlImg.classList.add('on');
+        e.preventDefault(); Parl.p3d = null; cv.style.opacity = '0'; Parl.fellBack = false; parlFallback();
       });
       Parl.p3d = api; Parl.p3Appear = 0; p3Size(true);
+      /* no fly-in from the top if the page was opened part-way down */
+      Object.keys(Parl.tgt).forEach(function(k){ Parl.cam[k] = Parl.tgt[k]; });
       /* the 3D scene has its own opaque night sky: stop decoding the two space videos */
       if(bgVideoWrap){ try{ bgVideo.pause(); bgVideo2.pause(); }catch(e){} }
       if(/[?&]p3d=1/.test(location.search)) window.__p3d = api;
       parlCanvas.classList.remove('on'); parlImg.classList.remove('on');
       parlKick();
-    }).catch(function(){});
-  };
-  if(window.requestIdleCallback) requestIdleCallback(go, {timeout: 5000}); else setTimeout(go, 2000);
+    }).catch(function(){ parlFallback(); });
+  }, 60); })();
 }
-function parlStart(){
+function parlStartPhoto(){
   if(!parlImg.naturalWidth) return;
   Parl.IW = parlImg.naturalWidth; Parl.IH = parlImg.naturalHeight;
   parlSize(true);
@@ -1937,11 +1957,10 @@ function parlStart(){
   }
   if(reduceMotion) return;
   parlAim(window.scrollY, viewH, document.documentElement.scrollHeight - viewH);
-  parlLoad3D();
 }
 if(parlCanvas && parlImg){
   parlCanvas.addEventListener('webglcontextlost', function(e){ e.preventDefault(); Parl.lost = true; parlCanvas.classList.remove('on'); });
-  parlCanvas.addEventListener('webglcontextrestored', function(){ Parl.u = {}; Parl.mode = 'off'; parlStart(); });
+  parlCanvas.addEventListener('webglcontextrestored', function(){ Parl.u = {}; Parl.mode = 'off'; parlStartPhoto(); });
   window.addEventListener('resize', function(){ p3Size(false); parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
   document.addEventListener('visibilitychange', function(){ if(!document.hidden){ Parl.lastT = 0; parlKick(); } });
   if(!reduceMotion){
@@ -1951,7 +1970,13 @@ if(parlCanvas && parlImg){
     }, {passive: true});
     document.addEventListener('mouseleave', function(){ Parl.mouse = false; });
   }
-  if(parlImg.complete && parlImg.naturalWidth) parlStart(); else parlImg.addEventListener('load', parlStart);
+  if(reduceMotion || (navigator.connection && navigator.connection.saveData)){
+    if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto);
+  } else {
+    Parl.mode = '3d'; parlSize(true);
+    parlAim(window.scrollY, viewH, document.documentElement.scrollHeight - viewH);
+    parlLoad3D();
+  }
 }
 
 /* Move the actual DOM node for `key` into `targetEl`, keeping its iframe's
