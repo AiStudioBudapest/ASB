@@ -1,0 +1,12 @@
+Textures and sky used by the 3D Parliament (public/alexstudio/parliament3d.js). All CC0 (public domain):
+
+- stone_*   : "Marble 01" by Rob Tuytel, Poly Haven (polyhaven.com/a/marble_01), 2K, CC0
+- roof_*    : "Roof Slates 03" by Rob Tuytel, Poly Haven (polyhaven.com/a/roof_slates_03), 1K, CC0
+- floor_*   : "Floor Tiles 06" by Rob Tuytel, Poly Haven (polyhaven.com/a/floor_tiles_06), 1K, CC0
+- paving_*  : "Pavement 01" by Rob Tuytel, Poly Haven (polyhaven.com/a/pavement_01), 1K, CC0
+- gold_*    : "Metal 034" by Lennart Demes, ambientCG (ambientcg.com/a/Metal034), 1K, CC0
+- sky*.jpg  : "Dikhololo Night" by Greg Zaal, Poly Haven (polyhaven.com/a/dikhololo_night), 4K HDRI,
+              tone-mapped to an 8-bit image, horizon replaced by a gradient, urban glow added, CC0
+
+Files were only re-compressed (JPEG) and the ARM/AO/roughness/metalness maps were repacked as glTF "ORM"
+(R = ambient occlusion, G = roughness, B = metalness). The three.js library (MIT) is bundled in parliament3d.js.

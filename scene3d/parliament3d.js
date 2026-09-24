@@ -9,8 +9,12 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { buildBuilding } from './facade.js';
+import { bakePBR, pbrMaterial } from './pbr.js';
+import { Batch, planarUV, M4 } from './arch.js';
 
 const TAU = Math.PI * 2;
 const OFF = 2000; /* the interior lives 2 km away on X so both scenes never overlap */
@@ -298,9 +302,9 @@ const REFLECT_SHADER = {
       float b=sin(p.y*.6-uTime*.9+p.x*.17);
       float c=sin((p.x+p.y)*1.3+uTime*1.6)*.5+sin((p.x-p.y)*1.9-uTime*1.3)*.5;
       vec2 n=vec2(a*.6+c*.4,b*.6+c*.3);
-      float amp=.0035+.0035*clamp(dist/200.,0.,2.);
+      float amp=.0018+.0022*clamp(dist/200.,0.,2.);
       vec2 uv=vUv.xy/vUv.w+n*amp;
-      vec3 refl=texture2D(tDiffuse,uv).rgb;
+      vec3 refl=(texture2D(tDiffuse,uv+vec2(.0014,0.)).rgb+texture2D(tDiffuse,uv-vec2(.0014,0.)).rgb+texture2D(tDiffuse,uv+vec2(0.,.0014)).rgb+texture2D(tDiffuse,uv-vec2(0.,.0014)).rgb)*.25;
       float fres=.05+.95*pow(1.-clamp(V.y,0.,1.),4.);
       vec3 deep=vec3(.003,.006,.017);
       vec3 col=mix(deep,refl*.9,clamp(fres*1.7+.14,0.,1.));
@@ -331,103 +335,92 @@ const GRADE_SHADER = {
 
 /* ------------------------------------------------------------------ materials */
 function makeMaterials() {
-  const facadeMap = canvasTex(256, 1152, (g, w, h) => paintFacade(g, w, h, 32, false), { repeat: true });
-  const facadeEmit = canvasTex(256, 1152, (g, w, h) => paintFacade(g, w, h, 32, true), { repeat: true });
-  const drumMap = canvasTex(1024, 256, (g, w, h) => drumPainter(g, w, h, false), { repeat: true });
-  const drumEmit = canvasTex(1024, 256, (g, w, h) => drumPainter(g, w, h, true), { repeat: true });
-  const cache = new Map();
   return {
-    facadeMap, facadeEmit, drumMap, drumEmit,
-    side(len, h) {
-      const key = len.toFixed(2) + '|' + h.toFixed(2);
-      if (cache.has(key)) return cache.get(key);
-      const map = facadeMap.clone(), em = facadeEmit.clone();
-      [map, em].forEach((t) => { t.repeat.set(len / 8, h / 36); t.needsUpdate = true; });
-      const m = patchMaterial(new THREE.MeshStandardMaterial({ map, emissiveMap: em, emissive: 0xffffff, emissiveIntensity: 1.0, roughness: .85, metalness: 0 }), true);
-      cache.set(key, m);
-      return m;
-    },
-    stone: patchMaterial(new THREE.MeshStandardMaterial({ color: 0xdcae62, emissive: 0x7a4a12, emissiveIntensity: .8, roughness: .7 }), true),
-    stoneLight: patchMaterial(new THREE.MeshStandardMaterial({ color: 0xf3d08e, emissive: 0x8a5a18, emissiveIntensity: .8, roughness: .7 }), true),
-    gold: patchMaterial(new THREE.MeshStandardMaterial({ color: 0xf3c15a, emissive: 0xb07a1c, emissiveIntensity: .9, roughness: .4, metalness: .3, flatShading: true }), false),
-    roof: patchMaterial(new THREE.MeshStandardMaterial({ color: 0x1c2438, roughness: .85, metalness: .05, flatShading: true, emissive: 0x0a0f1c, emissiveIntensity: 1, envMapIntensity: .3 }), false),
-    dome: patchMaterial(new THREE.MeshStandardMaterial({ color: 0xd9a24a, emissive: 0x8a5410, emissiveIntensity: 1, roughness: .55, metalness: .2, flatShading: true }), false),
-    ground: (() => {
-      const t = canvasTex(128, 128, (c, w, h) => {
-        c.fillStyle = '#2a2d3a'; c.fillRect(0, 0, w, h);
-        for (let i = 0; i < 900; i++) { c.fillStyle = R() > .5 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.08)'; c.fillRect(R() * w, R() * h, 2 + R() * 4, 2 + R() * 4); }
-        c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = 2;
-        for (let i = 0; i <= 4; i++) { c.beginPath(); c.moveTo(i * 32, 0); c.lineTo(i * 32, h); c.moveTo(0, i * 32); c.lineTo(w, i * 32); c.stroke(); }
-      }, { repeat: true });
-      t.repeat.set(400, 190);
-      return new THREE.MeshStandardMaterial({ map: t, color: 0x9aa0b8, roughness: .55, metalness: .1, emissive: 0x05060c });
-    })(),
-    city: new THREE.MeshStandardMaterial({ color: 0x1d2745, roughness: 1, emissive: 0x0d1428 })
+    stone: new THREE.MeshStandardMaterial({ color: 0xcfa866, roughness: .7, emissive: 0x3a230a }),
+    stoneLight: new THREE.MeshStandardMaterial({ color: 0xe9cf95, roughness: .7, emissive: 0x3a230a }),
+    gold: new THREE.MeshStandardMaterial({ color: 0xf3c15a, emissive: 0x7a5010, roughness: .35, metalness: .7 }),
+    dome: new THREE.MeshStandardMaterial({ color: 0xd9a24a, emissive: 0x4a2c08, roughness: .5, metalness: .3 })
   };
 }
 
+/* floodlights sit at the foot of the building: light fades with height, with a gentle horizontal unevenness */
+function floodPatch(mat, top, bottom, grime) {
+  mat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', `#include <common>
+varying vec3 vWP;`)
+      .replace('#include <project_vertex>', `#include <project_vertex>
+{
+  vec4 wq = vec4(transformed, 1.0);
+  #ifdef USE_INSTANCING
+    wq = instanceMatrix * wq;
+  #endif
+  vWP = (modelMatrix * wq).xyz;
+}`);
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+varying vec3 vWP;`)
+      .replace('#include <color_fragment>', `#include <color_fragment>
+${grime ? `{
+  float n1 = sin(vWP.x * 1.7) * sin(vWP.y * 0.9 + vWP.z * 1.3);
+  float streak = smoothstep(0.55, 1.0, sin(vWP.x * 2.3 + sin(vWP.y * 0.31 + vWP.z) * 2.6) * 0.5 + 0.5) * smoothstep(60.0, 0.0, vWP.y);
+  float soot = smoothstep(18.0, 48.0, vWP.y) * 0.14;
+  diffuseColor.rgb *= 1.0 - 0.1 * streak - soot + 0.05 * n1;
+}` : ''}`)
+      .replace('#include <opaque_fragment>', `outgoingLight *= mix(${bottom.toFixed(2)}, ${top.toFixed(2)}, smoothstep(0.0, 100.0, vWP.y)) * (0.92 + 0.16 * sin(vWP.x * 0.23 + vWP.z * 0.17) * sin(vWP.z * 0.31 + vWP.y * 0.05));
+#include <opaque_fragment>`);
+  };
+  mat.customProgramCacheKey = () => 'flood' + top + bottom + (grime ? 'g' : '');
+  return mat;
+}
+
+/* PBR set with its own UV repeat (for plain plane/cylinder UVs) */
+function tiledMaterial(set, rx, ry, params, normal) {
+  const cl = (t) => { const c = t.clone(); c.repeat.set(rx, ry); c.wrapS = c.wrapT = THREE.RepeatWrapping; c.needsUpdate = true; return c; };
+  return pbrMaterial({ map: cl(set.map), normalMap: cl(set.normalMap), orm: cl(set.orm) }, { normal: normal || 1, params });
+}
+
+/* a warm floodlit environment for reflections on gold, glass and wet stone (PMREM of a small gradient scene) */
+function warmEnv(renderer) {
+  const sc = new THREE.Scene();
+  sc.add(new THREE.Mesh(new THREE.SphereGeometry(10, 32, 16), new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    vertexShader: 'varying vec3 vD; void main(){ vD=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: `varying vec3 vD; void main(){
+      vec3 d=normalize(vD); float e=d.y;
+      vec3 sky=mix(vec3(.012,.022,.06),vec3(.002,.004,.016),smoothstep(0.,.8,e));
+      vec3 warm=vec3(1.5,.78,.3)*exp(-pow((e+.02)/.24,2.));
+      vec3 ground=vec3(.55,.30,.11)*1.5*smoothstep(.1,-.5,e);
+      gl_FragColor=vec4(sky+warm+ground,1.); }`
+  })));
+  const pm = new THREE.PMREMGenerator(renderer);
+  const t = pm.fromScene(sc, .02).texture; pm.dispose();
+  return t;
+}
+
 /* ------------------------------------------------------------------ exterior */
-function buildExterior(mobile, reflect) {
+function buildExterior(mobile, reflect, ctx) {
   const g = new THREE.Group();
   const M = makeMaterials();
+  const bm = ctx.mats;
   const glow = glowTexture();
   const updaters = [];
 
   const add = (o, x, y, z) => { if (x !== undefined) o.position.set(x, y, z); g.add(o); return o; };
 
-  /* a lit block whose four walls carry the facade texture */
-  function block(x0, x1, z0, z1, h, parent) {
-    const L = x1 - x0, D = z1 - z0;
-    const mats = [M.side(D, h), M.side(D, h), M.stone, M.stone, M.side(L, h), M.side(L, h)];
-    const m = new THREE.Mesh(new THREE.BoxGeometry(L, h, D), mats);
-    m.position.set((x0 + x1) / 2, h / 2, (z0 + z1) / 2);
-    (parent || g).add(m);
-    return m;
-  }
-  /* prism roofs: ridge along X or along Z */
-  function roofX(x0, x1, z0, z1, y0, rise, mat) {
-    const hw = (z1 - z0) / 2 + 1.2, s = new THREE.Shape();
-    s.moveTo(-hw, 0); s.lineTo(hw, 0); s.lineTo(0, rise); s.closePath();
-    const geo = new THREE.ExtrudeGeometry(s, { depth: x1 - x0 + 2.4, bevelEnabled: false });
-    geo.rotateY(Math.PI / 2);
-    const m = new THREE.Mesh(geo, mat || M.roof);
-    m.position.set(x0 - 1.2, y0, (z0 + z1) / 2);
-    g.add(m);
-    return m;
-  }
-  function roofZ(x0, x1, z0, z1, y0, rise, mat) {
-    const hw = (x1 - x0) / 2 + 1.2, s = new THREE.Shape();
-    s.moveTo(-hw, 0); s.lineTo(hw, 0); s.lineTo(0, rise); s.closePath();
-    const geo = new THREE.ExtrudeGeometry(s, { depth: z1 - z0 + 2.4, bevelEnabled: false });
-    const m = new THREE.Mesh(geo, mat || M.roof);
-    m.position.set((x0 + x1) / 2, y0, z0 - 1.2);
-    g.add(m);
-    return m;
-  }
-  function spire(x, y, z, r, shaft, cone) {
-    const s = new THREE.Group();
-    const sh = new THREE.Mesh(new THREE.CylinderGeometry(r * .72, r, shaft, 8), M.stone); sh.position.y = shaft / 2;
-    const co = new THREE.Mesh(new THREE.ConeGeometry(r * 1.2, cone, 8), M.gold); co.position.y = shaft + cone / 2;
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(r * .3, 8, 6), M.gold); ball.position.y = shaft + cone + r * .2;
-    s.add(sh, co, ball); s.position.set(x, y, z); g.add(s);
-    return s;
-  }
-  /* instanced pinnacles/buttresses */
-  const pins = [], bux = [];
-
   /* ---------- ground: square (back), promenade, quay, river ---------- */
   const groundGeo = new THREE.PlaneGeometry(3200, 1500);
   groundGeo.rotateX(-Math.PI / 2);
-  const ground = new THREE.Mesh(groundGeo, M.ground); ground.position.set(0, -.06, -710); g.add(ground); /* z -1460 .. 40 */
+  const ground = new THREE.Mesh(groundGeo, tiledMaterial(ctx.sets.paving, 3200 / 1.5, 1500 / 1.5, { color: 0xc8ccd8, envMapIntensity: .8, emissive: 0x1a1108, emissiveIntensity: 1 }, 1.2)); ground.position.set(0, -.06, -710); ground.receiveShadow = false; g.add(ground); /* z -1460 .. 40 */
   const quay = new THREE.Mesh(new THREE.BoxGeometry(3200, 2.6, 3), new THREE.MeshStandardMaterial({ color: 0x252b3e, roughness: 1, emissive: 0x07090f }));
   quay.position.set(0, -1.3, 40.5); g.add(quay);
   /* lit promenade band in front of the building */
   const promGeo = new THREE.PlaneGeometry(300, 16); promGeo.rotateX(-Math.PI / 2);
-  const prom = new THREE.Mesh(promGeo, new THREE.MeshBasicMaterial({ map: glow, color: 0x8a5a1c, transparent: true, opacity: .3, depthWrite: false, fog: false }));
+  const prom = new THREE.Mesh(promGeo, new THREE.MeshBasicMaterial({ map: glow, color: 0x8a5a1c, transparent: true, opacity: .55, depthWrite: false, fog: false }));
   prom.position.set(0, .02, 32); g.add(prom);
   /* Kossuth square glow */
   const sqGeo = new THREE.PlaneGeometry(190, 130); sqGeo.rotateX(-Math.PI / 2);
-  const sq = new THREE.Mesh(sqGeo, new THREE.MeshBasicMaterial({ map: glow, color: 0x6b4514, transparent: true, opacity: .22, depthWrite: false, fog: false }));
+  const sq = new THREE.Mesh(sqGeo, new THREE.MeshBasicMaterial({ map: glow, color: 0x6b4514, transparent: true, opacity: .5, depthWrite: false, fog: false }));
   sq.position.set(0, .02, -110); g.add(sq);
 
   /* river: dark water that glows gold under the floodlit facade */
@@ -466,131 +459,31 @@ function buildExterior(mobile, reflect) {
   updaters.push((t) => { waterMat.uniforms.uTime.value = t; });
   let reflector = null;
   if (reflect) {
-    reflector = new Reflector(new THREE.PlaneGeometry(3200, 1500), { textureWidth: 1024, textureHeight: 512, clipBias: .003, shader: REFLECT_SHADER, color: 0x0a1020, multisample: 0 });
+    reflector = new Reflector(new THREE.PlaneGeometry(3200, 1500), { textureWidth: 2048, textureHeight: 1024, clipBias: .003, shader: REFLECT_SHADER, color: 0x0a1020, multisample: 0 });
     reflector.rotation.x = -Math.PI / 2; reflector.position.set(0, -2.6, 42 + 750); g.add(reflector);
     water.visible = false;
     updaters.push((t) => { reflector.material.uniforms.uTime.value = t; });
   }
 
-  /* ---------- main masses ---------- */
-  /* wings */
-  block(-134, -42, -23, 23, 30); block(42, 134, -23, 23, 30);
-  /* central hall block */
-  block(-42, 42, -45, 30, 34);
-  /* twin front towers: square base, flanking the front porch */
-  [-24, 24].forEach((tx) => block(tx - 4.5, tx + 4.5, 26, 35, 42));
-  block(-19.5, 19.5, 26, 34, 32);
-  /* mid pavilions (x = +-62) and end pavilions (x = +-122) */
-  [-1, 1].forEach((s) => {
-    const mid = 62 * s, end = 122 * s;
-    block(mid - 16, mid + 16, -27, 27.5, 35);
-    roofZ(mid - 16, mid + 16, -27, 27.5, 35, 13);
-    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((c) => spire(mid + c[0] * 15, 35, c[1] > 0 ? 26.5 : -26, 1.1, 18, 8));
-    block(end - 12, end + 12, -27, 27.5, 32);
-    roofZ(end - 12, end + 12, -27, 27.5, 32, 10);
-    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((c) => spire(end + c[0] * 11, 32, c[1] > 0 ? 26.5 : -26, 1, 10, 7));
-  });
-  /* long wing roofs and central roof */
-  [-1, 1].forEach((s) => roofX(s > 0 ? 42 : -134, s > 0 ? 134 : -42, -23, 23, 30, 11));
-  roofX(-42, 42, -45, 30, 34, 8);
-  /* gable of the front porch */
-  roofZ(-19.5, 19.5, 26, 34, 32, 10);
+  /* ---------- the building (see facade.js) ---------- */
+  g.add(buildBuilding(bm, { mobile, rand: R }));
 
-  /* ---------- the great dome ---------- */
-  const dome = new THREE.Group(); dome.position.set(0, 42, 0); g.add(dome);
-  const drumMap = M.drumMap.clone(), drumEm = M.drumEmit.clone();
-  const drumMat = new THREE.MeshStandardMaterial({ map: drumMap, emissiveMap: drumEm, emissive: 0xffffff, emissiveIntensity: 1.05, roughness: .8 });
-  const drum = new THREE.Mesh(new THREE.CylinderGeometry(17.5, 18.5, 14, 16, 1, true), drumMat); drum.position.y = 7;
-  dome.add(drum);
-  const cornice = new THREE.Mesh(new THREE.CylinderGeometry(19.3, 19.3, 1.6, 16), M.stoneLight); cornice.position.y = 14.5; dome.add(cornice);
-  const profile = [];
-  for (let i = 0; i <= 26; i++) {
-    const t = i / 26, r = 17.4 * Math.pow(Math.cos(t * Math.PI / 2), .78) + .001;
-    profile.push(new THREE.Vector2(r, 14.9 + t * 27));
-  }
-  const domeMesh = new THREE.Mesh(new THREE.LatheGeometry(profile, 16), M.dome); dome.add(domeMesh);
-  for (let i = 0; i < 16; i++) {
-    const a = i / 16 * TAU, pts = profile.map((p) => new THREE.Vector3(Math.sin(a) * (p.x + .12), p.y, Math.cos(a) * (p.x + .12)));
-    dome.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.slice(0, -1)), 30, .32, 5), M.gold));
-    /* ring of pinnacles around the drum top */
-    const px = Math.sin(a + Math.PI / 16) * 19.6, pz = Math.cos(a + Math.PI / 16) * 19.6;
-    const pn = new THREE.Mesh(new THREE.ConeGeometry(.9, 8, 6), M.gold); pn.position.set(px, 19.2, pz); dome.add(pn);
-  }
-  const lant = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 3.2, 6, 12), drumMat); lant.position.y = 44.9; dome.add(lant);
-  const top = new THREE.Mesh(new THREE.ConeGeometry(3.4, 10, 12), M.gold); top.position.y = 52.9; dome.add(top);
-  const cross1 = new THREE.Mesh(new THREE.BoxGeometry(.35, 4.5, .35), M.gold); cross1.position.y = 60.4; dome.add(cross1);
-  const cross2 = new THREE.Mesh(new THREE.BoxGeometry(2.2, .35, .35), M.gold); cross2.position.y = 61.2; dome.add(cross2);
-  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffa040, blending: THREE.AdditiveBlending, transparent: true, opacity: .14, depthWrite: false, fog: false }));
-  halo.scale.set(120, 120, 1); halo.position.set(0, 26, 0); dome.add(halo);
-
-  /* ---------- twin front towers ---------- */
-  [-24, 24].forEach((tx) => {
-    const t = new THREE.Group(); t.position.set(tx, 42, 30.5); g.add(t);
-    const om = M.drumMap.clone(), oe = M.drumEmit.clone(); om.repeat.set(.5, 1); oe.repeat.set(.5, 1);
-    const oct = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.6, 10, 8, 1, true), new THREE.MeshStandardMaterial({ map: om, emissiveMap: oe, emissive: 0xffffff, emissiveIntensity: 1.05, roughness: .8 }));
-    oct.position.y = 5; t.add(oct);
-    const ring = new THREE.Mesh(new THREE.CylinderGeometry(5.1, 5.1, 1.2, 8), M.stoneLight); ring.position.y = 10.4; t.add(ring);
-    const cone = new THREE.Mesh(new THREE.ConeGeometry(4.6, 26, 8), M.dome); cone.position.y = 24; t.add(cone);
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(.9, 8, 6), M.gold); ball.position.y = 37.4; t.add(ball);
-    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((c) => {
-      const cs = new THREE.Mesh(new THREE.ConeGeometry(1, 9, 6), M.gold); cs.position.set(c[0] * 3.6, 5.5, c[1] * 3.6); t.add(cs);
-    });
-    const h2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffa040, blending: THREE.AdditiveBlending, transparent: true, opacity: .12, depthWrite: false, fog: false }));
-    h2.scale.set(46, 46, 1); h2.position.y = 8; t.add(h2);
-  });
-
-  /* back towers */
-  [-30, 30].forEach((tx) => { block(tx - 4, tx + 4, -45, -37, 38); spire(tx, 38, -41, 3.2, 8, 14); });
-
-  /* ---------- buttresses & pinnacles along the wing facades ---------- */
-  [-1, 1].forEach((s) => {
-    for (let i = 0; i < 4; i++) {
-      const x = s * (81 + i * 8.6);
-      [[-23.6, -1]].forEach((z) => { bux.push([x, z[0]]); pins.push([x, 27, z[0]]); });
-    }
-    for (let i = 0; i < 3; i++) {
-      const x = s * (45 + i * 6.5) + (s > 0 ? 0 : 0);
-      [[-23.6, -1]].forEach((z) => { bux.push([x, z[0]]); pins.push([x, 27, z[0]]); });
-    }
-  });
-  const bg = new THREE.InstancedMesh(new THREE.BoxGeometry(1.4, 26, 1.8), M.stone, bux.length);
-  bux.forEach((b, i) => { const m = new THREE.Matrix4().makeTranslation(b[0], 13, b[1]); bg.setMatrixAt(i, m); });
-  g.add(bg);
-  /* pinnacles on the eave line of the wings */
-  for (let x = -132; x <= 132; x += 4.2) { if (Math.abs(x) < 44) continue; pins.push([x, 30.4, -22.5]); }
-  const pg = new THREE.InstancedMesh(new THREE.ConeGeometry(.6, 4, 6), M.gold, pins.length);
-  pins.forEach((p, i) => pg.setMatrixAt(i, new THREE.Matrix4().makeTranslation(p[0], p[1] + 2, p[2])));
-  g.add(pg);
-  /* cornices */
-  [[-134, -42], [42, 134]].forEach((r) => {
-    [-23.5].forEach((z) => {
-      const c = new THREE.Mesh(new THREE.BoxGeometry(r[1] - r[0], 1.1, 1.6), M.stoneLight); c.position.set((r[0] + r[1]) / 2, 29.6, z); g.add(c);
-    });
-  });
-
-  /* ---------- back: entrance portico, grand stairs, lions, flags ---------- */
-  block(-24, 24, -52, -45, 27);
-  roofZ(-24, 24, -52, -45, 27, 9);
-  const doorGeo = archPanel(12, 14, .6, [{ cx: 0, y0: 0, hw: 4, spring: 6.4, k: 1.5 }]);
-  const doorFrame = new THREE.Mesh(doorGeo, M.stoneLight); doorFrame.position.set(0, 0, -52.4); doorFrame.rotation.y = Math.PI; g.add(doorFrame);
-  const doorGlow = new THREE.Mesh(new THREE.PlaneGeometry(8.4, 13), new THREE.MeshBasicMaterial({ color: 0xffb04a })); doorGlow.position.set(0, 6.5, -52.1); doorGlow.rotation.y = Math.PI; g.add(doorGlow);
-  const stairsInst = new THREE.InstancedMesh(new THREE.BoxGeometry(46, .2, 2), M.stoneLight, 8);
-  for (let i = 0; i < 8; i++) stairsInst.setMatrixAt(i, new THREE.Matrix4().makeTranslation(0, (8 - i) * .18 - .1, -53 - i * 2));
-  g.add(stairsInst);
+  /* ---------- back: grand stairs, lions, flags ---------- */
+  const stairsB = new Batch();
+  for (let i = 0; i < 8; i++) { const hh = (8 - i) * .18; stairsB.add(new THREE.BoxGeometry(46, hh, 2), M4(0, hh / 2, -53 - i * 2)); }
   [-20, 20].forEach((lx) => {
-    const lion = new THREE.Group();
-    const pl = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 7), M.stone); pl.position.y = 1.5; lion.add(pl);
-    const body = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.4, 5), M.gold); body.position.y = 4.2; lion.add(body);
-    const head = new THREE.Mesh(new THREE.SphereGeometry(1.4, 8, 6), M.gold); head.position.set(0, 5.3, 2.7); lion.add(head);
-    lion.position.set(lx, 0, -62); g.add(lion);
+    stairsB.add(new THREE.BoxGeometry(4, 3, 7), M4(lx, 1.5, -62));
+    stairsB.add(new THREE.BoxGeometry(2.6, 2.2, 5), M4(lx, 4.1, -62));
+    stairsB.add(new THREE.SphereGeometry(1.5, 10, 8), M4(lx, 5.3, -59.4));
   });
+  const stairsMesh = stairsB.mesh(bm.stone, 1.5); stairsMesh.castShadow = stairsMesh.receiveShadow = true; g.add(stairsMesh);
   /* flags */
   const flagTex = canvasTex(64, 48, (c, w, h) => { c.fillStyle = '#ce2939'; c.fillRect(0, 0, w, h / 3); c.fillStyle = '#f4f4f0'; c.fillRect(0, h / 3, w, h / 3); c.fillStyle = '#477050'; c.fillRect(0, 2 * h / 3, w, h / 3); });
   const flags = [];
   [-34, 0, 34].forEach((fx) => {
-    const pole = new THREE.Mesh(new THREE.CylinderGeometry(.18, .22, 34, 6), M.gold); pole.position.set(fx, 17, -82); g.add(pole);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(.18, .22, 34, 6), bm.gold); pole.position.set(fx, 17, -82); pole.castShadow = true; g.add(pole);
     const geo = new THREE.PlaneGeometry(9, 6, 16, 8); geo.translate(4.5, 0, 0);
-    const fm = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: flagTex, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: flagTex, emissiveIntensity: .35, roughness: 1 }));
+    const fm = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: flagTex, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: flagTex, emissiveIntensity: .3, roughness: 1 }));
     fm.position.set(fx + .2, 30, -82); g.add(fm);
     flags.push({ mesh: fm, base: geo.attributes.position.array.slice(), phase: fx * .3 });
   });
@@ -617,8 +510,16 @@ function buildExterior(mobile, reflect) {
 
   /* ---------- surroundings: Pest behind, Buda across the river, a bridge ---------- */
   const nCity = mobile ? 110 : 230;
-  const cityM = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), M.city, nCity);
-  const winPts = [], winCol = [];
+  const winC = canvasTex(512, 512, (c, w, h) => {
+    c.fillStyle = '#3a3f52'; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 700; i++) { c.fillStyle = 'rgba(' + (R() > .5 ? '255,255,255' : '0,0,0') + ',.03)'; c.fillRect(R() * w, R() * h, 4 + R() * 12, 4 + R() * 12); }
+    for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) { c.fillStyle = '#12151f'; c.fillRect(x * 64 + 14, y * 64 + 12, 30, 38); }
+  });
+  const winE = canvasTex(512, 512, (c, w, h) => {
+    c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+    for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) if (R() < .5) { const k = .55 + R() * .45; c.fillStyle = 'rgb(' + Math.round(255 * k) + ',' + Math.round(190 * k) + ',' + Math.round(96 * k) + ')'; c.fillRect(x * 64 + 14, y * 64 + 12, 30, 38); }
+  });
+  const cityB = new Batch();
   for (let i = 0; i < nCity; i++) {
     const w = 16 + R() * 26, d = 16 + R() * 26, h = 14 + R() * 34;
     let x, z;
@@ -628,18 +529,10 @@ function buildExterior(mobile, reflect) {
       else { x = (R() < .5 ? -1 : 1) * (175 + R() * 520); z = -230 + R() * 240; }
       if (!(Math.abs(x) < 230 && z > -330) && !(z > 8 && Math.abs(x) < 400)) break;
     }
-    const m = new THREE.Matrix4().compose(new THREE.Vector3(x, h / 2, z), new THREE.Quaternion(), new THREE.Vector3(w, h, d));
-    cityM.setMatrixAt(i, m);
-    for (let k = 0; k < 9; k++) {
-      winPts.push(x + (R() - .5) * w, 2 + R() * (h - 3), z + d / 2 + .3);
-      const c = .5 + R() * .5; winCol.push(1, .78 * c, .4 * c);
-    }
+    cityB.add(new THREE.BoxGeometry(w, h, d), M4(x, h / 2, z));
   }
-  g.add(cityM);
-  const winGeo = new THREE.BufferGeometry();
-  winGeo.setAttribute('position', new THREE.Float32BufferAttribute(winPts, 3));
-  winGeo.setAttribute('color', new THREE.Float32BufferAttribute(winCol, 3));
-  g.add(new THREE.Points(winGeo, new THREE.PointsMaterial({ size: 2.4, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: true })));
+  const cityMesh = cityB.mesh(new THREE.MeshStandardMaterial({ map: winC, emissiveMap: winE, emissive: 0xffffff, emissiveIntensity: 1.3, roughness: .9, color: 0x9aa0b8 }), 24);
+  g.add(cityMesh);
 
   /* Buda hills and castle */
   const hillShape = new THREE.Shape();
@@ -648,9 +541,8 @@ function buildExterior(mobile, reflect) {
   hillShape.lineTo(1600, 0); hillShape.closePath();
   const hills = new THREE.Mesh(new THREE.ShapeGeometry(hillShape), new THREE.MeshBasicMaterial({ color: 0x080d1c, side: THREE.DoubleSide }));
   hills.position.set(0, -2, 760); hills.rotation.y = Math.PI; g.add(hills);
-  const castleMap = M.side(220, 30);
-  const castle = new THREE.Mesh(new THREE.BoxGeometry(220, 30, 40), [castleMap, castleMap, M.stone, M.stone, castleMap, castleMap]);
-  castle.position.set(-260, 100, 700); g.add(castle);
+  const castleB = new Batch(); castleB.add(new THREE.BoxGeometry(220, 30, 40), M4(-260, 100, 700));
+  const castle = castleB.mesh(bm.stone, 6); g.add(castle);
   const cdome = new THREE.Mesh(new THREE.SphereGeometry(20, 14, 8, 0, TAU, 0, Math.PI / 2), M.dome); cdome.position.set(-260, 115, 700); g.add(cdome);
   const budaLights = [], budaCol = [];
   for (let x = -1400; x <= 1400; x += 14) { budaLights.push(x, 4, 690 + R() * 20); budaCol.push(1, .7, .35); }
@@ -671,12 +563,31 @@ function buildExterior(mobile, reflect) {
 
   /* ---------- the sightseeing boat ---------- */
   const boat = new THREE.Group();
-  const hull = new THREE.Mesh(new THREE.BoxGeometry(36, 3, 7.5), new THREE.MeshStandardMaterial({ color: 0x1b2544, roughness: .6, emissive: 0x0a1020 })); hull.position.y = .2; boat.add(hull);
-  const cab = new THREE.Mesh(new THREE.BoxGeometry(24, 3.2, 6), new THREE.MeshStandardMaterial({ color: 0xe6eaf2, roughness: .6, emissive: 0x30364a })); cab.position.y = 3.3; boat.add(cab);
-  const strip = new THREE.Mesh(new THREE.BoxGeometry(24.4, 1.5, 6.3), new THREE.MeshBasicMaterial({ color: 0xffd58a })); strip.position.y = 3.5; boat.add(strip);
-  const upper = new THREE.Mesh(new THREE.BoxGeometry(13, 2.4, 4.6), new THREE.MeshStandardMaterial({ color: 0xe6eaf2, emissive: 0x30364a })); upper.position.y = 6.1; boat.add(upper);
-  const bh = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffc46a, blending: THREE.AdditiveBlending, transparent: true, opacity: .55, depthWrite: false, fog: false })); bh.scale.set(52, 22, 1); bh.position.y = 3; boat.add(bh);
-  boat.scale.setScalar(.8); boat.position.set(0, -2.2, 104); g.add(boat);
+  const winStrip = canvasTex(512, 64, (c, w, h) => {
+    c.fillStyle = '#e9edf3'; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 22; i++) { c.fillStyle = '#1a2233'; c.fillRect(10 + i * 22.6, 14, 17, 30); }
+  });
+  const winStripE = canvasTex(512, 64, (c, w, h) => {
+    c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 22; i++) { const k = .7 + R() * .3; c.fillStyle = 'rgb(' + Math.round(255 * k) + ',' + Math.round(196 * k) + ',' + Math.round(110 * k) + ')'; c.fillRect(10 + i * 22.6, 14, 17, 30); }
+  });
+  const hullShape = new THREE.Shape();
+  hullShape.moveTo(-18, -3.6); hullShape.lineTo(13, -3.6); hullShape.quadraticCurveTo(18.5, -2.4, 20, 0); hullShape.quadraticCurveTo(18.5, 2.4, 13, 3.6); hullShape.lineTo(-18, 3.6); hullShape.closePath();
+  const hullGeo = new THREE.ExtrudeGeometry(hullShape, { depth: 2.4, bevelEnabled: true, bevelSize: .25, bevelThickness: .25, bevelSegments: 2, curveSegments: 10 });
+  hullGeo.rotateX(-Math.PI / 2);
+  const hull = new THREE.Mesh(hullGeo, new THREE.MeshStandardMaterial({ color: 0x141c33, roughness: .35, metalness: .3 })); hull.position.y = -.6; boat.add(hull);
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(37, .35, 7.4), new THREE.MeshStandardMaterial({ color: 0xd9dde6, roughness: .5 })); stripe.position.y = 1.9; stripe.scale.x = 1; boat.add(stripe);
+  const mkDeck = (w, h, d, y, x) => {
+    const m = new THREE.MeshStandardMaterial({ map: winStrip, emissiveMap: winStripE, emissive: 0xffffff, emissiveIntensity: 1.2, roughness: .5, color: 0xffffff });
+    const dk = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), [m, m, new THREE.MeshStandardMaterial({ color: 0xe6e9f0, roughness: .6 }), new THREE.MeshStandardMaterial({ color: 0x222 }), m, m]);
+    dk.position.set(x, y, 0); boat.add(dk);
+  };
+  mkDeck(29, 2.7, 6.6, 3.5, -2); mkDeck(19, 2.5, 5.4, 6.2, -4);
+  const funnel = new THREE.Mesh(new THREE.CylinderGeometry(.9, 1.1, 3.4, 12), new THREE.MeshStandardMaterial({ color: 0xc8202f, roughness: .5 })); funnel.position.set(-9, 9, 0); boat.add(funnel);
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(.08, .1, 6, 5), new THREE.MeshStandardMaterial({ color: 0xdddddd })); mast.position.set(9, 8.5, 0); boat.add(mast);
+  const bh = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffc46a, blending: THREE.AdditiveBlending, transparent: true, opacity: .4, depthWrite: false, fog: false })); bh.scale.set(56, 22, 1); bh.position.y = 3.5; boat.add(bh);
+  boat.traverse((o) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = false; } });
+  boat.scale.setScalar(.85); boat.position.set(0, -2.2, 104); g.add(boat);
   updaters.push((t) => {
     const p = ((t * 3.6 + 330) % 720) - 360; boat.position.x = p; boat.position.y = -2.0 + Math.sin(t * .9) * .18; boat.rotation.z = Math.sin(t * .7) * .012;
   });
@@ -721,18 +632,28 @@ function buildExterior(mobile, reflect) {
     });
   }
 
-  /* ---------- lights ---------- */
-  g.add(new THREE.HemisphereLight(0x4a5fae, 0x0d0b18, 1.0));
-  const key = new THREE.DirectionalLight(0xffc27a, 2.2); key.position.set(-60, 40, 220); g.add(key);
-  const back = new THREE.DirectionalLight(0xffb066, 1.7); back.position.set(40, 40, -220); g.add(back);
-  const side = new THREE.DirectionalLight(0xffb066, .9); side.position.set(300, 60, 0); g.add(side);
-  const side2 = new THREE.DirectionalLight(0xffb066, .9); side2.position.set(-300, 60, 0); g.add(side2);
+  /* ---------- lights: warm floodlights raking the front and the back, soft shadows ---------- */
+  g.add(new THREE.HemisphereLight(0x4a5fae, 0x100c18, .3));
+  const lights = {};
+  const flood = (name, color, k, x, y, z, shadow) => {
+    const l = new THREE.DirectionalLight(color, k); l.position.set(x, y, z); l.target.position.set(0, 28, 0);
+    l.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
+    const c = l.shadow.camera; c.left = -160; c.right = 160; c.top = 90; c.bottom = -38; c.near = 5; c.far = 460;
+    l.shadow.bias = -.0006; l.shadow.normalBias = .5; l.shadow.radius = 3;
+    g.add(l, l.target); if (shadow) lights[name] = l;
+    return l;
+  };
+  flood('key', 0xff9a2e, 1.55, -70, 16, 240, true);
+  flood('back', 0xff9530, 1.45, 60, 16, -240, true);
+  flood('fill', 0xffb060, .3, 150, 20, 180, false);
+  flood('sideA', 0xffb066, .35, 320, 50, 0, false);
+  flood('sideB', 0xffb066, .35, -320, 50, 0, false);
 
-  return { group: g, water, reflector, update(t, dt, active) { updaters.forEach((u) => u(t, dt, active)); } };
+  return { group: g, water, reflector, lights, update(t, dt, active) { updaters.forEach((u) => u(t, dt, active)); } };
 }
 
 /* ------------------------------------------------------------------ interior */
-function buildInterior(mobile) {
+function buildInterior(mobile, ctx) {
   const g = new THREE.Group(); g.position.set(OFF, 0, 0);
   const glow = glowTexture();
   const veins = canvasTex(512, 512, (c, w, h) => {
@@ -746,7 +667,9 @@ function buildInterior(mobile) {
     }
   }, { repeat: true });
   veins.repeat.set(.22, .22);
-  const marble = new THREE.MeshStandardMaterial({ map: veins, color: 0x9c8b68, roughness: .34, emissive: 0x2a1c0c, emissiveIntensity: .25 });
+  void veins;
+  const marble = tiledMaterial(ctx.sets.stone, 1 / 1.5, 1 / 1.5, { color: 0xc9b795, roughness: 1, envMapIntensity: .5 });
+  const marblePier = tiledMaterial(ctx.sets.stone, 4, 12, { color: 0xc9b795, envMapIntensity: .5 });
   const aoTex = canvasTex(64, 64, (c, w, h) => { const rg = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); rg.addColorStop(0, 'rgba(0,0,0,.65)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = rg; c.fillRect(0, 0, w, h); });
   const aoMat = new THREE.MeshBasicMaterial({ map: aoTex, transparent: true, depthWrite: false });
   const aoGeo = new THREE.PlaneGeometry(1, 1); aoGeo.rotateX(-Math.PI / 2);
@@ -785,7 +708,8 @@ function buildInterior(mobile) {
     c.fillStyle = '#7a1414'; c.beginPath(); c.arc(cx, cy, 70, 0, TAU); c.fill(); c.fillStyle = '#e7d9b6'; c.beginPath(); c.arc(cx, cy, 52, 0, TAU); c.fill();
   });
   const floorGeo = new THREE.CircleGeometry(15.4, 64); floorGeo.rotateX(-Math.PI / 2);
-  const floor = new THREE.Mesh(floorGeo, new THREE.MeshStandardMaterial({ map: floorTex, color: 0x9c8d72, roughness: .16, metalness: .08 })); floor.position.y = 0; g.add(floor);
+  void floorTex;
+  const floor = new THREE.Mesh(floorGeo, tiledMaterial(ctx.sets.floor, 30.8 / 3, 30.8 / 3, { color: 0xb8a888, envMapIntensity: .8 }, .8)); floor.position.y = 0; g.add(floor);
 
   /* ---- 16 piers, statues, arched wall panels ---- */
   const HALL_R = 14.2, WALL_H = 16;
@@ -806,7 +730,7 @@ function buildInterior(mobile) {
     }
     /* pier + statue at the vertex between panels */
     const th = (j + .5) / 16 * TAU, px = Math.sin(th) * HALL_R, pz = -Math.cos(th) * HALL_R;
-    const pier = new THREE.Mesh(new THREE.CylinderGeometry(.75, .9, 18, 10), marble); pier.position.set(px, 9, pz); g.add(pier); decal(px, pz, 5); decal(Math.sin(th) * (HALL_R - 1.5), -Math.cos(th) * (HALL_R - 1.5), 3.2);
+    const pier = new THREE.Mesh(new THREE.CylinderGeometry(.75, .9, 18, 10), marblePier); pier.position.set(px, 9, pz); g.add(pier); decal(px, pz, 5); decal(Math.sin(th) * (HALL_R - 1.5), -Math.cos(th) * (HALL_R - 1.5), 3.2);
     const cap = new THREE.Mesh(new THREE.CylinderGeometry(1.25, .8, 1.4, 10), gold); cap.position.set(px, 16.4, pz); g.add(cap);
     const band = new THREE.Mesh(new THREE.TorusGeometry(.95, .09, 6, 14), gold); band.rotation.x = Math.PI / 2; band.position.set(px, 9, pz); g.add(band);
     const sx = Math.sin(th) * (HALL_R - 1.5), sz = -Math.cos(th) * (HALL_R - 1.5);
@@ -839,7 +763,7 @@ function buildInterior(mobile) {
   const og = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xcfe0ff, blending: THREE.AdditiveBlending, transparent: true, opacity: .8, depthWrite: false })); og.scale.set(14, 14, 1); og.position.y = top.y - 1; g.add(og);
 
   /* ---- the Holy Crown on its pedestal ---- */
-  const ped = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.7, 1.2, 20), marble); ped.position.y = .6; g.add(ped); decal(0, 0, 7);
+  const ped = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.7, 1.2, 20), marblePier); ped.position.y = .6; g.add(ped); decal(0, 0, 7);
   const pedTop = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, .18, 20), gold); pedTop.position.y = 1.29; g.add(pedTop);
   const glass = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.3, 1.5), new THREE.MeshStandardMaterial({ color: 0xbfd8ff, transparent: true, opacity: .16, roughness: .05, depthWrite: false }));
   glass.position.y = 2.05; g.add(glass);
@@ -888,8 +812,8 @@ function buildInterior(mobile) {
     });
   }
   const barrel = new THREE.Mesh(new THREE.CylinderGeometry(7.4, 7.4, 36, 28, 1, true, Math.PI / 2, Math.PI), vaultMat.clone());
-  barrel.material.map = vaultMap.clone(); barrel.material.map.repeat.set(1, 6); barrel.material.map.needsUpdate = true;
-  barrel.material.emissiveMap = vaultEm.clone(); barrel.material.emissiveMap.repeat.set(1, 6); barrel.material.emissiveMap.needsUpdate = true;
+  barrel.material.map = vaultMap.clone(); barrel.material.map.repeat.set(8, 12); barrel.material.map.needsUpdate = true;
+  barrel.material.emissiveMap = vaultEm.clone(); barrel.material.emissiveMap.repeat.set(8, 12); barrel.material.emissiveMap.needsUpdate = true;
   barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 14, -32); g.add(barrel);
   [-1, 1].forEach((sd) => {
     const rail = new THREE.Mesh(new THREE.BoxGeometry(.18, .18, slen), gold); rail.rotation.x = -slope; rail.position.set(sd * 2.7, -4 + 1.3, -30); g.add(rail);
@@ -990,21 +914,48 @@ export function createParliament(canvas, opts) {
   renderer.toneMappingExposure = 1;
   const hdr = renderer.extensions.has('EXT_color_buffer_float') || renderer.extensions.has('EXT_color_buffer_half_float');
   let tier = hdr ? (mobile ? 1 : 2) : 0; /* 2 = reflections + MSAA + bloom, 1 = bloom, 0 = plain render */
+  /* individual switches for tier 2. MSAA on the HDR target produced black frames in some views (seen in testing), so anti-aliasing is SMAA on the final image instead. */
+  const flags = { msaa: false, smaa: true, shadows: true, reflect: true };
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x080a14, .0011);
   const camera = new THREE.PerspectiveCamera(40, 1, .5, 6000);
-  if (opts.photo) setupPhoto(opts.photo);
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.enabled = tier >= 2 && flags.shadows;
+  renderer.shadowMap.autoUpdate = false; /* the building is static: shadows are drawn once */
 
-  const skyTex = bakeSky(renderer, mobile ? 512 : 1024, hdr);
-  scene.background = skyTex; scene.backgroundIntensity = .95;
-  const pm = new THREE.PMREMGenerator(renderer);
-  const envSky = pm.fromCubemap(skyTex).texture, envRoom = pm.fromScene(new RoomEnvironment(), .04).texture;
-  pm.dispose();
+  /* real photo-scanned PBR sets when they loaded (Poly Haven / ambientCG, CC0), otherwise baked on the GPU */
+  const A = opts.assets || {};
+  const bake = (kind, key) => A[key] || bakePBR(renderer, kind, mobile ? 1024 : 2048);
+  const sets = { stone: bake('stone', 'stone'), roof: bake('roof', 'roof'), gold: bake('gold', 'gold'), paving: bake('paving', 'paving'), floor: bake('marble', 'floor') };
+  const mats = {
+    stone: floodPatch(pbrMaterial(sets.stone, { params: { color: 0xffffff, envMapIntensity: .7 } }), .5, 1.5, true),
+    roof: floodPatch(pbrMaterial(sets.roof, { params: { color: 0xffffff, envMapIntensity: .8 } }), .7, 1.4, true),
+    gold: floodPatch(pbrMaterial(sets.gold, { params: { color: 0xffffff, envMapIntensity: 1.6, metalness: .72 } }), .95, 1.3),
+    dark: new THREE.MeshStandardMaterial({ color: 0x2b2118, metalness: .8, roughness: .4 }),
+    glass: new THREE.MeshBasicMaterial({ vertexColors: true }),
+    stoneTile: sets.stone.tile, roofTile: sets.roof.tile, goldTile: sets.gold.tile
+  };
+
+  /* night sky: the real Milky Way photo (equirectangular) when available, else the procedural one */
+  if (A.sky) {
+    A.sky.mapping = THREE.EquirectangularReflectionMapping;
+    scene.background = A.sky; scene.backgroundIntensity = 1.0; scene.backgroundRotation.set(0, opts.skyRot === undefined ? 2.2 : opts.skyRot, 0);
+  } else { scene.background = bakeSky(renderer, mobile ? 512 : 1024, hdr); scene.backgroundIntensity = .95; }
+  const envSky = warmEnv(renderer);
+  const pmr = new THREE.PMREMGenerator(renderer), envRoom = pmr.fromScene(new RoomEnvironment(), .04).texture; pmr.dispose();
   scene.environment = envSky; scene.environmentIntensity = .7;
 
-  const ext = buildExterior(mobile, !mobile), inn = buildInterior(mobile);
+  const ext = buildExterior(mobile, !mobile, { sets, mats }), inn = buildInterior(mobile, { sets, mats });
   scene.add(ext.group, inn.group);
+  function applyTier() {
+    const sh = tier >= 2 && flags.shadows;
+    renderer.shadowMap.enabled = sh; renderer.shadowMap.needsUpdate = true;
+    Object.keys(ext.lights).forEach((k) => { ext.lights[k].castShadow = sh; });
+    scene.traverse((o) => { if (o.material) [].concat(o.material).forEach((m) => { m.needsUpdate = true; }); });
+  }
+  Object.keys(ext.lights).forEach((k) => { ext.lights[k].castShadow = tier >= 2 && flags.shadows; });
+  renderer.shadowMap.needsUpdate = true;
 
   const pose = { p: new THREE.Vector3(), t: new THREE.Vector3(), fov: 40 };
   const state = { W: 1, H: 1, dpr: 1, last: 0, inInterior: false, dbg: null };
@@ -1021,15 +972,16 @@ export function createParliament(canvas, opts) {
   function buildComposer() {
     if (composer) { composer.dispose(); composer = null; }
     if (tier < 1) return;
-    const rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: tier >= 2 ? 4 : 0 });
+    const rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: tier >= 2 && flags.msaa ? 4 : 0 });
     composer = new EffectComposer(renderer, rt);
     composer.setPixelRatio(state.dpr); composer.setSize(state.W, state.H);
     composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(state.W, state.H), .38, .6, .78);
+    bloom = new UnrealBloomPass(new THREE.Vector2(state.W, state.H), .3, .55, 1.0);
     composer.addPass(bloom);
     grade = new ShaderPass(GRADE_SHADER);
     composer.addPass(grade);
     composer.addPass(new OutputPass());
+    if (tier >= 2 && flags.smaa) composer.addPass(new SMAAPass());
   }
 
   function resize(w, h, dpr) {
@@ -1059,7 +1011,7 @@ export function createParliament(canvas, opts) {
       state.inInterior = interior; state.first = true; ext.group.visible = !interior; inn.group.visible = interior;
       scene.environment = interior ? envRoom : envSky; scene.environmentIntensity = interior ? .04 : .7;
     }
-    if (ext.reflector) ext.reflector.visible = tier >= 2 && !interior && pose.p.y < 260;
+    if (ext.reflector) ext.reflector.visible = tier >= 2 && flags.reflect && !interior && pose.p.y < 260;
     if (ext.water) ext.water.visible = !(ext.reflector && ext.reflector.visible);
     /* life: slow drift + mouse parallax */
     const mx = o.mx || 0, my = o.my || 0;
@@ -1072,7 +1024,7 @@ export function createParliament(canvas, opts) {
     camera.fov = pose.fov * clamp(1 + (1.3 - asp) * .6, 1, 1.6);
     camera.updateProjectionMatrix();
     /* exposure carries the section's dim and the cut fade (to black) */
-    renderer.toneMappingExposure = clamp(1.75 - (o.dim || 0) * 1.0, .5, 2) * (interior ? .9 : 1) * fade;
+    renderer.toneMappingExposure = clamp(1.45 - (o.dim || 0) * .9, .45, 2) * (interior ? .9 : 1) * fade;
     canvas.style.opacity = String(state.dbg || o.appear === undefined ? 1 : o.appear);
 
     ext.update(t, dt, !interior);
@@ -1101,7 +1053,7 @@ export function createParliament(canvas, opts) {
     } else meteorMesh.visible = false;
 
     state.info = { prog: prog, interior: interior, fade: fade, tier: tier, p: camera.position.toArray().map(Math.round), fov: Math.round(camera.fov) };
-    if (composer) { grade.uniforms.uTime.value = t; grade.uniforms.uVig.value = interior ? .4 : .55; bloom.strength = interior ? .34 : .38; bloom.threshold = interior ? 1.2 : .78; composer.render(dt); }
+    if (composer) { grade.uniforms.uTime.value = t; grade.uniforms.uVig.value = interior ? .4 : .55; bloom.strength = interior ? .34 : .3; bloom.threshold = interior ? 1.2 : 1.0; composer.render(dt); }
     else renderer.render(scene, camera);
   }
 
@@ -1110,10 +1062,36 @@ export function createParliament(canvas, opts) {
     debug(d) { state.dbg = d; },
     info() { return state.info; },
     /* called by the page when the GPU is too slow: reflections + MSAA first, then bloom */
-    degrade() { if (tier > 0) { tier--; buildComposer(); return true; } return false; },
+    degrade() { if (tier > 0) { tier--; applyTier(); buildComposer(); return true; } return false; },
     quality() { return tier; },
-    setTier(n) { tier = Math.max(0, Math.min(hdr ? 2 : 0, n)); buildComposer(); },
+    flags, refresh() { applyTier(); buildComposer(); },
+    setTier(n) { tier = Math.max(0, Math.min(hdr ? 2 : 0, n)); applyTier(); buildComposer(); },
     dispose() { renderer.dispose(); },
     renderer
   };
+}
+
+/* ------------------------------------------------------------------ assets (real textures + sky) */
+const TEX = {
+  stone: ['stone_c', 'stone_n', 'stone_orm', 1.5], roof: ['roof_c', 'roof_n', 'roof_orm', 3], gold: ['gold_c', 'gold_n', 'gold_orm', 1],
+  paving: ['paving_c', 'paving_n', 'paving_orm', 1.5], floor: ['floor_c', 'floor_n', 'floor_orm', 3]
+};
+export async function loadAssets(base, mobile) {
+  const loader = new THREE.TextureLoader();
+  const load = (url, srgb) => loader.loadAsync(url).then((t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 8; return t; });
+  const out = {};
+  await Promise.all(Object.keys(TEX).map(async (k) => {
+    try {
+      const d = TEX[k], r = await Promise.all([load(base + d[0] + '.jpg', true), load(base + d[1] + '.jpg', false), load(base + d[2] + '.jpg', false)]);
+      out[k] = { map: r[0], normalMap: r[1], orm: r[2], tile: d[3] };
+    } catch (e) { /* that set falls back to the GPU-baked texture */ }
+  }));
+  try { out.sky = await load(base + (mobile ? 'sky_2k.jpg' : 'sky.jpg'), true); } catch (e) { /* procedural sky */ }
+  return out;
+}
+/* what the page calls: fetch the textures, then build the scene */
+export async function loadParliament(canvas, opts) {
+  opts = opts || {};
+  const assets = await loadAssets(opts.base || '/alexstudio/tex/', !!opts.mobile);
+  return createParliament(canvas, Object.assign({}, opts, { assets }));
 }

@@ -11,7 +11,13 @@
    will actually get it (no reduced-motion, no data-saver). */
 (function(){try{
   var rm = matchMedia('(prefers-reduced-motion: reduce)').matches, sd = navigator.connection && navigator.connection.saveData;
-  if(!rm && !sd){ var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = '/alexstudio/parliament3d.js'; document.head.appendChild(l); }
+  if(!rm && !sd){
+    var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = '/alexstudio/parliament3d.js'; document.head.appendChild(l);
+    var small = matchMedia('(max-width:820px)').matches || matchMedia('(pointer:coarse)').matches;
+    ['stone_c','stone_n','stone_orm','roof_c','roof_n','roof_orm','gold_c','gold_n','gold_orm','paving_c','paving_n','paving_orm','floor_c','floor_n','floor_orm', small ? 'sky_2k' : 'sky'].forEach(function(n){
+      var i = document.createElement('link'); i.rel = 'preload'; i.as = 'image'; i.crossOrigin = 'anonymous'; i.href = '/alexstudio/tex/' + n + '.jpg'; document.head.appendChild(i);
+    });
+  }
 }catch(e){}})();
 </script>
 <style>
@@ -1920,16 +1926,14 @@ function parlFallback(){
 function parlLoad3D(){
   if(Parl.p3Tried) return;
   Parl.p3Tried = true;
-  var imgReady = new Promise(function(res){
-    if(parlImg.complete) res(); else { parlImg.addEventListener('load', res); parlImg.addEventListener('error', res); }
-  });
   var arm = function(){ setTimeout(function(){ if(Parl.p3d) return; if(document.hidden){ arm(); return; } parlFallback(); }, 9000); };
   arm();
   /* let the first frame paint before the (synchronous) scene build */
   (function(){ setTimeout(function(){
-    Promise.all([import('/alexstudio/parliament3d.js'), imgReady]).then(function(r){
+    import('/alexstudio/parliament3d.js').then(function(mod){
+      return mod.loadParliament(document.getElementById('p3dCanvas'), {mobile: (isCoarse || window.innerWidth <= 820) && !/[?&]p3d=hq/.test(location.search), base: '/alexstudio/tex/'});
+    }).then(function(api){
       var cv = document.getElementById('p3dCanvas');
-      var api = r[0].createParliament(cv, {mobile: isCoarse || window.innerWidth <= 820, photo: parlImg});
       cv.addEventListener('webglcontextlost', function(e){
         e.preventDefault(); Parl.p3d = null; cv.style.opacity = '0'; Parl.fellBack = false; parlFallback();
       });
