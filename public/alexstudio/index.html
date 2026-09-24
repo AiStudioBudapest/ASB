@@ -18,7 +18,7 @@
     var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = '/alexstudio/parliament3d.js'; document.head.appendChild(l);
     var small = matchMedia('(max-width:820px)').matches || matchMedia('(pointer:coarse)').matches;
     ['stone_c','stone_n','stone_orm','roof_c','roof_n','roof_orm','gold_c','gold_n','gold_orm','paving_c','paving_n','paving_orm','floor_c','floor_n','floor_orm', small ? 'sky_2k' : 'sky'].forEach(function(n){
-      var i = document.createElement('link'); i.rel = 'preload'; i.as = 'image'; i.crossOrigin = 'anonymous'; i.href = '/alexstudio/tex/' + n + '.jpg'; document.head.appendChild(i);
+      var i = document.createElement('link'); i.rel = 'preload'; i.as = 'image'; i.crossOrigin = 'anonymous'; i.href = '/alexstudio/tex/' + n + (small && n.indexOf('sky') < 0 ? '_m' : '') + '.jpg'; document.head.appendChild(i); /* phones get the light _m set, like the scene */
     });
   }
 }catch(e){}})();
@@ -269,7 +269,7 @@ header.nav{
 .mnav a{font-family:var(--serif);font-size:calc(30*var(--u));color:var(--text);}
 .mnav .nav-cta{margin-top:calc(10*var(--u));}
 
-@media (max-width:820px){
+@media (max-width:920px){ /* was 820: on tablets (834 px iPad) the 6 links + language + CTA overflowed the right edge */
   .nav-links{display:none;}
   .burger{display:block;order:3;margin-left:auto;} /* .nav-links (which had margin-left:auto) is hidden here, so push the burger to the right edge itself */
   .nav-cta{display:none;}
@@ -868,6 +868,44 @@ footer.site-foot a:hover{color:var(--cyan);}
   .hero .tagline{font-size:calc(36*var(--u));}
   .hero-sub{font-size:calc(16.5*var(--u));margin-top:calc(16*var(--u));}
   .hero::before{top:30%;height:56%;}
+}
+/* ============================================================
+   PHONES — every size from 280 px wide up (portrait) and landscape phones. Type scales with the phone's width AND
+   height, tap targets are >= 44 px, nothing can push the page sideways.
+   ============================================================ */
+@media (max-width:820px){
+  .hero{padding-top:clamp(86px,14vh,126px);}
+  .hero .tagline{font-size:clamp(25px,min(9.6vw,5.3vh),40px);}
+  .hero-sub{font-size:clamp(14px,min(4.4vw,2.6vh),17.5px);}
+  .eyebrow{font-size:clamp(10.5px,3.1vw,12.6px);}
+  /* full-screen menu: starts under the logo bar, and shrinks to fit short phones instead of sliding under the logo */
+  .mnav{padding:calc(96*var(--u)) var(--gutter) calc(24*var(--u));gap:clamp(8px,2.4vh,27px);overflow-y:auto;}
+  .mnav a{font-size:clamp(21px,min(7.4vw,4.3vh),31.5px);}
+  /* the e-mail pill scales with the phone and never wraps in the middle of the address */
+  .contact .mail{overflow-wrap:normal;white-space:nowrap;padding-left:calc(18*var(--u));padding-right:calc(18*var(--u));}
+  .contact .mail:not(.phone){font-size:clamp(12px,4.2vw,17px);gap:calc(9*var(--u));}
+  .contact .mail .ico{width:calc(17*var(--u));height:calc(17*var(--u));}
+}
+@media (pointer:coarse){
+  .burger::after{content:"";position:absolute;inset:-5px;} /* 50 px touch area around the 40 px button */
+  footer.site-foot a{display:inline-block;padding:calc(12*var(--u)) calc(4*var(--u));}
+  .site-foot-row{row-gap:0;}
+  .lang-switch-mobile button{min-height:44px;}
+}
+/* landscape phones / tablets use the wide nav: give its pills a 44 px touch height (never touching display, the phone nav hides them) */
+@media (pointer:coarse) and (min-width:821px){
+  .nav-links a,.nav-cta,.lang-btn{min-height:44px;display:inline-flex;align-items:center;}
+  .lang-option{min-height:44px;display:flex;align-items:center;}
+}
+/* landscape phones (short and wide): a compact nav and hero so the Parliament stays visible */
+@media (max-height:520px) and (orientation:landscape){
+  header.nav{padding-top:calc(10*var(--u));padding-bottom:calc(10*var(--u));}
+  .logo img{height:calc(34*var(--u));}
+  .hero{padding-top:calc(60*var(--u));padding-bottom:calc(20*var(--u));}
+  .hero .tagline{font-size:clamp(20px,7.4vh,34px);max-width:34ch;}
+  .hero-sub{font-size:clamp(12px,3.8vh,15.5px);margin-top:1.6vh;max-width:58ch;}
+  .eyebrow-wrap{margin-bottom:0;}
+  .mnav{overflow-y:auto;justify-content:flex-start;padding:76px 0 24px;}
 }
 </style>
 </head>
@@ -1669,7 +1707,7 @@ var Parl = {
   tgt: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
   mx: 0, my: 0, mouse: false, msx: 0, msy: 0, lx: .5, ly: .5,
   running: false, lastT: 0, lastDraw: 0, active: 0, frames: 0, slow: 0, lost: false, ys: [],
-  p3d: null, p3Appear: 0, p3Chk: 0, p3W: 0, p3H: 0, p3Cap: isCoarse ? 1.15 : 1.5, p3Frames: 0, p3Slow: 0
+  p3d: null, p3Appear: 0, p3Chk: 0, p3W: 0, p3H: 0, p3Cap: isCoarse ? ((navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ? .85 : 1) : 1.5, p3Frames: 0, p3Slow: 0
 };
 function parlClamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
 
@@ -1878,7 +1916,8 @@ function parlFrame(t){
     Parl.p3Appear = Math.min(1, Parl.p3Appear + dt * .8);
     /* safety net for missed resize events (rotation, browser zoom, devtools) */
     if(t - Parl.p3Chk > 1000){ Parl.p3Chk = t; p3Size(false); }
-    if(!(idle && t - Parl.lastDraw < 30)){
+    /* at most ~60 renders/s on phones (120 Hz screens would otherwise double the GPU work for nothing), 30/s when idle */
+    if(t - Parl.lastDraw >= (idle ? 30 : (isCoarse ? 15 : 7))){
       Parl.lastDraw = t;
       try{
         Parl.p3d.render(t, c.prog, {dim: c.dim, appear: Parl.p3Appear});

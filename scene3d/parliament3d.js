@@ -11,6 +11,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { buildBuilding } from './facade.js';
 import { bakePBR, pbrMaterial } from './pbr.js';
@@ -740,6 +741,31 @@ function buildExterior(mobile, reflect, ctx) {
   return { group: g, water, reflector, lights, door: setDoor, update(t, dt, active) { updaters.forEach((u) => u(t, dt, active)); } };
 }
 
+/* Merge the static meshes that share a material into one mesh each (the hall was ~350 draw calls: 16 piers with capitals, bands,
+   plinths, statues, arch panels, glow planes, 34 balustrade posts, ~50 shadow decals...). Only direct children of the group are
+   touched; groups (the crown), sprites, points and instanced meshes are left alone. */
+function mergeStatic(group) {
+  group.updateMatrix();
+  const buckets = new Map();
+  group.children.slice().forEach((o) => {
+    if (!o.isMesh || o.isInstancedMesh || Array.isArray(o.material) || o.userData.keep) return;
+    const key = o.material.uuid + '|' + Object.keys(o.geometry.attributes).sort().join(',') + '|' + o.renderOrder + '|' + o.visible;
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key).push(o);
+  });
+  buckets.forEach((arr) => {
+    if (arr.length < 3) return;
+    const geos = arr.map((o) => { o.updateMatrix(); const gg = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone(); gg.applyMatrix4(o.matrix); return gg; });
+    const merged = mergeGeometries(geos, false);
+    if (!merged) return;
+    merged.computeBoundingSphere();
+    const m = new THREE.Mesh(merged, arr[0].material);
+    m.renderOrder = arr[0].renderOrder;
+    arr.forEach((o) => group.remove(o));
+    group.add(m);
+  });
+}
+
 /* ------------------------------------------------------------------ interior */
 function buildInterior(mobile, ctx) {
   const g = new THREE.Group(); g.position.set(OFF, 0, 0);
@@ -864,18 +890,20 @@ function buildInterior(mobile, ctx) {
     const a = i / 28 * TAU;
     [0, .17].forEach((y) => { const p = new THREE.Mesh(new THREE.SphereGeometry(.026, 6, 5), pearl); p.position.set(Math.cos(a) * .375, y, Math.sin(a) * .375); crown.add(p); });
   }
-  const enamel = [0x2f7fe0, 0x1f9a5a, 0xd8342c, 0xf2f2f2];
+  const enamel = [0x2f7fe0, 0x1f9a5a, 0xd8342c, 0xf2f2f2].map((c) => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: .45, roughness: .3 }));
   for (let i = 0; i < 8; i++) {
-    const a = i / 8 * TAU + .2, pl = new THREE.Mesh(new THREE.BoxGeometry(.13, .11, .02), new THREE.MeshStandardMaterial({ color: enamel[i % 4], emissive: enamel[i % 4], emissiveIntensity: .45, roughness: .3 }));
+    const a = i / 8 * TAU + .2, pl = new THREE.Mesh(new THREE.BoxGeometry(.13, .11, .02), enamel[i % 4]);
     pl.position.set(Math.cos(a) * .383, .085, Math.sin(a) * .383); pl.rotation.y = -a + Math.PI / 2; crown.add(pl);
   }
   [0, Math.PI / 2].forEach((ry) => { const a = new THREE.Mesh(new THREE.TorusGeometry(.35, .028, 8, 24, Math.PI), crownGold); a.rotation.y = ry; a.position.y = .17; crown.add(a); });
   const cx1 = new THREE.Mesh(new THREE.BoxGeometry(.035, .2, .035), crownGold); cx1.position.set(.02, .58, 0); cx1.rotation.z = -.16; crown.add(cx1);
   const cx2 = new THREE.Mesh(new THREE.BoxGeometry(.12, .035, .035), crownGold); cx2.position.set(.008, .6, 0); cx2.rotation.z = -.16; crown.add(cx2);
+  const gemMat = [new THREE.MeshBasicMaterial({ color: 0x4aa8ff }), new THREE.MeshBasicMaterial({ color: 0xff3344 })];
   for (let i = 0; i < 12; i++) {
-    const a = i / 12 * TAU, gm = new THREE.Mesh(new THREE.SphereGeometry(.034, 8, 6), new THREE.MeshBasicMaterial({ color: i % 2 ? 0xff3344 : 0x4aa8ff }));
+    const a = i / 12 * TAU, gm = new THREE.Mesh(new THREE.SphereGeometry(.034, 8, 6), gemMat[i % 2]);
     gm.position.set(Math.cos(a) * .375, .085, Math.sin(a) * .375); crown.add(gm);
   }
+  mergeStatic(crown); /* ~90 tiny meshes -> a handful of draw calls; the group still spins as one */
   const cg = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffc860, blending: THREE.AdditiveBlending, transparent: true, opacity: .5, depthWrite: false })); cg.scale.set(4, 4, 1); cg.position.y = 2; g.add(cg);
   updaters.push((t) => { crown.rotation.y = t * .5; cg.material.opacity = .32 + Math.sin(t * 2) * .06; });
 
@@ -958,6 +986,7 @@ function buildInterior(mobile, ctx) {
   const stairL = new THREE.PointLight(0xffc477, 145, 60, 1.6); stairL.position.set(0, 8, -32); g.add(stairL);
   const stairL2 = new THREE.PointLight(0xffb060, 240, 40, 1.6); stairL2.position.set(0, 4, -44); g.add(stairL2);
 
+  mergeStatic(g);
   return { group: g, update(t, dt) { updaters.forEach((u) => u(t, dt)); } };
 }
 
@@ -1300,11 +1329,14 @@ const TEX = {
 };
 export async function loadAssets(base, mobile) {
   const loader = new THREE.TextureLoader();
-  const load = (url, srgb) => loader.loadAsync(url).then((t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 8; return t; });
+  /* phones: half-size textures (stone/floor 1K, the rest 512): ~1 MB instead of ~3.3 MB and a fraction of the GPU memory
+     (a 2K RGBA texture with mips is ~21 MB; the old set was ~150 MB, enough to make iOS Safari kill the tab) */
+  const sfx = mobile ? '_m' : '';
+  const load = (url, srgb) => loader.loadAsync(url).then((t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = mobile ? 2 : 8; return t; });
   const out = {};
   await Promise.all(Object.keys(TEX).map(async (k) => {
     try {
-      const d = TEX[k], r = await Promise.all([load(base + d[0] + '.jpg', true), load(base + d[1] + '.jpg', false), load(base + d[2] + '.jpg', false)]);
+      const d = TEX[k], r = await Promise.all([load(base + d[0] + sfx + '.jpg', true), load(base + d[1] + sfx + '.jpg', false), load(base + d[2] + sfx + '.jpg', false)]);
       out[k] = { map: r[0], normalMap: r[1], orm: r[2], tile: d[3] };
     } catch (e) { /* that set falls back to the GPU-baked texture */ }
   }));
