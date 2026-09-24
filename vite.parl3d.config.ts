@@ -19,7 +19,9 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        banner: '/* Parliament 3D scene (AiStudioBudapest). Includes three.js (MIT, (c) three.js authors), https://threejs.org */',
+        // `/*!` comments survive minification. The full MIT text sits next to the
+        // bundle in public/alexstudio/parliament3d.LICENSE.txt (copied from node_modules/three/LICENSE).
+        banner: '/*! Parliament 3D scene (AiStudioBudapest). Includes three.js, MIT License, (c) three.js authors, see parliament3d.LICENSE.txt */',
       },
     },
   },
