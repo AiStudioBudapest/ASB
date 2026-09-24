@@ -324,10 +324,17 @@ const SANITIZE_SHADER = {
   fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
     void main(){ vec4 c=texture2D(tDiffuse,vUv); if(any(isnan(c.rgb))||any(isinf(c.rgb))) c.rgb=vec3(0.); gl_FragColor=vec4(clamp(c.rgb,0.,24.),1.); }`
 };
-const GRADE_SHADER = {
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVig: { value: .5 }, uGrain: { value: .018 }, uCA: { value: .0016 }, uFlash: { value: 0 } },
+/* cross-dissolve between scenes: the last frame of the scene we just left is copied to a texture and faded out over the new one */
+const DISSOLVE_SHADER = {
+  uniforms: { tDiffuse: { value: null }, tPrev: { value: null }, uMix: { value: 0 } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime,uVig,uGrain,uCA,uFlash; varying vec2 vUv;
+  fragmentShader: `uniform sampler2D tDiffuse,tPrev; uniform float uMix; varying vec2 vUv;
+    void main(){ vec3 c=texture2D(tDiffuse,vUv).rgb; c=mix(c,texture2D(tPrev,vUv).rgb,uMix); gl_FragColor=vec4(c,1.); }`
+};
+const GRADE_SHADER = {
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVig: { value: .5 }, uGrain: { value: .018 }, uCA: { value: .0016 }, uFlash: { value: 0 }, uFlashCol: { value: new THREE.Color(2.5, 1.35, .42) } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime,uVig,uGrain,uCA,uFlash; uniform vec3 uFlashCol; varying vec2 vUv;
     void main(){
       vec2 c=vUv-.5; float r2=dot(c,c); vec2 off=c*r2*uCA*8.;
       vec3 col=vec3(texture2D(tDiffuse,vUv+off).r,texture2D(tDiffuse,vUv).g,texture2D(tDiffuse,vUv-off).b);
@@ -336,7 +343,7 @@ const GRADE_SHADER = {
       col=mix(col,col*vec3(.90,.98,1.12),smoothstep(.30,0.,l));
       float g=fract(sin(dot(vUv*1000.+fract(uTime)*97.,vec2(12.9898,78.233)))*43758.5453);
       col+=(g-.5)*uGrain*(.25+.75*smoothstep(1.,.0,l));
-      col=mix(col,vec3(2.8,1.9,.95),uFlash);
+      col=mix(col,uFlashCol,uFlash);
       gl_FragColor=vec4(max(col,0.),1.);
     }`
 };
@@ -477,9 +484,81 @@ function buildExterior(mobile, reflect, ctx) {
   /* ---------- the building (see facade.js) ---------- */
   g.add(buildBuilding(bm, { mobile, rand: R }));
 
+  /* ---------- the great back door: two leaves that swing open onto the lit hall ---------- */
+  const DOOR = { hw: 4.5, y0: 1.5, z: -51.2, spring: 8, k: 1.5 };
+  const woodTex = canvasTex(256, 512, (c, w, h) => {
+    c.fillStyle = '#5a3719'; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 4; i++) { c.fillStyle = i % 2 ? 'rgba(255,190,110,.10)' : 'rgba(0,0,0,.14)'; c.fillRect(i * 64, 0, 64, h); c.fillStyle = 'rgba(0,0,0,.55)'; c.fillRect(i * 64, 0, 2, h); }
+    for (let i = 0; i < 260; i++) { c.fillStyle = 'rgba(' + (R() > .5 ? '20,8,0' : '255,200,120') + ',' + (.03 + R() * .05) + ')'; c.fillRect(R() * w, R() * h, 1 + R() * 2, 12 + R() * 60); }
+  }, { repeat: true });
+  woodTex.repeat.set(.25, .12);
+  const woodMat = new THREE.MeshStandardMaterial({ map: woodTex, roughness: .5, metalness: .1, emissive: 0x2a1408, emissiveIntensity: .9, side: THREE.DoubleSide });
+  /* one leaf in hinge space: hinge on x = 0, the leaf runs toward -sgn*x */
+  const makeLeaf = (sgn) => {
+    const pts = archOutline(DOOR.hw, DOOR.spring, DOOR.k, 10).filter((p) => p[0] >= -1e-6);
+    const sh = new THREE.Shape(); sh.moveTo(0, 0);
+    pts.forEach((p) => sh.lineTo(sgn * (p[0] - DOOR.hw), p[1]));
+    sh.closePath();
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: .3, bevelEnabled: false, curveSegments: 6 }); geo.translate(0, 0, -.15);
+    const leaf = new THREE.Group(); leaf.add(new THREE.Mesh(geo, woodMat));
+    const cx = -sgn * DOOR.hw / 2;
+    [1.7, 4.6, 7.5].forEach((y) => { const b = new THREE.Mesh(new THREE.BoxGeometry(DOOR.hw - .3, .26, .42), bm.gold); b.position.set(cx, y, 0); leaf.add(b); });
+    const stile = new THREE.Mesh(new THREE.BoxGeometry(.22, DOOR.spring + 1.2, .42), bm.gold); stile.position.set(-sgn * (DOOR.hw - .14), (DOOR.spring + 1.2) / 2, 0); leaf.add(stile);
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(.2, DOOR.spring, .42), bm.gold); rail.position.set(sgn * -.1, DOOR.spring / 2, 0); leaf.add(rail);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(.34, .055, 8, 18), bm.gold); ring.position.set(-sgn * (DOOR.hw - .9), 4.6, .3); leaf.add(ring);
+    for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) {
+      const st = new THREE.Mesh(new THREE.SphereGeometry(.1, 6, 5), bm.gold); st.position.set(cx + (i - 2.5) * .62, 3.1 + j * 2.9, .2); leaf.add(st);
+    }
+    return leaf;
+  };
+  const pivotR = new THREE.Group(), pivotL = new THREE.Group();
+  pivotR.position.set(DOOR.hw, DOOR.y0, DOOR.z); pivotL.position.set(-DOOR.hw, DOOR.y0, DOOR.z);
+  pivotR.add(makeLeaf(1)); pivotL.add(makeLeaf(-1));
+  g.add(pivotR, pivotL);
+  /* a short lit vestibule behind the door: the walls glow warmer and brighter toward the hall at its far end */
+  const TZ0 = -50.5, TZ1 = -43.7, TW = DOOR.hw + .2;
+  const outline = archOutline(TW, DOOR.spring, DOOR.k, 10);
+  const vpos = [], vcol = [], vidx = [];
+  const W0 = [.5, .3, .12], W1 = [1.35, .85, .36], F0 = [.42, .04, .04], F1 = [1.2, .2, .13], RIB = [1.5, 1.0, .35];
+  const quad = (p, q, z0, z1, c0, c1, lift) => {
+    const b0 = vpos.length / 3;
+    [[p, z0, c0], [q, z0, c0], [q, z1, c1], [p, z1, c1]].forEach((v) => { vpos.push(v[0][0] * lift[0], (v[0][1] - lift[2]) * lift[1] + lift[2] + DOOR.y0 + lift[3], v[1]); vcol.push(v[2][0], v[2][1], v[2][2]); });
+    vidx.push(b0, b0 + 1, b0 + 2, b0, b0 + 2, b0 + 3);
+  };
+  const mid = (DOOR.spring + TW * Math.sqrt(2 * DOOR.k - 1)) / 2;
+  for (let i = 0; i < outline.length; i++) {
+    const p = outline[i], q = outline[(i + 1) % outline.length], floor = i === outline.length - 1;
+    quad(p, q, TZ0, TZ1, floor ? F0 : W0, floor ? F1 : W1, [1, 1, 0, floor ? .02 : 0]);
+    if (!floor) for (let k = 1; k <= 3; k++) quad(p, q, TZ0 + k * 1.7, TZ0 + k * 1.7 + .22, RIB, RIB, [.994, .994, mid, 0]);
+  }
+  const vgeo = new THREE.BufferGeometry();
+  vgeo.setAttribute('position', new THREE.Float32BufferAttribute(vpos, 3));
+  vgeo.setAttribute('color', new THREE.Float32BufferAttribute(vcol, 3));
+  vgeo.setIndex(vidx);
+  g.add(new THREE.Mesh(vgeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, fog: false })));
+  /* the hall glowing at the far end (stairs, red carpet, lamps) */
+  const portalTex = canvasTex(256, 512, (c, w, h) => {
+    const bg = c.createRadialGradient(w / 2, h * .78, 8, w / 2, h * .62, h * .8);
+    bg.addColorStop(0, '#fff6d8'); bg.addColorStop(.32, '#ffc866'); bg.addColorStop(1, '#a04c14');
+    c.fillStyle = bg; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 10; i++) { c.fillStyle = 'rgba(96,32,0,' + (.10 + i * .02) + ')'; c.fillRect(w * .14 + i * 2.4, h - 14 - i * i * 3 - i * 12, w * .72 - i * 4.8, 3); }
+    c.fillStyle = 'rgba(160,22,22,.8)'; c.beginPath(); c.moveTo(w * .34, h); c.lineTo(w * .66, h); c.lineTo(w * .54, h * .5); c.lineTo(w * .46, h * .5); c.closePath(); c.fill();
+    [[.24, .3], [.76, .3], [.3, .55], [.7, .55]].forEach((l) => { const rg = c.createRadialGradient(w * l[0], h * l[1], 0, w * l[0], h * l[1], 26); rg.addColorStop(0, 'rgba(255,255,235,1)'); rg.addColorStop(1, 'rgba(255,220,140,0)'); c.fillStyle = rg; c.fillRect(w * l[0] - 26, h * l[1] - 26, 52, 52); });
+  });
+  const portalShape = new THREE.Shape();
+  outline.forEach((p, i) => { if (i) portalShape.lineTo(p[0], p[1]); else portalShape.moveTo(p[0], p[1]); });
+  portalShape.closePath();
+  const portalGeo = new THREE.ShapeGeometry(portalShape), ppos = portalGeo.attributes.position, puv = new Float32Array(ppos.count * 2), ptop = DOOR.spring + TW * Math.sqrt(2 * DOOR.k - 1);
+  for (let i = 0; i < ppos.count; i++) { puv[i * 2] = (ppos.getX(i) + TW) / (2 * TW); puv[i * 2 + 1] = ppos.getY(i) / ptop; }
+  portalGeo.setAttribute('uv', new THREE.BufferAttribute(puv, 2));
+  const portal = new THREE.Mesh(portalGeo, new THREE.MeshBasicMaterial({ map: portalTex, color: new THREE.Color(1.0, .92, .8), side: THREE.DoubleSide, fog: false }));
+  portal.position.set(0, DOOR.y0, TZ1 - .05); g.add(portal);
+  const setDoor = (open) => { const a = clamp(open, 0, 1) * 1.4; pivotR.rotation.y = -a; pivotL.rotation.y = a; };
+
   /* ---------- back: grand stairs, lions, flags ---------- */
   const stairsB = new Batch();
   for (let i = 0; i < 8; i++) { const hh = (8 - i) * .18; stairsB.add(new THREE.BoxGeometry(46, hh, 2), M4(0, hh / 2, -53 - i * 2)); }
+  stairsB.add(new THREE.BoxGeometry(10, 1.5, 2.2), M4(0, .75, -51.1)); /* threshold of the great door */
   [-20, 20].forEach((lx) => {
     stairsB.add(new THREE.BoxGeometry(4, 3, 7), M4(lx, 1.5, -62));
     stairsB.add(new THREE.BoxGeometry(2.6, 2.2, 5), M4(lx, 4.1, -62));
@@ -489,7 +568,7 @@ function buildExterior(mobile, reflect, ctx) {
   /* flags */
   const flagTex = canvasTex(64, 48, (c, w, h) => { c.fillStyle = '#ce2939'; c.fillRect(0, 0, w, h / 3); c.fillStyle = '#f4f4f0'; c.fillRect(0, h / 3, w, h / 3); c.fillStyle = '#477050'; c.fillRect(0, 2 * h / 3, w, h / 3); });
   const flags = [];
-  [-34, 0, 34].forEach((fx) => {
+  [-36, -18, 18, 36].forEach((fx) => { /* none on the axis: the camera flies straight up it to the door */
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(.18, .22, 34, 6), bm.gold); pole.position.set(fx, 17, -82); pole.castShadow = true; g.add(pole);
     const geo = new THREE.PlaneGeometry(9, 6, 16, 8); geo.translate(4.5, 0, 0);
     const fm = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: flagTex, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: flagTex, emissiveIntensity: .3, roughness: 1 }));
@@ -658,7 +737,7 @@ function buildExterior(mobile, reflect, ctx) {
   flood('sideA', 0xffb066, .35, 320, 50, 0, false);
   flood('sideB', 0xffb066, .35, -320, 50, 0, false);
 
-  return { group: g, water, reflector, lights, update(t, dt, active) { updaters.forEach((u) => u(t, dt, active)); } };
+  return { group: g, water, reflector, lights, door: setDoor, update(t, dt, active) { updaters.forEach((u) => u(t, dt, active)); } };
 }
 
 /* ------------------------------------------------------------------ interior */
@@ -729,7 +808,7 @@ function buildInterior(mobile, ctx) {
     { cx: -1.05, y0: 11, hw: .42, spring: 2.2, k: 1.5 },
     { cx: 1.05, y0: 11, hw: .42, spring: 2.2, k: 1.5 }
   ]);
-  const backGlow = new THREE.MeshBasicMaterial({ color: 0xffa640 });
+  const backGlow = new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffa640).multiplyScalar(.78) });
   for (let j = 0; j < 16; j++) {
     const phi = j / 16 * TAU, ux = Math.sin(phi), uz = -Math.cos(phi);
     const p = new THREE.Mesh(panelGeo, marble); p.position.set(ux * apothem, 0, uz * apothem); p.rotation.y = -phi; g.add(p);
@@ -772,21 +851,33 @@ function buildInterior(mobile, ctx) {
   const og = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xcfe0ff, blending: THREE.AdditiveBlending, transparent: true, opacity: .8, depthWrite: false })); og.scale.set(14, 14, 1); og.position.y = top.y - 1; g.add(og);
 
   /* ---- the Holy Crown on its pedestal ---- */
-  const ped = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.7, 1.2, 20), marblePier); ped.position.y = .6; g.add(ped); decal(0, 0, 7);
-  const pedTop = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, .18, 20), gold); pedTop.position.y = 1.29; g.add(pedTop);
-  const glass = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.3, 1.5), new THREE.MeshStandardMaterial({ color: 0xbfd8ff, transparent: true, opacity: .16, roughness: .05, depthWrite: false }));
-  glass.position.y = 2.05; g.add(glass);
-  const crown = new THREE.Group(); crown.position.y = 1.7; g.add(crown);
-  const cband = new THREE.Mesh(new THREE.CylinderGeometry(.36, .38, .17, 24), gold); crown.add(cband);
-  [0, Math.PI / 2].forEach((ry) => { const a = new THREE.Mesh(new THREE.TorusGeometry(.35, .03, 6, 20, Math.PI), gold); a.rotation.y = ry; a.position.y = .08; crown.add(a); });
-  const cx1 = new THREE.Mesh(new THREE.BoxGeometry(.035, .2, .035), gold); cx1.position.y = .5; crown.add(cx1);
-  const cx2 = new THREE.Mesh(new THREE.BoxGeometry(.12, .035, .035), gold); cx2.position.y = .53; crown.add(cx2);
-  for (let i = 0; i < 12; i++) {
-    const a = i / 12 * TAU, gm = new THREE.Mesh(new THREE.SphereGeometry(.035, 6, 5), new THREE.MeshBasicMaterial({ color: i % 2 ? 0xff3344 : 0x4aa8ff }));
-    gm.position.set(Math.cos(a) * .375, 0, Math.sin(a) * .375); crown.add(gm);
+  const crownGold = new THREE.MeshStandardMaterial({ color: 0xf5c65a, emissive: 0x6a4610, emissiveIntensity: .9, roughness: .3, metalness: .6 });
+  const ped = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.7, 1.2, 28), marblePier); ped.position.y = .6; g.add(ped); decal(0, 0, 7);
+  const pedTop = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, .18, 28), crownGold); pedTop.position.y = 1.29; g.add(pedTop);
+  const velvet = new THREE.Mesh(new THREE.CylinderGeometry(.95, 1.05, .1, 28), new THREE.MeshStandardMaterial({ color: 0x6d1220, roughness: .95, emissive: 0x1c0408 })); velvet.position.y = 1.43; g.add(velvet);
+  const glass = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.3, 1.5), new THREE.MeshStandardMaterial({ color: 0xbfd8ff, transparent: true, opacity: .045, roughness: .05, envMapIntensity: .25, depthWrite: false }));
+  glass.position.y = 2.1; g.add(glass);
+  const crown = new THREE.Group(); crown.position.y = 1.5; crown.scale.setScalar(1.5); g.add(crown);
+  const pearl = new THREE.MeshStandardMaterial({ color: 0xf6f0e4, roughness: .25, emissive: 0x403830 });
+  const cband = new THREE.Mesh(new THREE.CylinderGeometry(.36, .38, .17, 32), crownGold); cband.position.y = .085; crown.add(cband);
+  for (let i = 0; i < 28; i++) {
+    const a = i / 28 * TAU;
+    [0, .17].forEach((y) => { const p = new THREE.Mesh(new THREE.SphereGeometry(.026, 6, 5), pearl); p.position.set(Math.cos(a) * .375, y, Math.sin(a) * .375); crown.add(p); });
   }
-  const cg = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffc860, blending: THREE.AdditiveBlending, transparent: true, opacity: .8, depthWrite: false })); cg.scale.set(5, 5, 1); cg.position.y = 1.9; g.add(cg);
-  updaters.push((t) => { crown.rotation.y = t * .5; cg.material.opacity = .4 + Math.sin(t * 2) * .08; });
+  const enamel = [0x2f7fe0, 0x1f9a5a, 0xd8342c, 0xf2f2f2];
+  for (let i = 0; i < 8; i++) {
+    const a = i / 8 * TAU + .2, pl = new THREE.Mesh(new THREE.BoxGeometry(.13, .11, .02), new THREE.MeshStandardMaterial({ color: enamel[i % 4], emissive: enamel[i % 4], emissiveIntensity: .45, roughness: .3 }));
+    pl.position.set(Math.cos(a) * .383, .085, Math.sin(a) * .383); pl.rotation.y = -a + Math.PI / 2; crown.add(pl);
+  }
+  [0, Math.PI / 2].forEach((ry) => { const a = new THREE.Mesh(new THREE.TorusGeometry(.35, .028, 8, 24, Math.PI), crownGold); a.rotation.y = ry; a.position.y = .17; crown.add(a); });
+  const cx1 = new THREE.Mesh(new THREE.BoxGeometry(.035, .2, .035), crownGold); cx1.position.set(.02, .58, 0); cx1.rotation.z = -.16; crown.add(cx1);
+  const cx2 = new THREE.Mesh(new THREE.BoxGeometry(.12, .035, .035), crownGold); cx2.position.set(.008, .6, 0); cx2.rotation.z = -.16; crown.add(cx2);
+  for (let i = 0; i < 12; i++) {
+    const a = i / 12 * TAU, gm = new THREE.Mesh(new THREE.SphereGeometry(.034, 8, 6), new THREE.MeshBasicMaterial({ color: i % 2 ? 0xff3344 : 0x4aa8ff }));
+    gm.position.set(Math.cos(a) * .375, .085, Math.sin(a) * .375); crown.add(gm);
+  }
+  const cg = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffc860, blending: THREE.AdditiveBlending, transparent: true, opacity: .5, depthWrite: false })); cg.scale.set(4, 4, 1); cg.position.y = 2; g.add(cg);
+  updaters.push((t) => { crown.rotation.y = t * .5; cg.material.opacity = .32 + Math.sin(t * 2) * .06; });
 
   /* carpet from the centre to the staircase door */
   const carpetTex = canvasTex(128, 512, (c, w, h) => {
@@ -862,7 +953,8 @@ function buildInterior(mobile, ctx) {
   /* ---- lights ---- */
   g.add(new THREE.HemisphereLight(0xffe4b8, 0x3a2010, .18));
   const hallL = new THREE.PointLight(0xffd08a, 180, 70, 1.6); hallL.position.set(0, 13, 0); g.add(hallL);
-  const crownL = new THREE.PointLight(0xffc860, 42, 24, 1.8); crownL.position.set(0, 5, 0); g.add(crownL);
+  const crownL = new THREE.PointLight(0xffc860, 20, 24, 1.8); crownL.position.set(0, 5, 0); g.add(crownL);
+  const crownS = new THREE.SpotLight(0xffe0a6, 130, 30, .34, .7, 1.4); crownS.position.set(.6, 11, -1.4); crownS.target.position.set(0, 1.7, 0); g.add(crownS, crownS.target);
   const stairL = new THREE.PointLight(0xffc477, 145, 60, 1.6); stairL.position.set(0, 8, -32); g.add(stairL);
   const stairL2 = new THREE.PointLight(0xffb060, 240, 40, 1.6); stairL2.position.set(0, 4, -44); g.add(stairL2);
 
@@ -879,20 +971,33 @@ const PATH_A = [
   [3, [12, 124, 88], [0, 56, -6], 48],
   [3.5, [205, 84, -20], [0, 44, 0], 46],
   [4, [66, 30, -168], [0, 30, -44], 44],
-  [4.6, [0, 7, -104], [0, 9, -52], 52]
+  /* the approach: centred on the axis, the doors swing open (4.2 -> 4.46) and the camera walks into the light */
+  [4.15, [22, 15, -128], [0, 9, -52], 46],
+  [4.32, [2, 7.5, -92], [0, 8, -51], 48],
+  [4.48, [0, 6, -73], [0, 7, -49], 50],
+  [4.56, [0, 4.4, -55.5], [0, 4.9, -40], 54],
+  [4.63, [0, 3.7, -46.6], [0, 4.4, -30], 56]
 ];
 const PATH_I = [
   [4.66, [OFF, -6.2, -47.5], [OFF, -1, -26], 62],
   [4.85, [OFF, -3.0, -33], [OFF, 4, -12], 62],
   [5.0, [OFF, .7, -19], [OFF, 11, 4], 66],
-  [5.3, [OFF, 5.5, -7], [OFF, 26, 2], 72],
-  [5.65, [OFF + 3.5, 3.2, 5], [OFF, 1.4, 0], 52]
+  [5.2, [OFF, 4.5, -9], [OFF, 20, 2], 70],
+  /* the Holy Crown: three long, calm shots around it (well clear of any cut) */
+  [5.4, [OFF + .4, 2.7, -3.9], [OFF, 1.95, 0], 44],
+  [5.55, [OFF + 3.3, 2.5, -1.6], [OFF, 1.95, 0], 44],
+  [5.68, [OFF + 3.4, 3.1, 1.5], [OFF, 2.0, 0], 42],
+  /* then up the hall toward the light of the oculus */
+  [5.78, [OFF + 1.2, 9, 1.2], [OFF, 24, 0], 62],
+  [5.85, [OFF, 29, .3], [OFF, 52, 0], 78]
 ];
 const PATH_C = [
-  [5.75, [38, 2.8, 142], [6, 28, 24], 52],
+  [5.86, [0, 118, -34], [0, 62, 40], 60],
+  [5.93, [12, 66, 122], [0, 50, 0], 50],
   [6.0, [-6, 30, 214], [0, 46, 0], 40]
 ];
-const CUT1 = 4.63, CUT2 = 5.72, CUTW = .1;
+const CUT1 = 4.63, CUT2 = 5.86, CUT1W = .06, CUT2W = .05;
+const FLASH_WARM = [2.5, 1.35, .42], FLASH_COOL = [1.6, 2.0, 3.0];
 
 function cr(p0, p1, p2, p3, u) {
   const u2 = u * u, u3 = u2 * u;
@@ -977,9 +1082,23 @@ export function createParliament(canvas, opts) {
   meteorMesh.visible = false; meteorMesh.renderOrder = 10; scene.add(meteorMesh);
 
   /* post-processing chain, rebuilt when the quality tier changes */
-  let composer = null, bloom = null, grade = null;
+  let composer = null, bloom = null, grade = null, dissolve = null, prevTex = null;
+  const fx = { zone: -1, mix: 0, capZone: -2, capAge: 99 };
+  const DISSOLVE_S = .8;
+  const dbs = new THREE.Vector2();
+  function ensurePrev() {
+    if (!dissolve) return;
+    renderer.getDrawingBufferSize(dbs);
+    const w = Math.max(1, Math.round(dbs.x)), h = Math.max(1, Math.round(dbs.y));
+    if (!prevTex || prevTex.image.width !== w || prevTex.image.height !== h) {
+      if (prevTex) prevTex.dispose();
+      prevTex = new THREE.FramebufferTexture(w, h);
+      fx.capZone = -2; fx.mix = 0;
+    }
+    dissolve.uniforms.tPrev.value = prevTex;
+  }
   function buildComposer() {
-    if (composer) { composer.dispose(); composer = null; }
+    if (composer) { composer.dispose(); composer = null; dissolve = null; }
     if (tier < 1) return;
     const rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: tier >= 2 && flags.msaa ? 4 : 0 });
     composer = new EffectComposer(renderer, rt);
@@ -992,15 +1111,18 @@ export function createParliament(canvas, opts) {
     composer.addPass(grade);
     composer.addPass(new OutputPass());
     if (tier >= 2 && flags.smaa) composer.addPass(new SMAAPass());
+    dissolve = new ShaderPass(DISSOLVE_SHADER); dissolve.enabled = false; composer.addPass(dissolve);
+    ensurePrev();
   }
 
   function resize(w, h, dpr) {
+    if (!(w >= 2 && h >= 2)) return; /* hidden / zero-size canvas: keep the last good size (a zero-size target = incomplete framebuffer = black) */
     state.W = w; state.H = h; state.dpr = dpr;
     renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    if (composer) { composer.setPixelRatio(dpr); composer.setSize(w, h); } else buildComposer();
+    if (composer) { composer.setPixelRatio(dpr); composer.setSize(w, h); ensurePrev(); } else buildComposer();
   }
 
   /* self-healing: a frame whose sampled pixels are ALL black means something went wrong on this GPU */
@@ -1015,18 +1137,30 @@ export function createParliament(canvas, opts) {
   }
   function render(now, prog, o) {
     o = o || {};
-    const t = now / 1000, dt = Math.min(.05, state.last ? t - state.last : .016); state.last = t;
-    let interior, fade = 1;
-    if (state.dbg) {
+    const t = now / 1000, dt = clamp(state.last ? t - state.last : .016, 0, .05); state.last = t;
+    let interior, fade = 1, flashCol = FLASH_WARM, calm = 0, dim = o.dim || 0;
+    const byPose = state.dbg && state.dbg.prog === undefined;
+    if (byPose) {
       pose.p.set(...state.dbg.p); pose.t.set(...state.dbg.t); pose.fov = state.dbg.fov || 45; interior = !!state.dbg.interior;
+      ext.door(state.dbg.door || 0);
     } else {
+      if (state.dbg) { prog = state.dbg.prog; dim = state.dbg.dim === undefined ? .58 : state.dbg.dim; } /* test hook: debug({prog, dim}) */
       if (prog <= CUT1) samplePath(PATH_A, prog, pose);
       else if (prog < CUT2) samplePath(PATH_I, prog, pose);
       else samplePath(PATH_C, prog, pose);
       interior = prog > CUT1 && prog < CUT2;
-      const dc = Math.min(Math.abs(prog - CUT1), Math.abs(prog - CUT2));
-      fade = smooth(0, CUTW, dc);
+      const d1 = Math.abs(prog - CUT1), d2 = Math.abs(prog - CUT2);
+      if (d1 < d2) fade = smooth(0, CUT1W, d1); else { fade = smooth(0, CUT2W, d2); flashCol = FLASH_COOL; }
+      ext.door(smooth(4.2, 4.46, prog));
+      calm = smooth(4.1, 4.45, prog) * (prog < CUT1 + .01 ? 1 : 0); /* no sideways drift while flying through the door */
     }
+    /* scene changes (outside -> the hall -> outside): dissolve from the last frame we drew instead of cutting */
+    const zone = byPose ? (interior ? 1 : 0) : (prog <= CUT1 ? 0 : prog < CUT2 ? 1 : 2);
+    if (zone !== fx.zone) {
+      if (fx.zone >= 0 && composer && fx.capZone === fx.zone && fx.capAge < 6) fx.mix = 1;
+      fx.zone = zone;
+    }
+    fx.mix = Math.max(0, fx.mix - dt / DISSOLVE_S);
     if (interior !== state.inInterior || state.first !== true) {
       state.inInterior = interior; state.first = true; ext.group.visible = !interior; inn.group.visible = interior; renderer.shadowMap.needsUpdate = true;
       scene.environment = interior ? envRoom : envSky; scene.environmentIntensity = interior ? .04 : .7;
@@ -1036,16 +1170,17 @@ export function createParliament(canvas, opts) {
     /* life: slow drift + mouse parallax */
     const mx = o.mx || 0, my = o.my || 0;
     camera.position.copy(pose.p);
-    camera.position.x += Math.sin(t * .17) * 1.6 + mx * 3.2 * (interior ? .25 : 1);
-    camera.position.y += Math.sin(t * .13) * .7 - my * 1.6 * (interior ? .25 : 1);
-    camera.position.z += Math.cos(t * .11) * 1.4;
+    const dm = (1 - calm) * (interior ? .5 : 1);
+    camera.position.x += Math.sin(t * .17) * 1.6 * dm + mx * 3.2 * (interior ? .25 : 1) * (1 - calm);
+    camera.position.y += Math.sin(t * .13) * .7 * dm - my * 1.6 * (interior ? .25 : 1) * (1 - calm);
+    camera.position.z += Math.cos(t * .11) * 1.4 * dm;
     camera.lookAt(pose.t);
     const asp = state.W / state.H;
     camera.fov = pose.fov * clamp(1 + (1.3 - asp) * .6, 1, 1.6);
     camera.updateProjectionMatrix();
     /* exposure carries the section's dim and the cut fade (to black) */
-    const flash = 1 - fade;
-    renderer.toneMappingExposure = clamp(1.45 - (o.dim || 0) * .9, .45, 2) * (interior ? .9 : 1) * (composer ? 1 : 1 + flash * 6);
+    const flash = composer ? 0 : Math.pow(1 - fade, 1.4);
+    renderer.toneMappingExposure = clamp(1.45 - dim * .9, .45, 2) * (interior ? .9 : 1) * (composer ? 1 : 1 + flash * 6);
     canvas.style.opacity = String(state.dbg || o.appear === undefined ? 1 : o.appear);
 
     ext.update(t, dt, !interior);
@@ -1073,8 +1208,11 @@ export function createParliament(canvas, opts) {
       }
     } else meteorMesh.visible = false;
 
-    state.info = { prog: prog, interior: interior, fade: fade, tier: tier, p: camera.position.toArray().map(Math.round), fov: Math.round(camera.fov) };
-    if (composer) { grade.uniforms.uTime.value = t; grade.uniforms.uFlash.value = flash; grade.uniforms.uVig.value = interior ? .4 : .55; bloom.strength = interior ? .34 : .3; bloom.threshold = interior ? 1.2 : 1.0; composer.render(dt); }
+    state.info = { prog: prog, interior: interior, fade: fade, mix: +fx.mix.toFixed(2), tier: tier, p: camera.position.toArray().map(Math.round), fov: Math.round(camera.fov) };
+    if (composer) { dissolve.enabled = fx.mix > .001; dissolve.uniforms.uMix.value = smooth(0, 1, fx.mix); grade.uniforms.uTime.value = t; grade.uniforms.uFlash.value = flash; grade.uniforms.uFlashCol.value.setRGB(flashCol[0], flashCol[1], flashCol[2]); grade.uniforms.uVig.value = interior ? .4 : .55; bloom.strength = interior ? .34 : .3; bloom.threshold = interior ? 1.2 : 1.0; composer.render(dt);
+      /* keep a copy of the frame just drawn while we are close to a scene change */
+      if (fx.mix <= .001 && !byPose && Math.min(Math.abs(prog - CUT1), Math.abs(prog - CUT2)) < .2) { renderer.copyFramebufferToTexture(prevTex); fx.capZone = zone; fx.capAge = 0; } else fx.capAge++;
+    }
     else renderer.render(scene, camera);
     if (!state.dbg && ++guard.n % 45 === 0) {
       if (blackFrame()) {
@@ -1086,11 +1224,22 @@ export function createParliament(canvas, opts) {
   /* compile every shader (both scenes, all passes) and draw one frame of each before the page shows the canvas,
      so nothing stalls or flashes black the first time a section is reached */
   async function warm() {
-    ext.group.visible = true; inn.group.visible = true;
+    /* the passes must exist BEFORE compiling: with a composer every material is drawn into an HDR target (no tone mapping),
+       which is a different shader variant from a plain draw to the screen. Compiling the wrong one meant a second, visible
+       compile at the first real frame and again on the first entry into the hall. */
+    if (tier >= 1 && !composer) resize(canvas.clientWidth || 960, canvas.clientHeight || 540, 1);
     camera.position.set(0, 26, 190); camera.lookAt(0, 80, 0); camera.updateMatrixWorld();
-    try { await renderer.compileAsync(scene, camera); } catch (e) { try { renderer.compile(scene, camera); } catch (e2) { /* first frame compiles them */ } }
+    const compileCfg = async (extOn) => {
+      ext.group.visible = extOn; inn.group.visible = !extOn;
+      renderer.setRenderTarget(composer ? composer.readBuffer : null);
+      try { await renderer.compileAsync(scene, camera); } catch (e) { try { renderer.compile(scene, camera); } catch (e2) { /* the first frame compiles them */ } }
+      renderer.setRenderTarget(null);
+    };
+    await compileCfg(true); await compileCfg(false);
     state.first = false;
     [0, 5, 0].forEach((pr) => render(performance.now(), pr, { appear: 0 }));
+    if (dissolve) { fx.zone = 0; fx.capZone = 0; fx.capAge = 0; fx.mix = 1; render(performance.now(), 5, { appear: 0 }); render(performance.now(), 0, { appear: 0 }); } /* compile the dissolve pass too */
+    fx.mix = 0; fx.zone = -1; fx.capZone = -2; fx.capAge = 99;
     state.last = 0;
   }
 

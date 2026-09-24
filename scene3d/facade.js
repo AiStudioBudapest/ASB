@@ -52,6 +52,7 @@ export function buildBuilding(mats, opts) {
     add('stone', panel(W, H, T, holes, gable), t, M4(0, 0, -T / 2));
     holes.forEach((h) => {
       add('stone', frame(h, o.fr || .28, .36), t, M4(0, 0, .18));
+      if (h.open) return; /* a real doorway: the page code fits leaves and the glowing hall behind */
       glass(t, h, -T * .42, .75 + R() * .5);
       bars(t, h, -T * .42, h.tall);
       if (!h.circle && h.y0 > 5) add('stone', new THREE.BoxGeometry(h.hw * 2 + .8, .28, .5), t, M4(h.cx, h.y0 - .16, .2));
@@ -230,9 +231,11 @@ export function buildBuilding(mats, opts) {
     { circle: true, cx: 0, cy: 34.2, r: 1.2 }
   ]);
   /* back portico (Kossuth square side): tall entrance under a gable */
-  solid(-24, 24, -50.2, -44.6, 27);
+  /* the bulk is carved for the great doorway: a lit vestibule (built by the page code) runs through it */
+  solid(-24, -4.8, -50.2, -44.6, 27); solid(4.8, 24, -50.2, -44.6, 27);
+  add('stone', new THREE.BoxGeometry(9.6, 10.4, 5.6), I, M4(0, 21.8, -47.4));
   wall(at(0, -52, Math.PI), 48, 27, [
-    { cx: 0, y0: 0, hw: 4.6, spring: 9.5, k: 1.5, tall: true }, { cx: -14, y0: 1.5, hw: 2.4, spring: 6.5, k: 1.5, tall: true }, { cx: 14, y0: 1.5, hw: 2.4, spring: 6.5, k: 1.5, tall: true },
+    { cx: 0, y0: 0, hw: 4.6, spring: 9.5, k: 1.5, tall: true, open: true }, { cx: -14, y0: 1.5, hw: 2.4, spring: 6.5, k: 1.5, tall: true }, { cx: 14, y0: 1.5, hw: 2.4, spring: 6.5, k: 1.5, tall: true },
     { cx: -14, y0: 14, hw: .9, spring: 5.5, k: 1.6 }, { cx: -7, y0: 14, hw: .9, spring: 5.5, k: 1.6 }, { cx: 7, y0: 14, hw: .9, spring: 5.5, k: 1.6 }, { cx: 14, y0: 14, hw: .9, spring: 5.5, k: 1.6 },
     { circle: true, cx: 0, cy: 21, r: 1.6 }
   ], 9, { thick: 1.6 });

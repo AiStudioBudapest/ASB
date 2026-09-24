@@ -1909,6 +1909,7 @@ function p3Size(force){
   var cv = document.getElementById('p3dCanvas');
   if(!Parl.p3d || !cv) return;
   var w = cv.clientWidth, h = cv.clientHeight;
+  if(w < 2 || h < 2) return; /* hidden tab / zero-size canvas: keep the last good size */
   if(!force){
     if(w === Parl.p3W && h === Parl.p3H) return;
     if(isCoarse && Math.abs(w - Parl.p3W) < 2 && Math.abs(h - Parl.p3H) < 160) return;
