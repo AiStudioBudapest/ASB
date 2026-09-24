@@ -3,16 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080A19">
+<meta name="theme-color" content="#07080a">
 <title>AiStudioBudapest — Prémium Webdesign Portfólió</title>
 <meta name="description" content="AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.">
-<!-- Suisse Int'l (per the design spec) is a third-party font host; loaded
-     non-blocking (media=print swap) so a slow response can never delay first
-     paint. font-display:swap is set in the served @font-face. Licence: the host
-     states CC BY 4.0 with required credit — see the footer line. -->
-<link rel="preconnect" href="https://db.onlinewebfonts.com" crossorigin>
-<link href="https://db.onlinewebfonts.com/c/13ab13418f633c1b0516fed6e30bedbc?family=Suisse+Int%27l" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://db.onlinewebfonts.com/c/13ab13418f633c1b0516fed6e30bedbc?family=Suisse+Int%27l" rel="stylesheet"></noscript>
 <style>
 /* Fonts self-hosted under /alexstudio/fonts/ instead of loaded from
    Google's CDN: fonts.googleapis.com/fonts.gstatic.com would otherwise see
@@ -56,17 +49,17 @@
   --vshift:0px;
   --mx:50%; --my:50%;
 
-  --ink:#080A19; --panel:#0c1330; --panel-2:#101a3b; --line:rgba(255,255,255,.12);
+  --ink:#07080a; --panel:#0d0f13; --panel-2:#12151b; --line:rgba(255,255,255,.12);
   /* --muted-2 only reaches ~3.9:1 against --ink — below the 4.5:1 WCAG AA
      floor for normal-size text. Fine for form placeholders (transient,
      backed by a real <label>), never for text that's actually read —
      use --muted (7.8:1) for that instead. */
-  --text:#eef6fb; --muted:#a3b4c8; --muted-2:#6b7d93;
+  --text:#f2f3f5; --muted:#9aa2ad; --muted-2:#666e79;
   --cyan:#7fe9de; --cyan-soft:rgba(127,233,222,.16);
   --white:#fbfbfa;
 
   --serif:'Prata', Georgia, serif;
-  --sans:"Suisse Int'l",'Suisse Intl','Hanken Grotesk',system-ui,sans-serif;
+  --sans:'Hanken Grotesk', system-ui, sans-serif;
 
   --ease:cubic-bezier(.16,1,.3,1);
   --ease-soft:cubic-bezier(.22,.61,.36,1);
@@ -120,20 +113,43 @@ img{display:block;max-width:100%;}
 [tabindex="-1"]:focus{outline:none;}
 
 /* ============================================================
-   1. BACKGROUND — the ocean. The same looping sea clip as the hero is
-      fixed behind the WHOLE site; a deep-water layer darkens it as you
-      scroll, so the page sinks from the surface into the deep. Bubbles
-      rise through it, and a small cursor-tracked glow follows the mouse.
+   1. BACKGROUND — just the real looping 4K space video, a
+      neutral dark vignette for legibility, twinkling stars and
+      a small cursor-tracked glow. No grids, no colour tint.
    ============================================================ */
-/* The gradient is what shows while the clip loads, if it is blocked, and
-   permanently for prefers-reduced-motion (the video is removed). */
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,#0a2447 0%,#080A19 62%,#050816 100%);}
-.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-/* Deep-water layer: its opacity is written from onScrollFrame() — 0 at the
-   very top (the hero shows the untouched clip, exactly as designed), ~0.86 by
-   the end of the first screen so text stays readable over the brightest
-   part of the clip, then slowly deepening down the page. */
-.bg-depth{position:absolute;inset:0;background:linear-gradient(180deg,#0a2a4e 0%,#060d26 55%,#040816 100%);opacity:0;}
+/* The poster is the video's first frame: visible instantly while the clip
+   loads, and the permanent backdrop for prefers-reduced-motion (video removed). */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#050608 url('/media/space-poster.jpg') center/cover no-repeat;}
+.bg-video-wrap{position:absolute;inset:0;opacity:.7;filter:saturate(1.15) brightness(.78) contrast(1.05);}
+/* Two copies of the same clip so the loop restart can be hidden: see the
+   crossfade logic in the script below. Each video sits at opacity 0 until
+   it's the active one — .bg-video-wrap carries the shared dimming/filter
+   look so the two videos blend into each other during a crossfade instead
+   of each separately darkening/lightening as they fade. */
+.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;}
+.bg-video.active{opacity:1;}
+.bg-video.fading{transition:opacity 1.4s linear;}
+/* This tint sits on the fixed (viewport-relative, not page-relative) space
+   background, so its gradient re-applies at every scroll position — the
+   bottom ~45% of whatever's currently on screen was getting up to 88%
+   black, which is also right where content sections' scroll-reveal (see
+   --rp in onScrollFrame()) actually plays out, so the "fading in" was
+   fighting near-total darkness the whole time. Lightened across the board
+   so the lower half of the viewport stays legible and the reveal is
+   actually visible while it happens. */
+.bg-tint{position:absolute;inset:0;background:
+  linear-gradient(180deg, rgba(5,6,8,.32) 0%, rgba(5,6,8,.4) 55%, rgba(4,5,7,.56) 100%);
+}
+/* The Parliament of Budapest, rendered in 3D by WebGL (see "Parliament camera"
+   in the script) on top of the space video. The canvas is transparent where the
+   photo shows sky, so the Milky Way stays visible above the building. It is
+   100vh (large viewport on phones), not 100% of .bg, so the URL bar
+   collapsing never resizes the canvas. */
+.bg-parl{position:absolute;left:0;top:0;width:100%;height:100vh;opacity:0;transition:opacity 1.6s var(--ease);}
+.bg-parl.on{opacity:1;}
+/* Also the texture source, and the fallback when WebGL is unavailable. */
+.bg-parl-img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;opacity:0;pointer-events:none;}
+.bg-parl-img.on{opacity:.92;}
 .spotlight{
   position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;
   background:radial-gradient(220px circle at var(--mx) var(--my), rgba(127,233,222,.06), transparent 60%);
@@ -144,38 +160,34 @@ body.mouse-active .spotlight{opacity:1;}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:160px 160px;
 }
-.particles{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
-/* Bubbles: a thin translucent ring with a soft highlight, rising and fading. */
-.particles i{position:absolute;bottom:-24px;border-radius:50%;opacity:0;
-  border:1px solid rgba(200,240,255,.4);
-  background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.5),rgba(255,255,255,.08) 45%,rgba(255,255,255,0) 70%);
-  animation:bubble-rise linear infinite;}
-@keyframes bubble-rise{
-  0%{transform:translate3d(0,0,0);opacity:0;}
-  12%{opacity:.75;}
-  88%{opacity:.45;}
-  100%{transform:translate3d(var(--dx,0px),-112vh,0);opacity:0;}
-}
+.particles{position:fixed;inset:0;z-index:2;pointer-events:none;}
+.particles i{position:absolute;border-radius:50%;background:#fff;opacity:.15;
+  animation:twinkle 5s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(1);}50%{opacity:.9;transform:scale(1.6);}}
 
 /* ============================================================
    2. NAV
    ============================================================ */
-header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
-.nav-inner{width:100%;max-width:1800px;margin:0 auto;padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;}
-.nav-inner > *{pointer-events:auto;}
-@media (min-width:640px){.nav-inner{padding:30px 32px 0;}}
-@media (min-width:768px){.nav-inner{padding:30px 82px 0;}}
-.logo{display:flex;align-items:center;flex:none;}
-.logo img{display:block;width:auto;height:46px;}
-.nav-pill{display:none;align-items:center;gap:30px;height:52px;padding:0 24px;border-radius:11px;background:rgba(10,7,7,.35);
-  -webkit-backdrop-filter:blur(17px);backdrop-filter:blur(17px);}
-.nav-pill a{color:rgba(255,255,255,.8);font-size:14px;font-weight:450;line-height:14px;white-space:nowrap;transition:color .2s;}
-.nav-pill a:hover{color:#fff;}
-.auth-pill{display:none;align-items:center;gap:5px;height:52px;padding:3px;border-radius:13px;background:rgba(0,0,0,.35);
-  -webkit-backdrop-filter:blur(17px);backdrop-filter:blur(17px);}
-.nav-cta{display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 24px;border-radius:11px;
-  background:#E9E9E9;color:#0A0707;font-size:14px;font-weight:450;line-height:14px;white-space:nowrap;transition:background-color .2s;}
-.nav-cta:hover{background:#fff;}
+header.nav{
+  position:fixed;top:0;left:0;right:0;z-index:40;
+  display:flex;align-items:center;gap:calc(28 * var(--u));
+  padding:calc(22 * var(--u)) var(--gutter);
+}
+.logo{display:flex;align-items:center;}
+.logo img{height:calc(100 * var(--u));width:auto;display:block;}
+.nav-links{display:flex;gap:calc(6 * var(--u));margin-left:auto;}
+.nav-links a{
+  font-size:calc(13 * var(--u));letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  padding:calc(9 * var(--u)) calc(14 * var(--u));border-radius:999px;transition:color .25s var(--ease),background .25s var(--ease);
+}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.06);}
+.nav-links a.active{color:var(--ink);background:var(--white);}
+.nav-cta{
+  font-size:calc(12 * var(--u));letter-spacing:.08em;font-weight:600;text-transform:uppercase;
+  padding:calc(11 * var(--u)) calc(20 * var(--u));border-radius:999px;border:1px solid var(--line);
+  transition:border-color .25s var(--ease),background .25s var(--ease);white-space:nowrap;
+}
+.nav-cta:hover{border-color:var(--cyan);background:var(--cyan-soft);}
 
 .lang-switch{position:relative;}
 .lang-btn{
@@ -201,100 +213,65 @@ header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
 }
 .lang-option:hover{color:var(--text);background:rgba(255,255,255,.06);}
 .lang-option.active{color:var(--cyan);}
+.lang-switch-mobile{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(8*var(--u));margin-top:calc(6*var(--u));}
+.lang-switch-mobile button{
+  background:none;border:1px solid var(--line);border-radius:999px;padding:calc(9*var(--u)) calc(16*var(--u));
+  font-family:var(--sans);font-size:calc(13*var(--u));letter-spacing:.04em;color:var(--muted);cursor:pointer;
+}
+.lang-switch-mobile button.active{color:var(--cyan);border-color:var(--cyan);}
+.burger{display:none;position:relative;width:calc(40*var(--u));height:calc(40*var(--u));border:1px solid var(--line);border-radius:8px;flex:none;}
+.burger span{position:absolute;left:calc(11*var(--u));right:calc(11*var(--u));height:1.5px;background:var(--text);transition:transform .3s var(--ease),opacity .2s;}
+.burger span:nth-child(1){top:calc(14*var(--u));}
+.burger span:nth-child(2){top:calc(19.5*var(--u));}
+.burger span:nth-child(3){top:calc(25*var(--u));}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(calc(5.5*var(--u))) rotate(45deg);}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(calc(-5.5*var(--u))) rotate(-45deg);}
 
-/* glass language button inside the right pill (the spec's "Login" slot) */
-.auth-pill .lang-btn{height:46px;padding:0 24px;gap:6px;border:0;border-radius:11px;background:transparent;color:#fff;
-  font-size:14px;font-weight:450;line-height:14px;letter-spacing:0;transition:background-color .2s;}
-.auth-pill .lang-btn:hover,.auth-pill .lang-switch.open .lang-btn{background:rgba(255,255,255,.05);}
-.auth-pill .lang-chevron{width:10px;height:10px;opacity:.8;}
+.mnav{
+  position:fixed;inset:0;z-index:39;background:rgba(6,7,9,.98);backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(26*var(--u));
+  opacity:0;pointer-events:none;
+  /* visibility (not just opacity) while closed: a fixed full-screen
+     backdrop-filter layer is otherwise kept alive and composited every frame. */
+  visibility:hidden;transition:opacity .35s var(--ease),visibility 0s linear .35s;
+}
+.mnav.open{opacity:1;pointer-events:auto;visibility:visible;transition-delay:0s;}
+.mnav a{font-family:var(--serif);font-size:calc(30*var(--u));color:var(--text);}
+.mnav .nav-cta{margin-top:calc(10*var(--u));}
 
-/* hamburger (below 1180px): 44x44 glass square, Menu and X cross-fade */
-.burger-wrap{display:block;}
-.burger{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;border-radius:11px;
-  background:rgba(10,7,7,.35);-webkit-backdrop-filter:blur(17px);backdrop-filter:blur(17px);transition:background-color .2s;}
-.burger:hover{background:rgba(255,255,255,.1);}
-.burger-ic{position:relative;width:20px;height:20px;}
-.burger-ic svg{position:absolute;inset:0;width:20px;height:20px;color:#fff;transition:all .3s ease-out;}
-.burger .ic-menu{opacity:1;transform:rotate(0) scale(1);}
-.burger .ic-close{opacity:0;transform:rotate(-90deg) scale(.75);}
-.burger[aria-expanded="true"] .ic-menu{opacity:0;transform:rotate(90deg) scale(.75);}
-.burger[aria-expanded="true"] .ic-close{opacity:1;transform:rotate(0) scale(1);}
-
-/* mobile overlay: visibility-toggled (never unmounted) so both directions animate */
-.mnav{position:fixed;inset:0;z-index:40;visibility:hidden;transition:visibility 0s linear .5s;}
-.mnav.open{visibility:visible;transition-delay:0s;}
-.mnav-backdrop{position:absolute;inset:0;background:rgba(8,10,25,.9);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
-  opacity:0;transition:opacity .5s;}
-.mnav.open .mnav-backdrop{opacity:1;}
-.mnav-panel{position:absolute;top:76px;left:16px;right:16px;max-height:calc(100vh - 92px);max-height:calc(100dvh - 92px);overflow-y:auto;
-  padding:24px;border:1px solid rgba(255,255,255,.06);border-radius:20px;background:rgba(17,16,15,.6);
-  -webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);
-  opacity:0;transform:translateY(-16px) scale(.97);transform-origin:top;transition:all .5s cubic-bezier(.32,.72,0,1);}
-.mnav.open .mnav-panel{opacity:1;transform:none;}
-@media (min-width:640px){.mnav-panel{top:86px;left:24px;right:24px;max-height:calc(100vh - 110px);max-height:calc(100dvh - 110px);padding:32px;}}
-.mnav-links{display:flex;flex-direction:column;gap:4px;}
-.mnav-links a{display:flex;align-items:center;justify-content:space-between;padding:16px;border-radius:12px;
-  color:rgba(255,255,255,.9);font-size:18px;font-weight:450;opacity:0;transform:translateX(-12px);transition:all .3s;}
-.mnav-links a:hover{background:rgba(255,255,255,.06);}
-.mnav.open .mnav-links a{opacity:1;transform:none;}
-.mnav.open .mnav-links a:nth-child(1){transition-delay:100ms;}
-.mnav.open .mnav-links a:nth-child(2){transition-delay:150ms;}
-.mnav.open .mnav-links a:nth-child(3){transition-delay:200ms;}
-.mnav.open .mnav-links a:nth-child(4){transition-delay:250ms;}
-.mnav.open .mnav-links a:nth-child(5){transition-delay:300ms;}
-.mnav.open .mnav-links a:nth-child(6){transition-delay:350ms;}
-.mnav-divider{height:1px;margin:20px 0;background:rgba(255,255,255,.1);}
-.mnav-ctas{display:flex;flex-direction:column;gap:12px;opacity:0;transform:translateY(8px);transition:all .3s;}
-.mnav.open .mnav-ctas{opacity:1;transform:none;transition-delay:400ms;}
-.mnav-cta-primary{display:flex;align-items:center;justify-content:center;width:100%;height:50px;border-radius:12px;
-  background:#E9E9E9;color:#0A0707;font-size:15px;font-weight:450;transition:background-color .2s;}
-.mnav-cta-primary:hover{background:#fff;}
-/* language buttons take the spec's outlined "Login" button slot */
-.lang-switch-mobile{display:flex;flex-wrap:wrap;gap:8px;margin:0;}
-.lang-switch-mobile button{flex:1 1 auto;height:44px;padding:0 14px;border:1px solid rgba(255,255,255,.3);border-radius:12px;background:none;
-  color:#fff;font-family:var(--sans);font-size:15px;font-weight:450;letter-spacing:0;cursor:pointer;transition:background-color .2s;}
-.lang-switch-mobile button:hover{background:rgba(255,255,255,.05);}
-.lang-switch-mobile button.active{border-color:#fff;background:rgba(255,255,255,.12);color:#fff;}
-
-/* desktop navigation from 1180px: our six-item menu + language switch need
-   more room than the demo's four items, so the pills replace the hamburger
-   here instead of at the spec's 1024px. */
-@media (min-width:1180px){
-  .logo img{height:56px;}
-  .nav-pill,.auth-pill{display:flex;}
-  .burger-wrap{display:none;}
+@media (max-width:820px){
+  .nav-links{display:none;}
+  .burger{display:block;order:3;margin-left:auto;} /* .nav-links (which had margin-left:auto) is hidden here, so push the burger to the right edge itself */
+  .nav-cta{display:none;}
+  .lang-switch{display:none;}
+  /* --u caps out at ~1.05px on both desktop and mobile widths (it's a
+     vw-driven clamp with a low ceiling), so a --u-sized logo ends up
+     almost the same absolute height everywhere — fine on a wide desktop
+     nav, way too dominant on a narrow phone screen. Sized down here
+     directly instead of trying to stretch --u itself to cover both. */
+  .logo img{height:calc(48*var(--u));}
 }
 
 /* ============================================================
-   3. HERO — the very first thing you see: the tagline and a glass
-      stat card over the ocean clip. The three-project showcase lives
-      further down.
+   3. HERO — the very first thing you see: a tagline over the
+      space video. The three-project showcase lives further down.
    ============================================================ */
-/* Fixed nav = pt 20/30px + row height; the hero reserves that space so its
-   content is centred exactly as if the nav were part of the flow. */
-:root{--nav-space:66px;}
-@media (min-width:640px){:root{--nav-space:76px;}}
-@media (min-width:1180px){:root{--nav-space:86px;}}
-/* min-height (not the spec's fixed h-screen): our copy is longer than the
-   demo's, so on short screens the hero must be allowed to grow instead of
-   clipping its content. Scrolling shatters the tagline letters far past the
-   edges — even invisible those boxes widen the page on mobile, hence the clip. */
-.hero{position:relative;z-index:2;width:100%;overflow:hidden;overflow:clip;}
-.hero-content{position:relative;z-index:10;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;padding-top:var(--nav-space);}
-.hero-row{flex:1;display:flex;align-items:center;padding:32px 0;}
-.hero-inner{width:100%;max-width:1800px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:40px;}
-.hero-copy{max-width:593px;}
-@media (min-width:640px){.hero-inner{padding:0 32px;}}
-@media (min-width:768px){.hero-inner{padding:0 82px;}}
-@media (min-width:1024px){.hero-inner{flex-direction:row;align-items:center;justify-content:space-between;gap:48px;}}
+.hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:calc(170*var(--u)) var(--gutter) calc(60*var(--u));
+  /* Scrolling shatters the tagline letters far past the screen edges
+     (--ex up to ~230px). Even invisible, those boxes widen the page and make
+     mobile browsers zoom out / scroll sideways, so they are clipped here. */
+  overflow-x:clip;}
 .eyebrow-wrap{display:flex;align-items:center;gap:calc(12*var(--u));margin-bottom:calc(10*var(--u));}
 .eyebrow-wrap .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);}
 .eyebrow{font-size:calc(12*var(--u));letter-spacing:.32em;text-transform:uppercase;color:var(--cyan);font-weight:600;}
 
-.tagline{margin:0 0 20px;color:#fff;font-family:var(--sans);font-weight:400;font-size:36px;line-height:.95;letter-spacing:normal;text-align:left;}
-@media (min-width:640px){.tagline{margin-bottom:32px;font-size:52px;}}
-@media (min-width:768px){.tagline{font-size:64px;}}
-@media (min-width:1024px){.tagline{font-size:72px;}}
+.tagline{
+  font-family:var(--serif);font-weight:400;letter-spacing:.01em;
+  font-size:calc(58*var(--u));line-height:1.15;max-width:18ch;margin:0;color:var(--white);
+}
 
 /* Scroll-scrubbed letter shatter: --p (0-1) is set on .tagline once per
    scroll frame in onScrollFrame(); every .letter reads it straight through
@@ -314,9 +291,7 @@ header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
     scale(calc(1 - var(--lp) * .4));
   opacity:calc(1 - var(--lp));
 }
-.hero-sub{max-width:370px;margin:0 0 28px;color:rgba(255,255,255,.8);font-size:16px;font-weight:450;line-height:1.3;}
-@media (min-width:640px){.hero-sub{margin-bottom:40px;font-size:18px;}}
-@media (min-width:768px){.hero-sub{font-size:20px;}}
+.hero-sub{margin-top:calc(20*var(--u));color:var(--muted);font-size:calc(16*var(--u));max-width:42ch;}
 
 .scroll-arrow{display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--u));
   margin-top:calc(48*var(--u));text-decoration:none;color:var(--muted);}
@@ -341,72 +316,18 @@ header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
 @media (prefers-reduced-motion:reduce){
   .scroll-arrow-chevrons span{animation:none!important;opacity:.7;}
 }
-/* Entrance animations: pure CSS keyframes + animation-delay, no JS state, no
-   observers. Every animated element starts at opacity 0 (.o0) and the
-   keyframes reveal it with fill-mode "forwards". */
-@keyframes fade-up{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-@keyframes fade-down{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
-@keyframes fade-scale{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
-@keyframes bar-grow{from{transform:scaleY(0);opacity:0;}to{transform:scaleY(1);opacity:1;}}
-.o0{opacity:0;}
-.animate-fade-up{animation:fade-up .8s cubic-bezier(.16,1,.3,1) forwards;}
-.animate-fade-down{animation:fade-down .7s cubic-bezier(.16,1,.3,1) forwards;}
-.animate-fade-scale{animation:fade-scale .9s cubic-bezier(.16,1,.3,1) forwards;}
+.scroll-cue{margin-top:calc(56*var(--u));width:calc(28*var(--u));height:calc(44*var(--u));
+  border:1.5px solid var(--line);border-radius:999px;position:relative;flex:none;}
+.scroll-cue span{position:absolute;top:calc(8*var(--u));left:50%;width:4px;height:8px;border-radius:2px;
+  background:var(--cyan);transform:translateX(-50%);animation:scrollcue 1.8s ease-in-out infinite;}
+@keyframes scrollcue{0%{opacity:1;transform:translate(-50%,0);}70%{opacity:0;transform:translate(-50%,14px);}100%{opacity:0;transform:translate(-50%,14px);}}
 
-/* hero call-to-action buttons */
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;}
-.hero-btn{display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 20px;border-radius:12px;
-  font-size:14px;font-weight:450;line-height:15.5px;white-space:nowrap;transition:opacity .2s;}
-.hero-btn.light{background:#E9E9E9;color:#0A0707;}
-.hero-btn.light:hover{opacity:.9;}
-.hero-btn.outline{border:1px solid #fff;color:#fff;}
-.hero-btn.outline:hover{opacity:.8;}
-
-/* glassmorphic stat card (right column). The animation sits on the card
-   itself, not on a wrapper: a parent with opacity/transform would become the
-   backdrop root and the blur would pop in only once the animation ends. */
-.stat-card-wrap{width:100%;max-width:405px;margin:0 auto;}
-.stat-card{width:100%;border-radius:24px;padding:20px 20px 20px;background:rgba(17,16,15,.35);
-  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);}
-.sc-label{margin:0 0 12px;color:#fff;font-size:16px;font-weight:450;line-height:20px;}
-.sc-amount{margin:0 0 8px;}
-.sc-amount span{color:#fff;font-size:28px;font-weight:450;line-height:1;}
-.sc-amount .dim{color:rgba(255,255,255,.2);}
-.sc-delta{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
-.sc-badge{padding:7px 6px;background:rgba(255,255,255,.2);border-radius:6px;color:#fff;font-size:12px;font-weight:450;line-height:14px;}
-.sc-caption{color:rgba(255,255,255,.8);font-size:12px;font-weight:450;line-height:14px;opacity:.7;}
-.sc-chart{position:relative;}
-.sc-bars{display:flex;align-items:flex-end;gap:1.5px;height:80px;}
-.sc-bar{flex:1;border-radius:.5px;transform-origin:bottom;opacity:0;animation:bar-grow .6s cubic-bezier(.16,1,.3,1) forwards;}
-.sc-grid{position:absolute;inset:0;pointer-events:none;}
-.sc-grid i{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.1);}
-.sc-axis{display:flex;justify-content:space-between;margin-top:12px;}
-.sc-axis span{color:rgba(255,255,255,.8);font-size:9px;font-weight:450;line-height:10px;}
-@media (min-width:640px){
-  .hero-ctas{gap:16px;}
-  .hero-btn{height:51px;padding:0 27px;font-size:15.5px;}
-  .stat-card{border-radius:33px;padding:32px 32px 24px;}
-  .sc-label{margin-bottom:16px;font-size:20px;}
-  .sc-amount{margin-bottom:12px;}
-  .sc-amount span{font-size:46px;}
-  .sc-delta{margin-bottom:32px;}
-  .sc-badge,.sc-caption{font-size:14px;}
-  .sc-bars{height:100px;}
-  .sc-axis span{font-size:10px;}
-}
-@media (min-width:1024px){
-  .stat-card-wrap{margin:0;}
-  /* side by side: the card keeps its 405px and the text column gives way
-     (left to shrink on its own, the card was squeezed to ~210px at 1024px) */
-  .hero-copy{flex:0 1 593px;min-width:0;}
-  .stat-card-wrap{flex:0 0 405px;width:405px;}
-}
-/* the text column is only ~400px wide here, so the 72px headline would need 7
-   lines and push the buttons off a 1024x768 tablet */
-@media (min-width:1024px) and (max-width:1279px){.tagline{font-size:48px;}}
-@media (prefers-reduced-motion:reduce){
-  .o0,.sc-bar{opacity:1!important;animation:none!important;transform:none!important;}
-}
+.hero.enter .eyebrow-wrap,.hero.enter .tagline,.hero.enter .hero-sub,.hero.enter .scroll-cue{
+  opacity:0;transform:translateY(calc(14*var(--u)));}
+.hero.enter.run .eyebrow-wrap{opacity:1;transform:none;transition:opacity .7s var(--ease) .1s,transform .7s var(--ease) .1s;}
+.hero.enter.run .tagline{opacity:1;transform:none;transition:opacity .9s var(--ease) .25s,transform .9s var(--ease) .25s;}
+.hero.enter.run .hero-sub{opacity:1;transform:none;transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;}
+.hero.enter.run .scroll-cue{opacity:1;transform:none;transition:opacity .8s var(--ease) .7s,transform .8s var(--ease) .7s;}
 
 /* ============================================================
    4. SHOWCASE — the three-slot cinematic switcher
@@ -414,10 +335,10 @@ header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
 .stage{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(60*var(--u));
   transform:translateY(var(--vshift));perspective:calc(2400*var(--u));
-  /* The side previews peek in past the screen edges and any wide decoration
-     would too. Left unclipped they widen the page: mobile browsers then grow
-     the layout viewport to fit them (the whole site suddenly looks zoomed out)
-     and let you scroll sideways. body{overflow-x:hidden} does not stop that on
+  /* The decorative orbit rings are wider than a phone (up to ~1200px). Left
+     unclipped they widen the page: mobile browsers then grow the layout
+     viewport to fit them (the whole site suddenly looks zoomed out) and let
+     you scroll sideways. body{overflow-x:hidden} does not stop that on
      mobile, so the overflow is contained at its source. clip (unlike
      hidden) leaves overflow-y alone. */
   overflow-x:clip;
@@ -471,6 +392,14 @@ header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
 .stack{position:relative;width:100%;perspective:calc(1400*var(--u));cursor:pointer;}
 .tilt{transform-style:preserve-3d;transition:transform .6s var(--ease-soft);}
 
+/* orbiting rings behind the featured preview — purely decorative */
+.orbit-ring{
+  position:absolute;top:50%;left:50%;width:calc(880*var(--u));height:calc(880*var(--u));
+  transform:translate(-50%,-50%);border:1px dashed rgba(127,233,222,.16);border-radius:50%;
+  animation:spin 90s linear infinite;pointer-events:none;z-index:-1;
+}
+.orbit-ring.b{width:calc(1160*var(--u));height:calc(1160*var(--u));border-color:rgba(255,255,255,.07);animation-duration:130s;animation-direction:reverse;}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
 
 .enter-hint{
   position:absolute;bottom:calc(16*var(--u));left:50%;z-index:5;pointer-events:none;
@@ -584,16 +513,19 @@ header.nav{position:fixed;top:0;left:0;right:0;z-index:41;pointer-events:none;}
 .enter.run .side{opacity:1;transition:opacity .9s var(--ease) .45s,transform .9s var(--ease) .45s;}
 .enter.run .side.left{transform:translateX(calc(-14*var(--u)));}
 .enter.run .side.right{transform:translateX(calc(14*var(--u)));}
-.grain{opacity:0;transition:opacity 1.3s var(--ease);}
-body.ready .grain{opacity:1;}
+.bg,.grain{opacity:0;transition:opacity 1.3s var(--ease);}
+body.ready .bg,body.ready .grain{opacity:1;}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto;}
   .enter *,.enter{transition:none!important;transform:none!important;opacity:1!important;}
-  .grain{transition:none!important;opacity:1!important;}
-  .particles{display:none!important;}
+  .bg,.grain{transition:none!important;opacity:1!important;}
+  .particles i{animation:none!important;}
   .bg-video{display:none!important;}
+  .bg-parl{transition:none!important;}
   .composition,.side,.frame-shell,.tilt{transition:none!important;}
   .frame-shell{animation:none!important;}
+  .orbit-ring{animation:none!important;}
+  .scroll-cue span{animation:none!important;}
   .spotlight{display:none!important;}
   .cursor-dot,.cursor-ring{display:none!important;}
 }
@@ -614,27 +546,28 @@ body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
 @media (pointer:coarse){ .cursor-dot,.cursor-ring{display:none!important;} }
 
 /* ============================================================
-   7. DIVE — full-screen splash played when a project is opened, so the
-      switch reads as plunging into the site: a bright surface flash that
-      fades into deep water, with ripples spreading from the click.
+   7. HYPERSPACE WARP — full-screen flash played when a project
+      is opened, so the switch reads as diving into the site.
    ============================================================ */
 #warp{position:fixed;inset:0;z-index:95;pointer-events:none;opacity:0;
-  background:radial-gradient(circle at var(--wx,50%) var(--wy,50%), rgba(235,252,255,.96) 0%, rgba(96,200,232,.85) 20%, rgba(8,24,64,0) 68%);
+  background:radial-gradient(circle at var(--wx,50%) var(--wy,50%), #fff 0%, rgba(127,233,222,.85) 20%, rgba(5,6,8,0) 68%);
   transition:opacity .55s ease;}
 #warp.active{opacity:1;}
 #warp::after{content:"";position:absolute;inset:0;opacity:0;
-  background:repeating-radial-gradient(circle at var(--wx,50%) var(--wy,50%), rgba(255,255,255,.5) 0 2px, transparent 2px 54px);
-  transition:opacity .6s ease .1s;}
-#warp.active::after{opacity:.75;}
+  background:repeating-conic-gradient(from 0deg at var(--wx,50%) var(--wy,50%), rgba(255,255,255,.55) 0deg .6deg, transparent .6deg 6deg);
+  mix-blend-mode:screen;transition:opacity .6s ease .1s;}
+#warp.active::after{opacity:.85;}
 
 /* ============================================================
-   7b. SCROLLYTELLING — a thin top progress rail, the deepening
-   water layer + hero parallax (driven in the script), and a staggered
+   7b. SCROLLYTELLING — a thin top progress rail, a scroll-linked
+   background zoom + hero parallax (driven in the script), an
+   extra rotation layered onto the orbit rings, and a staggered
    reveal-on-scroll for every section below the fold.
    ============================================================ */
 .scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:50;background:rgba(255,255,255,.05);pointer-events:none;}
 .scroll-progress span{display:block;height:100%;width:0%;
   background:linear-gradient(90deg,var(--cyan),var(--white));box-shadow:0 0 12px rgba(127,233,222,.55);}
+.orbit-wrap{position:absolute;inset:0;pointer-events:none;z-index:-1;will-change:transform;}
 
 /* Continuously scroll-driven, not a one-shot triggered transition: --rp
    (0-1) is recomputed every scroll frame in onScrollFrame() from each
@@ -660,6 +593,13 @@ body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
    8. SUPPORTING SECTIONS
    ============================================================ */
 section.band{position:relative;z-index:2;padding:calc(90*var(--u)) var(--gutter);border-top:1px solid var(--line);}
+/* The lit Parliament glows behind the sections: text sits on a soft dark halo
+   and the cards are darker glass, so nothing depends on what part of the
+   building the camera happens to be showing. */
+section.band h2,section.band p,section.band .eyebrow,.stage .eyebrow{text-shadow:0 1px 16px rgba(3,4,10,.85),0 0 3px rgba(3,4,10,.6);}
+section.band .service-card,section.band .pricing-card,section.band .faq-item{background-color:rgba(6,8,16,.68);}
+section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px solid var(--line);border-radius:calc(14*var(--u));
+  background:rgba(6,8,16,.66);color:#c3cad4;}
 .band-head{max-width:calc(640*var(--u));margin:0 auto calc(48*var(--u));text-align:center;}
 .band-head .eyebrow{display:block;margin-bottom:calc(12*var(--u));}
 .band-head h2{font-family:var(--serif);font-weight:400;font-size:calc(38*var(--u));margin:0;text-transform:uppercase;letter-spacing:.02em;
@@ -800,7 +740,7 @@ footer.site-foot a:hover{color:var(--cyan);}
 @media (max-width:1180px){
   .headline{font-size:calc(70*var(--u));}
   .side .frame-shell{width:calc(240*var(--u));}
-
+  .tagline{font-size:calc(48*var(--u));}
 }
 @media (max-width:980px){
   .composition{grid-template-columns:calc(120*var(--u)) 1fr calc(120*var(--u));gap:calc(4*var(--u));}
@@ -824,7 +764,7 @@ footer.site-foot a:hover{color:var(--cyan);}
   .enter.run .side.left{transform:translateX(calc(-44*var(--u)));}
   .enter.run .side.right{transform:translateX(calc(44*var(--u)));}
   .headline{font-size:calc(46*var(--u));letter-spacing:0;}
-
+  .tagline{font-size:calc(38*var(--u));max-width:15ch;}
   .description{font-size:calc(14.5*var(--u));max-width:34ch;}
   .cta-row{gap:calc(12*var(--u));}
   .enter-hint{display:none;}
@@ -849,16 +789,21 @@ footer.site-foot a:hover{color:var(--cyan);}
    10. PHONE / TABLET PERFORMANCE — keep every frame cheap
    ============================================================ */
 /* Touch devices and phones: things that force the GPU to redo full-screen
-   work on every frame while the ocean video plays underneath. */
+   work on every frame while the space video plays underneath. */
 @media (max-width:820px), (pointer:coarse){
   /* a full-screen mix-blend-mode layer over a playing video is one of the
      most expensive things a mobile GPU can be asked to do, for a 5% noise. */
   .grain{display:none;}
+  /* a live CSS filter on a playing video is re-run every frame; plain
+     opacity gives (almost) the same dimming for free. */
+  .bg-video-wrap{filter:none;opacity:.55;}
 }
-/* Phones: the floating "levitate" loop keeps three iframe layers animating
-   non-stop, and the glow behind each preview is decoration only. */
+/* Phones: the decorative extras cost far more than they add on a small
+   screen. The orbit rings alone are two ~1000px rotating layers (tens of MB
+   of GPU texture) that are mostly off-screen anyway; the floating "levitate"
+   loop keeps three iframe layers animating non-stop. */
 @media (max-width:820px){
-  .frame-glow{display:none;}
+  .orbit-wrap,.frame-glow{display:none;}
   .frame-shell{animation:none;}
 }
 </style>
@@ -866,10 +811,13 @@ footer.site-foot a:hover{color:var(--cyan);}
 <body>
 
 <div class="bg" aria-hidden="true">
-  <!-- The hero's sea clip, fixed behind the whole site (see the note in the CSS
-       and the depth layer driven from onScrollFrame). -->
-  <video class="bg-video" id="bgVideo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260813_092641_de52eb87-daf2-41db-92cb-7a56eae012a5.mp4" autoplay loop muted playsinline></video>
-  <span class="bg-depth" id="bgDepth"></span>
+  <div class="bg-video-wrap" id="bgVideoWrap">
+    <video class="bg-video" id="bgVideo" muted playsinline preload="none"></video>
+    <video class="bg-video" id="bgVideo2" muted playsinline preload="none"></video>
+  </div>
+  <canvas class="bg-parl" id="parlCanvas"></canvas>
+  <img class="bg-parl-img" id="parlImg" src="/alexstudio/parlement.jpg" alt="" width="2400" height="1138" decoding="async">
+  <span class="bg-tint"></span>
 </div>
 <div class="spotlight" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
@@ -892,91 +840,47 @@ footer.site-foot a:hover{color:var(--cyan);}
 </div>
 
 <header class="nav">
-  <div class="nav-inner">
-    <a class="logo o0 animate-fade-down" style="animation-delay:0ms" href="#top"><img src="/alexstudio/logo.png" alt="AiStudioBudapest" /></a>
-    <nav class="nav-pill o0 animate-fade-down" style="animation-delay:100ms" aria-label="Fő navigáció" data-i18n-aria="navAriaPrimary">
-      <a href="#showcase" data-i18n="navProjects">Projektek</a>
-      <a href="#pricing" data-i18n="navPricing">Árak</a>
-      <a href="#services" data-i18n="navServices">Szolgáltatások</a>
-      <a href="#about" data-i18n="navAbout">Rólunk</a>
-      <a href="#faq" data-i18n="navFaq">GYIK</a>
-    </nav>
-    <div class="auth-pill o0 animate-fade-down" style="animation-delay:200ms">
-      <div class="lang-switch" id="langSwitch">
-        <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" data-i18n-aria="langAria" aria-label="Nyelv kiválasztása">
-          <span id="langBtnLabel">HU</span>
-          <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="lang-menu" id="langMenu" role="menu"></div>
-      </div>
-      <a class="nav-cta" href="#contact" data-i18n="navCta">Projekt indítása</a>
-    </div>
-    <div class="burger-wrap o0 animate-fade-down" style="animation-delay:100ms">
-      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menü megnyitása">
-        <span class="burger-ic" aria-hidden="true">
-          <svg class="ic-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-          <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-        </span>
-      </button>
-    </div>
+  <a class="logo" href="#top"><img src="/alexstudio/logo.png" alt="AiStudioBudapest" /></a>
+  <nav class="nav-links" aria-label="Fő navigáció" data-i18n-aria="navAriaPrimary">
+    <a href="#showcase" class="active" data-i18n="navProjects">Projektek</a>
+    <a href="#pricing" data-i18n="navPricing">Árak</a>
+    <a href="#services" data-i18n="navServices">Szolgáltatások</a>
+    <a href="#about" data-i18n="navAbout">Rólunk</a>
+    <a href="#faq" data-i18n="navFaq">GYIK</a>
+    <a href="#contact" data-i18n="navContact">Kapcsolat</a>
+  </nav>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" data-i18n-aria="langAria" aria-label="Nyelv kiválasztása">
+      <span id="langBtnLabel">HU</span>
+      <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="lang-menu" id="langMenu" role="menu"></div>
   </div>
+  <a class="nav-cta" href="#contact" data-i18n="navCta">Projekt indítása</a>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menü megnyitása">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <div class="mnav" id="mnav">
-  <div class="mnav-backdrop"></div>
-  <div class="mnav-panel" id="mnavPanel">
-    <nav class="mnav-links" aria-label="Fő navigáció" data-i18n-aria="navAriaPrimary">
-      <a href="#showcase" data-i18n="navProjects">Projektek</a>
-      <a href="#pricing" data-i18n="navPricing">Árak</a>
-      <a href="#services" data-i18n="navServices">Szolgáltatások</a>
-      <a href="#about" data-i18n="navAbout">Rólunk</a>
-      <a href="#faq" data-i18n="navFaq">GYIK</a>
-      <a href="#contact" data-i18n="navContact">Kapcsolat</a>
-    </nav>
-    <div class="mnav-divider"></div>
-    <div class="mnav-ctas">
-      <a class="mnav-cta-primary" href="#contact" data-i18n="navCta">Projekt indítása</a>
-      <div class="lang-switch-mobile" id="langSwitchMobile" role="group" data-i18n-aria="langAria" aria-label="Nyelv kiválasztása"></div>
-    </div>
-  </div>
+  <a href="#top" data-i18n="navProjects">Projektek</a>
+  <a href="#pricing" data-i18n="navPricing">Árak</a>
+  <a href="#services" data-i18n="navServices">Szolgáltatások</a>
+  <a href="#about" data-i18n="navAbout">Rólunk</a>
+  <a href="#faq" data-i18n="navFaq">GYIK</a>
+  <a href="#contact" data-i18n="navContact">Kapcsolat</a>
+  <a class="nav-cta" href="#contact" data-i18n="navCta">Projekt indítása</a>
+  <div class="lang-switch-mobile" id="langSwitchMobile" role="group" data-i18n-aria="langAria" aria-label="Nyelv kiválasztása"></div>
 </div>
 
-<section class="hero" id="top">
-  <div class="hero-content">
-    <div class="hero-row">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <div class="o0 animate-fade-up" style="animation-delay:300ms">
-            <h1 class="tagline">Prémium webdesign, amellyel az ambiciózus márkák hullámokat vetnek.</h1>
-          </div>
-          <div class="o0 animate-fade-up" style="animation-delay:500ms">
-            <p class="hero-sub" data-i18n="heroSub">Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.</p>
-          </div>
-          <div class="o0 animate-fade-up" style="animation-delay:700ms">
-            <div class="hero-ctas">
-              <a class="hero-btn light" href="#contact" data-i18n="navCta">Projekt indítása</a>
-              <a class="hero-btn outline" href="#showcase" data-i18n="heroCtaProjects">Projektek megtekintése</a>
-            </div>
-          </div>
-        </div>
-        <div class="stat-card-wrap">
-          <div class="stat-card o0 animate-fade-scale" style="animation-delay:900ms">
-            <p class="sc-label" data-i18n="cardLabel">Átfutási idő</p>
-            <p class="sc-amount"><span>3–12</span><span class="dim" data-i18n="cardUnit"> nap</span></p>
-            <div class="sc-delta">
-              <span class="sc-badge" data-i18n="cardBadge">3 csomag</span>
-              <span class="sc-caption" data-i18n="cardCaption">a tartalom leadásától függően</span>
-            </div>
-            <div class="sc-chart" aria-hidden="true">
-              <div class="sc-bars" id="scBars"></div>
-              <div class="sc-grid"><i style="left:20%"></i><i style="left:40%"></i><i style="left:60%"></i><i style="left:80%"></i><i style="left:100%"></i></div>
-              <div class="sc-axis" id="scAxis"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<section class="hero enter" id="top">
+  <div class="eyebrow-wrap">
+    <span class="dot"></span>
+    <span class="eyebrow" data-i18n="heroEyebrow">Webdesign</span>
   </div>
+  <h1 class="tagline">Prémium webdesign, amely az ambiciózus márkákat pályára állítja.</h1>
+  <p class="hero-sub" data-i18n="heroSub">Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.</p>
+  <div class="scroll-cue" aria-hidden="true"><span></span></div>
 </section>
 
 <main id="showcase" class="stage showcase enter">
@@ -1000,6 +904,10 @@ footer.site-foot a:hover{color:var(--cyan);}
 
     <div class="center-col">
       <div class="stack" id="stack" title="Belépés az oldalra" data-i18n-title="stackTitle">
+        <span class="orbit-wrap" id="orbitWrap" aria-hidden="true">
+          <span class="orbit-ring"></span>
+          <span class="orbit-ring b"></span>
+        </span>
         <div class="tilt" id="tilt">
           <div class="preview-slot center" id="centerSlot" data-slot-for="premium"></div>
         </div>
@@ -1225,9 +1133,6 @@ footer.site-foot a:hover{color:var(--cyan);}
   <div class="site-foot-row site-foot-legal">
     <span><a href="/alexstudio/impresszum.html">Impresszum</a> · <a href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a> · <a href="/alexstudio/aszf.html">ÁSZF</a> · <a href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a></span>
   </div>
-  <div class="site-foot-row site-foot-legal">
-    <span>Font made from <a href="https://www.onlinewebfonts.com/fonts" target="_blank" rel="noopener">Web Fonts</a> is licensed by CC BY 4.0</span>
-  </div>
 </footer>
 
 <script>
@@ -1295,9 +1200,7 @@ hu:{
   navAbout:'Rólunk', navFaq:'GYIK', navContact:'Kapcsolat', navCta:'Projekt indítása',
   burgerOpen:'Menü megnyitása', burgerClose:'Menü bezárása', langAria:'Nyelv kiválasztása',
   heroEyebrow:'Webdesign',
-  heroCtaProjects:'Projektek megtekintése', cardLabel:'Átfutási idő', cardUnit:' nap', cardBadge:'3 csomag',
-  cardCaption:'a tartalom leadásától függően', cardAxis:['Terv','Dizájn','Fejlesztés','Teszt','Indulás'],
-  heroTagline:'Prémium webdesign, amellyel az ambiciózus márkák hullámokat vetnek.',
+  heroTagline:'Prémium webdesign, amely az ambiciózus márkákat pályára állítja.',
   heroSub:'Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.',
   showcaseEyebrow:'Kiemelt munkák',
   stackTitle:'Belépés az oldalra', enterHint:'Belépés az oldalra ↗',
@@ -1350,9 +1253,7 @@ en:{
   navAbout:'About', navFaq:'FAQ', navContact:'Contact', navCta:'Start a project',
   burgerOpen:'Open menu', burgerClose:'Close menu', langAria:'Choose language',
   heroEyebrow:'Web Design',
-  heroCtaProjects:'View the projects', cardLabel:'Typical delivery', cardUnit:' days', cardBadge:'3 tiers',
-  cardCaption:'depending on content & feedback', cardAxis:['Plan','Design','Build','Test','Launch'],
-  heroTagline:'Premium web design, built to help ambitious brands make waves.',
+  heroTagline:'Premium web design, built to send ambitious brands into orbit.',
   heroSub:'Three tiers of craft, from a focused one-page site to a fully custom premium experience — scroll down to explore them live.',
   showcaseEyebrow:'Selected Work',
   stackTitle:'Enter the site', enterHint:'Enter the site ↗',
@@ -1405,9 +1306,7 @@ fr:{
   navAbout:'À propos', navFaq:'FAQ', navContact:'Contact', navCta:'Démarrer un projet',
   burgerOpen:'Ouvrir le menu', burgerClose:'Fermer le menu', langAria:'Choisir la langue',
   heroEyebrow:'Webdesign',
-  heroCtaProjects:'Voir les projets', cardLabel:'Délai de livraison', cardUnit:' jours', cardBadge:'3 formules',
-  cardCaption:'selon le contenu et vos retours', cardAxis:['Plan','Design','Dév.','Tests','Lancement'],
-  heroTagline:'Un webdesign premium, conçu pour que les marques ambitieuses fassent des vagues.',
+  heroTagline:'Un webdesign premium, conçu pour propulser les marques ambitieuses en orbite.',
   heroSub:"Trois niveaux de savoir-faire, du site une page à l'expérience premium entièrement sur mesure — défilez pour les découvrir en direct.",
   showcaseEyebrow:'Travaux sélectionnés',
   stackTitle:'Entrer sur le site', enterHint:'Entrer sur le site ↗',
@@ -1460,9 +1359,7 @@ es:{
   navAbout:'Nosotros', navFaq:'Preguntas', navContact:'Contacto', navCta:'Iniciar un proyecto',
   burgerOpen:'Abrir menú', burgerClose:'Cerrar menú', langAria:'Elegir idioma',
   heroEyebrow:'Diseño web',
-  heroCtaProjects:'Ver los proyectos', cardLabel:'Plazo de entrega', cardUnit:' días', cardBadge:'3 planes',
-  cardCaption:'según contenido y comentarios', cardAxis:['Plan','Diseño','Desarrollo','Pruebas','Lanzamiento'],
-  heroTagline:'Diseño web prémium, hecho para que las marcas ambiciosas hagan olas.',
+  heroTagline:'Diseño web prémium, hecho para poner en órbita a las marcas ambiciosas.',
   heroSub:'Tres niveles de artesanía digital, desde un sitio de una página hasta una experiencia prémium totalmente a medida — desplázate para descubrirlos en vivo.',
   showcaseEyebrow:'Trabajos destacados',
   stackTitle:'Entrar al sitio', enterHint:'Entrar al sitio ↗',
@@ -1515,9 +1412,7 @@ de:{
   navAbout:'Über uns', navFaq:'FAQ', navContact:'Kontakt', navCta:'Projekt starten',
   burgerOpen:'Menü öffnen', burgerClose:'Menü schließen', langAria:'Sprache wählen',
   heroEyebrow:'Webdesign',
-  heroCtaProjects:'Projekte ansehen', cardLabel:'Lieferzeit', cardUnit:' Tage', cardBadge:'3 Pakete',
-  cardCaption:'je nach Inhalt und Feedback', cardAxis:['Plan','Design','Entwicklung','Test','Start'],
-  heroTagline:'Premium-Webdesign, damit ambitionierte Marken Wellen schlagen.',
+  heroTagline:'Premium-Webdesign, das ambitionierte Marken in die Umlaufbahn schickt.',
   heroSub:'Drei Stufen handwerklicher Qualität, von der fokussierten One-Page-Website bis zum vollständig individuellen Premium-Erlebnis — scrolle nach unten, um sie live zu entdecken.',
   showcaseEyebrow:'Ausgewählte Arbeiten',
   stackTitle:'Zur Website', enterHint:'Zur Website ↗',
@@ -1574,6 +1469,11 @@ function readStoredLang(){
 }
 var currentLang = readStoredLang();
 
+/* Pexels space clip, re-encoded and self-hosted (was a 10.6 MB 2560x1440
+   file streamed twice — one <video> per crossfade copy — which is what made
+   phones stutter). 1080p ~1.4 MB for desktop, 720p ~0.65 MB for phones and small tablets. */
+var SPACE_BG_VIDEO = window.matchMedia('(max-width:820px)').matches
+  ? '/media/space-720.mp4' : '/media/space-1080.mp4';
 
 var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* Viewport height cached for the scroll loop. Mobile browsers fire `resize`
@@ -1603,7 +1503,7 @@ var tilt = document.getElementById('tilt');
 var composition = document.querySelector('.composition');
 var stack = document.getElementById('stack');
 var warp = document.getElementById('warp');
-var bgDepth = document.getElementById('bgDepth');
+var orbitWrap = document.getElementById('orbitWrap');
 var scrollProgressBar = document.querySelector('#scrollProgress span');
 var burger = document.getElementById('burger');
 var mnav = document.getElementById('mnav');
@@ -1614,58 +1514,6 @@ var projectEls = {};
 document.querySelectorAll('.project').forEach(function(p){
   projectEls[p.getAttribute('data-project')] = p;
 });
-
-/* ---------------- hero stat card: 32 bars + time axis ----------------
-   Heights are the spec's exact numbers; the tallest bar is derived, never
-   hard-coded. The last 4 bars are the dimmed "projected" ones, and each bar
-   grows from its own base after a staggered delay (1100ms + i*30ms). */
-var BAR_HEIGHTS = [
-  23, 40, 53, 40, 33, 14, 7, 17, 75, 65,
-  88, 75, 65, 47, 33, 88, 4, 7, 9, 14,
-  95, 65, 79, 37, 7, 40, 17, 20, 62, 47,
-  92, 72
-];
-(function buildStatBars(){
-  var wrap = document.getElementById('scBars');
-  if(!wrap) return;
-  var maxHeight = Math.max.apply(null, BAR_HEIGHTS);
-  BAR_HEIGHTS.forEach(function(h, i){
-    var bar = document.createElement('span');
-    bar.className = 'sc-bar';
-    bar.style.height = (h / maxHeight * 100) + '%';
-    bar.style.backgroundColor = i >= 28 ? 'rgba(255,255,255,0.1)' : 'white';
-    bar.style.animationDelay = (1100 + i * 30) + 'ms';
-    wrap.appendChild(bar);
-  });
-})();
-function renderStatCard(){
-  var axis = document.getElementById('scAxis');
-  var labels = T[currentLang].cardAxis;
-  if(!axis || !labels) return;
-  axis.innerHTML = '';
-  labels.forEach(function(label, i){
-    var span = document.createElement('span');
-    span.textContent = label;
-    span.style.opacity = i >= 3 ? '0.4' : '1'; /* the last two stages are dimmed */
-    axis.appendChild(span);
-  });
-}
-
-/* Ocean video: one clip, fixed behind the whole site. Dropped entirely for
-   prefers-reduced-motion (the deep-water gradient on .bg stays). Some
-   browsers pause a muted video while its tab is in the background and do not
-   always resume it on return. */
-var bgVideo = document.getElementById('bgVideo');
-if(bgVideo){
-  if(reduceMotion){
-    bgVideo.remove();
-    bgVideo = null;
-  } else {
-    document.addEventListener('visibilitychange', function(){
-      if(!document.hidden) bgVideo.play().catch(function(){});
-    });
-  }
-}
 
 /* ---------------- hero tagline: split into letters for the scroll
    shatter effect. Grouped by word (see .word in CSS) so normal line
@@ -1708,6 +1556,337 @@ function splitTagline(text){
 }
 /* First split happens inside applyLang(currentLang), called once
    everything else below is set up — see the initial-mount block. */
+
+/* ---------------- space background video: crossfade loop ----------------
+   A native `loop` restart snaps straight back to frame 0 the instant the
+   clip ends — motion/lighting jump in one frame, which reads as "a clip
+   repeating" rather than an ambient, endless scene. Two copies of the same
+   clip take turns instead: while one plays, the other sits primed at its
+   own frame 0; a few seconds before the visible one ends, the idle copy
+   starts playing underneath and a short opacity crossfade dissolves from
+   one to the other. By the time the first copy would have visibly jumped,
+   viewers are already looking at the second one, mid-scene — no cut ever
+   reaches the screen. The two copies then swap roles forever. */
+var bgVideoWrap = document.getElementById('bgVideoWrap');
+var bgVideo = document.getElementById('bgVideo');
+var bgVideo2 = document.getElementById('bgVideo2');
+if(bgVideoWrap && bgVideo && bgVideo2){
+  if(reduceMotion){
+    bgVideoWrap.remove();
+    bgVideoWrap = null;
+  } else {
+    var BG_CROSSFADE_S = 1.4;
+    var bgActive = bgVideo;
+    var bgIdle = bgVideo2;
+    var bgSwapping = false;
+
+    [bgVideo, bgVideo2].forEach(function(v){
+      v.preload = 'auto';
+      v.src = SPACE_BG_VIDEO;
+      v.addEventListener('timeupdate', function(){
+        if(v !== bgActive || bgSwapping) return;
+        var d = v.duration;
+        if(!d || !isFinite(d) || d - v.currentTime > BG_CROSSFADE_S) return;
+        bgSwapping = true;
+        bgIdle.currentTime = 0;
+        bgIdle.play().catch(function(){});
+        bgActive.classList.add('fading');
+        bgIdle.classList.add('fading');
+        bgIdle.classList.add('active');
+        bgActive.classList.remove('active');
+        var justFinished = bgActive;
+        setTimeout(function(){
+          justFinished.pause();
+          justFinished.currentTime = 0;
+          justFinished.classList.remove('fading');
+          bgIdle.classList.remove('fading');
+          var tmp = bgActive; bgActive = bgIdle; bgIdle = tmp;
+          bgSwapping = false;
+        }, BG_CROSSFADE_S * 1000);
+      });
+    });
+
+    var tryPlayBg = function(){ bgActive.play().catch(function(){}); };
+    bgActive.classList.add('active');
+    bgActive.addEventListener('canplay', tryPlayBg, {once:true});
+    tryPlayBg();
+  }
+}
+
+/* ---------------- Parliament camera ----------------
+   The Hungarian Parliament at night (one photo, /alexstudio/parlement.jpg) is
+   the 3D subject in front of the Milky Way video. A WebGL shader turns it into
+   a 2.5D scene: a depth map deduced from the photo's luminance (lit building =
+   near, sky = far) drives (1) a dolly zoom where near parts grow faster than
+   far ones and (2) parallax when the camera drifts or the mouse moves, plus a
+   cursor "torch", a shimmering Danube and a sky that goes transparent so the
+   stars show through. The camera flies to a different part of the building for
+   every section (PARL_STOPS) as the page scrolls. Without WebGL the same photo
+   is zoomed in 2D; with prefers-reduced-motion it stays still. */
+var PARL_STOPS = [
+  {id:'top',      fx:.495, fy:.41, ay:.80, z:2.1,  dim:.28},  /* the dome */
+  {id:'showcase', fx:.495, fy:.47, ay:.50, z:1.25, dim:.42},  /* pulled back: the whole facade */
+  {id:'pricing',  fx:.370, fy:.53, ay:.50, z:2.5,  dim:.55},  /* left wing */
+  {id:'services', fx:.620, fy:.53, ay:.50, z:2.5,  dim:.58},  /* right wing */
+  {id:'about',    fx:.495, fy:.60, ay:.50, z:2.8,  dim:.64},  /* the lit arcades */
+  {id:'faq',      fx:.495, fy:.33, ay:.50, z:2.8,  dim:.58},  /* the spire among the stars */
+  {id:'contact',  fx:.560, fy:.80, ay:.50, z:1.9,  dim:.50}   /* the Danube and its reflections */
+];
+var parlCanvas = document.getElementById('parlCanvas');
+var parlImg = document.getElementById('parlImg');
+var Parl = {
+  mode: 'off', gl: null, u: {}, W: 0, H: 0, dpr: 1, dprCap: isCoarse ? 1.15 : 1.35, IW: 2400, IH: 1138,
+  cam: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
+  tgt: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
+  mx: 0, my: 0, mouse: false, msx: 0, msy: 0, lx: .5, ly: .5,
+  running: false, lastT: 0, lastDraw: 0, active: 0, frames: 0, slow: 0, lost: false, ys: []
+};
+function parlClamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
+
+/* Where the photo lands on screen for a camera state (used by the shader
+   uniforms and by the 2D fallback). z is relative to the "cover" fit; on
+   portrait screens the cover fit already zooms in a lot, so the extra zoom is
+   scaled down. */
+function parlMap(c){
+  var W = Parl.W, H = Parl.H, ar = W / H;
+  var zk = ar >= 1 ? 1 : parlClamp(.55 + ar * .45, .55, 1);
+  var z = 1 + (Math.exp(c.lz) - 1) * zk;
+  var s = Math.max(W / Parl.IW, H / Parl.IH) * 1.04 * z;
+  var dw = Parl.IW * s, dh = Parl.IH * s;
+  return {
+    ox: parlClamp(W * .5 - c.fx * dw, W - dw, 0),
+    oy: parlClamp(H * c.ay - c.fy * dh, H - dh, 0),
+    dw: dw, dh: dh, z: z
+  };
+}
+
+/* Scroll → camera target. Each section has a stop (the scroll position that
+   centres it on screen); between two stops the camera glides from one part of
+   the building to the next with a soft ease and a small pull-back mid-way, so
+   it feels like flying rather than cross-fading. Reads layout only. */
+function parlAim(sy, vh, docH){
+  var n = PARL_STOPS.length, ys = Parl.ys, i, r, el;
+  for(i = 0; i < n; i++){
+    el = PARL_STOPS[i].el || (PARL_STOPS[i].el = document.getElementById(PARL_STOPS[i].id));
+    if(i === 0 || !el){ ys[i] = 0; continue; }
+    r = el.getBoundingClientRect();
+    ys[i] = Math.max(0, r.top + sy + r.height / 2 - vh / 2);
+  }
+  if(docH > 0) ys[n - 1] = Math.min(ys[n - 1], docH);
+  for(i = n - 2; i >= 1; i--) ys[i] = Math.min(ys[i], ys[i + 1] - 40);
+  for(i = 1; i < n; i++) if(ys[i] <= ys[i - 1] + 1) ys[i] = ys[i - 1] + 1;
+  i = 0;
+  while(i < n - 2 && sy >= ys[i + 1]) i++;
+  var f = parlClamp((sy - ys[i]) / (ys[i + 1] - ys[i]), 0, 1);
+  var e = f * f * (3 - 2 * f), a = PARL_STOPS[i], b = PARL_STOPS[i + 1], t = Parl.tgt;
+  t.fx = a.fx + (b.fx - a.fx) * e;
+  t.fy = a.fy + (b.fy - a.fy) * e;
+  t.ay = a.ay + (b.ay - a.ay) * e;
+  t.dim = a.dim + (b.dim - a.dim) * e;
+  t.lz = Math.log(a.z) + (Math.log(b.z) - Math.log(a.z)) * e - .13 * Math.sin(Math.PI * e);
+  t.prog = i + e;
+  Parl.active = performance.now();
+  parlKick();
+}
+
+var PARL_VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+var PARL_FS = [
+  '#ifdef GL_FRAGMENT_PRECISION_HIGH', 'precision highp float;', '#else', 'precision mediump float;', '#endif',
+  'uniform sampler2D u_img,u_depth,u_mask;uniform vec2 u_res,u_off,u_isz,u_par,u_piv,u_light;',
+  'uniform float u_time,u_dim,u_lit,u_water,u_dolly;',
+  'const vec3 K=vec3(0.299,0.587,0.114);',
+  'void main(){',
+  ' vec2 px=vec2(gl_FragCoord.x,u_res.y-gl_FragCoord.y);',
+  ' vec2 iuv=(px-u_off)/u_isz; float asp=u_isz.x/u_isz.y;',
+  ' float wa=smoothstep(u_water,u_water+0.05,iuv.y); float ph=iuv.y*230.0;',
+  ' iuv.x+=wa*(sin(ph+u_time*1.7+sin(iuv.x*60.0+u_time*0.6)*2.0)*0.0011+sin(ph*0.5-u_time*1.1)*0.0007)*(0.4+(iuv.y-u_water)*2.0);',
+  ' float d=texture2D(u_depth,iuv).r;',
+  ' iuv=u_piv+(iuv-u_piv)/(1.0+(d-0.35)*u_dolly);',
+  ' iuv+=u_par*(d-0.35);',
+  ' vec3 c=texture2D(u_img,iuv).rgb; float l=dot(c,K);',
+  ' float e=0.007; float dx=texture2D(u_depth,iuv+vec2(e,0.0)).r-texture2D(u_depth,iuv-vec2(e,0.0)).r;',
+  ' float dy=texture2D(u_depth,iuv+vec2(0.0,e*asp)).r-texture2D(u_depth,iuv-vec2(0.0,e*asp)).r;',
+  ' vec3 n=normalize(vec3(-dx*5.0,-dy*5.0,1.0)); vec2 lv=(u_light-iuv)*vec2(asp,1.0); float ld=length(lv);',
+  ' vec3 L=normalize(vec3(lv,0.28)); float diff=max(dot(n,L),0.0); float fall=exp(-ld*ld*7.0);',
+  ' c*=1.0+u_lit*fall*(0.3+0.8*diff);',
+  ' float a=texture2D(u_mask,iuv).r;',
+  ' c=mix(c,c*vec3(0.86,0.98,1.16),1.0-smoothstep(0.0,0.5,l));',
+  ' c*=1.0-u_dim;',
+  ' vec2 q=px/u_res-0.5; c*=smoothstep(1.1,0.32,length(q*vec2(1.0,1.1)));',
+  ' float g=fract(sin(dot(px+fract(u_time)*100.0,vec2(12.9898,78.233)))*43758.5453); c+=(g-0.5)*0.02*a;',
+  ' gl_FragColor=vec4(c*a,a);}'
+].join('\n');
+
+function parlBlur(src, w, h, r){
+  var out = new Float32Array(w * h), tmp = new Float32Array(w * h), x, y, k, sum, cnt;
+  for(y = 0; y < h; y++) for(x = 0; x < w; x++){ sum = 0; cnt = 0; for(k = -r; k <= r; k++){ sum += src[y * w + parlClamp(x + k, 0, w - 1)]; cnt++; } tmp[y * w + x] = sum / cnt; }
+  for(y = 0; y < h; y++) for(x = 0; x < w; x++){ sum = 0; cnt = 0; for(k = -r; k <= r; k++){ sum += tmp[parlClamp(y + k, 0, h - 1) * w + x]; cnt++; } out[y * w + x] = sum / cnt; }
+  return out;
+}
+/* Fake depth: bright (lit building) = near, dark sky = far, lower in the image
+   = nearer (the river). Small on purpose: 192 px wide, blurred twice. */
+function parlDepth(img){
+  var w = 192, h = Math.max(2, Math.round(w * img.naturalHeight / img.naturalWidth)), cv = document.createElement('canvas'), x, y, i;
+  cv.width = w; cv.height = h;
+  var g = cv.getContext('2d'); g.drawImage(img, 0, 0, w, h);
+  var d = g.getImageData(0, 0, w, h).data, L = new Float32Array(w * h), mx = .0001;
+  for(i = 0; i < w * h; i++) L[i] = (.299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2]) / 255;
+  L = parlBlur(parlBlur(L, w, h, 3), w, h, 3);
+  for(i = 0; i < w * h; i++) if(L[i] > mx) mx = L[i];
+  var out = new Uint8Array(w * h);
+  for(y = 0; y < h; y++) for(x = 0; x < w; x++){
+    out[y * w + x] = Math.round(parlClamp(.6 * Math.pow(L[y * w + x] / mx, .7) + .4 * (y / h), 0, 1) * 255);
+  }
+  return {data: out, w: w, h: h};
+}
+/* Opacity mask: 0 = sky (the video shows through), 1 = building / skyline /
+   river. The night sky is the only blue part of the photo (blue minus red is
+   ~0.16; the dark skyline, the river and the lit building are neutral or warm),
+   so that difference tells them apart. Built once, at half resolution. */
+function parlMask(img){
+  var w = 1200, h = Math.round(w * img.naturalHeight / img.naturalWidth), cv = document.createElement('canvas'), x, y, i;
+  cv.width = w; cv.height = h;
+  var g = cv.getContext('2d'); g.drawImage(img, 0, 0, w, h);
+  var d = g.getImageData(0, 0, w, h).data, out = new Uint8Array(w * h);
+  for(y = 0; y < h; y++) for(x = 0; x < w; x++){
+    i = y * w + x;
+    var t = parlClamp(((d[i * 4 + 2] - d[i * 4]) / 255 - .065) / .07, 0, 1), sky = t * t * (3 - 2 * t);
+    var yy = y / h, r = parlClamp((yy - .585) / .035, 0, 1);
+    out[y * w + x] = Math.round(255 * Math.max(1 - sky, r * r * (3 - 2 * r)));
+  }
+  return {data: out, w: w, h: h};
+}
+function parlShader(gl, type, code){
+  var sh = gl.createShader(type); gl.shaderSource(sh, code); gl.compileShader(sh);
+  if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){ if(window.console) console.warn(gl.getShaderInfoLog(sh)); return null; }
+  return sh;
+}
+function parlSize(force){
+  var w = parlCanvas.clientWidth, h = parlCanvas.clientHeight;
+  /* phones: ignore height-only changes (URL bar), a resize would flash the canvas */
+  if(!force && isCoarse && Math.abs(w - Parl.W) < 2 && Math.abs(h - Parl.H) < 160) return;
+  Parl.dpr = Math.min(window.devicePixelRatio || 1, Parl.dprCap);
+  Parl.W = w; Parl.H = h;
+  if(Parl.mode === 'gl'){
+    parlCanvas.width = Math.round(w * Parl.dpr); parlCanvas.height = Math.round(h * Parl.dpr);
+    Parl.gl.viewport(0, 0, parlCanvas.width, parlCanvas.height);
+  }
+}
+function parlInitGL(){
+  var gl = null;
+  try{ gl = parlCanvas.getContext('webgl', {alpha: true, premultipliedAlpha: true, antialias: false, powerPreference: 'high-performance'}) || parlCanvas.getContext('experimental-webgl'); }catch(e){}
+  if(!gl) return false;
+  var vs = parlShader(gl, gl.VERTEX_SHADER, PARL_VS), fs = parlShader(gl, gl.FRAGMENT_SHADER, PARL_FS);
+  if(!vs || !fs) return false;
+  var pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr, gl.LINK_STATUS)) return false;
+  gl.useProgram(pr);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  function tex(unit){
+    var tx = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, tx);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  }
+  tex(0);
+  try{ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, parlImg); }catch(e){ return false; }
+  var dp = parlDepth(parlImg); tex(1); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, dp.w, dp.h, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, dp.data);
+  var mk = parlMask(parlImg); tex(2);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, mk.w, mk.h, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, mk.data);
+  var names = ['u_img', 'u_depth', 'u_mask', 'u_res', 'u_off', 'u_isz', 'u_par', 'u_piv', 'u_light', 'u_time', 'u_dim', 'u_lit', 'u_water', 'u_dolly'], k;
+  for(k = 0; k < names.length; k++) Parl.u[names[k]] = gl.getUniformLocation(pr, names[k]);
+  gl.uniform1i(Parl.u.u_img, 0); gl.uniform1i(Parl.u.u_depth, 1); gl.uniform1i(Parl.u.u_mask, 2); gl.uniform1f(Parl.u.u_water, .72);
+  gl.clearColor(0, 0, 0, 0);
+  Parl.gl = gl; Parl.mode = 'gl'; Parl.lost = false;
+  return true;
+}
+
+function parlDraw(now){
+  var gl = Parl.gl, c = Parl.cam, m = parlMap(c), d = Parl.dpr, u = Parl.u, tt = (now / 1000) % 4000;
+  var zs = Math.max(1, m.z);
+  /* orbit drift + mouse: near parts of the building shift more than far ones */
+  var px = Math.sin(c.prog * 1.5 + tt * .11) * .010 + Parl.msx * .010;
+  var py = Math.cos(c.prog * 1.1 + tt * .09) * .005 + Parl.msy * .006;
+  var lx, ly, lit;
+  if(Parl.mouse){ lx = (Parl.mx - m.ox) / m.dw; ly = (Parl.my - m.oy) / m.dh; lit = .8; }
+  else { lx = c.fx + Math.sin(tt * .23) * .05 / zs; ly = c.fy + Math.sin(tt * .17) * .03 / zs; lit = .45; }
+  Parl.lx += (lx - Parl.lx) * .1; Parl.ly += (ly - Parl.ly) * .1;
+  gl.uniform2f(u.u_res, parlCanvas.width, parlCanvas.height);
+  gl.uniform2f(u.u_off, m.ox * d, m.oy * d); gl.uniform2f(u.u_isz, m.dw * d, m.dh * d);
+  gl.uniform2f(u.u_par, px / Math.sqrt(zs), py / Math.sqrt(zs));
+  gl.uniform2f(u.u_piv, c.fx, c.fy); gl.uniform2f(u.u_light, Parl.lx, Parl.ly);
+  gl.uniform1f(u.u_time, tt); gl.uniform1f(u.u_dim, c.dim); gl.uniform1f(u.u_lit, lit);
+  gl.uniform1f(u.u_dolly, Math.min(.32, .11 * (zs - 1)));
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+function parlDrawImg(){
+  var m = parlMap(Parl.cam);
+  parlImg.style.width = m.dw.toFixed(1) + 'px'; parlImg.style.height = m.dh.toFixed(1) + 'px';
+  parlImg.style.transform = 'translate3d(' + m.ox.toFixed(1) + 'px,' + m.oy.toFixed(1) + 'px,0)';
+}
+function parlFrame(t){
+  Parl.running = false;
+  if(document.hidden || Parl.lost || Parl.mode === 'off') return;
+  var dt = Math.min(.05, Parl.lastT ? (t - Parl.lastT) / 1000 : .016); Parl.lastT = t;
+  var c = Parl.cam, g = Parl.tgt, k = 1 - Math.exp(-dt * 5.5), moving = false, key;
+  for(key in g){
+    var diff = g[key] - c[key];
+    if(Math.abs(diff) > .0004){ c[key] += diff * k; moving = true; } else c[key] = g[key];
+  }
+  Parl.msx += (Parl.mx / Math.max(1, Parl.W) * 2 - 1 - Parl.msx) * (Parl.mouse ? k : 0);
+  Parl.msy += (Parl.my / Math.max(1, Parl.H) * 2 - 1 - Parl.msy) * (Parl.mouse ? k : 0);
+  if(moving) Parl.active = t;
+  var idle = t - Parl.active > 1600;
+  if(Parl.mode === 'gl'){
+    /* idle = only the river shimmer and the drift move: 24 fps is plenty */
+    if(!(idle && t - Parl.lastDraw < 40)){
+      Parl.lastDraw = t; parlDraw(t);
+      /* very slow GPU: lower the render resolution once */
+      if(++Parl.frames > 30 && Parl.frames <= 120 && !idle){
+        if(dt > .034) Parl.slow++;
+        if(Parl.frames === 120 && Parl.slow > 60 && Parl.dprCap > 1){ Parl.dprCap = 1; parlSize(true); }
+      }
+    }
+  } else if(moving){
+    parlDrawImg();
+  }
+  if(Parl.mode === 'gl' || moving){ Parl.running = true; requestAnimationFrame(parlFrame); }
+}
+function parlKick(){
+  if(Parl.running || Parl.mode === 'off' || document.hidden) return;
+  Parl.running = true; requestAnimationFrame(parlFrame);
+}
+function parlStart(){
+  if(!parlImg.naturalWidth) return;
+  Parl.IW = parlImg.naturalWidth; Parl.IH = parlImg.naturalHeight;
+  parlSize(true);
+  if(parlInitGL()){
+    parlSize(true);
+    parlCanvas.classList.add('on');
+    if(reduceMotion) parlDraw(0); else parlKick();
+  } else {
+    Parl.mode = 'img'; parlImg.classList.add('on'); parlDrawImg();
+  }
+  if(reduceMotion) return;
+  parlAim(window.scrollY, viewH, document.documentElement.scrollHeight - viewH);
+}
+if(parlCanvas && parlImg){
+  parlCanvas.addEventListener('webglcontextlost', function(e){ e.preventDefault(); Parl.lost = true; parlCanvas.classList.remove('on'); });
+  parlCanvas.addEventListener('webglcontextrestored', function(){ Parl.u = {}; Parl.mode = 'off'; parlStart(); });
+  window.addEventListener('resize', function(){ parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden){ Parl.lastT = 0; parlKick(); } });
+  if(!reduceMotion){
+    window.addEventListener('pointermove', function(e){
+      if(e.pointerType && e.pointerType !== 'mouse') return;
+      Parl.mouse = true; Parl.mx = e.clientX; Parl.my = e.clientY; Parl.active = performance.now(); parlKick();
+    }, {passive: true});
+    document.addEventListener('mouseleave', function(){ Parl.mouse = false; });
+  }
+  if(parlImg.complete && parlImg.naturalWidth) parlStart(); else parlImg.addEventListener('load', parlStart);
+}
 
 /* Move the actual DOM node for `key` into `targetEl`, keeping its iframe's
    live state (playing video, scroll position, everything) intact.
@@ -1797,7 +1976,7 @@ function rotate(fromSide){
 /* ----------------------------------------------------------
    show(next, newLeft, newRight) — cinematic FLIP transition via
    the Web Animations API: each of the three shells arcs upward
-   as it swaps places (like buoys trading positions on the swell),
+   as it swaps places (like weightless objects trading orbits),
    with a slight rotateY that banks into its own direction of
    travel so it reads as a 3D turn rather than a flat slide. No
    blur/dimming — every shell stays fully lit and legible for the
@@ -2071,7 +2250,6 @@ function applyLang(lang){
 
   splitTagline(T[lang].heroTagline);
   renderPricing();
-  renderStatCard();
   renderFaq();
   refreshRevealEls();
   renderFrameBarLabels();
@@ -2251,7 +2429,7 @@ window.addEventListener('resize', function(){
 /* ----------------------------------------------------------
    enterSite(url) — "diving into" the featured site: the whole
    stack rushes toward the viewer while the rest of the page
-   fades away and a splash of light fires, then we navigate in
+   fades away and a hyperspace flash fires, then we navigate in
    the same tab (so the transition is actually visible).
 ---------------------------------------------------------- */
 function enterSite(url){
@@ -2407,7 +2585,6 @@ attachSideTilt(sideRight);
 /* ---------------- mobile menu ---------------- */
 function setMenu(open){
   mnav.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : ''; /* no page scroll behind the open menu */
   burger.setAttribute('aria-expanded', open ? 'true' : 'false');
   burger.setAttribute('aria-label', open ? T[currentLang].burgerClose : T[currentLang].burgerOpen);
 }
@@ -2417,27 +2594,26 @@ burger.addEventListener('click', function(e){
 });
 mnav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setMenu(false); }); });
 document.addEventListener('click', function(e){
-  if(mnav.classList.contains('open') && !document.getElementById('mnavPanel').contains(e.target) && !burger.contains(e.target)) setMenu(false);
+  if(mnav.classList.contains('open') && !mnav.contains(e.target) && !burger.contains(e.target)) setMenu(false);
 });
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape' && mnav.classList.contains('open')){ setMenu(false); burger.focus(); }
 });
 
-/* ---------------- rising bubbles ---------------- */
+/* ---------------- twinkling starfield ---------------- */
 if(!reduceMotion){
   var field = document.getElementById('particles');
-  var bubbleCount = window.innerWidth <= 820 ? 9 : 22; /* each bubble is its own animated layer */
-  for(var bi = 0; bi < bubbleCount; bi++){
-    var bubble = document.createElement('i');
-    var bubbleSize = 4 + Math.random() * 12;
-    bubble.style.width = bubbleSize.toFixed(1) + 'px';
-    bubble.style.height = bubbleSize.toFixed(1) + 'px';
-    bubble.style.left = (Math.random() * 100) + '%';
-    bubble.style.setProperty('--dx', ((Math.random() * 2 - 1) * 46).toFixed(0) + 'px');
-    var bubbleDur = 14 + Math.random() * 16;
-    bubble.style.animationDuration = bubbleDur.toFixed(1) + 's';
-    bubble.style.animationDelay = (-Math.random() * bubbleDur).toFixed(1) + 's'; /* negative: already mid-rise at load */
-    field.appendChild(bubble);
+  var starCount = window.innerWidth <= 820 ? 16 : 40; /* each star is its own animated layer */
+  for(var i=0;i<starCount;i++){
+    var s = document.createElement('i');
+    var size = (1 + Math.random()*2).toFixed(1);
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*100)+'%';
+    s.style.animationDelay = (Math.random()*5).toFixed(2)+'s';
+    s.style.animationDuration = (3+Math.random()*5).toFixed(2)+'s';
+    field.appendChild(s);
   }
 }
 
@@ -2473,9 +2649,10 @@ refreshRevealEls();
 /* ----------------------------------------------------------
    Scrollytelling — one rAF-throttled scroll handler drives every
    scroll-linked effect together: the top progress rail, the hero
-   parallax fade as it's scrolled past, the deep-water layer that
-   darkens the ocean the further you descend, and every .band-reveal
-   section fading/lifting in below the fold. Everything reads scroll position
+   parallax fade as it's scrolled past, a slow background-video
+   zoom that deepens the further you travel, an extra spin layered
+   onto the orbit rings, and every .band-reveal section fading/
+   lifting in below the fold. Everything reads scroll position
    directly each frame (no CSS transition on these), so it all
    stays glued to the scrollbar instead of lagging behind it.
 ---------------------------------------------------------- */
@@ -2489,7 +2666,7 @@ if(!reduceMotion){
      front costs at most one layout; writes are also skipped when a value
      hasn't changed, so once the hero is scrolled past or a section is fully
      revealed it costs nothing per frame. */
-  var lastHeroP = -1, lastDepthP = -1;
+  var lastHeroP = -1, lastZoomP = -1;
   function onScrollFrame(){
     scrollRafId = null;
     var sy = window.scrollY;
@@ -2502,6 +2679,8 @@ if(!reduceMotion){
       tops[i] = revealEls[i].getBoundingClientRect().top - (revealEls[i].__revealOffset || 0);
     }
 
+    if(Parl.mode !== 'off') parlAim(sy, vh, docH);
+
     /* --- writes --- */
     if(scrollProgressBar) scrollProgressBar.style.width = (docH > 0 ? Math.min(100, sy / docH * 100) : 0).toFixed(2) + '%';
 
@@ -2509,20 +2688,19 @@ if(!reduceMotion){
     if(heroP !== lastHeroP){
       lastHeroP = heroP;
       hero.style.opacity = String(Math.max(0, 1 - heroP * 1.25));
-      hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px)';
+      hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px) scale(' + (1 - heroP * 0.05).toFixed(3) + ')';
       if(tagline) tagline.style.setProperty('--p', heroP.toFixed(4));
     }
 
-    /* Deep water: nothing over the hero (it shows the clip untouched), ~86%
-       by the end of the first screen for legibility, then a little deeper
-       towards the bottom of the page. */
-    if(bgDepth){
-      var depthP = Math.min(1, sy / (vh * 0.9)) * 0.86 + Math.min(1, docH > 0 ? sy / docH : 0) * 0.08;
-      if(depthP !== lastDepthP){
-        lastDepthP = depthP;
-        bgDepth.style.opacity = depthP.toFixed(3);
+    if(bgVideoWrap){
+      var zoomP = Math.min(1, sy / (vh * 2.4));
+      if(zoomP !== lastZoomP){
+        lastZoomP = zoomP;
+        bgVideoWrap.style.transform = 'scale(' + (1 + zoomP * 0.16).toFixed(3) + ')';
       }
     }
+
+    if(orbitWrap) orbitWrap.style.transform = 'rotate(' + (sy * 0.025).toFixed(2) + 'deg)';
 
     /* An element starts revealing as its top edge enters the bottom of the
        screen and is fully opaque once it has risen to ~68% of the way down
@@ -2557,7 +2735,12 @@ if(!reduceMotion){
 /* ---------------- hero entrance: fades in immediately on load ---------------- */
 requestAnimationFrame(function(){
   document.body.classList.add('ready');
-  /* the hero's entrance is pure CSS now (keyframes + animation-delay) */
+  if(reduceMotion){
+    hero.classList.remove('enter');
+  } else {
+    hero.classList.add('run');
+    setTimeout(function(){ hero.classList.remove('enter','run'); }, 1600);
+  }
 });
 
 /* ---------------- showcase entrance: plays once, the first time
