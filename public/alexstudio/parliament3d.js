@@ -15535,12 +15535,12 @@ var hd = [
 		0,
 		[
 			0,
-			34,
-			300
+			30,
+			262
 		],
 		[
 			0,
-			111,
+			100,
 			0
 		],
 		44
@@ -16090,7 +16090,7 @@ function Od(e, t) {
 			let e = Math.abs(i - vd), t = Math.abs(i - yd);
 			e < t ? p = Qu(0, bd, e) : (p = Qu(0, xd, t), h = Cd), _.door(Qu(4.2, 4.46, i));
 			let n = x.W / x.H;
-			n < .9 && (b.t.y += 34 * Zu((.9 - n) / .4, 0, 1) * (1 - Qu(0, .7, i))), w = Qu(4.1, 4.45, i) * +(i < 4.64), w = Math.max(w, Qu(5.3, 5.38, i) * (1 - Qu(5.68, 5.76, i)));
+			n < .9 && (b.t.y += 40 * Zu((.9 - n) / .4, 0, 1) * (1 - Qu(0, .7, i))), w = Qu(4.1, 4.45, i) * +(i < 4.64), w = Math.max(w, Qu(5.3, 5.38, i) * (1 - Qu(5.68, 5.76, i)));
 		}
 		let F = N ? +!!f : i <= vd ? 0 : i < yd ? 1 : 2;
 		F !== j.zone && (j.zone >= 0 && E && j.capZone === j.zone && j.capAge < 6 && (j.mix = 1), j.zone = F), j.mix = Math.max(0, j.mix - d / .8), (f !== x.inInterior || x.first !== !0) && (x.inInterior = f, x.first = !0, _.group.visible = !f, v.group.visible = f, r.shadowMap.needsUpdate = !0, s.environment = f ? g : m, s.environmentIntensity = f ? .04 : .7), _.reflector && (_.reflector.visible = a >= 2 && o.reflect && !f && b.p.y < 260), _.water && (_.water.visible = !(_.reflector && _.reflector.visible));

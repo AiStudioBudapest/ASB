@@ -350,18 +350,12 @@ header.nav{
 @media (prefers-reduced-motion:reduce){
   .scroll-arrow-chevrons span{animation:none!important;opacity:.7;}
 }
-.scroll-cue{margin-top:calc(56*var(--u));width:calc(28*var(--u));height:calc(44*var(--u));
-  border:1.5px solid rgba(255,255,255,.65);border-radius:999px;position:relative;flex:none;}
-.scroll-cue span{position:absolute;top:calc(8*var(--u));left:50%;width:4px;height:8px;border-radius:2px;
-  background:var(--cyan);transform:translateX(-50%);animation:scrollcue 1.8s ease-in-out infinite;}
-@keyframes scrollcue{0%{opacity:1;transform:translate(-50%,0);}70%{opacity:0;transform:translate(-50%,14px);}100%{opacity:0;transform:translate(-50%,14px);}}
 
-.hero.enter .eyebrow-wrap,.hero.enter .tagline,.hero.enter .hero-sub,.hero.enter .scroll-cue{
+.hero.enter .eyebrow-wrap,.hero.enter .tagline,.hero.enter .hero-sub{
   opacity:0;transform:translateY(calc(14*var(--u)));}
 .hero.enter.run .eyebrow-wrap{opacity:1;transform:none;transition:opacity .7s var(--ease) .1s,transform .7s var(--ease) .1s;}
 .hero.enter.run .tagline{opacity:1;transform:none;transition:opacity .9s var(--ease) .25s,transform .9s var(--ease) .25s;}
 .hero.enter.run .hero-sub{opacity:1;transform:none;transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;}
-.hero.enter.run .scroll-cue{opacity:1;transform:none;transition:opacity .8s var(--ease) .7s,transform .8s var(--ease) .7s;}
 
 /* ============================================================
    4. SHOWCASE — the three-slot cinematic switcher
@@ -558,7 +552,6 @@ body.ready .bg,body.ready .grain{opacity:1;}
   .composition,.side,.frame-shell,.tilt{transition:none!important;}
   .frame-shell{animation:none!important;}
   .orbit-ring{animation:none!important;}
-  .scroll-cue span{animation:none!important;}
   .spotlight{display:none!important;}
   .cursor-dot,.cursor-ring{display:none!important;}
 }
@@ -867,12 +860,15 @@ footer.site-foot a:hover{color:var(--cyan);}
   .orbit-wrap,.frame-glow{display:none;}
   .frame-shell{animation:none;}
 }
+@media (min-width:1100px){
+  .hero .tagline{max-width:40ch;}
+  .hero-sub{max-width:66ch;}
+}
 /* Phones: the hero text sits at the top so the Parliament shows underneath it (the camera is raised to match). */
 @media (max-width:820px){
   .hero{justify-content:flex-start;padding:calc(112*var(--u)) var(--gutter) calc(40*var(--u));}
   .hero .tagline{font-size:calc(36*var(--u));}
   .hero-sub{font-size:calc(16.5*var(--u));margin-top:calc(16*var(--u));}
-  .scroll-cue{margin-top:calc(26*var(--u));}
   .hero::before{top:30%;height:56%;}
 }
 </style>
@@ -973,7 +969,6 @@ footer.site-foot a:hover{color:var(--cyan);}
   </div>
   <h1 class="tagline">Prémium webdesign, amely az ambiciózus márkákat pályára állítja.</h1>
   <p class="hero-sub" data-i18n="heroSub">Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.</p>
-  <div class="scroll-cue" aria-hidden="true"><span></span></div>
 </section>
 
 <main id="showcase" class="stage showcase enter">

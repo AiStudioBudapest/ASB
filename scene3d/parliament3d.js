@@ -965,7 +965,7 @@ function buildInterior(mobile, ctx) {
 /* waypoints: [page progress, position, look-at, fov]; progress 0..6 = hero, vitrine,
    prix, services, à propos, FAQ, contact (see PARL_STOPS in the page). */
 const PATH_A = [
-  [0, [0, 34, 300], [0, 111, 0], 44], /* the first screen: the whole Parliament in the lower half, the sky above it for the title (was [0,12,176] -> [0,48,0], building behind the text) */
+  [0, [0, 30, 262], [0, 100, 0], 44], /* the first screen: the whole Parliament in the lower half, the sky above it for the title (was [0,12,176] -> [0,48,0], building behind the text) */
   [1, [-172, 58, 190], [0, 40, 0], 44],
   [2, [-104, 17, 86], [-70, 31, 0], 46],
   [3, [12, 124, 88], [0, 56, -6], 48],
@@ -1186,7 +1186,7 @@ export function createParliament(canvas, opts) {
       ext.door(smooth(4.2, 4.46, prog));
       /* portrait screens: the hero text takes the top two thirds, so the first shot looks higher = the building sits lower, under the text */
       const asp0 = state.W / state.H;
-      if (asp0 < .9) pose.t.y += 34 * clamp((.9 - asp0) / .4, 0, 1) * (1 - smooth(0, .7, prog));
+      if (asp0 < .9) pose.t.y += 40 * clamp((.9 - asp0) / .4, 0, 1) * (1 - smooth(0, .7, prog));
       calm = smooth(4.1, 4.45, prog) * (prog < CUT1 + .01 ? 1 : 0); /* no sideways drift while flying through the door */
       calm = Math.max(calm, smooth(5.3, 5.38, prog) * (1 - smooth(5.68, 5.76, prog))); /* nor around the crown: no bobbing, no mouse-driven zoom */
     }
