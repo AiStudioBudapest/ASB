@@ -41,17 +41,31 @@ ul{padding-left:20px;}
 .legal-nav a{color:var(--muted);text-decoration:none;}
 .legal-nav a:hover,.legal-nav a[aria-current]{color:var(--cyan);}
 footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;}
+.lang-block[hidden]{display:none;}
+.tr-note{font-size:13px;color:var(--muted);border-left:2px solid rgba(127,233,222,.5);padding:2px 0 2px 12px;margin:0 0 28px;}
+.lang-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px;}
+.lang-pills button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.04em;cursor:pointer;min-height:36px;}
+.lang-pills button:hover{color:var(--text);border-color:rgba(255,255,255,.4);}
+.lang-pills button.active{color:var(--cyan);border-color:var(--cyan);background:rgba(127,233,222,.08);}
+@media (pointer:coarse){.lang-pills button{min-height:44px;padding:8px 16px;}.legal-nav a{display:inline-block;padding:8px 0;}}
+.wrap{overflow-wrap:anywhere;}
+.lang-block{hyphens:auto;-webkit-hyphens:auto;}
+h1{font-size:clamp(24px,7.4vw,40px);}
+table,th,td{overflow-wrap:normal;hyphens:manual;}
+td code{white-space:nowrap;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="/">← Vissza az AiStudioBudapest oldalra</a>
+  <a class="back" href="/" data-ui="back">← Vissza az AiStudioBudapest oldalra</a>
+  <div class="lang-pills" id="langPills"></div>
   <nav class="legal-nav" aria-label="Jogi dokumentumok">
-    <a href="/alexstudio/impresszum.html" aria-current="page">Impresszum</a>
-    <a href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a>
-    <a href="/alexstudio/aszf.html">Általános Szerződési Feltételek</a>
-    <a href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a>
+    <a data-ui="imp" href="/alexstudio/impresszum.html" aria-current="page">Impresszum</a>
+    <a data-ui="priv" href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a>
+    <a data-ui="terms" href="/alexstudio/aszf.html">Általános Szerződési Feltételek</a>
+    <a data-ui="cookies" href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a>
   </nav>
+  <div class="lang-block" lang="hu" data-lang="hu">
 
   <h1>Impresszum</h1>
   <p class="updated">Utolsó frissítés: 2026. szeptember 23.</p>
@@ -83,8 +97,147 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
 
   <h2>Jogi nyilatkozat</h2>
   <p>A weboldalon található tartalmak (szövegek, képek, az egyes csomagok bemutatására szolgáló élő prototípusok) az üzemeltetők szellemi tulajdonát képezik, eltérő jelölés hiányában. A weboldalon megjelenő árak tájékoztató jellegűek — részletek az <a href="/alexstudio/aszf.html">Általános Szerződési Feltételekben</a>.</p>
+  </div>
+
+  <div class="lang-block" lang="en" data-lang="en" hidden>
+  <h1>Legal notice</h1>
+  <p class="updated">Last updated: 23 September 2026</p>
+  <p class="tr-note">Convenience translation. The Hungarian version is the authoritative text; in case of any discrepancy the Hungarian version prevails.</p>
+
+  <div class="todo">
+    <b>Current status:</b> as of this date, AiStudioBudapest's activity is not yet registered as a business of its own. According to the operators, they will register as sole traders (egyéni vállalkozó) at the same time as they accept the first real order. Until that happens, the details below reflect the current, unofficial situation — no company registration number, registry number or tax number exists yet, so no invented data appears here either. This page will be updated as soon as the registration takes place.
+  </div>
+
+  <h2>Service provider</h2>
+  <p>
+    AiStudioBudapest — Alex and Theo<br>
+    <span class="muted">[Full name / company name to be added after registration]</span>
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    E-mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a><br>
+    Phone: +36 30 947 6955, +36 70 368 2482
+  </p>
+
+  <h2>Registered office / postal address</h2>
+  <p class="muted">[To be completed]</p>
+
+  <h2>Registration number, tax number</h2>
+  <p class="muted">None — the operator is currently not a registered business. This information will appear here as soon as it is available.</p>
+
+  <h2>Hosting provider</h2>
+  <p class="muted">[To be completed once the website is moved to its live hosting]</p>
+
+  <h2>Legal disclaimer</h2>
+  <p>The content of this website (texts, images, the live prototypes presenting each package) is the intellectual property of the operators unless marked otherwise. The prices shown on the website are for information only — details in the <a href="/alexstudio/aszf.html">General Terms and Conditions</a>.</p>
+  </div>
+
+  <div class="lang-block" lang="fr" data-lang="fr" hidden>
+  <h1>Mentions légales</h1>
+  <p class="updated">Dernière mise à jour : 23 septembre 2026</p>
+  <p class="tr-note">Traduction fournie à titre de commodité. La version hongroise fait foi ; en cas de divergence, c'est la version hongroise qui prévaut.</p>
+
+  <div class="todo">
+    <b>Statut actuel :</b> à cette date, l'activité d'AiStudioBudapest n'est pas encore enregistrée comme entreprise à part entière. D'après les exploitants, ils s'enregistreront comme entrepreneurs individuels (egyéni vállalkozó) au moment même où ils accepteront la première commande réelle. Tant que ce n'est pas fait, les informations ci-dessous reflètent la situation actuelle, non officielle — il n'existe encore ni numéro d'immatriculation au registre du commerce, ni numéro d'enregistrement, ni numéro fiscal, c'est pourquoi aucune donnée inventée n'apparaît ici. Cette page sera mise à jour dès que l'enregistrement aura eu lieu.
+  </div>
+
+  <h2>Prestataire</h2>
+  <p>
+    AiStudioBudapest — Alex et Theo<br>
+    <span class="muted">[Nom complet / raison sociale à compléter après l'enregistrement]</span>
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    E-mail : <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a><br>
+    Téléphone : +36 30 947 6955, +36 70 368 2482
+  </p>
+
+  <h2>Siège / adresse postale</h2>
+  <p class="muted">[À compléter]</p>
+
+  <h2>Numéro d'enregistrement, numéro fiscal</h2>
+  <p class="muted">Aucun — l'exploitant n'est actuellement pas une entreprise enregistrée. Cette information apparaîtra ici dès qu'elle sera disponible.</p>
+
+  <h2>Hébergeur</h2>
+  <p class="muted">[À compléter dès que le site sera placé sur son hébergement définitif]</p>
+
+  <h2>Mention légale</h2>
+  <p>Les contenus de ce site (textes, images, prototypes en ligne présentant chaque formule) sont la propriété intellectuelle des exploitants, sauf mention contraire. Les prix affichés sur le site sont indicatifs — détails dans les <a href="/alexstudio/aszf.html">Conditions générales</a>.</p>
+  </div>
+
+  <div class="lang-block" lang="es" data-lang="es" hidden>
+  <h1>Aviso legal</h1>
+  <p class="updated">Última actualización: 23 de septiembre de 2026</p>
+  <p class="tr-note">Traducción de cortesía. La versión húngara es el texto oficial; en caso de discrepancia prevalece la versión húngara.</p>
+
+  <div class="todo">
+    <b>Estado actual:</b> a esta fecha, la actividad de AiStudioBudapest todavía no está registrada como empresa propia. Según los operadores, se darán de alta como empresarios individuales (egyéni vállalkozó) en el mismo momento en que acepten el primer encargo real. Hasta que eso ocurra, los datos siguientes reflejan la situación actual, no oficial: todavía no existe número de registro mercantil, número de registro ni número de identificación fiscal, por lo que tampoco aparece aquí ningún dato inventado. Esta página se actualizará en cuanto se realice el alta.
+  </div>
+
+  <h2>Proveedor del servicio</h2>
+  <p>
+    AiStudioBudapest — Alex y Theo<br>
+    <span class="muted">[Nombre completo / razón social por completar tras el registro]</span>
+  </p>
+
+  <h2>Contacto</h2>
+  <p>
+    Correo electrónico: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a><br>
+    Teléfono: +36 30 947 6955, +36 70 368 2482
+  </p>
+
+  <h2>Domicilio social / dirección postal</h2>
+  <p class="muted">[Por completar]</p>
+
+  <h2>Número de registro, número de identificación fiscal</h2>
+  <p class="muted">Ninguno — el operador no es actualmente una empresa registrada. Este dato aparecerá aquí en cuanto esté disponible.</p>
+
+  <h2>Proveedor de alojamiento</h2>
+  <p class="muted">[Por completar en cuanto el sitio web pase a su alojamiento definitivo]</p>
+
+  <h2>Declaración legal</h2>
+  <p>Los contenidos de este sitio web (textos, imágenes, prototipos en vivo que presentan cada paquete) son propiedad intelectual de los operadores, salvo indicación en contrario. Los precios que aparecen en el sitio son orientativos — detalles en las <a href="/alexstudio/aszf.html">Condiciones generales</a>.</p>
+  </div>
+
+  <div class="lang-block" lang="de" data-lang="de" hidden>
+  <h1>Impressum</h1>
+  <p class="updated">Letzte Aktualisierung: 23. September 2026</p>
+  <p class="tr-note">Übersetzung zur besseren Verständlichkeit. Maßgeblich ist die ungarische Fassung; bei Abweichungen geht die ungarische Fassung vor.</p>
+
+  <div class="todo">
+    <b>Aktueller Status:</b> Zum heutigen Datum ist die Tätigkeit von AiStudioBudapest noch nicht als eigenständiges Unternehmen eingetragen. Nach Angaben der Betreiber werden sie sich zeitgleich mit der Annahme des ersten echten Auftrags als Einzelunternehmer (egyéni vállalkozó) registrieren lassen. Bis dahin spiegeln die folgenden Angaben den aktuellen, nicht offiziellen Stand wider — Handelsregisternummer, Registriernummer und Steuernummer existieren noch nicht, daher steht hier auch keine erfundene Angabe. Diese Seite wird aktualisiert, sobald die Eintragung erfolgt ist.
+  </div>
+
+  <h2>Diensteanbieter</h2>
+  <p>
+    AiStudioBudapest — Alex und Theo<br>
+    <span class="muted">[Vollständiger Name / Firmenname nach der Registrierung zu ergänzen]</span>
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>
+    E-Mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a><br>
+    Telefon: +36 30 947 6955, +36 70 368 2482
+  </p>
+
+  <h2>Sitz / Postanschrift</h2>
+  <p class="muted">[Wird ergänzt]</p>
+
+  <h2>Registernummer, Steuernummer</h2>
+  <p class="muted">Keine — der Betreiber ist derzeit kein eingetragenes Unternehmen. Diese Angabe erscheint hier, sobald sie vorliegt.</p>
+
+  <h2>Hosting-Anbieter</h2>
+  <p class="muted">[Wird ergänzt, sobald die Website auf ihr endgültiges Hosting umzieht]</p>
+
+  <h2>Rechtlicher Hinweis</h2>
+  <p>Die Inhalte dieser Website (Texte, Bilder, die Live-Prototypen zur Vorstellung der einzelnen Pakete) sind, sofern nicht anders gekennzeichnet, geistiges Eigentum der Betreiber. Die auf der Website angezeigten Preise sind unverbindlich — Einzelheiten in den <a href="/alexstudio/aszf.html">Allgemeinen Geschäftsbedingungen</a>.</p>
+  </div>
 
   <footer>© 2026 AiStudioBudapest</footer>
 </div>
+<script type="application/json" id="legalMeta">{"hu": {"title": "Impresszum — AiStudioBudapest", "description": "AiStudioBudapest — impresszum és a szolgáltató adatai."}, "en": {"title": "Legal notice — AiStudioBudapest", "description": "AiStudioBudapest — legal notice and details of the service provider."}, "fr": {"title": "Mentions légales — AiStudioBudapest", "description": "AiStudioBudapest — mentions légales et coordonnées du prestataire."}, "es": {"title": "Aviso legal — AiStudioBudapest", "description": "AiStudioBudapest — aviso legal y datos del proveedor del servicio."}, "de": {"title": "Impressum — AiStudioBudapest", "description": "AiStudioBudapest — Impressum und Angaben zum Diensteanbieter."}}</script>
+<script src="/alexstudio/legal.js" defer></script>
 </body>
 </html>

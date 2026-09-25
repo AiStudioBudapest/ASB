@@ -42,17 +42,31 @@ ul{padding-left:20px;}
 .legal-nav a{color:var(--muted);text-decoration:none;}
 .legal-nav a:hover,.legal-nav a[aria-current]{color:var(--cyan);}
 footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;}
+.lang-block[hidden]{display:none;}
+.tr-note{font-size:13px;color:var(--muted);border-left:2px solid rgba(127,233,222,.5);padding:2px 0 2px 12px;margin:0 0 28px;}
+.lang-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px;}
+.lang-pills button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.04em;cursor:pointer;min-height:36px;}
+.lang-pills button:hover{color:var(--text);border-color:rgba(255,255,255,.4);}
+.lang-pills button.active{color:var(--cyan);border-color:var(--cyan);background:rgba(127,233,222,.08);}
+@media (pointer:coarse){.lang-pills button{min-height:44px;padding:8px 16px;}.legal-nav a{display:inline-block;padding:8px 0;}}
+.wrap{overflow-wrap:anywhere;}
+.lang-block{hyphens:auto;-webkit-hyphens:auto;}
+h1{font-size:clamp(24px,7.4vw,40px);}
+table,th,td{overflow-wrap:normal;hyphens:manual;}
+td code{white-space:nowrap;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="/">← Vissza az AiStudioBudapest oldalra</a>
+  <a class="back" href="/" data-ui="back">← Vissza az AiStudioBudapest oldalra</a>
+  <div class="lang-pills" id="langPills"></div>
   <nav class="legal-nav" aria-label="Jogi dokumentumok">
-    <a href="/alexstudio/impresszum.html">Impresszum</a>
-    <a href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a>
-    <a href="/alexstudio/aszf.html" aria-current="page">Általános Szerződési Feltételek</a>
-    <a href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a>
+    <a data-ui="imp" href="/alexstudio/impresszum.html">Impresszum</a>
+    <a data-ui="priv" href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a>
+    <a data-ui="terms" href="/alexstudio/aszf.html" aria-current="page">Általános Szerződési Feltételek</a>
+    <a data-ui="cookies" href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a>
   </nav>
+  <div class="lang-block" lang="hu" data-lang="hu">
 
   <h1>Általános Szerződési Feltételek</h1>
   <p class="updated">Utolsó frissítés: 2026. szeptember 23.</p>
@@ -87,8 +101,159 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
 
   <h2>8. Kapcsolat</h2>
   <p>E-mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — Telefon: +36 30 947 6955, +36 70 368 2482</p>
+  </div>
+
+  <div class="lang-block" lang="en" data-lang="en" hidden>
+  <h1>General Terms and Conditions</h1>
+  <p class="updated">Last updated: 23 September 2026</p>
+  <p class="tr-note">Convenience translation. The Hungarian version is the authoritative text; in case of any discrepancy the Hungarian version prevails.</p>
+
+  <div class="callout">
+    <p style="margin:0"><strong>Important before you read:</strong> this document governs the <em>use of the website</em> — the prices and descriptions shown on the website are for information only, and the contact form on the site is for sending an enquiry, <u>not</u> for placing an order. The actual assignment is always made <strong>at a personal meeting, by a written contract signed by both parties</strong>, which contains the final price, the deadline, the payment terms and the cancellation/refund rules. If there is any difference between this website and your signed contract, the signed contract always prevails.</p>
+  </div>
+
+  <h2>1. Who we are and what this document covers</h2>
+  <p>AiStudioBudapest (Alex and Theo — see the <a href="/alexstudio/impresszum.html">Legal notice</a> for the exact details) operates this website, whose purpose is to present our services through three live prototypes (Esszencia, Presztízs, Prémium) and to make it possible to get in touch. This document applies exclusively to the <em>use</em> of the website.</p>
+
+  <h2>2. The prices shown</h2>
+  <p>The prices shown on the website (149 900 Ft / 199 900 Ft / 349 900 Ft, and the monthly maintenance fees) are indicative starting prices for the advertised scope. The final price, scope and deadline are always set out in the contract concluded in person, based on your individual needs.</p>
+
+  <h2>3. The contact form</h2>
+  <p>Filling in and submitting the form <strong>does not create a contract or a payment obligation</strong> — it sends us a message, which we answer by e-mail. The <a href="/alexstudio/adatvedelem.html">Privacy notice</a> describes in detail which data is needed and how it is handled.</p>
+
+  <h2>4. Concluding a contract, and the cancellation/refund rules</h2>
+  <p>After an enquiry through the website, the assignment is always made <strong>at a personal meeting, in writing</strong>. This contract also contains — tailored to your case — the cancellation and refund terms.</p>
+  <div class="todo">
+    <b>Important legal difference to be taken into account when the contract is drafted:</b> if a future client contracts <em>as a private individual</em> (not as a business), and the contract were nevertheless concluded exclusively between absent parties (e.g. only by e-mail/phone, without a personal meeting), Hungarian and EU consumer protection rules (Government Decree 45/2014 (II. 26.), Directive 2011/83/EU) grant a 14-day right of withdrawal — this right cannot be limited unilaterally by a rule such as “refundable only before work begins”. Since your usual process ends with a personal meeting, this is not relevant in most cases (the rules only apply to contracts concluded exclusively at a distance), but if a contract were ever concluded at a distance with a private individual, it would have to take this into account (e.g. the client's express request and acknowledgement that work starts immediately and that the right of withdrawal is lost). For business clients (contracting as a company) this restriction does not apply and the agreed terms can be applied freely.
+  </div>
+
+  <h2>5. Intellectual property</h2>
+  <p>The content shown on the website — texts, layout, the live prototypes presenting each package — is the intellectual property of the operators. Copying it or using it for commercial purposes without our prior written permission is not allowed.</p>
+
+  <h2>6. Limitation of liability</h2>
+  <p>The three demos shown on the website (Esszencia, Presztízs, Prémium) are fictional projects made for demonstration — the names, contact details and reviews that appear in them are not real and do not constitute a real business offer. We keep the content of the website up to date to the best of our knowledge, but we do not guarantee continuous, error-free availability.</p>
+
+  <h2>7. Amendments</h2>
+  <p>We may update this document — the current version is always available here. Contracts already concluded and signed are governed by the signed terms in force at the time of signing, not by any later change to the website.</p>
+
+  <h2>8. Contact</h2>
+  <p>E-mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — Phone: +36 30 947 6955, +36 70 368 2482</p>
+  </div>
+
+  <div class="lang-block" lang="fr" data-lang="fr" hidden>
+  <h1>Conditions générales</h1>
+  <p class="updated">Dernière mise à jour : 23 septembre 2026</p>
+  <p class="tr-note">Traduction fournie à titre de commodité. La version hongroise fait foi ; en cas de divergence, c'est la version hongroise qui prévaut.</p>
+
+  <div class="callout">
+    <p style="margin:0"><strong>Important avant de lire :</strong> ce document encadre l'<em>utilisation du site</em> — les prix et descriptions affichés sur le site sont indicatifs, et le formulaire de contact du site sert à envoyer une demande d'information, <u>pas</u> à passer commande. La véritable commande se fait toujours <strong>lors d'un rendez-vous en personne, par un contrat écrit signé des deux parties</strong>, qui indique le prix définitif, le délai, les conditions de paiement et les règles d'annulation/de remboursement. En cas de différence entre ce site et votre contrat signé, c'est toujours le contrat signé qui prévaut.</p>
+  </div>
+
+  <h2>1. Qui nous sommes et ce que couvre ce document</h2>
+  <p>AiStudioBudapest (Alex et Theo — voir les <a href="/alexstudio/impresszum.html">Mentions légales</a> pour les coordonnées exactes) exploite ce site, dont le but est de présenter nos services à travers trois prototypes en ligne (Esszencia, Presztízs, Prémium) et de permettre de nous contacter. Ce document ne concerne que l'<em>utilisation</em> du site.</p>
+
+  <h2>2. Les prix affichés</h2>
+  <p>Les prix affichés sur le site (149 900 Ft / 199 900 Ft / 349 900 Ft, ainsi que les frais mensuels de maintenance) sont des prix de départ indicatifs, correspondant au périmètre annoncé. Le prix définitif, le périmètre et le délai sont toujours fixés dans le contrat conclu en personne, en fonction de vos besoins spécifiques.</p>
+
+  <h2>3. Le formulaire de contact</h2>
+  <p>Remplir et envoyer le formulaire <strong>ne crée ni contrat ni obligation de paiement</strong> — cela nous envoie un message, auquel nous répondons par e-mail. La <a href="/alexstudio/adatvedelem.html">Politique de confidentialité</a> décrit en détail les données nécessaires et leur traitement.</p>
+
+  <h2>4. Conclusion du contrat et règles d'annulation/de remboursement</h2>
+  <p>Après une demande faite via le site, la commande se fait toujours <strong>lors d'un rendez-vous en personne, par écrit</strong>. Ce contrat contient aussi — adaptées à votre cas — les conditions d'annulation et de remboursement.</p>
+  <div class="todo">
+    <b>Différence juridique importante à prendre en compte lors de la rédaction du contrat :</b> si un futur client contracte <em>en tant que particulier</em> (et non comme entreprise), et que le contrat était malgré tout conclu exclusivement entre absents (par exemple uniquement par e-mail/téléphone, sans rendez-vous en personne), les règles hongroises et européennes de protection des consommateurs (décret gouvernemental 45/2014 (II. 26.), directive 2011/83/UE) lui accordent un droit de rétractation de 14 jours — ce droit ne peut pas être limité unilatéralement par une règle du type « remboursable uniquement avant le début du travail ». Comme votre processus habituel se termine par un rendez-vous en personne, cela n'est pas pertinent dans la plupart des cas (ces règles ne s'appliquent qu'aux contrats conclus exclusivement à distance), mais si un contrat était un jour conclu à distance avec un particulier, il devrait en tenir compte (par exemple demande expresse du client et reconnaissance que le travail commence immédiatement et que le droit de rétractation est perdu). Pour les clients professionnels (qui contractent en tant qu'entreprise), cette restriction n'existe pas et les conditions convenues peuvent être appliquées librement.
+  </div>
+
+  <h2>5. Propriété intellectuelle</h2>
+  <p>Les contenus du site — textes, mise en page, prototypes en ligne présentant chaque formule — sont la propriété intellectuelle des exploitants. Leur copie ou leur utilisation à des fins commerciales sans notre autorisation écrite préalable n'est pas permise.</p>
+
+  <h2>6. Limitation de responsabilité</h2>
+  <p>Les trois démos présentées sur le site (Esszencia, Presztízs, Prémium) sont des projets fictifs, réalisés à des fins de démonstration — les noms, coordonnées et avis qui y figurent ne sont pas réels et ne constituent pas une véritable offre commerciale. Nous tenons le contenu du site à jour au mieux de nos connaissances, mais nous ne garantissons pas une disponibilité continue et sans erreur.</p>
+
+  <h2>7. Modification</h2>
+  <p>Nous pouvons mettre à jour ce document — la version en vigueur est toujours disponible ici. Les contrats déjà conclus et signés sont régis par les conditions signées applicables au moment de la signature, et non par une éventuelle modification ultérieure du site.</p>
+
+  <h2>8. Contact</h2>
+  <p>E-mail : <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — Téléphone : +36 30 947 6955, +36 70 368 2482</p>
+  </div>
+
+  <div class="lang-block" lang="es" data-lang="es" hidden>
+  <h1>Condiciones generales</h1>
+  <p class="updated">Última actualización: 23 de septiembre de 2026</p>
+  <p class="tr-note">Traducción de cortesía. La versión húngara es el texto oficial; en caso de discrepancia prevalece la versión húngara.</p>
+
+  <div class="callout">
+    <p style="margin:0"><strong>Importante antes de leer:</strong> este documento regula el <em>uso del sitio web</em>: los precios y descripciones que aparecen en el sitio son orientativos, y el formulario de contacto sirve para enviar una consulta, <u>no</u> para hacer un pedido. El encargo real se formaliza siempre <strong>en una reunión en persona, mediante un contrato escrito firmado por ambas partes</strong>, que recoge el precio final, el plazo, las condiciones de pago y las normas de cancelación/reembolso. Si hubiera alguna diferencia entre este sitio web y tu contrato firmado, prevalece siempre el contrato firmado.</p>
+  </div>
+
+  <h2>1. Quiénes somos y a qué se refiere este documento</h2>
+  <p>AiStudioBudapest (Alex y Theo — consulta el <a href="/alexstudio/impresszum.html">Aviso legal</a> para los datos exactos) gestiona este sitio web, cuyo objetivo es presentar nuestros servicios mediante tres prototipos en vivo (Esszencia, Presztízs, Prémium) y permitir el contacto. Este documento se refiere exclusivamente al <em>uso</em> del sitio web.</p>
+
+  <h2>2. Los precios que aparecen</h2>
+  <p>Los precios indicados en el sitio (149 900 Ft / 199 900 Ft / 349 900 Ft, y las cuotas mensuales de mantenimiento) son precios de partida orientativos para el alcance anunciado. El precio final, el alcance y el plazo se fijan siempre en el contrato celebrado en persona, según tus necesidades concretas.</p>
+
+  <h2>3. El formulario de contacto</h2>
+  <p>Rellenar y enviar el formulario <strong>no crea ningún contrato ni obligación de pago</strong>: nos envía un mensaje al que respondemos por correo electrónico. La <a href="/alexstudio/adatvedelem.html">Política de privacidad</a> describe en detalle qué datos se necesitan y cómo se tratan.</p>
+
+  <h2>4. Celebración del contrato y normas de cancelación/reembolso</h2>
+  <p>Tras una consulta a través del sitio web, el encargo se formaliza siempre <strong>en una reunión en persona, por escrito</strong>. Ese contrato recoge también —adaptadas a tu caso— las condiciones de cancelación y reembolso.</p>
+  <div class="todo">
+    <b>Diferencia jurídica importante que hay que tener en cuenta al redactar el contrato:</b> si un futuro cliente contrata <em>como particular</em> (no como empresa) y el contrato se celebrara, pese a todo, exclusivamente entre ausentes (por ejemplo solo por correo electrónico/teléfono, sin reunión en persona), las normas húngaras y europeas de protección de los consumidores (Decreto del Gobierno 45/2014 (II. 26.), Directiva 2011/83/UE) le reconocen un derecho de desistimiento de 14 días; este derecho no puede limitarse unilateralmente con una norma del tipo «reembolsable solo antes de empezar el trabajo». Como vuestro proceso habitual termina con una reunión en persona, en la mayoría de los casos esto no es relevante (las normas solo se aplican a contratos celebrados exclusivamente a distancia), pero si alguna vez se celebrara un contrato a distancia con un particular, este debería tenerlo en cuenta (por ejemplo, solicitud expresa del cliente y reconocimiento de que el trabajo empieza de inmediato y de que se pierde el derecho de desistimiento). Para los clientes profesionales (que contratan como empresa) esta restricción no existe y las condiciones acordadas pueden aplicarse libremente.
+  </div>
+
+  <h2>5. Propiedad intelectual</h2>
+  <p>Los contenidos del sitio —textos, diseño, prototipos en vivo que presentan cada paquete— son propiedad intelectual de los operadores. No está permitido copiarlos ni utilizarlos con fines comerciales sin nuestra autorización previa por escrito.</p>
+
+  <h2>6. Limitación de responsabilidad</h2>
+  <p>Las tres demos que se muestran en el sitio (Esszencia, Presztízs, Prémium) son proyectos ficticios creados con fines de demostración: los nombres, datos de contacto y opiniones que aparecen en ellas no son reales y no constituyen una oferta comercial real. Mantenemos el contenido del sitio actualizado lo mejor que sabemos, pero no garantizamos una disponibilidad continua y libre de errores.</p>
+
+  <h2>7. Modificación</h2>
+  <p>Podemos actualizar este documento; la versión vigente está siempre disponible aquí. A los contratos ya celebrados y firmados se les aplican las condiciones firmadas vigentes en el momento de la firma, no una posible modificación posterior del sitio web.</p>
+
+  <h2>8. Contacto</h2>
+  <p>Correo electrónico: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — Teléfono: +36 30 947 6955, +36 70 368 2482</p>
+  </div>
+
+  <div class="lang-block" lang="de" data-lang="de" hidden>
+  <h1>Allgemeine Geschäftsbedingungen</h1>
+  <p class="updated">Letzte Aktualisierung: 23. September 2026</p>
+  <p class="tr-note">Übersetzung zur besseren Verständlichkeit. Maßgeblich ist die ungarische Fassung; bei Abweichungen geht die ungarische Fassung vor.</p>
+
+  <div class="callout">
+    <p style="margin:0"><strong>Wichtig, bevor du weiterliest:</strong> Dieses Dokument regelt die <em>Nutzung der Website</em> — die auf der Website angezeigten Preise und Beschreibungen sind unverbindlich, und das Kontaktformular der Seite dient dem Senden einer Anfrage, <u>nicht</u> einer Bestellung. Der eigentliche Auftrag kommt immer <strong>bei einem persönlichen Treffen durch einen von beiden Seiten unterschriebenen schriftlichen Vertrag</strong> zustande, der den endgültigen Preis, die Frist, die Zahlungsbedingungen sowie die Stornierungs-/Erstattungsregeln enthält. Sollte es zwischen dieser Website und deinem unterschriebenen Vertrag Abweichungen geben, gilt immer der unterschriebene Vertrag.</p>
+  </div>
+
+  <h2>1. Wer wir sind und was dieses Dokument umfasst</h2>
+  <p>AiStudioBudapest (Alex und Theo — die genauen Angaben findest du im <a href="/alexstudio/impresszum.html">Impressum</a>) betreibt diese Website, deren Zweck es ist, unsere Leistungen anhand von drei Live-Prototypen (Esszencia, Presztízs, Prémium) vorzustellen und die Kontaktaufnahme zu ermöglichen. Dieses Dokument bezieht sich ausschließlich auf die <em>Nutzung</em> der Website.</p>
+
+  <h2>2. Die angezeigten Preise</h2>
+  <p>Die auf der Website angegebenen Preise (149 900 Ft / 199 900 Ft / 349 900 Ft sowie die monatlichen Wartungsgebühren) sind unverbindliche Einstiegspreise für den beworbenen Leistungsumfang. Der endgültige Preis, der Umfang und die Frist werden in jedem Fall in dem persönlich geschlossenen Vertrag festgelegt, entsprechend deinen individuellen Anforderungen.</p>
+
+  <h2>3. Das Kontaktformular</h2>
+  <p>Das Ausfüllen und Absenden des Formulars <strong>begründet weder einen Vertrag noch eine Zahlungspflicht</strong> — es sendet uns eine Nachricht, auf die wir per E-Mail antworten. Die <a href="/alexstudio/adatvedelem.html">Datenschutzerklärung</a> beschreibt im Einzelnen, welche Daten benötigt und wie sie verarbeitet werden.</p>
+
+  <h2>4. Vertragsschluss und Stornierungs-/Erstattungsregeln</h2>
+  <p>Nach einer Anfrage über die Website kommt der Auftrag immer <strong>bei einem persönlichen Treffen, schriftlich</strong> zustande. Dieser Vertrag enthält — auf deinen Fall zugeschnitten — auch die Stornierungs- und Erstattungsbedingungen.</p>
+  <div class="todo">
+    <b>Wichtiger rechtlicher Unterschied, der beim Verfassen des Vertrags zu beachten ist:</b> Schließt ein künftiger Kunde den Vertrag <em>als Privatperson</em> (nicht als Unternehmen) und käme der Vertrag dennoch ausschließlich unter Abwesenden zustande (z. B. nur per E-Mail/Telefon, ohne persönliches Treffen), gewähren die ungarischen und EU-Verbraucherschutzvorschriften (Regierungsverordnung 45/2014 (II. 26.), Richtlinie 2011/83/EU) ihm ein 14-tägiges Widerrufsrecht — dieses Recht kann nicht einseitig durch eine Regel wie „Erstattung nur vor Arbeitsbeginn“ eingeschränkt werden. Da euer üblicher Ablauf mit einem persönlichen Treffen endet, ist das in den meisten Fällen nicht relevant (die Vorschriften gelten nur für ausschließlich im Fernabsatz geschlossene Verträge), aber falls jemals ein Vertrag mit einer Privatperson im Fernabsatz geschlossen würde, müsste der Vertrag dies berücksichtigen (z. B. ausdrücklicher Wunsch und Kenntnisnahme des Kunden, dass die Arbeit sofort beginnt und das Widerrufsrecht erlischt). Bei Geschäftskunden (die als Unternehmen kontrahieren) besteht diese Einschränkung nicht, und die vereinbarten Bedingungen können frei angewendet werden.
+  </div>
+
+  <h2>5. Geistiges Eigentum</h2>
+  <p>Die auf der Website gezeigten Inhalte — Texte, Layout, die Live-Prototypen zur Vorstellung der einzelnen Pakete — sind geistiges Eigentum der Betreiber. Ihr Kopieren oder ihre gewerbliche Nutzung ohne unsere vorherige schriftliche Genehmigung ist nicht gestattet.</p>
+
+  <h2>6. Haftungsbeschränkung</h2>
+  <p>Die drei auf der Website gezeigten Demos (Esszencia, Presztízs, Prémium) sind erfundene Projekte zu Vorführzwecken — die dort vorkommenden Namen, Kontaktdaten und Bewertungen sind nicht echt und stellen kein reales Geschäftsangebot dar. Wir halten den Inhalt der Website nach bestem Wissen aktuell, garantieren aber keine ununterbrochene, fehlerfreie Verfügbarkeit.</p>
+
+  <h2>7. Änderungen</h2>
+  <p>Wir können dieses Dokument aktualisieren — die aktuelle Fassung ist immer hier abrufbar. Für bereits geschlossene, unterschriebene Verträge gelten die bei Vertragsschluss gültigen, unterschriebenen Bedingungen, nicht eine etwaige spätere Änderung der Website.</p>
+
+  <h2>8. Kontakt</h2>
+  <p>E-Mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — Telefon: +36 30 947 6955, +36 70 368 2482</p>
+  </div>
 
   <footer>© 2026 AiStudioBudapest</footer>
 </div>
+<script type="application/json" id="legalMeta">{"hu": {"title": "Általános Szerződési Feltételek — AiStudioBudapest", "description": "AiStudioBudapest — a weboldal használatára vonatkozó általános szerződési feltételek."}, "en": {"title": "General Terms and Conditions — AiStudioBudapest", "description": "AiStudioBudapest — general terms and conditions governing the use of the website."}, "fr": {"title": "Conditions générales — AiStudioBudapest", "description": "AiStudioBudapest — conditions générales relatives à l'utilisation du site."}, "es": {"title": "Condiciones generales — AiStudioBudapest", "description": "AiStudioBudapest — condiciones generales que regulan el uso del sitio web."}, "de": {"title": "Allgemeine Geschäftsbedingungen — AiStudioBudapest", "description": "AiStudioBudapest — allgemeine Geschäftsbedingungen für die Nutzung der Website."}}</script>
+<script src="/alexstudio/legal.js" defer></script>
 </body>
 </html>

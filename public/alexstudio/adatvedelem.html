@@ -48,17 +48,31 @@ th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;le
 .legal-nav a{color:var(--muted);text-decoration:none;}
 .legal-nav a:hover,.legal-nav a[aria-current]{color:var(--cyan);}
 footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;}
+.lang-block[hidden]{display:none;}
+.tr-note{font-size:13px;color:var(--muted);border-left:2px solid rgba(127,233,222,.5);padding:2px 0 2px 12px;margin:0 0 28px;}
+.lang-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px;}
+.lang-pills button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.04em;cursor:pointer;min-height:36px;}
+.lang-pills button:hover{color:var(--text);border-color:rgba(255,255,255,.4);}
+.lang-pills button.active{color:var(--cyan);border-color:var(--cyan);background:rgba(127,233,222,.08);}
+@media (pointer:coarse){.lang-pills button{min-height:44px;padding:8px 16px;}.legal-nav a{display:inline-block;padding:8px 0;}}
+.wrap{overflow-wrap:anywhere;}
+.lang-block{hyphens:auto;-webkit-hyphens:auto;}
+h1{font-size:clamp(24px,7.4vw,40px);}
+table,th,td{overflow-wrap:normal;hyphens:manual;}
+td code{white-space:nowrap;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="/">← Vissza az AiStudioBudapest oldalra</a>
+  <a class="back" href="/" data-ui="back">← Vissza az AiStudioBudapest oldalra</a>
+  <div class="lang-pills" id="langPills"></div>
   <nav class="legal-nav" aria-label="Jogi dokumentumok">
-    <a href="/alexstudio/impresszum.html">Impresszum</a>
-    <a href="/alexstudio/adatvedelem.html" aria-current="page">Adatvédelmi tájékoztató</a>
-    <a href="/alexstudio/aszf.html">Általános Szerződési Feltételek</a>
-    <a href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a>
+    <a data-ui="imp" href="/alexstudio/impresszum.html">Impresszum</a>
+    <a data-ui="priv" href="/alexstudio/adatvedelem.html" aria-current="page">Adatvédelmi tájékoztató</a>
+    <a data-ui="terms" href="/alexstudio/aszf.html">Általános Szerződési Feltételek</a>
+    <a data-ui="cookies" href="/alexstudio/cookie-tajekoztato.html">Cookie-tájékoztató</a>
   </nav>
+  <div class="lang-block" lang="hu" data-lang="hu">
 
   <h1>Adatvédelmi tájékoztató</h1>
   <p class="updated">Utolsó frissítés: 2026. szeptember 23. — hatályos jogszabály: az Európai Parlament és a Tanács (EU) 2016/679 rendelete (GDPR), valamint az információs önrendelkezési jogról és az információszabadságról szóló 2011. évi CXII. törvény (Infotv.)</p>
@@ -118,8 +132,259 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
 
   <h2>7. A tájékoztató módosítása</h2>
   <p>Ezt a tájékoztatót frissíthetjük, ha a weboldal működése vagy az alkalmazott szolgáltatások változnak — az aktuális verzió mindig itt érhető el.</p>
+  </div>
+
+  <div class="lang-block" lang="en" data-lang="en" hidden>
+  <h1>Privacy notice</h1>
+  <p class="updated">Last updated: 23 September 2026 — applicable law: Regulation (EU) 2016/679 of the European Parliament and of the Council (GDPR), and Act CXII of 2011 on the Right of Informational Self-Determination and on Freedom of Information (Infotv.)</p>
+  <p class="tr-note">Convenience translation. The Hungarian version is the authoritative text; in case of any discrepancy the Hungarian version prevails.</p>
+
+  <p>This notice describes what personal data we process when you use the <strong>aistudiobudapest.hu</strong> website (currently available in a development environment, under <code>/alexstudio/</code>), why, for how long, and what rights you have in this respect. We only process data that is actually necessary — this notice was written by reviewing the website's actual code, not from a template.</p>
+
+  <h2>1. Who processes your data?</h2>
+  <p>Alex and Theo, under the name AiStudioBudapest.</p>
+  <div class="todo"><b>To be completed:</b> full name, address, and — once available — registration/tax number. See the <a href="/alexstudio/impresszum.html">Legal notice</a> for the exact, current status.</div>
+  <p>E-mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — you can contact us here with any question about data processing.</p>
+
+  <h2>2. What data we process, and why</h2>
+
+  <h3>2.1 Contact form</h3>
+  <p>When you fill in the form at the bottom of the website, you send the following data: <strong>name, e-mail address, message text</strong>. This is <u>not</u> an order — only an enquiry, which we answer by e-mail. The actual contract (and its terms, including the cancellation/refund rules) is always made in person, in writing — see the <a href="/alexstudio/aszf.html">Terms and Conditions</a>.</p>
+  <p><strong>Legal basis:</strong> your consent (Article 6(1)(a) GDPR) — by submitting the form you consent to our processing the data provided for the purpose of answering your enquiry.</p>
+  <p><strong>Recipient:</strong> the message reaches us by e-mail through the <a href="https://formsubmit.co" target="_blank" rel="noopener">FormSubmit.co</a> service. FormSubmit acts as a data processor — <span class="muted">their own privacy statement, dated 2019, does not go into detail about the location of the servers or the retention period; we point this out here so that you know exactly what to expect.</span> The content of the message is then also stored in our e-mail account (Gmail).</p>
+  <p><strong>Retention period:</strong> we keep the message for as long as it is needed to handle the enquiry, or as long as a business relationship exists; after that it is deleted, or deleted earlier on request.</p>
+
+  <h3>2.2 Language setting (local storage, not a cookie)</h3>
+  <p>In your browser's <code>localStorage</code> we store a single entry (<code>aistudio_lang</code>), which remembers which language you chose (Hungarian, English, French, Spanish, German). It stays solely on your device, does not reach us, and cannot be used to identify you. Since it is necessary for the basic operation of the website (remembering your language setting), it does not require separate consent — details in the <a href="/alexstudio/cookie-tajekoztato.html">Cookie notice</a>.</p>
+
+  <h3>2.3 What we do NOT collect</h3>
+  <p>There is no analytics tool (e.g. Google Analytics), no advertising pixel (e.g. Meta Pixel), no profiling, no sale or transfer to third parties for marketing purposes. We verified this by reviewing the complete source code of the website; we don't just claim it.</p>
+
+  <h2>3. Third parties to whom data may be passed</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table">
+  <table>
+    <tr><th>Provider</th><th>What we use it for</th><th>What data</th></tr>
+    <tr><td>FormSubmit.co</td><td>Forwarding the contact form to e-mail</td><td>Name, e-mail address, message</td></tr>
+    <tr><td>Pexels (Canva Inc.)</td><td>Loading the video played in the background</td><td>IP address and browser data when the video is requested (technical in nature, necessary for the video service to work)</td></tr>
+  </table>
+  </div>
+  <p class="muted">We serve the fonts (Hanken Grotesk, Prata) from our own server, not from an external provider — a deliberate decision so that as little data as possible reaches third parties beyond what is needed just to load the page.</p>
+  <p>Three live prototypes (Esszencia, Presztízs, Prémium) can also be viewed on the website in embedded windows — these are demo sites of their own, which also load a background video and store their own language setting in your browser, but do not send data anywhere (the booking/contact forms in them work for demonstration purposes only, not for real data collection).</p>
+
+  <h2>4. How long we keep the data</h2>
+  <p>We keep contact messages until the matter is closed, or for as long as any business/contractual relationship exists, and delete them within a reasonable time afterwards, unless a law (e.g. accounting or tax obligations) requires longer retention in the case of a concluded contract.</p>
+
+  <h2>5. What rights do you have?</h2>
+  <p>Under the GDPR you can request at any time:</p>
+  <ul>
+    <li><strong>Access</strong> to the data we hold about you</li>
+    <li><strong>Rectification</strong> if any data is inaccurate</li>
+    <li><strong>Erasure</strong> (“right to be forgotten”)</li>
+    <li><strong>Restriction of processing</strong></li>
+    <li><strong>Data portability</strong> (in the case of the contact form, since it is based on consent)</li>
+    <li><strong>Withdrawal of your consent</strong> — this does not affect the lawfulness of processing carried out before the withdrawal</li>
+    <li><strong>Objection</strong> to the processing</li>
+  </ul>
+  <p>You can exercise these rights at <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a>.</p>
+
+  <h2>6. Complaint</h2>
+  <p>If you feel your rights have been violated, you can lodge a complaint with the Hungarian National Authority for Data Protection and Freedom of Information (NAIH):</p>
+  <p class="muted">Address: 1055 Budapest, Falk Miksa utca 9–11.<br>Postal address: 1363 Budapest, Pf. 9.<br>Phone: +36 (1) 391-1400<br>E-mail: ugyfelszolgalat@naih.hu<br>Website: <a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a></p>
+  <p>In addition, you can go to court — proceedings can also be brought before the regional court (törvényszék) of your place of residence or stay.</p>
+
+  <h2>7. Amendments to this notice</h2>
+  <p>We may update this notice if the way the website works or the services we use change — the current version is always available here.</p>
+  </div>
+
+  <div class="lang-block" lang="fr" data-lang="fr" hidden>
+  <h1>Politique de confidentialité</h1>
+  <p class="updated">Dernière mise à jour : 23 septembre 2026 — textes applicables : règlement (UE) 2016/679 du Parlement européen et du Conseil (RGPD), et loi hongroise CXII de 2011 sur le droit à l'autodétermination informationnelle et sur la liberté d'information (Infotv.)</p>
+  <p class="tr-note">Traduction fournie à titre de commodité. La version hongroise fait foi ; en cas de divergence, c'est la version hongroise qui prévaut.</p>
+
+  <p>Cette politique décrit les données personnelles que nous traitons lorsque vous utilisez le site <strong>aistudiobudapest.hu</strong> (actuellement accessible dans un environnement de développement, sous <code>/alexstudio/</code>), pourquoi, pendant combien de temps, et quels sont vos droits à cet égard. Nous ne traitons que les données réellement nécessaires — cette politique a été rédigée après examen du code réel du site, et non à partir d'un modèle.</p>
+
+  <h2>1. Qui traite vos données ?</h2>
+  <p>Alex et Theo, sous le nom AiStudioBudapest.</p>
+  <div class="todo"><b>À compléter :</b> nom complet, adresse et — dès qu'il existera — numéro d'enregistrement/numéro fiscal. Voir les <a href="/alexstudio/impresszum.html">Mentions légales</a> pour le statut exact et actuel.</div>
+  <p>E-mail : <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — vous pouvez nous écrire ici pour toute question relative au traitement des données.</p>
+
+  <h2>2. Quelles données nous traitons, et pourquoi</h2>
+
+  <h3>2.1 Formulaire de contact</h3>
+  <p>Lorsque vous remplissez le formulaire en bas du site, vous envoyez les données suivantes : <strong>nom, adresse e-mail, texte du message</strong>. Il ne s'agit <u>pas</u> d'une commande — seulement d'une demande, à laquelle nous répondons par e-mail. Le contrat proprement dit (et ses conditions, y compris les règles d'annulation/de remboursement) est toujours conclu en personne, par écrit — voir les <a href="/alexstudio/aszf.html">Conditions générales</a>.</p>
+  <p><strong>Base juridique :</strong> votre consentement (article 6, paragraphe 1, point a) du RGPD) — en envoyant le formulaire, vous consentez à ce que nous traitions les données fournies afin de répondre à votre demande.</p>
+  <p><strong>Destinataire :</strong> le message nous parvient par e-mail via le service <a href="https://formsubmit.co" target="_blank" rel="noopener">FormSubmit.co</a>. FormSubmit agit comme sous-traitant — <span class="muted">sa propre déclaration de confidentialité, datée de 2019, ne précise pas en détail l'emplacement des serveurs ni la durée de conservation ; nous le signalons ici pour que vous sachiez exactement à quoi vous attendre.</span> Le contenu du message est ensuite également conservé dans notre messagerie (Gmail).</p>
+  <p><strong>Durée de conservation :</strong> nous conservons le message aussi longtemps que nécessaire pour traiter la demande, ou tant qu'une relation d'affaires existe ; ensuite il est supprimé, ou supprimé plus tôt sur demande.</p>
+
+  <h3>2.2 Réglage de la langue (stockage local, pas un cookie)</h3>
+  <p>Dans le <code>localStorage</code> de votre navigateur, nous stockons une seule entrée (<code>aistudio_lang</code>), qui mémorise la langue que vous avez choisie (hongrois, anglais, français, espagnol, allemand). Elle reste uniquement sur votre appareil, ne nous parvient pas et ne permet pas de vous identifier. Comme elle est nécessaire au fonctionnement de base du site (mémoriser votre réglage de langue), elle ne requiert pas de consentement distinct — détails dans l'<a href="/alexstudio/cookie-tajekoztato.html">Information sur les cookies</a>.</p>
+
+  <h3>2.3 Ce que nous ne collectons PAS</h3>
+  <p>Il n'y a pas d'outil de mesure d'audience (p. ex. Google Analytics), pas de pixel publicitaire (p. ex. Meta Pixel), pas de profilage, pas de vente ni de transmission à des tiers à des fins de marketing. Nous l'avons vérifié en examinant l'intégralité du code source du site ; nous ne nous contentons pas de l'affirmer.</p>
+
+  <h2>3. Tiers auxquels des données peuvent parvenir</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Tableau défilant">
+  <table>
+    <tr><th>Prestataire</th><th>Utilisation</th><th>Données concernées</th></tr>
+    <tr><td>FormSubmit.co</td><td>Transmission du formulaire de contact par e-mail</td><td>Nom, adresse e-mail, message</td></tr>
+    <tr><td>Pexels (Canva Inc.)</td><td>Chargement de la vidéo diffusée en arrière-plan</td><td>Adresse IP et données du navigateur lors de la requête de la vidéo (de nature technique, nécessaires au fonctionnement du service vidéo)</td></tr>
+  </table>
+  </div>
+  <p class="muted">Les polices de caractères (Hanken Grotesk, Prata) sont servies depuis notre propre serveur, et non par un prestataire externe — un choix délibéré pour que le moins de données possible parviennent à des tiers, au-delà de ce qui est nécessaire au simple chargement de la page.</p>
+  <p>Trois prototypes en ligne (Esszencia, Presztízs, Prémium) peuvent aussi être consultés sur le site dans des fenêtres intégrées — ce sont des sites de démonstration à part entière, qui chargent eux aussi une vidéo d'arrière-plan et stockent leur propre réglage de langue dans votre navigateur, mais n'envoient de données nulle part (les formulaires de réservation/de contact qu'ils contiennent ne fonctionnent qu'à des fins de démonstration, pas pour une véritable collecte de données).</p>
+
+  <h2>4. Durée de conservation des données</h2>
+  <p>Nous conservons les messages de contact jusqu'à la clôture de l'affaire, ou tant qu'une relation commerciale/contractuelle existe, puis nous les supprimons dans un délai raisonnable, sauf si la loi (par exemple des obligations comptables ou fiscales) impose une conservation plus longue dans le cas d'un contrat conclu.</p>
+
+  <h2>5. Quels sont vos droits ?</h2>
+  <p>En vertu du RGPD, vous pouvez à tout moment demander :</p>
+  <ul>
+    <li>l'<strong>accès</strong> aux données que nous détenons sur vous</li>
+    <li>la <strong>rectification</strong> de toute donnée inexacte</li>
+    <li>l'<strong>effacement</strong> (« droit à l'oubli »)</li>
+    <li>la <strong>limitation du traitement</strong></li>
+    <li>la <strong>portabilité</strong> des données (pour le formulaire de contact, puisqu'il repose sur le consentement)</li>
+    <li>le <strong>retrait de votre consentement</strong> — cela n'affecte pas la licéité du traitement effectué avant le retrait</li>
+    <li>l'<strong>opposition</strong> au traitement</li>
+  </ul>
+  <p>Vous pouvez exercer ces droits à l'adresse <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a>.</p>
+
+  <h2>6. Réclamation</h2>
+  <p>Si vous estimez que vos droits ont été violés, vous pouvez déposer une réclamation auprès de l'Autorité nationale hongroise de protection des données et de la liberté de l'information (NAIH) :</p>
+  <p class="muted">Adresse : 1055 Budapest, Falk Miksa utca 9–11.<br>Adresse postale : 1363 Budapest, Pf. 9.<br>Téléphone : +36 (1) 391-1400<br>E-mail : ugyfelszolgalat@naih.hu<br>Site web : <a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a></p>
+  <p>Vous pouvez en outre saisir un tribunal — la procédure peut aussi être engagée devant le tribunal (törvényszék) de votre lieu de résidence ou de séjour.</p>
+
+  <h2>7. Modification de cette politique</h2>
+  <p>Nous pouvons mettre à jour cette politique si le fonctionnement du site ou les services utilisés changent — la version en vigueur est toujours disponible ici.</p>
+  </div>
+
+  <div class="lang-block" lang="es" data-lang="es" hidden>
+  <h1>Política de privacidad</h1>
+  <p class="updated">Última actualización: 23 de septiembre de 2026 — normativa aplicable: Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo (RGPD) y la Ley húngara CXII de 2011 sobre el derecho de autodeterminación informativa y la libertad de información (Infotv.)</p>
+  <p class="tr-note">Traducción de cortesía. La versión húngara es el texto oficial; en caso de discrepancia prevalece la versión húngara.</p>
+
+  <p>Esta política describe qué datos personales tratamos cuando utilizas el sitio web <strong>aistudiobudapest.hu</strong> (actualmente disponible en un entorno de desarrollo, bajo <code>/alexstudio/</code>), por qué, durante cuánto tiempo y qué derechos tienes al respecto. Solo tratamos los datos que son realmente necesarios: esta política se ha redactado revisando el código real del sitio, no a partir de una plantilla.</p>
+
+  <h2>1. ¿Quién trata tus datos?</h2>
+  <p>Alex y Theo, bajo el nombre AiStudioBudapest.</p>
+  <div class="todo"><b>Por completar:</b> nombre completo, dirección y —cuando exista— número de registro/identificación fiscal. Consulta el <a href="/alexstudio/impresszum.html">Aviso legal</a> para conocer el estado exacto y actual.</div>
+  <p>Correo electrónico: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — puedes escribirnos aquí con cualquier duda sobre el tratamiento de datos.</p>
+
+  <h2>2. Qué datos tratamos y por qué</h2>
+
+  <h3>2.1 Formulario de contacto</h3>
+  <p>Al rellenar el formulario que hay al final del sitio, envías los siguientes datos: <strong>nombre, dirección de correo electrónico y texto del mensaje</strong>. Esto <u>no</u> es un pedido: es solo una consulta, a la que respondemos por correo electrónico. El contrato propiamente dicho (y sus condiciones, incluidas las normas de cancelación/reembolso) se celebra siempre en persona, por escrito — consulta las <a href="/alexstudio/aszf.html">Condiciones generales</a>.</p>
+  <p><strong>Base jurídica:</strong> tu consentimiento (artículo 6, apartado 1, letra a) del RGPD): al enviar el formulario consientes que tratemos los datos facilitados con el fin de responder a tu consulta.</p>
+  <p><strong>Destinatario:</strong> el mensaje nos llega por correo electrónico a través del servicio <a href="https://formsubmit.co" target="_blank" rel="noopener">FormSubmit.co</a>. FormSubmit actúa como encargado del tratamiento — <span class="muted">su propia declaración de privacidad, fechada en 2019, no detalla la ubicación de los servidores ni el plazo de conservación; lo indicamos aquí para que sepas exactamente qué esperar.</span> El contenido del mensaje se almacena después también en nuestra cuenta de correo (Gmail).</p>
+  <p><strong>Plazo de conservación:</strong> conservamos el mensaje mientras sea necesario para atender la consulta o mientras exista una relación comercial; después se elimina, o se elimina antes si lo solicitas.</p>
+
+  <h3>2.2 Ajuste de idioma (almacenamiento local, no es una cookie)</h3>
+  <p>En el <code>localStorage</code> de tu navegador guardamos una única entrada (<code>aistudio_lang</code>), que recuerda qué idioma has elegido (húngaro, inglés, francés, español, alemán). Permanece únicamente en tu dispositivo, no nos llega y no sirve para identificarte. Como es necesaria para el funcionamiento básico del sitio (recordar tu ajuste de idioma), no requiere un consentimiento aparte — detalles en la <a href="/alexstudio/cookie-tajekoztato.html">Información sobre cookies</a>.</p>
+
+  <h3>2.3 Lo que NO recopilamos</h3>
+  <p>No hay herramienta de análisis de visitas (p. ej. Google Analytics), ni píxel publicitario (p. ej. Meta Pixel), ni elaboración de perfiles, ni venta o cesión a terceros con fines de marketing. Lo hemos comprobado revisando el código fuente completo del sitio; no nos limitamos a afirmarlo.</p>
+
+  <h2>3. Terceros a los que pueden llegar datos</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Tabla desplazable">
+  <table>
+    <tr><th>Proveedor</th><th>Para qué lo usamos</th><th>Qué datos</th></tr>
+    <tr><td>FormSubmit.co</td><td>Reenvío del formulario de contacto por correo electrónico</td><td>Nombre, dirección de correo electrónico, mensaje</td></tr>
+    <tr><td>Pexels (Canva Inc.)</td><td>Carga del vídeo que se reproduce de fondo</td><td>Dirección IP y datos del navegador al solicitar el vídeo (de carácter técnico, necesarios para el funcionamiento del servicio de vídeo)</td></tr>
+  </table>
+  </div>
+  <p class="muted">Las fuentes tipográficas (Hanken Grotesk, Prata) las servimos desde nuestro propio servidor, no desde un proveedor externo: es una decisión deliberada para que llegue a terceros la menor cantidad posible de datos, más allá de lo estrictamente necesario para cargar la página.</p>
+  <p>En el sitio también pueden verse tres prototipos en vivo (Esszencia, Presztízs, Prémium) en ventanas incrustadas: son páginas de demostración propias, que también cargan un vídeo de fondo y guardan su propio ajuste de idioma en tu navegador, pero no envían datos a ningún sitio (los formularios de reserva/contacto que contienen funcionan solo con fines de demostración, no para recopilar datos reales).</p>
+
+  <h2>4. Durante cuánto tiempo conservamos los datos</h2>
+  <p>Conservamos los mensajes de contacto hasta que se resuelva el asunto o mientras exista una relación comercial/contractual, y los eliminamos en un plazo razonable después, salvo que una ley (p. ej. obligaciones contables o fiscales) exija una conservación más larga en el caso de un contrato celebrado.</p>
+
+  <h2>5. ¿Qué derechos tienes?</h2>
+  <p>Con arreglo al RGPD, puedes solicitar en cualquier momento:</p>
+  <ul>
+    <li>el <strong>acceso</strong> a los datos que tratamos sobre ti</li>
+    <li>la <strong>rectificación</strong> si algún dato es inexacto</li>
+    <li>la <strong>supresión</strong> («derecho al olvido»)</li>
+    <li>la <strong>limitación del tratamiento</strong></li>
+    <li>la <strong>portabilidad</strong> de los datos (en el caso del formulario de contacto, ya que se basa en el consentimiento)</li>
+    <li>la <strong>retirada de tu consentimiento</strong> — esto no afecta a la licitud del tratamiento anterior a la retirada</li>
+    <li>la <strong>oposición</strong> al tratamiento</li>
+  </ul>
+  <p>Puedes ejercer estos derechos en <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a>.</p>
+
+  <h2>6. Reclamación</h2>
+  <p>Si consideras que se han vulnerado tus derechos, puedes presentar una reclamación ante la Autoridad Nacional húngara de Protección de Datos y Libertad de Información (NAIH):</p>
+  <p class="muted">Dirección: 1055 Budapest, Falk Miksa utca 9–11.<br>Dirección postal: 1363 Budapest, Pf. 9.<br>Teléfono: +36 (1) 391-1400<br>Correo electrónico: ugyfelszolgalat@naih.hu<br>Sitio web: <a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a></p>
+  <p>Además, puedes acudir a los tribunales: el procedimiento también puede iniciarse ante el tribunal (törvényszék) de tu lugar de residencia o estancia.</p>
+
+  <h2>7. Modificación de esta política</h2>
+  <p>Podemos actualizar esta política si cambian el funcionamiento del sitio o los servicios utilizados; la versión vigente está siempre disponible aquí.</p>
+  </div>
+
+  <div class="lang-block" lang="de" data-lang="de" hidden>
+  <h1>Datenschutzerklärung</h1>
+  <p class="updated">Letzte Aktualisierung: 23. September 2026 — anwendbares Recht: Verordnung (EU) 2016/679 des Europäischen Parlaments und des Rates (DSGVO) sowie das ungarische Gesetz CXII von 2011 über das Recht auf informationelle Selbstbestimmung und die Informationsfreiheit (Infotv.)</p>
+  <p class="tr-note">Übersetzung zur besseren Verständlichkeit. Maßgeblich ist die ungarische Fassung; bei Abweichungen geht die ungarische Fassung vor.</p>
+
+  <p>Diese Erklärung beschreibt, welche personenbezogenen Daten wir bei der Nutzung der Website <strong>aistudiobudapest.hu</strong> (derzeit in einer Entwicklungsumgebung unter <code>/alexstudio/</code> erreichbar) verarbeiten, warum, wie lange und welche Rechte du in diesem Zusammenhang hast. Wir verarbeiten nur Daten, die tatsächlich erforderlich sind — diese Erklärung wurde anhand einer Überprüfung des tatsächlichen Codes der Website erstellt, nicht aus einer Vorlage.</p>
+
+  <h2>1. Wer verarbeitet deine Daten?</h2>
+  <p>Alex und Theo, unter dem Namen AiStudioBudapest.</p>
+  <div class="todo"><b>Wird ergänzt:</b> vollständiger Name, Anschrift und — sobald vorhanden — Register-/Steuernummer. Den genauen, aktuellen Stand findest du im <a href="/alexstudio/impresszum.html">Impressum</a>.</div>
+  <p>E-Mail: <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> — hier kannst du dich mit jeder Frage zur Datenverarbeitung an uns wenden.</p>
+
+  <h2>2. Welche Daten wir verarbeiten und warum</h2>
+
+  <h3>2.1 Kontaktformular</h3>
+  <p>Wenn du das Formular am Ende der Website ausfüllst, sendest du folgende Daten: <strong>Name, E-Mail-Adresse, Nachrichtentext</strong>. Das ist <u>keine</u> Bestellung — nur eine Anfrage, die wir per E-Mail beantworten. Der eigentliche Vertrag (und seine Bedingungen, einschließlich der Stornierungs-/Erstattungsregeln) kommt immer persönlich und schriftlich zustande — siehe die <a href="/alexstudio/aszf.html">Allgemeinen Geschäftsbedingungen</a>.</p>
+  <p><strong>Rechtsgrundlage:</strong> deine Einwilligung (Art. 6 Abs. 1 Buchst. a DSGVO) — mit dem Absenden des Formulars willigst du ein, dass wir die angegebenen Daten zur Beantwortung deiner Anfrage verarbeiten.</p>
+  <p><strong>Empfänger:</strong> Die Nachricht erreicht uns per E-Mail über den Dienst <a href="https://formsubmit.co" target="_blank" rel="noopener">FormSubmit.co</a>. FormSubmit handelt als Auftragsverarbeiter — <span class="muted">dessen eigene Datenschutzerklärung aus dem Jahr 2019 geht nicht im Einzelnen auf den Standort der Server oder die Speicherdauer ein; darauf weisen wir hier ausdrücklich hin, damit du genau weißt, womit du rechnen kannst.</span> Der Inhalt der Nachricht wird danach auch in unserem E-Mail-Konto (Gmail) gespeichert.</p>
+  <p><strong>Speicherdauer:</strong> Wir bewahren die Nachricht so lange auf, wie sie zur Bearbeitung der Anfrage erforderlich ist bzw. solange eine Geschäftsbeziehung besteht; danach wird sie gelöscht, auf Wunsch auch früher.</p>
+
+  <h3>2.2 Spracheinstellung (lokaler Speicher, kein Cookie)</h3>
+  <p>Im <code>localStorage</code> deines Browsers speichern wir einen einzigen Eintrag (<code>aistudio_lang</code>), der sich merkt, welche Sprache du gewählt hast (Ungarisch, Englisch, Französisch, Spanisch, Deutsch). Er bleibt ausschließlich auf deinem Gerät, gelangt nicht zu uns und eignet sich nicht zu deiner Identifizierung. Da er für den Grundbetrieb der Website (Merken deiner Spracheinstellung) erforderlich ist, bedarf er keiner gesonderten Einwilligung — Einzelheiten in den <a href="/alexstudio/cookie-tajekoztato.html">Cookie-Hinweisen</a>.</p>
+
+  <h3>2.3 Was wir NICHT erheben</h3>
+  <p>Es gibt kein Besucher-Tracking (z. B. Google Analytics), keine Werbe-Pixel (z. B. Meta Pixel), kein Profiling, keinen Verkauf und keine Weitergabe an Dritte zu Marketingzwecken. Das haben wir durch eine Überprüfung des gesamten Quellcodes der Website kontrolliert; wir behaupten es nicht nur.</p>
+
+  <h2>3. Dritte, an die Daten gelangen können</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollbare Tabelle">
+  <table>
+    <tr><th>Anbieter</th><th>Wofür wir ihn nutzen</th><th>Welche Daten</th></tr>
+    <tr><td>FormSubmit.co</td><td>Weiterleitung des Kontaktformulars per E-Mail</td><td>Name, E-Mail-Adresse, Nachricht</td></tr>
+    <tr><td>Pexels (Canva Inc.)</td><td>Laden des im Hintergrund abgespielten Videos</td><td>IP-Adresse und Browserdaten beim Abruf des Videos (technischer Natur, für das Funktionieren des Videodienstes erforderlich)</td></tr>
+  </table>
+  </div>
+  <p class="muted">Die Schriftarten (Hanken Grotesk, Prata) liefern wir von unserem eigenen Server aus, nicht von einem externen Anbieter — eine bewusste Entscheidung, damit möglichst wenige Daten an Dritte gelangen, über das hinaus, was zum bloßen Laden der Seite nötig ist.</p>
+  <p>Auf der Website sind außerdem drei Live-Prototypen (Esszencia, Presztízs, Prémium) in eingebetteten Fenstern zu sehen — das sind eigene Demoseiten, die ebenfalls ein Hintergrundvideo laden und eine eigene Spracheinstellung in deinem Browser speichern, aber keine Daten irgendwohin senden (die darin enthaltenen Buchungs-/Kontaktformulare funktionieren ausschließlich zu Demonstrationszwecken, nicht zur tatsächlichen Datenerhebung).</p>
+
+  <h2>4. Wie lange wir die Daten aufbewahren</h2>
+  <p>Kontaktnachrichten bewahren wir bis zum Abschluss der Angelegenheit bzw. solange eine Geschäfts-/Vertragsbeziehung besteht auf und löschen sie danach innerhalb angemessener Zeit, es sei denn, ein Gesetz (z. B. Buchführungs- oder Steuerpflichten) schreibt bei einem zustande gekommenen Vertrag eine längere Aufbewahrung vor.</p>
+
+  <h2>5. Welche Rechte hast du?</h2>
+  <p>Nach der DSGVO kannst du jederzeit verlangen:</p>
+  <ul>
+    <li><strong>Auskunft</strong> über die zu deiner Person verarbeiteten Daten</li>
+    <li><strong>Berichtigung</strong>, wenn eine Angabe unrichtig ist</li>
+    <li><strong>Löschung</strong> („Recht auf Vergessenwerden“)</li>
+    <li><strong>Einschränkung der Verarbeitung</strong></li>
+    <li><strong>Datenübertragbarkeit</strong> (beim Kontaktformular, da es auf einer Einwilligung beruht)</li>
+    <li><strong>Widerruf deiner Einwilligung</strong> — dies berührt nicht die Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung</li>
+    <li><strong>Widerspruch</strong> gegen die Verarbeitung</li>
+  </ul>
+  <p>Diese Rechte kannst du unter <a href="mailto:aistudiobudapest@gmail.com">aistudiobudapest@gmail.com</a> ausüben.</p>
+
+  <h2>6. Beschwerde</h2>
+  <p>Wenn du der Ansicht bist, dass deine Rechte verletzt wurden, kannst du dich bei der Ungarischen Nationalen Behörde für Datenschutz und Informationsfreiheit (NAIH) beschweren:</p>
+  <p class="muted">Anschrift: 1055 Budapest, Falk Miksa utca 9–11.<br>Postanschrift: 1363 Budapest, Pf. 9.<br>Telefon: +36 (1) 391-1400<br>E-Mail: ugyfelszolgalat@naih.hu<br>Website: <a href="https://naih.hu" target="_blank" rel="noopener">naih.hu</a></p>
+  <p>Darüber hinaus kannst du dich an ein Gericht wenden — das Verfahren kann auch vor dem Gericht (törvényszék) deines Wohn- oder Aufenthaltsorts eingeleitet werden.</p>
+
+  <h2>7. Änderung dieser Erklärung</h2>
+  <p>Wir können diese Erklärung aktualisieren, wenn sich die Funktionsweise der Website oder die eingesetzten Dienste ändern — die aktuelle Fassung ist immer hier abrufbar.</p>
+  </div>
 
   <footer>© 2026 AiStudioBudapest</footer>
 </div>
+<script type="application/json" id="legalMeta">{"hu": {"title": "Adatvédelmi tájékoztató — AiStudioBudapest", "description": "AiStudioBudapest — adatvédelmi tájékoztató: milyen adatokat kezelünk, miért, meddig, és milyen jogaid vannak."}, "en": {"title": "Privacy notice — AiStudioBudapest", "description": "AiStudioBudapest — privacy notice: what data we process, why, for how long, and what rights you have."}, "fr": {"title": "Politique de confidentialité — AiStudioBudapest", "description": "AiStudioBudapest — politique de confidentialité : quelles données nous traitons, pourquoi, combien de temps, et quels sont vos droits."}, "es": {"title": "Política de privacidad — AiStudioBudapest", "description": "AiStudioBudapest — política de privacidad: qué datos tratamos, por qué, durante cuánto tiempo y qué derechos tienes."}, "de": {"title": "Datenschutzerklärung — AiStudioBudapest", "description": "AiStudioBudapest — Datenschutzerklärung: welche Daten wir verarbeiten, warum, wie lange und welche Rechte du hast."}}</script>
+<script src="/alexstudio/legal.js" defer></script>
 </body>
 </html>

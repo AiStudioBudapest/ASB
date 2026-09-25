@@ -48,17 +48,31 @@ th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;le
 .legal-nav a{color:var(--muted);text-decoration:none;}
 .legal-nav a:hover,.legal-nav a[aria-current]{color:var(--cyan);}
 footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;}
+.lang-block[hidden]{display:none;}
+.tr-note{font-size:13px;color:var(--muted);border-left:2px solid rgba(127,233,222,.5);padding:2px 0 2px 12px;margin:0 0 28px;}
+.lang-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 24px;}
+.lang-pills button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.04em;cursor:pointer;min-height:36px;}
+.lang-pills button:hover{color:var(--text);border-color:rgba(255,255,255,.4);}
+.lang-pills button.active{color:var(--cyan);border-color:var(--cyan);background:rgba(127,233,222,.08);}
+@media (pointer:coarse){.lang-pills button{min-height:44px;padding:8px 16px;}.legal-nav a{display:inline-block;padding:8px 0;}}
+.wrap{overflow-wrap:anywhere;}
+.lang-block{hyphens:auto;-webkit-hyphens:auto;}
+h1{font-size:clamp(24px,7.4vw,40px);}
+table,th,td{overflow-wrap:normal;hyphens:manual;}
+td code{white-space:nowrap;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="/">← Vissza az AiStudioBudapest oldalra</a>
+  <a class="back" href="/" data-ui="back">← Vissza az AiStudioBudapest oldalra</a>
+  <div class="lang-pills" id="langPills"></div>
   <nav class="legal-nav" aria-label="Jogi dokumentumok">
-    <a href="/alexstudio/impresszum.html">Impresszum</a>
-    <a href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a>
-    <a href="/alexstudio/aszf.html">Általános Szerződési Feltételek</a>
-    <a href="/alexstudio/cookie-tajekoztato.html" aria-current="page">Cookie-tájékoztató</a>
+    <a data-ui="imp" href="/alexstudio/impresszum.html">Impresszum</a>
+    <a data-ui="priv" href="/alexstudio/adatvedelem.html">Adatvédelmi tájékoztató</a>
+    <a data-ui="terms" href="/alexstudio/aszf.html">Általános Szerződési Feltételek</a>
+    <a data-ui="cookies" href="/alexstudio/cookie-tajekoztato.html" aria-current="page">Cookie-tájékoztató</a>
   </nav>
+  <div class="lang-block" lang="hu" data-lang="hu">
 
   <h1>Cookie-tájékoztató</h1>
   <p class="updated">Utolsó frissítés: 2026. szeptember 23.</p>
@@ -82,8 +96,115 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:v
 
   <h2>Hogyan törölheted</h2>
   <p>A böngésződ beállításai között bármikor törölheted az oldal által tárolt adatokat (Chrome-ban pl.: Beállítások → Adatvédelem és biztonság → Webhelyadatok törlése). Mivel csak a nyelvi preferenciádat tároljuk, ennek törlése után a weboldal egyszerűen a magyar nyelvi verzióval indul újra.</p>
+  </div>
+
+  <div class="lang-block" lang="en" data-lang="en" hidden>
+  <h1>Cookie notice</h1>
+  <p class="updated">Last updated: 23 September 2026</p>
+  <p class="tr-note">Convenience translation. The Hungarian version is the authoritative text; in case of any discrepancy the Hungarian version prevails.</p>
+
+  <p>This notice describes exactly what we store in your browser — no more and no less than what the code actually does.</p>
+
+  <h2>What we use today</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table">
+  <table>
+    <tr><th>Name</th><th>Type</th><th>Purpose</th><th>Lifetime</th><th>Consent?</th></tr>
+    <tr><td><code>aistudio_lang</code></td><td>localStorage (not a cookie)</td><td>Remembers which language you chose</td><td>Until you clear it in your browser</td><td>Not required — it is needed for the basic operation of the site and never leaves your device</td></tr>
+  </table>
+  </div>
+  <p class="muted">Technically this is not even a “cookie” in the strict sense — it lives in the browser's local storage called <code>localStorage</code>, which the server cannot see; only your own browser reads it back.</p>
+
+  <h2>What we do NOT use <span class="status off">currently switched off</span></h2>
+  <p>There is no analytics tool (e.g. Google Analytics), no advertising cookie (e.g. Meta Pixel), no third-party marketing cookie. If this changes, this notice and the consent bar below will be updated too — the code is already prepared for it, but as long as there is nothing to consent to, we do not show an unnecessary consent pop-up.</p>
+
+  <h2>What the embedded demo sites use</h2>
+  <p>The three live prototypes shown on the website (Esszencia, Presztízs, Prémium) store their own, equally minimal language setting (<code>tb_lang</code>, and <code>teszt-oldal-lang</code>) — for the same functional purpose as the main site's <code>aistudio_lang</code> key, and likewise requiring no consent.</p>
+
+  <h2>How to delete it</h2>
+  <p>You can delete the data stored by the site at any time in your browser settings (in Chrome, for example: Settings → Privacy and security → Delete browsing data / Site settings). Since we only store your language preference, after deleting it the website simply starts again in the Hungarian version.</p>
+  </div>
+
+  <div class="lang-block" lang="fr" data-lang="fr" hidden>
+  <h1>Information sur les cookies</h1>
+  <p class="updated">Dernière mise à jour : 23 septembre 2026</p>
+  <p class="tr-note">Traduction fournie à titre de commodité. La version hongroise fait foi ; en cas de divergence, c'est la version hongroise qui prévaut.</p>
+
+  <p>Cette information décrit précisément ce que nous stockons dans votre navigateur — ni plus, ni moins que ce que fait réellement le code.</p>
+
+  <h2>Ce que nous utilisons aujourd'hui</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Tableau défilant">
+  <table>
+    <tr><th>Nom</th><th>Type</th><th>Finalité</th><th>Durée de vie</th><th>Consentement ?</th></tr>
+    <tr><td><code>aistudio_lang</code></td><td>localStorage (pas un cookie)</td><td>Mémorise la langue que vous avez choisie</td><td>Jusqu'à ce que vous l'effaciez dans votre navigateur</td><td>Non nécessaire — il sert au fonctionnement de base du site et ne quitte jamais votre appareil</td></tr>
+  </table>
+  </div>
+  <p class="muted">Techniquement, ce n'est même pas un « cookie » au sens strict : il se trouve dans le stockage local du navigateur appelé <code>localStorage</code>, que le serveur ne voit pas ; seul votre navigateur le relit.</p>
+
+  <h2>Ce que nous n'utilisons PAS <span class="status off">actuellement désactivé</span></h2>
+  <p>Il n'y a pas d'outil de mesure d'audience (p. ex. Google Analytics), pas de cookie publicitaire (p. ex. Meta Pixel), pas de cookie marketing de tiers. Si cela change, cette information et la barre de consentement ci-dessous seront mises à jour aussi — le code y est déjà préparé, mais tant qu'il n'y a rien à autoriser, nous n'affichons pas de fenêtre de consentement inutile.</p>
+
+  <h2>Ce qu'utilisent les sites de démonstration intégrés</h2>
+  <p>Les trois prototypes en ligne visibles sur le site (Esszencia, Presztízs, Prémium) stockent leur propre réglage de langue, tout aussi minimal (<code>tb_lang</code>, ainsi que <code>teszt-oldal-lang</code>) — dans le même but fonctionnel que la clé <code>aistudio_lang</code> du site principal, et sans nécessiter de consentement non plus.</p>
+
+  <h2>Comment l'effacer</h2>
+  <p>Vous pouvez à tout moment effacer les données stockées par le site dans les paramètres de votre navigateur (dans Chrome par exemple : Paramètres → Confidentialité et sécurité → Supprimer les données de navigation / Paramètres des sites). Comme nous ne stockons que votre préférence de langue, après l'effacement le site redémarre simplement en version hongroise.</p>
+  </div>
+
+  <div class="lang-block" lang="es" data-lang="es" hidden>
+  <h1>Información sobre cookies</h1>
+  <p class="updated">Última actualización: 23 de septiembre de 2026</p>
+  <p class="tr-note">Traducción de cortesía. La versión húngara es el texto oficial; en caso de discrepancia prevalece la versión húngara.</p>
+
+  <p>Esta información describe exactamente lo que almacenamos en tu navegador: ni más ni menos de lo que hace realmente el código.</p>
+
+  <h2>Lo que usamos hoy</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Tabla desplazable">
+  <table>
+    <tr><th>Nombre</th><th>Tipo</th><th>Finalidad</th><th>Duración</th><th>¿Consentimiento?</th></tr>
+    <tr><td><code>aistudio_lang</code></td><td>localStorage (no es una cookie)</td><td>Recuerda qué idioma has elegido</td><td>Hasta que lo borres en tu navegador</td><td>No es necesario: hace falta para el funcionamiento básico del sitio y nunca sale de tu dispositivo</td></tr>
+  </table>
+  </div>
+  <p class="muted">Técnicamente ni siquiera es una «cookie» en sentido estricto: está en el almacenamiento local del navegador llamado <code>localStorage</code>, que el servidor no ve; solo tu navegador lo vuelve a leer.</p>
+
+  <h2>Lo que NO usamos <span class="status off">actualmente desactivado</span></h2>
+  <p>No hay herramienta de medición de audiencia (p. ej. Google Analytics), ni cookie publicitaria (p. ej. Meta Pixel), ni cookie de marketing de terceros. Si esto cambia, esta información y la barra de consentimiento de abajo también se actualizarán: el código ya está preparado, pero mientras no haya nada que autorizar, no mostramos una ventana de consentimiento innecesaria.</p>
+
+  <h2>Lo que usan las páginas de demostración incrustadas</h2>
+  <p>Los tres prototipos en vivo que se ven en el sitio (Esszencia, Presztízs, Prémium) almacenan su propio ajuste de idioma, igual de mínimo (<code>tb_lang</code> y <code>teszt-oldal-lang</code>), con la misma finalidad funcional que la clave <code>aistudio_lang</code> del sitio principal, y tampoco requieren consentimiento.</p>
+
+  <h2>Cómo borrarlo</h2>
+  <p>Puedes borrar en cualquier momento los datos almacenados por el sitio desde los ajustes de tu navegador (en Chrome, por ejemplo: Configuración → Privacidad y seguridad → Borrar datos de navegación / Configuración de sitios). Como solo guardamos tu preferencia de idioma, tras borrarla el sitio simplemente arranca de nuevo en la versión húngara.</p>
+  </div>
+
+  <div class="lang-block" lang="de" data-lang="de" hidden>
+  <h1>Cookie-Hinweise</h1>
+  <p class="updated">Letzte Aktualisierung: 23. September 2026</p>
+  <p class="tr-note">Übersetzung zur besseren Verständlichkeit. Maßgeblich ist die ungarische Fassung; bei Abweichungen geht die ungarische Fassung vor.</p>
+
+  <p>Diese Information beschreibt genau, was wir in deinem Browser speichern — nicht mehr und nicht weniger, als der Code tatsächlich tut.</p>
+
+  <h2>Was wir heute verwenden</h2>
+  <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollbare Tabelle">
+  <table>
+    <tr><th>Name</th><th>Typ</th><th>Zweck</th><th>Lebensdauer</th><th>Einwilligung?</th></tr>
+    <tr><td><code>aistudio_lang</code></td><td>localStorage (kein Cookie)</td><td>Merkt sich, welche Sprache du gewählt hast</td><td>Bis du es in deinem Browser löschst</td><td>Nicht erforderlich — wird für den Grundbetrieb der Seite benötigt und verlässt nie dein Gerät</td></tr>
+  </table>
+  </div>
+  <p class="muted">Technisch ist das nicht einmal ein „Cookie“ im engeren Sinn — es liegt im lokalen Speicher des Browsers namens <code>localStorage</code>, den der Server nicht sieht; nur dein Browser liest ihn wieder aus.</p>
+
+  <h2>Was wir NICHT verwenden <span class="status off">derzeit ausgeschaltet</span></h2>
+  <p>Es gibt kein Besucher-Tracking (z. B. Google Analytics), keine Werbe-Cookies (z. B. Meta Pixel), keine Marketing-Cookies von Drittanbietern. Sollte sich das ändern, werden dieser Hinweis und das Einwilligungsbanner weiter unten ebenfalls aktualisiert — der Code ist bereits darauf vorbereitet, aber solange es nichts zu genehmigen gibt, zeigen wir kein überflüssiges Einwilligungs-Popup an.</p>
+
+  <h2>Was die eingebetteten Demoseiten verwenden</h2>
+  <p>Die drei auf der Website zu sehenden Live-Prototypen (Esszencia, Presztízs, Prémium) speichern eine eigene, ebenso minimale Spracheinstellung (<code>tb_lang</code> bzw. <code>teszt-oldal-lang</code>) — zum gleichen funktionalen Zweck wie der Schlüssel <code>aistudio_lang</code> der Hauptseite und ebenfalls ohne Einwilligungspflicht.</p>
+
+  <h2>So löschst du es</h2>
+  <p>Du kannst die von der Seite gespeicherten Daten jederzeit in deinen Browsereinstellungen löschen (in Chrome z. B.: Einstellungen → Datenschutz und Sicherheit → Browserdaten löschen / Website-Einstellungen). Da wir nur deine Sprachpräferenz speichern, startet die Website nach dem Löschen einfach wieder in der ungarischen Version.</p>
+  </div>
 
   <footer>© 2026 AiStudioBudapest</footer>
 </div>
+<script type="application/json" id="legalMeta">{"hu": {"title": "Cookie-tájékoztató — AiStudioBudapest", "description": "AiStudioBudapest — milyen sütiket és helyi tárolást használunk, és miért."}, "en": {"title": "Cookie notice — AiStudioBudapest", "description": "AiStudioBudapest — which cookies and local storage we use, and why."}, "fr": {"title": "Information sur les cookies — AiStudioBudapest", "description": "AiStudioBudapest — quels cookies et quel stockage local nous utilisons, et pourquoi."}, "es": {"title": "Información sobre cookies — AiStudioBudapest", "description": "AiStudioBudapest — qué cookies y almacenamiento local usamos, y por qué."}, "de": {"title": "Cookie-Hinweise — AiStudioBudapest", "description": "AiStudioBudapest — welche Cookies und welchen lokalen Speicher wir verwenden und warum."}}</script>
+<script src="/alexstudio/legal.js" defer></script>
 </body>
 </html>
