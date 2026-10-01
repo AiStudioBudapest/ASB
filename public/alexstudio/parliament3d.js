@@ -15043,94 +15043,18 @@ function pd(e, t, n) {
 	}), Se.scale.setScalar(.85), Se.position.set(0, -2.2, 104), r.add(Se), s.push((e) => {
 		let t = (e * 3.6 + 330) % 720 - 360;
 		Se.position.x = t, Se.position.y = -2 + Math.sin(e * .9) * .18, Se.rotation.z = Math.sin(e * .7) * .012;
-	});
-	let G = e ? 0 : 1100, Ne = null;
-	if (G) {
-		let e = new Float32Array(G * 3), t = new Float32Array(G * 3), n = new Float32Array(G * 3), i = new Float32Array(G), a = new pn();
-		a.setAttribute("position", new Qt(e, 3)), a.setAttribute("color", new Qt(t, 3));
-		let c = new Cr(a, new vr({
-			size: 4.2,
-			map: o,
-			vertexColors: !0,
-			transparent: !0,
-			depthWrite: !1,
-			blending: 2,
-			fog: !1
-		}));
-		c.frustumCulled = !1, r.add(c), Ne = {
-			pos: e,
-			col: t,
-			vel: n,
-			life: i,
-			geo: a,
-			next: 3,
-			head: 0,
-			base: new Float32Array(G * 3)
-		}, Ne.burst = (t, r, a, o, s, c) => {
-			for (let l = 0; l < 220; l++) {
-				let l = Ne.head;
-				Ne.head = (Ne.head + 1) % G;
-				let u = $() * Ju, d = Math.acos(2 * $() - 1), f = 24 + $() * 22;
-				e[l * 3] = t, e[l * 3 + 1] = r, e[l * 3 + 2] = a, n[l * 3] = Math.sin(d) * Math.cos(u) * f, n[l * 3 + 1] = Math.cos(d) * f, n[l * 3 + 2] = Math.sin(d) * Math.sin(u) * f, Ne.base[l * 3] = o, Ne.base[l * 3 + 1] = s, Ne.base[l * 3 + 2] = c, i[l] = 1.6 + $() * .5;
-			}
-		}, s.push((r, o, s) => {
-			if (s) {
-				if (Ne.next -= o, Ne.next < 0) {
-					Ne.next = 3.5 + $() * 5;
-					let e = [
-						[
-							1,
-							.3,
-							.3
-						],
-						[
-							.4,
-							.8,
-							1
-						],
-						[
-							1,
-							.85,
-							.3
-						],
-						[
-							.6,
-							1,
-							.5
-						],
-						[
-							1,
-							.5,
-							1
-						]
-					][Math.floor($() * 5)];
-					Ne.burst(($() - .5) * 340, 95 + $() * 70, 150 + $() * 150, e[0], e[1], e[2]);
-				}
-				for (let r = 0; r < G; r++) {
-					if (i[r] <= 0) {
-						t[r * 3] = t[r * 3 + 1] = t[r * 3 + 2] = 0;
-						continue;
-					}
-					i[r] -= o, n[r * 3 + 1] -= 16 * o;
-					let a = Math.max(0, i[r]) / 2;
-					e[r * 3] += n[r * 3] * o, e[r * 3 + 1] += n[r * 3 + 1] * o, e[r * 3 + 2] += n[r * 3 + 2] * o, n[r * 3] *= .985, n[r * 3 + 2] *= .985, t[r * 3] = Ne.base[r * 3] * a, t[r * 3 + 1] = Ne.base[r * 3 + 1] * a, t[r * 3 + 2] = Ne.base[r * 3 + 2] * a;
-				}
-				a.attributes.position.needsUpdate = !0, a.attributes.color.needsUpdate = !0;
-			}
-		});
-	}
-	r.add(new qa(4874158, 1051672, .3));
-	let Pe = {}, Fe = (t, n, i, a, o, s, c) => {
+	}), r.add(new qa(4874158, 1051672, .3));
+	let G = {}, Ne = (t, n, i, a, o, s, c) => {
 		let l = new po(n, i);
 		l.position.set(a, o, s), l.target.position.set(0, 28, 0), l.shadow.mapSize.set(e ? 1024 : 2048, e ? 1024 : 2048);
 		let u = l.shadow.camera;
-		return u.left = -160, u.right = 160, u.top = 90, u.bottom = -38, u.near = 5, u.far = 460, l.shadow.bias = -6e-4, l.shadow.normalBias = .5, l.shadow.radius = 3, r.add(l, l.target), c && (Pe[t] = l), l;
+		return u.left = -160, u.right = 160, u.top = 90, u.bottom = -38, u.near = 5, u.far = 460, l.shadow.bias = -6e-4, l.shadow.normalBias = .5, l.shadow.radius = 3, r.add(l, l.target), c && (G[t] = l), l;
 	};
-	return Fe("key", 16751150, 1.55, -70, 16, 240, !0), Fe("back", 16749872, 1.45, 60, 16, -240, !0), Fe("fill", 16756832, .3, 150, 20, 180, !1), Fe("sideA", 16756838, .35, 320, 50, 0, !1), Fe("sideB", 16756838, .35, -320, 50, 0, !1), {
+	return Ne("key", 16751150, 1.55, -70, 16, 240, !0), Ne("back", 16749872, 1.45, 60, 16, -240, !0), Ne("fill", 16756832, .3, 150, 20, 180, !1), Ne("sideA", 16756838, .35, 320, 50, 0, !1), Ne("sideB", 16756838, .35, -320, 50, 0, !1), {
 		group: r,
 		water: m,
 		reflector: h,
-		lights: Pe,
+		lights: G,
 		door: R,
 		update(e, t, n) {
 			s.forEach((r) => r(e, t, n));

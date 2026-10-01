@@ -589,23 +589,7 @@ body.ready .bg,body.ready .grain{opacity:1;}
   .frame-shell{animation:none!important;}
   .orbit-ring{animation:none!important;}
   .spotlight{display:none!important;}
-  .cursor-dot,.cursor-ring{display:none!important;}
 }
-
-/* ============================================================
-   6. CUSTOM CURSOR — dot + lagging ring, grows on interactive
-      targets. Fine pointers only (see script), hidden otherwise.
-   ============================================================ */
-.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:80;opacity:0;}
-.cursor-dot{width:6px;height:6px;background:var(--cyan);transition:opacity .3s ease;}
-.cursor-ring{width:32px;height:32px;border:1px solid rgba(127,233,222,.7);
-  transition:width .35s var(--ease),height .35s var(--ease),opacity .3s ease,background-color .3s ease;}
-.cursor-ring.active{width:56px;height:56px;background:rgba(127,233,222,.12);}
-body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
-@media (pointer:fine){
-  body.cursor-ready,body.cursor-ready a,body.cursor-ready button{cursor:none;}
-}
-@media (pointer:coarse){ .cursor-dot,.cursor-ring{display:none!important;} }
 
 /* ============================================================
    7. HYPERSPACE WARP — full-screen flash played when a project
@@ -679,6 +663,11 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
 .service-card h3{font-family:var(--serif);font-weight:400;font-size:calc(21*var(--u));margin:calc(10*var(--u)) 0 calc(10*var(--u));}
 .service-card p{color:var(--muted);font-size:calc(14*var(--u));margin:0;}
 
+.process-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:calc(20*var(--u));}
+@media (max-width:1000px){.process-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.process-grid{grid-template-columns:1fr;}}
+.process-grid .service-card{border-top:2px solid rgba(127,233,222,.45);}
+.contact-note{color:var(--muted);font-size:calc(14*var(--u));line-height:1.7;text-align:center;margin:calc(18*var(--u)) auto 0;max-width:calc(440*var(--u));}
 .pricing-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));align-items:stretch;}
 @media (max-width:820px){.pricing-grid{grid-template-columns:1fr;}}
 .pricing-card{display:flex;flex-direction:column;padding:calc(32*var(--u)) calc(28*var(--u));
@@ -991,8 +980,6 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
 <div class="particles" aria-hidden="true" id="particles"></div>
 <div id="warp" aria-hidden="true"></div>
 <div class="scroll-progress" aria-hidden="true" id="scrollProgress"><span></span></div>
-<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <!-- Dormant unless ANALYTICS_ENABLED is flipped to true in the script below
      (see the "cookie consent" section) — the site currently loads no
@@ -1045,8 +1032,8 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
     <span class="dot"></span>
     <span class="eyebrow" data-i18n="heroEyebrow">Webdesign</span>
   </div>
-  <h1 class="tagline">Prémium webdesign, amely az ambiciózus márkákat pályára állítja.</h1>
-  <p class="hero-sub" data-i18n="heroSub">Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.</p>
+  <h1 class="tagline">Prémium weboldalak, amelyekre büszke lehetsz.</h1>
+  <p class="hero-sub" data-i18n="heroSub">Egyedi, gyors és mobilbarát weboldalak Budapestről — az egyoldalas bemutatkozástól a teljesen egyedi prémium élményig. Három szint, rögzített árak, élő prototípusok: görgess lejjebb, és próbáld ki őket.</p>
 </section>
 
 <main id="showcase" class="stage showcase enter">
@@ -1198,9 +1185,39 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
     <p data-i18n="servicesP">Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.</p>
   </div>
   <div class="services-grid">
-    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="service1Title">Egyoldalas weboldalak</h3><p data-i18n="service1Desc">Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást, és hívásokká alakítja a látogatókat.</p></div>
-    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="service2Title">Üzleti weboldalak</h3><p data-i18n="service2Desc">Több szekcióból álló oldalak szolgáltatásokkal, galériákkal, foglalási folyamattal és igény esetén kétnyelvű tartalommal.</p></div>
-    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="service3Title">Prémium élmények</h3><p data-i18n="service3Desc">Teljesen egyedi, animált, több oldalas digitális élmények azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat.</p></div>
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="service1Title">Egyoldalas weboldalak</h3><p data-i18n="service1Desc">Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást: ki vagy, mit kínálsz, mikor vagy elérhető — és hívásokká alakítja a látogatókat. Ideális kisvállalkozásoknak, akik gyorsan és kedvező áron szeretnének professzionális online jelenlétet.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="service2Title">Üzleti weboldalak</h3><p data-i18n="service2Desc">Több szekcióból és oldalból álló weboldal szolgáltatásokkal, fotógalériával, online foglalási folyamattal és igény esetén kétnyelvű (magyar–angol) tartalommal. Azoknak, akik nem csak megjelenni, hanem ügyfeleket szerezni és kiszolgálni szeretnének online.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="service3Title">Prémium élmények</h3><p data-i18n="service3Desc">Teljesen egyedi, animált, többoldalas digitális élmény blogbal, vendégértékelésekkel és saját arculatra szabott mozgásokkal — azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat, és az első másodpercben el akarják nyűgözni a látogatót.</p></div>
+  </div>
+</section>
+
+<section class="band" id="why">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="whyEyebrow">Miért mi</span>
+    <h2 data-i18n="whyH2">Amiért velünk érdemes dolgozni</h2>
+    <p data-i18n="whyP">Nem sablonokat töltünk fel: minden weboldalt a te vállalkozásodra szabunk — gyorsan, átláthatóan és a végéig melletted állva.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="why1Title">Egyedi kód, nem sablon</h3><p data-i18n="why1Desc">Minden oldal a nulláról készül — nincs előre gyártott sablon és nincs oldalépítő, így a weboldalad pontosan olyan, amilyennek a márkádat látod.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="why2Title">Gyors átfutás</h3><p data-i18n="why2Desc">Az Esszencia 3–4, a Presztízs 4–7, a Prémium 7–12 nap alatt elkészül — attól függően, milyen gyorsan érkezik vissza a tartalom és a visszajelzés.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="why3Title">Minden eszközre tervezve</h3><p data-i18n="why3Desc">Telefonon, tableten és asztali gépen egyaránt hibátlanul működik: olvasható szövegek, kényelmesen megérinthető gombok, vízszintes görgetés nélkül.</p></div>
+    <div class="service-card band-reveal"><span class="n">04</span><h3 data-i18n="why4Title">Átlátható árak</h3><p data-i18n="why4Desc">Rögzített tartalmú csomagok, egyértelmű árakkal, rejtett költségek nélkül — a havi karbantartás díját is előre látod.</p></div>
+    <div class="service-card band-reveal"><span class="n">05</span><h3 data-i18n="why5Title">Minden egy kézben</h3><p data-i18n="why5Desc">A tárhely, a domain név, a frissítések, a biztonsági mentések és a kisebb javítások egyetlen havi csomagban — neked nem kell semmilyen technikai ügyet intézned.</p></div>
+    <div class="service-card band-reveal"><span class="n">06</span><h3 data-i18n="why6Title">Személyes kapcsolat</h3><p data-i18n="why6Desc">Közvetlenül velünk, a két alapítóval beszélsz — nincs közvetítő. A szerződést személyesen írjuk alá.</p></div>
+  </div>
+</section>
+
+<section class="band" id="process">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="processEyebrow">Hogyan dolgozunk</span>
+    <h2 data-i18n="processH2">Négy lépés az ötlettől az indulásig</h2>
+    <p data-i18n="processP">Egyszerű, átlátható folyamat — mindig tudod, hol tart a projekted, és mi a következő lépés.</p>
+  </div>
+  <div class="process-grid">
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="step1Title">Megbeszélés</h3><p data-i18n="step1Desc">Mesélsz a vállalkozásodról és a céljaidról, mi pedig javaslunk egy hozzád illő szintet, és tisztázzuk, milyen tartalomra van szükség.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="step2Title">Szerződés</h3><p data-i18n="step2Desc">Személyesen aláírjuk a szerződést: benne van, mit kapsz, mennyiért és mikorra, az előleg és a fizetés részleteivel együtt.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="step3Title">Tervezés és fejlesztés</h3><p data-i18n="step3Desc">Elkészítjük a weboldalt a megadott szövegekkel, fotókkal és elérhetőségekkel, és élő előnézeten mutatjuk meg, hogy visszajelezhess.</p></div>
+    <div class="service-card band-reveal"><span class="n">04</span><h3 data-i18n="step4Title">Indulás és támogatás</h3><p data-i18n="step4Desc">Beállítjuk a tárhelyet és a domain nevet, élesítjük az oldalt — majd a havi karbantartással a továbbiakban is gondoskodunk róla.</p></div>
   </div>
 </section>
 
@@ -1211,6 +1228,8 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
   </div>
   <div class="about">
     <p class="band-reveal" data-i18n="aboutText">Alex és Theo vagyunk, két fiatal vállalkozó, akiket a digitális technológia és a webdesign iránti szenvedély hajt. Modern, nagy teljesítményű weboldalakat készítünk a legújabb mesterséges intelligencia technológiák felhasználásával, hogy segítsünk a vállalkozásoknak javítani online jelenlétüket és növelni üzletüket.</p>
+    <p class="band-reveal" data-i18n="aboutText2">Budapesten dolgozunk, két fős csapatként: közvetlenül velünk beszélsz, nincs közvetítő és nincs ügyfélszolgálati labirintus. Minden projektet mi tervezünk, kódolunk és adunk át — ugyanaz a két ember, aki az első egyeztetésen is ott ült veled szemben.</p>
+    <p class="band-reveal" data-i18n="aboutText3">Hisszük, hogy egy jó weboldal nem kiadás, hanem eszköz: bizalmat épít, bemutatja, mit tudsz, és megkönnyíti, hogy az ügyfeleid megtaláljanak és felvegyék veled a kapcsolatot. Pontosan ezért építjük őket úgy, mintha a saját vállalkozásunk lennének.</p>
   </div>
 </section>
 
@@ -1249,6 +1268,22 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
       <button type="button" class="faq-q" aria-expanded="false"><span>Vállaltok folyamatos karbantartást?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-a-wrap"><div class="faq-a"><p>Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.</p></div></div>
     </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Mobilon is jól fog kinézni a weboldalam?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Igen. Minden weboldalt telefonra, tabletre és asztali gépre egyaránt megtervezünk, és ki is próbálunk ezeken: az oldal alkalmazkodik a képernyő méretéhez, a szöveg olvasható, a gombok kényelmesen megérinthetők.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Milyen anyagokat kell előkészítenem?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Elég a vállalkozásod bemutatása, az elérhetőségek, a nyitvatartás és néhány fotó — ha van logód, azt is használjuk. Ha nincs jó minőségű fotód, opcionálisan profi fotóst is szervezünk (ár kérésre).</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Hogyan zajlik a szerződéskötés és a fizetés?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>A szerződést személyesen írjuk alá. Ebben rögzítjük a csomagot, a határidőt, az előleg összegét és a fizetés részleteit, így az elejétől fogva minden egyértelmű.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Meg fog jelenni a weboldalam a Google-ben?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Gyors, tiszta és mobilbarát kódot készítünk, ami jó alap a kereséshez. Konkrét helyezést viszont senki sem garantálhat — a keresők sok tényezőt figyelembe vesznek, és az eredmény idővel épül.</p></div></div>
+    </div>
   </div>
 </section>
 
@@ -1265,11 +1300,12 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
         <a class="mail phone" href="tel:+36309476955"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 5.1 5.1l1.4-2.3L19 14.5V18a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+36 30 947 6955</span></a>
         <a class="mail phone" href="tel:+36703682482"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 5.1 5.1l1.4-2.3L19 14.5V18a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+36 70 368 2482</span></a>
       </div>
+      <p class="contact-note" data-i18n="contactNote">Írj, vagy hívj bátran — az első beszélgetés semmire nem kötelez. Budapesten személyes találkozót is egyeztethetünk.</p>
     </div>
 
     <form class="contact-form" id="contactForm" action="https://formsubmit.co/ajax/aistudiobudapest@gmail.com" method="POST">
       <input type="hidden" name="_subject" id="formSubjectInput" value="Új üzenet az AiStudioBudapest oldalról">
-      <h3 class="form-title" data-i18n="formDivider">Van egy konkrétabb kérdésed?</h3>
+      <h3 class="form-title" data-i18n="formDivider">A te projekted itt kezdődik.</h3>
       <div class="form-row">
         <div>
           <label class="field-label" for="formNameInput" data-i18n="formName">Neved</label>
@@ -1371,8 +1407,8 @@ hu:{
   navAbout:'Rólunk', navFaq:'GYIK', navContact:'Kapcsolat', navCta:'Projekt indítása',
   burgerOpen:'Menü megnyitása', burgerClose:'Menü bezárása', langAria:'Nyelv kiválasztása',
   heroEyebrow:'Webdesign',
-  heroTagline:'Prémium webdesign, amely az ambiciózus márkákat pályára állítja.',
-  heroSub:'Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.',
+  heroTagline:"Prémium weboldalak, amelyekre büszke lehetsz.",
+  heroSub:"Egyedi, gyors és mobilbarát weboldalak Budapestről — az egyoldalas bemutatkozástól a teljesen egyedi prémium élményig. Három szint, rögzített árak, élő prototípusok: görgess lejjebb, és próbáld ki őket.",
   showcaseEyebrow:'Kiemelt munkák',
   stackTitle:'Belépés az oldalra', enterHint:'Belépés az oldalra ↗',
   ctaViewProject:'Projekt megtekintése ↗', ctaWorkTogether:'Dolgozzunk együtt',
@@ -1393,11 +1429,13 @@ hu:{
   addonPrice:'Ár kérésre', addonCta:'Ajánlatkérés',
   servicesEyebrow:'Amit építünk', servicesH2:'Három szint, egy színvonal',
   servicesP:'Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.',
-  service1Title:'Egyoldalas weboldalak', service1Desc:'Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást, és hívásokká alakítja a látogatókat.',
-  service2Title:'Üzleti weboldalak', service2Desc:'Több szekcióból álló oldalak szolgáltatásokkal, galériákkal, foglalási folyamattal és igény esetén kétnyelvű tartalommal.',
-  service3Title:'Prémium élmények', service3Desc:'Teljesen egyedi, animált, több oldalas digitális élmények azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat.',
+  service1Title:'Egyoldalas weboldalak', service1Desc:"Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást: ki vagy, mit kínálsz, mikor vagy elérhető — és hívásokká alakítja a látogatókat. Ideális kisvállalkozásoknak, akik gyorsan és kedvező áron szeretnének professzionális online jelenlétet.",
+  service2Title:'Üzleti weboldalak', service2Desc:"Több szekcióból és oldalból álló weboldal szolgáltatásokkal, fotógalériával, online foglalási folyamattal és igény esetén kétnyelvű (magyar–angol) tartalommal. Azoknak, akik nem csak megjelenni, hanem ügyfeleket szerezni és kiszolgálni szeretnének online.",
+  service3Title:'Prémium élmények', service3Desc:"Teljesen egyedi, animált, többoldalas digitális élmény blogbal, vendégértékelésekkel és saját arculatra szabott mozgásokkal — azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat, és az első másodpercben el akarják nyűgözni a látogatót.",
   aboutEyebrow:'Rólunk',
   aboutText:'Alex és Theo vagyunk, két fiatal vállalkozó, akiket a digitális technológia és a webdesign iránti szenvedély hajt. Modern, nagy teljesítményű weboldalakat készítünk a legújabb mesterséges intelligencia technológiák felhasználásával, hogy segítsünk a vállalkozásoknak javítani online jelenlétüket és növelni üzletüket.',
+  aboutText2:"Budapesten dolgozunk, két fős csapatként: közvetlenül velünk beszélsz, nincs közvetítő és nincs ügyfélszolgálati labirintus. Minden projektet mi tervezünk, kódolunk és adunk át — ugyanaz a két ember, aki az első egyeztetésen is ott ült veled szemben.",
+  aboutText3:"Hisszük, hogy egy jó weboldal nem kiadás, hanem eszköz: bizalmat épít, bemutatja, mit tudsz, és megkönnyíti, hogy az ügyfeleid megtaláljanak és felvegyék veled a kapcsolatot. Pontosan ezért építjük őket úgy, mintha a saját vállalkozásunk lennének.",
   faqEyebrow:'GYIK', faqH2:'Kérdések és válaszok',
   faqP:'Még bizonytalan vagy valamiben? Íme, amit a legtöbben kérdeznek egy projekt indítása előtt.',
   faqItems:[
@@ -1406,11 +1444,42 @@ hu:{
     {q:'Frissíthetem magam a tartalmat indulás után?', a:'Az Esszenciánál és a Presztízsnél bármikor kérhetők kisebb szöveg- vagy fotómódosítások. A Prémium teljesen egyedi felépítése miatt ott a módosítások jellemzően rajtunk keresztül mennek, hogy a dizájn épségben maradjon.'},
     {q:'Ti intézitek a tárhelyet és a domain nevet?', a:'Igen — a nulláról beállítjuk a tárhelyet és a domain nevet, vagy dolgozunk egy már meglévő domaineddel is.'},
     {q:'Mi van, ha később több oldalra vagy funkcióra lesz szükségem?', a:'Minden szint bővíthető. Amint tudjuk, mire van szükséged — egy extra oldalra, egy új szekcióra, egy funkcióra —, azt külön árazzuk, nem kötünk az eredeti tartalomhoz.'},
-    {q:'Vállaltok folyamatos karbantartást?', a:'Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.'}
+    {q:'Vállaltok folyamatos karbantartást?', a:'Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.'},
+    {q:"Mobilon is jól fog kinézni a weboldalam?", a:"Igen. Minden weboldalt telefonra, tabletre és asztali gépre egyaránt megtervezünk, és ki is próbálunk ezeken: az oldal alkalmazkodik a képernyő méretéhez, a szöveg olvasható, a gombok kényelmesen megérinthetők."},
+    {q:"Milyen anyagokat kell előkészítenem?", a:"Elég a vállalkozásod bemutatása, az elérhetőségek, a nyitvatartás és néhány fotó — ha van logód, azt is használjuk. Ha nincs jó minőségű fotód, opcionálisan profi fotóst is szervezünk (ár kérésre)."},
+    {q:"Hogyan zajlik a szerződéskötés és a fizetés?", a:"A szerződést személyesen írjuk alá. Ebben rögzítjük a csomagot, a határidőt, az előleg összegét és a fizetés részleteit, így az elejétől fogva minden egyértelmű."},
+    {q:"Meg fog jelenni a weboldalam a Google-ben?", a:"Gyors, tiszta és mobilbarát kódot készítünk, ami jó alap a kereséshez. Konkrét helyezést viszont senki sem garantálhat — a keresők sok tényezőt figyelembe vesznek, és az eredmény idővel épül."}
   ],
+  whyEyebrow:"Miért mi",
+  whyH2:"Amiért velünk érdemes dolgozni",
+  whyP:"Nem sablonokat töltünk fel: minden weboldalt a te vállalkozásodra szabunk — gyorsan, átláthatóan és a végéig melletted állva.",
+  why1Title:"Egyedi kód, nem sablon",
+  why1Desc:"Minden oldal a nulláról készül — nincs előre gyártott sablon és nincs oldalépítő, így a weboldalad pontosan olyan, amilyennek a márkádat látod.",
+  why2Title:"Gyors átfutás",
+  why2Desc:"Az Esszencia 3–4, a Presztízs 4–7, a Prémium 7–12 nap alatt elkészül — attól függően, milyen gyorsan érkezik vissza a tartalom és a visszajelzés.",
+  why3Title:"Minden eszközre tervezve",
+  why3Desc:"Telefonon, tableten és asztali gépen egyaránt hibátlanul működik: olvasható szövegek, kényelmesen megérinthető gombok, vízszintes görgetés nélkül.",
+  why4Title:"Átlátható árak",
+  why4Desc:"Rögzített tartalmú csomagok, egyértelmű árakkal, rejtett költségek nélkül — a havi karbantartás díját is előre látod.",
+  why5Title:"Minden egy kézben",
+  why5Desc:"A tárhely, a domain név, a frissítések, a biztonsági mentések és a kisebb javítások egyetlen havi csomagban — neked nem kell semmilyen technikai ügyet intézned.",
+  why6Title:"Személyes kapcsolat",
+  why6Desc:"Közvetlenül velünk, a két alapítóval beszélsz — nincs közvetítő. A szerződést személyesen írjuk alá.",
+  processEyebrow:"Hogyan dolgozunk",
+  processH2:"Négy lépés az ötlettől az indulásig",
+  processP:"Egyszerű, átlátható folyamat — mindig tudod, hol tart a projekted, és mi a következő lépés.",
+  step1Title:"Megbeszélés",
+  step1Desc:"Mesélsz a vállalkozásodról és a céljaidról, mi pedig javaslunk egy hozzád illő szintet, és tisztázzuk, milyen tartalomra van szükség.",
+  step2Title:"Szerződés",
+  step2Desc:"Személyesen aláírjuk a szerződést: benne van, mit kapsz, mennyiért és mikorra, az előleg és a fizetés részleteivel együtt.",
+  step3Title:"Tervezés és fejlesztés",
+  step3Desc:"Elkészítjük a weboldalt a megadott szövegekkel, fotókkal és elérhetőségekkel, és élő előnézeten mutatjuk meg, hogy visszajelezhess.",
+  step4Title:"Indulás és támogatás",
+  step4Desc:"Beállítjuk a tárhelyet és a domain nevet, élesítjük az oldalt — majd a havi karbantartással a továbbiakban is gondoskodunk róla.",
+  contactNote:"Írj, vagy hívj bátran — az első beszélgetés semmire nem kötelez. Budapesten személyes találkozót is egyeztethetünk.",
   contactEyebrow:'Kapcsolat', contactH2:'Építsünk valami prémiumot',
   contactP:'Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.',
-  formDivider:'Van egy konkrétabb kérdésed?', formName:'Neved', formEmail:'E-mail címed',
+  formDivider:"A te projekted itt kezdődik.", formName:'Neved', formEmail:'E-mail címed',
   formMessage:'Mesélj a projektedről vagy a kérdésedről…', formMessageLabel:'Üzeneted', legalImpressum:'Impresszum', legalPrivacy:'Adatvédelmi tájékoztató', legalTerms:'ÁSZF', legalCookies:'Cookie-tájékoztató', formSubmit:'Üzenet küldése', formSending:'Küldés…',
   formSuccess:'Köszönjük — hamarosan jelentkezünk.', formError:'Hiba történt — kérjük, írj közvetlenül e-mailben.',
   formSubject:'Új üzenet az AiStudioBudapest oldalról',
@@ -1424,8 +1493,8 @@ en:{
   navAbout:'About', navFaq:'FAQ', navContact:'Contact', navCta:'Start a project',
   burgerOpen:'Open menu', burgerClose:'Close menu', langAria:'Choose language',
   heroEyebrow:'Web Design',
-  heroTagline:'Premium web design, built to send ambitious brands into orbit.',
-  heroSub:'Three tiers of craft, from a focused one-page site to a fully custom premium experience — scroll down to explore them live.',
+  heroTagline:"Premium websites you can be proud of.",
+  heroSub:"Custom, fast and mobile-friendly websites from Budapest — from a one-page introduction to a fully bespoke premium experience. Three tiers, fixed prices, live prototypes: scroll down and try them.",
   showcaseEyebrow:'Selected Work',
   stackTitle:'Enter the site', enterHint:'Enter the site ↗',
   ctaViewProject:'View project ↗', ctaWorkTogether:"Let's work together",
@@ -1446,11 +1515,13 @@ en:{
   addonPrice:'Price on request', addonCta:'Request a quote',
   servicesEyebrow:'What I build', servicesH2:'Three tiers, one standard',
   servicesP:'Every project is designed and coded from scratch to fit the ambition — and the budget — of the business behind it.',
-  service1Title:'One-page websites', service1Desc:'A focused, elegant single page that presents a business clearly and converts visitors into calls.',
-  service2Title:'Business websites', service2Desc:'Multi-section sites with services, galleries, booking flows and bilingual content where needed.',
-  service3Title:'Premium experiences', service3Desc:'Fully custom, animated, multi-page digital experiences for brands that want to lead their category.',
+  service1Title:'One-page websites', service1Desc:"A focused, elegant one-page site that shows clearly who you are, what you offer and when you are available — and turns visitors into calls. Ideal for small businesses that want a professional online presence quickly and at a fair price.",
+  service2Title:'Business websites', service2Desc:"A multi-section, multi-page website with services, a photo gallery, an online booking flow and, if needed, bilingual content. For businesses that want not only to appear online but to win and serve customers there.",
+  service3Title:'Premium experiences', service3Desc:"A fully bespoke, animated, multi-page digital experience with a blog, customer reviews and motion designed around your identity — for brands that want to lead their category and impress visitors from the first second.",
   aboutEyebrow:'About',
   aboutText:'We are Alex and Theo, two young entrepreneurs passionate about digital technology and web design. We create modern, high-performance websites using the latest artificial intelligence technologies to help businesses improve their online presence and grow their business.',
+  aboutText2:"We work from Budapest as a two-person team: you talk directly to us, with no middlemen and no customer-service maze. We design, code and deliver every project ourselves — the same two people who sat across from you at the first meeting.",
+  aboutText3:"We believe a good website is not an expense but a tool: it builds trust, shows what you can do and makes it easy for customers to find you and get in touch. That is exactly why we build each one as if it were our own business.",
   faqEyebrow:'FAQ', faqH2:'Questions, answered',
   faqP:"Still unsure about something? Here's what people usually ask before starting a project.",
   faqItems:[
@@ -1459,11 +1530,42 @@ en:{
     {q:'Can I update the content myself after launch?', a:"For Esszencia and Presztízs, small text or photo changes can be requested anytime. Prémium's fully custom build usually goes through us so the design stays intact."},
     {q:'Do you handle hosting and the domain name?', a:'Yes — we can set up hosting and a domain name for you from scratch, or work with a domain you already own.'},
     {q:'What if I need more pages or features later?', a:'Every tier can grow. Once we know what you need — an extra page, a new section, a feature — we quote it separately rather than locking you into the original scope.'},
-    {q:'Do you offer ongoing maintenance?', a:"Yes — you'll find the exact monthly rates next to the prices above. It covers hosting, the domain name, updates, backups and small fixes."}
+    {q:'Do you offer ongoing maintenance?', a:"Yes — you'll find the exact monthly rates next to the prices above. It covers hosting, the domain name, updates, backups and small fixes."},
+    {q:"Will my website look good on mobile?", a:"Yes. We design and test every website on phones, tablets and desktops: the page adapts to the screen size, the text stays readable and the buttons are easy to tap."},
+    {q:"What materials do I need to prepare?", a:"A description of your business, contact details, opening hours and a few photos are enough — and your logo, if you have one. If you don't have good-quality photos, we can optionally arrange a professional photographer (price on request)."},
+    {q:"How do the contract and payment work?", a:"We sign the contract in person. It sets out the package, the deadline, the deposit amount and the payment details, so everything is clear from the start."},
+    {q:"Will my website show up on Google?", a:"We build fast, clean, mobile-friendly code, which is a solid foundation for search. But nobody can guarantee a specific ranking — search engines weigh many factors, and results build over time."}
   ],
+  whyEyebrow:"Why us",
+  whyH2:"Why work with us",
+  whyP:"We don't upload templates: every website is tailored to your business — quickly, transparently, and with us by your side to the end.",
+  why1Title:"Custom code, not a template",
+  why1Desc:"Every site is built from scratch — no ready-made template, no page builder — so your website looks exactly the way you picture your brand.",
+  why2Title:"Fast turnaround",
+  why2Desc:"Esszencia is ready in 3–4 days, Presztízs in 4–7, Prémium in 7–12 — depending on how quickly content and feedback come back.",
+  why3Title:"Built for every device",
+  why3Desc:"Flawless on phones, tablets and desktops: readable text, comfortable tap targets and no sideways scrolling.",
+  why4Title:"Transparent pricing",
+  why4Desc:"Packages with fixed content and clear prices, no hidden costs — you see the monthly maintenance fee upfront too.",
+  why5Title:"Everything in one hand",
+  why5Desc:"Hosting, domain name, updates, backups and minor fixes in a single monthly plan — you never have to deal with anything technical.",
+  why6Title:"A personal relationship",
+  why6Desc:"You speak directly with us, the two founders — no middlemen. We sign the contract in person.",
+  processEyebrow:"How we work",
+  processH2:"Four steps from idea to launch",
+  processP:"A simple, transparent process — you always know where your project stands and what comes next.",
+  step1Title:"Discussion",
+  step1Desc:"You tell us about your business and goals; we recommend the right tier and clarify what content is needed.",
+  step2Title:"Contract",
+  step2Desc:"We sign the contract in person: it states what you get, for how much and by when, including the deposit and payment details.",
+  step3Title:"Design and build",
+  step3Desc:"We build the website with the text, photos and contact details you provide, and show it on a live preview so you can give feedback.",
+  step4Title:"Launch and support",
+  step4Desc:"We set up hosting and the domain name and take the site live — then look after it with the monthly maintenance plan.",
+  contactNote:"Write or call us anytime — the first conversation doesn't commit you to anything. We can also arrange to meet in person in Budapest.",
   contactEyebrow:'Contact', contactH2:"Let's build something premium",
   contactP:"Tell me about your business and I'll recommend the right tier — Esszencia, Presztízs, or Prémium.",
-  formDivider:'Have a more specific request?', formName:'Your name', formEmail:'Your email',
+  formDivider:"Your project starts here.", formName:'Your name', formEmail:'Your email',
   formMessage:'Tell us about your project or question…', formMessageLabel:'Your message', legalImpressum:'Legal notice', legalPrivacy:'Privacy notice', legalTerms:'Terms', legalCookies:'Cookie notice', formSubmit:'Send message', formSending:'Sending…',
   formSuccess:"Thanks — we'll get back to you soon.", formError:'Something went wrong — please email us directly instead.',
   formSubject:'New message from the AiStudioBudapest site',
@@ -1477,8 +1579,8 @@ fr:{
   navAbout:'À propos', navFaq:'FAQ', navContact:'Contact', navCta:'Démarrer un projet',
   burgerOpen:'Ouvrir le menu', burgerClose:'Fermer le menu', langAria:'Choisir la langue',
   heroEyebrow:'Webdesign',
-  heroTagline:'Un webdesign premium, conçu pour propulser les marques ambitieuses en orbite.',
-  heroSub:"Trois niveaux de savoir-faire, du site une page à l'expérience premium entièrement sur mesure — défilez pour les découvrir en direct.",
+  heroTagline:"Des sites web premium dont vous serez fier.",
+  heroSub:"Des sites sur mesure, rapides et adaptés au mobile, conçus à Budapest — de la simple page de présentation à l'expérience premium entièrement personnalisée. Trois formules, des prix fixes, des prototypes en direct : faites défiler et essayez-les.",
   showcaseEyebrow:'Travaux sélectionnés',
   stackTitle:'Entrer sur le site', enterHint:'Entrer sur le site ↗',
   ctaViewProject:'Voir le projet ↗', ctaWorkTogether:'Travaillons ensemble',
@@ -1499,11 +1601,13 @@ fr:{
   addonPrice:'Prix sur demande', addonCta:'Demander un devis',
   servicesEyebrow:'Ce que je construis', servicesH2:'Trois niveaux, une seule exigence',
   servicesP:"Chaque projet est conçu et codé à partir de zéro pour correspondre à l'ambition — et au budget — de l'entreprise concernée.",
-  service1Title:'Sites une page', service1Desc:'Une page unique, focalisée et élégante, qui présente clairement une entreprise et transforme les visiteurs en appels.',
-  service2Title:'Sites professionnels', service2Desc:'Sites à plusieurs sections avec services, galeries, prise de rendez-vous et contenu bilingue si besoin.',
-  service3Title:'Expériences premium', service3Desc:'Expériences numériques entièrement sur mesure, animées et multi-pages, pour les marques qui veulent dominer leur catégorie.',
+  service1Title:'Sites une page', service1Desc:"Un site d'une page, élégant et ciblé, qui montre clairement qui vous êtes, ce que vous proposez et quand vous êtes disponible — et transforme les visiteurs en appels. Idéal pour les petites entreprises qui veulent une présence en ligne professionnelle, rapidement et à prix juste.",
+  service2Title:'Sites professionnels', service2Desc:"Un site de plusieurs pages et sections avec services, galerie photo, réservation en ligne et, si besoin, contenu bilingue. Pour les entreprises qui veulent non seulement être visibles en ligne, mais y trouver et servir leurs clients.",
+  service3Title:'Expériences premium', service3Desc:"Une expérience numérique entièrement sur mesure, animée et multipage, avec blog, avis clients et mouvements conçus autour de votre identité — pour les marques qui veulent mener leur catégorie et impressionner dès la première seconde.",
   aboutEyebrow:'À propos',
   aboutText:"Nous sommes Alex et Theo, deux jeunes entrepreneurs passionnés de technologie numérique et de webdesign. Nous créons des sites modernes et performants grâce aux dernières technologies d'intelligence artificielle, pour aider les entreprises à améliorer leur présence en ligne et à développer leur activité.",
+  aboutText2:"Nous travaillons depuis Budapest, en équipe de deux : vous parlez directement avec nous, sans intermédiaire ni labyrinthe de service client. Nous concevons, codons et livrons chaque projet nous-mêmes — les deux mêmes personnes qui étaient en face de vous lors du premier rendez-vous.",
+  aboutText3:"Nous sommes convaincus qu'un bon site n'est pas une dépense, mais un outil : il inspire confiance, montre ce que vous savez faire et permet à vos clients de vous trouver et de vous contacter facilement. C'est précisément pourquoi nous construisons chaque site comme s'il s'agissait de notre propre entreprise.",
   faqEyebrow:'FAQ', faqH2:'Questions fréquentes',
   faqP:"Encore une hésitation ? Voici ce qu'on nous demande le plus souvent avant de démarrer un projet.",
   faqItems:[
@@ -1512,11 +1616,42 @@ fr:{
     {q:'Puis-je modifier le contenu moi-même après le lancement ?', a:"Pour l'Esszencia et le Presztízs, de petites modifications de texte ou de photos peuvent être demandées à tout moment. Pour le Prémium, entièrement sur mesure, les modifications passent généralement par nous afin de préserver le design."},
     {q:'Vous occupez-vous de l’hébergement et du nom de domaine ?', a:"Oui — nous pouvons configurer l'hébergement et un nom de domaine de A à Z, ou travailler avec un domaine que vous possédez déjà."},
     {q:"Et si j'ai besoin de plus de pages ou de fonctionnalités plus tard ?", a:'Chaque formule peut évoluer. Une fois que nous savons ce dont vous avez besoin — une page en plus, une nouvelle section, une fonctionnalité — nous la chiffrons séparément, sans vous enfermer dans le périmètre initial.'},
-    {q:'Proposez-vous une maintenance continue ?', a:"Oui — vous trouverez les tarifs mensuels exacts à côté des prix plus haut. Cela couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections."}
+    {q:'Proposez-vous une maintenance continue ?', a:"Oui — vous trouverez les tarifs mensuels exacts à côté des prix plus haut. Cela couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections."},
+    {q:"Mon site sera-t-il bien lisible sur mobile ?", a:"Oui. Nous concevons et testons chaque site sur téléphone, tablette et ordinateur : la page s'adapte à la taille de l'écran, le texte reste lisible et les boutons sont faciles à toucher."},
+    {q:"Quels éléments dois-je préparer ?", a:"Une présentation de votre activité, vos coordonnées, vos horaires et quelques photos suffisent — ainsi que votre logo, si vous en avez un. Si vous n'avez pas de photos de bonne qualité, nous pouvons en option organiser un photographe professionnel (prix sur demande)."},
+    {q:"Comment se déroulent le contrat et le paiement ?", a:"Le contrat se signe en personne. Il fixe la formule, le délai, le montant de l'acompte et les modalités de paiement, pour que tout soit clair dès le départ."},
+    {q:"Mon site apparaîtra-t-il sur Google ?", a:"Nous construisons un code rapide, propre et adapté au mobile, une base solide pour le référencement. Mais personne ne peut garantir une position précise — les moteurs de recherche pèsent de nombreux facteurs et les résultats se construisent avec le temps."}
   ],
+  whyEyebrow:"Pourquoi nous",
+  whyH2:"Pourquoi travailler avec nous",
+  whyP:"Nous ne remplissons pas des modèles : chaque site est taillé pour votre entreprise — rapidement, en toute transparence, et à vos côtés jusqu'au bout.",
+  why1Title:"Du code sur mesure, pas un modèle",
+  why1Desc:"Chaque site est créé de zéro — ni modèle prêt à l'emploi, ni constructeur de pages — pour que votre site ressemble exactement à l'image que vous vous faites de votre marque.",
+  why2Title:"Livraison rapide",
+  why2Desc:"Esszencia est prêt en 3 à 4 jours, Presztízs en 4 à 7, Prémium en 7 à 12 — selon la rapidité avec laquelle le contenu et vos retours nous parviennent.",
+  why3Title:"Pensé pour tous les écrans",
+  why3Desc:"Impeccable sur téléphone, tablette et ordinateur : textes lisibles, boutons faciles à toucher, aucun défilement horizontal.",
+  why4Title:"Des prix transparents",
+  why4Desc:"Des formules au contenu défini et aux prix clairs, sans coûts cachés — le tarif de la maintenance mensuelle est lui aussi annoncé d'avance.",
+  why5Title:"Tout au même endroit",
+  why5Desc:"Hébergement, nom de domaine, mises à jour, sauvegardes et petites corrections dans un seul forfait mensuel — vous n'avez rien de technique à gérer.",
+  why6Title:"Une relation personnelle",
+  why6Desc:"Vous parlez directement avec nous, les deux fondateurs — sans intermédiaire. Le contrat se signe en personne.",
+  processEyebrow:"Notre méthode",
+  processH2:"Quatre étapes de l'idée au lancement",
+  processP:"Un processus simple et transparent — vous savez toujours où en est votre projet et quelle est la suite.",
+  step1Title:"Échange",
+  step1Desc:"Vous nous parlez de votre entreprise et de vos objectifs ; nous vous recommandons la formule adaptée et précisons le contenu nécessaire.",
+  step2Title:"Contrat",
+  step2Desc:"Nous signons le contrat en personne : il précise ce que vous recevez, pour quel prix et pour quand, avec l'acompte et les modalités de paiement.",
+  step3Title:"Conception et développement",
+  step3Desc:"Nous réalisons le site à partir des textes, photos et coordonnées que vous fournissez, et vous le présentons en aperçu en direct pour recueillir vos retours.",
+  step4Title:"Mise en ligne et suivi",
+  step4Desc:"Nous configurons l'hébergement et le nom de domaine, mettons le site en ligne — puis nous en prenons soin grâce au forfait de maintenance mensuel.",
+  contactNote:"Écrivez-nous ou appelez-nous quand vous voulez — la première discussion ne vous engage à rien. Nous pouvons aussi convenir d'une rencontre en personne à Budapest.",
   contactEyebrow:'Contact', contactH2:'Construisons quelque chose de premium',
   contactP:"Parlez-moi de votre entreprise, et je vous recommanderai la formule adaptée — Esszencia, Presztízs ou Prémium.",
-  formDivider:'Une demande plus précise ?', formName:'Votre nom', formEmail:'Votre e-mail',
+  formDivider:"Votre projet commence ici.", formName:'Votre nom', formEmail:'Votre e-mail',
   formMessage:'Parlez-nous de votre projet ou de votre question…', formMessageLabel:'Votre message', legalImpressum:'Mentions légales', legalPrivacy:'Confidentialité', legalTerms:'Conditions générales', legalCookies:'Cookies', formSubmit:'Envoyer le message', formSending:'Envoi…',
   formSuccess:'Merci — nous revenons vers vous bientôt.', formError:'Une erreur est survenue — écrivez-nous directement par e-mail.',
   formSubject:'Nouveau message du site AiStudioBudapest',
@@ -1530,8 +1665,8 @@ es:{
   navAbout:'Nosotros', navFaq:'Preguntas', navContact:'Contacto', navCta:'Iniciar un proyecto',
   burgerOpen:'Abrir menú', burgerClose:'Cerrar menú', langAria:'Elegir idioma',
   heroEyebrow:'Diseño web',
-  heroTagline:'Diseño web prémium, hecho para poner en órbita a las marcas ambiciosas.',
-  heroSub:'Tres niveles de artesanía digital, desde un sitio de una página hasta una experiencia prémium totalmente a medida — desplázate para descubrirlos en vivo.',
+  heroTagline:"Sitios web prémium de los que sentirte orgulloso.",
+  heroSub:"Sitios web a medida, rápidos y adaptados al móvil, desde Budapest — desde una página de presentación hasta una experiencia prémium totalmente personalizada. Tres niveles, precios fijos, prototipos en vivo: desplázate hacia abajo y pruébalos.",
   showcaseEyebrow:'Trabajos destacados',
   stackTitle:'Entrar al sitio', enterHint:'Entrar al sitio ↗',
   ctaViewProject:'Ver proyecto ↗', ctaWorkTogether:'Trabajemos juntos',
@@ -1552,11 +1687,13 @@ es:{
   addonPrice:'Precio a consultar', addonCta:'Pedir presupuesto',
   servicesEyebrow:'Lo que construimos', servicesH2:'Tres niveles, un mismo estándar',
   servicesP:'Cada proyecto se diseña y programa desde cero para ajustarse a la ambición — y el presupuesto — del negocio detrás de él.',
-  service1Title:'Sitios de una página', service1Desc:'Una página única, enfocada y elegante, que presenta un negocio con claridad y convierte visitantes en llamadas.',
-  service2Title:'Sitios empresariales', service2Desc:'Sitios de varias secciones con servicios, galerías, reservas y contenido bilingüe cuando se necesite.',
-  service3Title:'Experiencias prémium', service3Desc:'Experiencias digitales totalmente a medida, animadas y de varias páginas, para marcas que quieren liderar su categoría.',
+  service1Title:'Sitios de una página', service1Desc:"Un sitio de una página, elegante y enfocado, que muestra con claridad quién eres, qué ofreces y cuándo estás disponible — y convierte a los visitantes en llamadas. Ideal para pequeños negocios que quieren una presencia online profesional, rápido y a buen precio.",
+  service2Title:'Sitios empresariales', service2Desc:"Un sitio de varias páginas y secciones con servicios, galería de fotos, reservas online y, si hace falta, contenido bilingüe. Para negocios que no solo quieren aparecer en internet, sino conseguir y atender allí a sus clientes.",
+  service3Title:'Experiencias prémium', service3Desc:"Una experiencia digital totalmente a medida, animada y de varias páginas, con blog, reseñas de clientes y movimientos diseñados en torno a tu identidad — para marcas que quieren liderar su categoría e impresionar desde el primer segundo.",
   aboutEyebrow:'Nosotros',
   aboutText:'Somos Alex y Theo, dos jóvenes emprendedores apasionados por la tecnología digital y el diseño web. Creamos sitios web modernos y de alto rendimiento usando las últimas tecnologías de inteligencia artificial, para ayudar a los negocios a mejorar su presencia en línea y hacer crecer su actividad.',
+  aboutText2:"Trabajamos desde Budapest como un equipo de dos: hablas directamente con nosotros, sin intermediarios ni laberintos de atención al cliente. Diseñamos, programamos y entregamos cada proyecto nosotros mismos — las mismas dos personas que se sentaron contigo en la primera reunión.",
+  aboutText3:"Creemos que una buena web no es un gasto, sino una herramienta: genera confianza, muestra lo que sabes hacer y facilita que tus clientes te encuentren y te contacten. Precisamente por eso construimos cada una como si fuera nuestro propio negocio.",
   faqEyebrow:'Preguntas frecuentes', faqH2:'Preguntas y respuestas',
   faqP:'¿Aún tienes dudas? Esto es lo que la gente suele preguntar antes de empezar un proyecto.',
   faqItems:[
@@ -1565,11 +1702,42 @@ es:{
     {q:'¿Puedo actualizar el contenido yo mismo después del lanzamiento?', a:'En Esszencia y Presztízs se pueden pedir pequeños cambios de texto o fotos en cualquier momento. Al ser Prémium totalmente a medida, los cambios normalmente pasan por nosotros para que el diseño se mantenga intacto.'},
     {q:'¿Se encargan del hosting y del dominio?', a:'Sí — podemos configurar el hosting y un dominio desde cero, o trabajar con uno que ya tengas.'},
     {q:'¿Y si más adelante necesito más páginas o funciones?', a:'Cada nivel puede crecer. En cuanto sepamos qué necesitas — una página extra, una nueva sección, una función — lo presupuestamos aparte, sin atarte al alcance original.'},
-    {q:'¿Ofrecen mantenimiento continuo?', a:'Sí — encontrarás las tarifas mensuales exactas junto a los precios más arriba. Esto cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.'}
+    {q:'¿Ofrecen mantenimiento continuo?', a:'Sí — encontrarás las tarifas mensuales exactas junto a los precios más arriba. Esto cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.'},
+    {q:"¿Mi web se verá bien en el móvil?", a:"Sí. Diseñamos y probamos cada sitio en móviles, tabletas y ordenadores: la página se adapta al tamaño de la pantalla, el texto sigue siendo legible y los botones son fáciles de pulsar."},
+    {q:"¿Qué materiales tengo que preparar?", a:"Basta con una descripción de tu negocio, los datos de contacto, el horario y algunas fotos — y tu logotipo, si lo tienes. Si no tienes fotos de buena calidad, podemos organizar opcionalmente un fotógrafo profesional (precio bajo petición)."},
+    {q:"¿Cómo funcionan el contrato y el pago?", a:"El contrato se firma en persona. En él se fijan el paquete, el plazo, el importe del anticipo y los detalles de pago, para que todo quede claro desde el principio."},
+    {q:"¿Aparecerá mi web en Google?", a:"Construimos código rápido, limpio y adaptado al móvil, una base sólida para el posicionamiento. Pero nadie puede garantizar una posición concreta — los buscadores valoran muchos factores y los resultados se construyen con el tiempo."}
   ],
+  whyEyebrow:"Por qué nosotros",
+  whyH2:"Por qué trabajar con nosotros",
+  whyP:"No subimos plantillas: cada sitio web se adapta a tu negocio — con rapidez, con transparencia y a tu lado hasta el final.",
+  why1Title:"Código a medida, no plantillas",
+  why1Desc:"Cada sitio se crea desde cero — sin plantillas prefabricadas ni constructores de páginas — para que tu web se vea exactamente como imaginas tu marca.",
+  why2Title:"Entrega rápida",
+  why2Desc:"Esszencia está lista en 3–4 días, Presztízs en 4–7 y Prémium en 7–12 — según la rapidez con la que lleguen el contenido y tus comentarios.",
+  why3Title:"Pensado para todos los dispositivos",
+  why3Desc:"Impecable en móviles, tabletas y ordenadores: textos legibles, botones cómodos de pulsar y sin desplazamiento horizontal.",
+  why4Title:"Precios transparentes",
+  why4Desc:"Paquetes con contenido definido y precios claros, sin costes ocultos — la cuota mensual de mantenimiento también la ves por adelantado.",
+  why5Title:"Todo en un solo lugar",
+  why5Desc:"Alojamiento, nombre de dominio, actualizaciones, copias de seguridad y pequeñas correcciones en un único plan mensual — no tienes que ocuparte de nada técnico.",
+  why6Title:"Trato personal",
+  why6Desc:"Hablas directamente con nosotros, los dos fundadores — sin intermediarios. El contrato se firma en persona.",
+  processEyebrow:"Cómo trabajamos",
+  processH2:"Cuatro pasos de la idea al lanzamiento",
+  processP:"Un proceso sencillo y transparente: siempre sabes en qué punto está tu proyecto y cuál es el siguiente paso.",
+  step1Title:"Conversación",
+  step1Desc:"Nos cuentas sobre tu negocio y tus objetivos; nosotros recomendamos el nivel adecuado y aclaramos qué contenido hace falta.",
+  step2Title:"Contrato",
+  step2Desc:"Firmamos el contrato en persona: recoge qué recibes, por cuánto y para cuándo, junto con el anticipo y los detalles de pago.",
+  step3Title:"Diseño y desarrollo",
+  step3Desc:"Creamos el sitio con los textos, las fotos y los datos de contacto que nos facilitas y te lo mostramos en una vista previa en vivo para que nos des tu opinión.",
+  step4Title:"Lanzamiento y soporte",
+  step4Desc:"Configuramos el alojamiento y el dominio, publicamos el sitio — y después nos ocupamos de él con el plan de mantenimiento mensual.",
+  contactNote:"Escríbenos o llámanos cuando quieras — la primera conversación no te compromete a nada. También podemos quedar en persona en Budapest.",
   contactEyebrow:'Contacto', contactH2:'Construyamos algo prémium',
   contactP:'Cuéntame sobre tu negocio y te recomendaré el nivel adecuado — Esszencia, Presztízs o Prémium.',
-  formDivider:'¿Tienes una solicitud más concreta?', formName:'Tu nombre', formEmail:'Tu correo electrónico',
+  formDivider:"Tu proyecto empieza aquí.", formName:'Tu nombre', formEmail:'Tu correo electrónico',
   formMessage:'Cuéntanos sobre tu proyecto o tu pregunta…', formMessageLabel:'Tu mensaje', legalImpressum:'Aviso legal', legalPrivacy:'Privacidad', legalTerms:'Condiciones', legalCookies:'Cookies', formSubmit:'Enviar mensaje', formSending:'Enviando…',
   formSuccess:'Gracias — te responderemos pronto.', formError:'Algo salió mal — escríbenos directamente por correo, por favor.',
   formSubject:'Nuevo mensaje del sitio AiStudioBudapest',
@@ -1583,8 +1751,8 @@ de:{
   navAbout:'Über uns', navFaq:'FAQ', navContact:'Kontakt', navCta:'Projekt starten',
   burgerOpen:'Menü öffnen', burgerClose:'Menü schließen', langAria:'Sprache wählen',
   heroEyebrow:'Webdesign',
-  heroTagline:'Premium-Webdesign, das ambitionierte Marken in die Umlaufbahn schickt.',
-  heroSub:'Drei Stufen handwerklicher Qualität, von der fokussierten One-Page-Website bis zum vollständig individuellen Premium-Erlebnis — scrolle nach unten, um sie live zu entdecken.',
+  heroTagline:"Premium-Websites, auf die du stolz sein kannst.",
+  heroSub:"Individuelle, schnelle und mobilfreundliche Websites aus Budapest — von der einseitigen Vorstellung bis zum vollständig maßgeschneiderten Premium-Erlebnis. Drei Stufen, feste Preise, Live-Prototypen: Scrolle nach unten und probiere sie aus.",
   showcaseEyebrow:'Ausgewählte Arbeiten',
   stackTitle:'Zur Website', enterHint:'Zur Website ↗',
   ctaViewProject:'Projekt ansehen ↗', ctaWorkTogether:'Lass uns zusammenarbeiten',
@@ -1605,11 +1773,13 @@ de:{
   addonPrice:'Preis auf Anfrage', addonCta:'Angebot anfordern',
   servicesEyebrow:'Was wir bauen', servicesH2:'Drei Stufen, ein Qualitätsstandard',
   servicesP:'Jedes Projekt wird von Grund auf entworfen und programmiert, passend zum Anspruch — und zum Budget — des dahinterstehenden Unternehmens.',
-  service1Title:'One-Page-Websites', service1Desc:'Eine fokussierte, elegante Einzelseite, die ein Unternehmen klar präsentiert und Besucher in Anrufe verwandelt.',
-  service2Title:'Business-Websites', service2Desc:'Mehrteilige Seiten mit Leistungen, Galerien, Buchungsabläufen und bei Bedarf zweisprachigen Inhalten.',
-  service3Title:'Premium-Erlebnisse', service3Desc:'Vollständig individuelle, animierte, mehrseitige digitale Erlebnisse für Marken, die ihre Kategorie anführen wollen.',
+  service1Title:'One-Page-Websites', service1Desc:"Eine fokussierte, elegante einseitige Website, die klar zeigt, wer du bist, was du anbietest und wann du erreichbar bist — und Besucher in Anrufe verwandelt. Ideal für kleine Unternehmen, die schnell und zu einem fairen Preis einen professionellen Online-Auftritt wollen.",
+  service2Title:'Business-Websites', service2Desc:"Eine Website mit mehreren Bereichen und Seiten, mit Leistungen, Fotogalerie, Online-Buchung und bei Bedarf zweisprachigen Inhalten. Für Unternehmen, die online nicht nur auftauchen, sondern dort Kunden gewinnen und betreuen wollen.",
+  service3Title:'Premium-Erlebnisse', service3Desc:"Ein vollständig maßgeschneidertes, animiertes, mehrseitiges digitales Erlebnis mit Blog, Kundenbewertungen und auf deine Identität abgestimmten Bewegungen — für Marken, die ihre Kategorie anführen und Besucher vom ersten Moment an beeindrucken wollen.",
   aboutEyebrow:'Über uns',
   aboutText:'Wir sind Alex und Theo, zwei junge Unternehmer mit Leidenschaft für digitale Technologie und Webdesign. Wir erstellen moderne, leistungsstarke Websites mit den neuesten Technologien der künstlichen Intelligenz, um Unternehmen zu helfen, ihre Online-Präsenz zu verbessern und ihr Geschäft auszubauen.',
+  aboutText2:"Wir arbeiten von Budapest aus als Zweierteam: Du sprichst direkt mit uns, ohne Zwischenstation und ohne Kundendienst-Labyrinth. Wir entwerfen, programmieren und übergeben jedes Projekt selbst — dieselben zwei Personen, die beim ersten Treffen mit dir am Tisch saßen.",
+  aboutText3:"Wir glauben, dass eine gute Website keine Ausgabe ist, sondern ein Werkzeug: Sie schafft Vertrauen, zeigt, was du kannst, und macht es Kunden leicht, dich zu finden und Kontakt aufzunehmen. Genau deshalb bauen wir jede so, als wäre es unser eigenes Unternehmen.",
   faqEyebrow:'FAQ', faqH2:'Fragen und Antworten',
   faqP:'Noch unsicher bei etwas? Das wird uns vor Projektbeginn am häufigsten gefragt.',
   faqItems:[
@@ -1618,11 +1788,42 @@ de:{
     {q:'Kann ich Inhalte nach dem Launch selbst aktualisieren?', a:'Bei Esszencia und Presztízs können jederzeit kleine Text- oder Fotoänderungen angefragt werden. Bei der vollständig individuellen Prémium-Umsetzung laufen Änderungen meist über uns, damit das Design intakt bleibt.'},
     {q:'Kümmert ihr euch um Hosting und Domainnamen?', a:'Ja — wir richten Hosting und eine Domain von Grund auf für dich ein, oder arbeiten mit einer bereits vorhandenen Domain.'},
     {q:'Was, wenn ich später mehr Seiten oder Funktionen brauche?', a:'Jede Stufe kann wachsen. Sobald wir wissen, was gebraucht wird — eine zusätzliche Seite, ein neuer Abschnitt, eine Funktion —, kalkulieren wir das separat, ohne dich an den ursprünglichen Umfang zu binden.'},
-    {q:'Bietet ihr laufende Wartung an?', a:'Ja — die genauen monatlichen Preise findest du weiter oben neben den Preisen. Das deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.'}
+    {q:'Bietet ihr laufende Wartung an?', a:'Ja — die genauen monatlichen Preise findest du weiter oben neben den Preisen. Das deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.'},
+    {q:"Sieht meine Website auch auf dem Handy gut aus?", a:"Ja. Wir entwerfen und testen jede Website auf Smartphone, Tablet und Desktop: Die Seite passt sich der Bildschirmgröße an, der Text bleibt lesbar und die Schaltflächen sind leicht anzutippen."},
+    {q:"Welche Unterlagen muss ich vorbereiten?", a:"Eine Beschreibung deines Unternehmens, Kontaktdaten, Öffnungszeiten und ein paar Fotos genügen — und dein Logo, falls vorhanden. Wenn du keine Fotos in guter Qualität hast, können wir optional einen professionellen Fotografen organisieren (Preis auf Anfrage)."},
+    {q:"Wie laufen Vertrag und Zahlung ab?", a:"Den Vertrag unterschreiben wir persönlich. Darin sind Paket, Frist, Höhe der Anzahlung und Zahlungsdetails festgelegt, damit von Anfang an alles klar ist."},
+    {q:"Wird meine Website bei Google angezeigt?", a:"Wir bauen schnellen, sauberen und mobilfreundlichen Code — eine solide Grundlage für die Suche. Eine bestimmte Platzierung kann jedoch niemand garantieren: Suchmaschinen berücksichtigen viele Faktoren, und Ergebnisse wachsen mit der Zeit."}
   ],
+  whyEyebrow:"Warum wir",
+  whyH2:"Warum du mit uns arbeiten solltest",
+  whyP:"Wir laden keine Vorlagen hoch: Jede Website wird auf dein Unternehmen zugeschnitten — schnell, transparent und mit uns an deiner Seite bis zum Schluss.",
+  why1Title:"Individueller Code statt Vorlage",
+  why1Desc:"Jede Seite entsteht von Grund auf — ohne fertige Vorlage und ohne Seitenbaukasten —, damit deine Website genau so aussieht, wie du dir deine Marke vorstellst.",
+  why2Title:"Schnelle Umsetzung",
+  why2Desc:"Esszencia ist in 3–4 Tagen fertig, Presztízs in 4–7, Prémium in 7–12 — je nachdem, wie schnell Inhalte und Feedback zurückkommen.",
+  why3Title:"Für jedes Gerät gemacht",
+  why3Desc:"Einwandfrei auf Smartphone, Tablet und Desktop: gut lesbare Texte, bequem antippbare Schaltflächen und kein seitliches Scrollen.",
+  why4Title:"Transparente Preise",
+  why4Desc:"Pakete mit festem Inhalt und klaren Preisen, ohne versteckte Kosten — auch die monatliche Wartungsgebühr kennst du im Voraus.",
+  why5Title:"Alles aus einer Hand",
+  why5Desc:"Hosting, Domain, Updates, Backups und kleine Korrekturen in einem einzigen Monatspaket — du musst dich um nichts Technisches kümmern.",
+  why6Title:"Persönlicher Kontakt",
+  why6Desc:"Du sprichst direkt mit uns, den beiden Gründern — ohne Zwischenstation. Den Vertrag unterschreiben wir persönlich.",
+  processEyebrow:"So arbeiten wir",
+  processH2:"Vier Schritte von der Idee zum Start",
+  processP:"Ein einfacher, transparenter Ablauf — du weißt immer, wo dein Projekt steht und was als Nächstes kommt.",
+  step1Title:"Gespräch",
+  step1Desc:"Du erzählst uns von deinem Unternehmen und deinen Zielen; wir empfehlen die passende Stufe und klären, welche Inhalte nötig sind.",
+  step2Title:"Vertrag",
+  step2Desc:"Wir unterschreiben den Vertrag persönlich: Er hält fest, was du bekommst, für wie viel und bis wann — samt Anzahlung und Zahlungsdetails.",
+  step3Title:"Gestaltung und Entwicklung",
+  step3Desc:"Wir bauen die Website mit deinen Texten, Fotos und Kontaktdaten und zeigen sie dir in einer Live-Vorschau, damit du Feedback geben kannst.",
+  step4Title:"Start und Betreuung",
+  step4Desc:"Wir richten Hosting und Domain ein und schalten die Website live — danach kümmern wir uns mit dem monatlichen Wartungspaket weiter um sie.",
+  contactNote:"Schreib oder ruf uns jederzeit an — das erste Gespräch verpflichtet dich zu nichts. Wir können uns auch persönlich in Budapest treffen.",
   contactEyebrow:'Kontakt', contactH2:'Lass uns etwas Premium bauen',
   contactP:'Erzähl mir von deinem Unternehmen, und ich empfehle dir die passende Stufe — Esszencia, Presztízs oder Prémium.',
-  formDivider:'Eine konkretere Anfrage?', formName:'Dein Name', formEmail:'Deine E-Mail',
+  formDivider:"Dein Projekt beginnt hier.", formName:'Dein Name', formEmail:'Deine E-Mail',
   formMessage:'Erzähl uns von deinem Projekt oder deiner Frage…', formMessageLabel:'Deine Nachricht', legalImpressum:'Impressum', legalPrivacy:'Datenschutz', legalTerms:'AGB', legalCookies:'Cookies', formSubmit:'Nachricht senden', formSending:'Wird gesendet…',
   formSuccess:'Danke — wir melden uns bald.', formError:'Etwas ist schiefgelaufen — schreib uns bitte direkt per E-Mail.',
   formSubject:'Neue Nachricht von der AiStudioBudapest-Website',
@@ -1673,7 +1874,7 @@ var scrollProgressBar = document.querySelector('#scrollProgress span');
 var burger = document.getElementById('burger');
 var mnav = document.getElementById('mnav');
 var revealEls = [];
-var CASCADE_GRIDS = ['services-grid', 'pricing-grid'];
+var CASCADE_GRIDS = ['services-grid', 'pricing-grid', 'process-grid'];
 
 var projectEls = {};
 document.querySelectorAll('.project').forEach(function(p){
@@ -2833,31 +3034,6 @@ function attachSideTilt(sideEl){
 }
 attachSideTilt(sideLeft);
 attachSideTilt(sideRight);
-
-/* ---------------- custom cursor: dot + lagging ring ---------------- */
-(function(){
-  var fine = window.matchMedia('(pointer: fine)').matches;
-  if(!fine || reduceMotion) return;
-  var dot = document.getElementById('cursorDot');
-  var ring = document.getElementById('cursorRing');
-  document.body.classList.add('cursor-ready');
-  var mx = -100, my = -100, rx = -100, ry = -100, shown = false;
-  window.addEventListener('mousemove', function(e){
-    mx = e.clientX; my = e.clientY;
-    dot.style.transform = 'translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
-    if(!shown){ shown = true; document.body.classList.add('cursor-visible'); }
-  });
-  window.addEventListener('mouseover', function(e){
-    var t = e.target.closest && e.target.closest('a, button, [data-cursor]');
-    ring.classList.toggle('active', Boolean(t));
-  });
-  (function loop(){
-    rx += (mx - rx) * 0.18;
-    ry += (my - ry) * 0.18;
-    ring.style.transform = 'translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';
-    requestAnimationFrame(loop);
-  })();
-})();
 
 /* ---------------- mobile menu ---------------- */
 function setMenu(open){

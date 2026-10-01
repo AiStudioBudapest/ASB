@@ -681,46 +681,6 @@ function buildExterior(mobile, reflect, ctx) {
     const p = ((t * 3.6 + 330) % 720) - 360; boat.position.x = p; boat.position.y = -2.0 + Math.sin(t * .9) * .18; boat.rotation.z = Math.sin(t * .7) * .012;
   });
 
-  /* ---------- fireworks over the Danube ---------- */
-  const FW = mobile ? 0 : 1100;
-  let fw = null;
-  if (FW) {
-    const pos = new Float32Array(FW * 3), col = new Float32Array(FW * 3), vel = new Float32Array(FW * 3), life = new Float32Array(FW);
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ size: 4.2, map: glow, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }));
-    pts.frustumCulled = false; g.add(pts);
-    fw = { pos, col, vel, life, geo, next: 3, head: 0, base: new Float32Array(FW * 3) };
-    fw.burst = (cx, cy, cz, r, gc, b) => {
-      for (let n = 0; n < 220; n++) {
-        const i = fw.head; fw.head = (fw.head + 1) % FW;
-        const th = R() * TAU, ph = Math.acos(2 * R() - 1), sp = 24 + R() * 22;
-        pos[i * 3] = cx; pos[i * 3 + 1] = cy; pos[i * 3 + 2] = cz;
-        vel[i * 3] = Math.sin(ph) * Math.cos(th) * sp; vel[i * 3 + 1] = Math.cos(ph) * sp; vel[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * sp;
-        fw.base[i * 3] = r; fw.base[i * 3 + 1] = gc; fw.base[i * 3 + 2] = b; life[i] = 1.6 + R() * .5;
-      }
-    };
-    updaters.push((t, dt, active) => {
-      if (!active) return;
-      fw.next -= dt;
-      if (fw.next < 0) {
-        fw.next = 3.5 + R() * 5;
-        const pal = [[1, .3, .3], [.4, .8, 1], [1, .85, .3], [.6, 1, .5], [1, .5, 1]][Math.floor(R() * 5)];
-        fw.burst((R() - .5) * 340, 95 + R() * 70, 150 + R() * 150, pal[0], pal[1], pal[2]);
-      }
-      for (let i = 0; i < FW; i++) {
-        if (life[i] <= 0) { col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = 0; continue; }
-        life[i] -= dt; vel[i * 3 + 1] -= 16 * dt;
-        const k = Math.max(0, life[i]) / 2.0;
-        pos[i * 3] += vel[i * 3] * dt; pos[i * 3 + 1] += vel[i * 3 + 1] * dt; pos[i * 3 + 2] += vel[i * 3 + 2] * dt;
-        vel[i * 3] *= .985; vel[i * 3 + 2] *= .985;
-        col[i * 3] = fw.base[i * 3] * k; col[i * 3 + 1] = fw.base[i * 3 + 1] * k; col[i * 3 + 2] = fw.base[i * 3 + 2] * k;
-      }
-      geo.attributes.position.needsUpdate = true; geo.attributes.color.needsUpdate = true;
-    });
-  }
-
   /* ---------- lights: warm floodlights raking the front and the back, soft shadows ---------- */
   g.add(new THREE.HemisphereLight(0x4a5fae, 0x100c18, .3));
   const lights = {};

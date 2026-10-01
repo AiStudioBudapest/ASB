@@ -12,6 +12,15 @@
 
 Typical turnaround: Esszencia 3–4 days, Presztízs 4–7 days, Prémium 7–12 days, depending on how quickly the client supplies content and feedback.
 
+## How the agency works
+
+1. Discussion: the client describes the business and goals; the agency recommends a tier and clarifies the content needed.
+2. Contract: signed in person (the site itself is a showcase and contact form, not a binding online order).
+3. Design and build: the site is built from scratch (no templates or page builders) from the client's text, photos and contact details, and shown on a live preview for feedback.
+4. Launch and support: hosting and domain are set up, the site goes live, and the monthly maintenance plan covers hosting, domain, updates, backups and minor fixes.
+
+Sites are designed and tested for phones, tablets and desktops. No ranking on search engines is guaranteed.
+
 ## Pages
 
 - [Portfolio / main site](/): live showcase of all three tiers, pricing, FAQ, contact form.
