@@ -37,8 +37,19 @@
 /* Fetch the 3D Parliament scene as early as possible — only for visitors who
    will actually get it (no reduced-motion, no data-saver). */
 (function(){try{
+  /* No hardware acceleration (Windows "Basic Render Driver", SwiftShader, llvmpipe...): the browser emulates WebGL on the CPU, so
+     the 3D scene runs at ~10 fps with multi-second freezes (seen in a friend's ?diag=1 report). Detect it up front and use the
+     still photo (plain <img>, no WebGL) instead of waiting for the slow-frame safety net, and don't preload the 3D files either. */
+  try{
+    var c = document.createElement('canvas'), g = c.getContext('webgl') || c.getContext('experimental-webgl');
+    if(g){
+      var x = g.getExtension('WEBGL_debug_renderer_info');
+      window.AIS_SOFT_GL = /basic render|swiftshader|llvmpipe|softpipe|software/i.test(x ? String(g.getParameter(x.UNMASKED_RENDERER_WEBGL)) : '');
+      var lose = g.getExtension('WEBGL_lose_context'); if(lose) lose.loseContext();
+    }
+  }catch(e){}
   var rm = matchMedia('(prefers-reduced-motion: reduce)').matches, sd = navigator.connection && navigator.connection.saveData;
-  if(!rm && !sd){
+  if(!rm && !sd && !window.AIS_SOFT_GL){
     var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = '/alexstudio/parliament3d.js'; document.head.appendChild(l);
     var small = matchMedia('(max-width:820px)').matches || matchMedia('(pointer:coarse)').matches;
     ['stone_c','stone_n','stone_orm','roof_c','roof_n','roof_orm','gold_c','gold_n','gold_orm','paving_c','paving_n','paving_orm','floor_c','floor_n','floor_orm', small ? 'sky_2k' : 'sky'].forEach(function(n){
@@ -1884,7 +1895,9 @@ function parlSize(force){
     Parl.gl.viewport(0, 0, parlCanvas.width, parlCanvas.height);
   }
 }
+var PARL_SOFT = !!window.AIS_SOFT_GL; /* detected in <head>, see the preload script */
 function parlInitGL(){
+  if(PARL_SOFT) return false; /* photo fallback stays a plain <img> */
   var gl = null;
   try{ gl = parlCanvas.getContext('webgl', {alpha: true, premultipliedAlpha: true, antialias: false, powerPreference: 'high-performance'}) || parlCanvas.getContext('experimental-webgl'); }catch(e){}
   if(!gl) return false;
@@ -2111,8 +2124,8 @@ if(parlCanvas && parlImg){
   window.addEventListener('resize', function(){ p3Size(false); parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
   document.addEventListener('visibilitychange', function(){ if(!document.hidden){ Parl.lastT = 0; parlKick(); } });
   /* No pointer tracking for the Parliament on purpose: the mouse must never move it (parallax, torch, tilt). Parl.mouse stays false. */
-  if(reduceMotion || (navigator.connection && navigator.connection.saveData)){
-    aisMark('photo-mode', reduceMotion ? 'prefers-reduced-motion is on' : 'browser data-saver is on');
+  if(reduceMotion || PARL_SOFT || (navigator.connection && navigator.connection.saveData)){
+    aisMark('photo-mode', reduceMotion ? 'prefers-reduced-motion is on' : PARL_SOFT ? 'no GPU acceleration (software WebGL)' : 'browser data-saver is on');
     Parl.posterOff = true; posterHide(true);
     if(document.readyState === 'complete') window.aisLoaderHide && window.aisLoaderHide(); else window.addEventListener('load', function(){ window.aisLoaderHide && window.aisLoaderHide(); }, {once: true});
     if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto);
