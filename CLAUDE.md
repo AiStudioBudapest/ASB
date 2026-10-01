@@ -84,3 +84,7 @@ L'écart de gamme doit se voir immédiatement : Esszencia simple et basique (vol
 ## Copies sur claude.ai
 
 Ces deux sites sont aussi publiés comme pages privées sur claude.ai. Elles ne sont pas synchronisées avec ce projet : une modification faite ici n'y apparaît pas, et inversement.
+
+## alexstudio : scène 3D du Parlement et rendu logiciel
+
+Le hero est une scène three.js (`scene3d/parliament3d.js` → `npm run build:3d` → `public/alexstudio/parliament3d.js`, committé). Sans accélération GPU (renderer « Microsoft Basic Render Driver », SwiftShader, llvmpipe — détecté dans le script `<head>` via `WEBGL_debug_renderer_info`, drapeau `window.AIS_SOFT_GL`), la 3D tourne à ~10 fps avec des gels de ~1 s (rapport `?diag=1` d'un ami, sept. 2026). Dans ce cas : pas de préchargement de la 3D ni des textures, et le fond est la photo `parlement.jpg` en simple `<img>` (`parlInitGL()` renvoie `false`). Ne pas retirer cette détection. Le panneau `?diag=1` (`diag.js`) sert à diagnostiquer les machines lentes.
