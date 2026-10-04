@@ -304,6 +304,7 @@ header.nav{
   background:radial-gradient(ellipse at center,rgba(3,7,18,.9) 0%,rgba(3,7,18,.72) 38%,rgba(3,7,18,0) 70%);}
 .hero-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(70*var(--u));}
 .tagline{font-family:var(--display);font-weight:400;font-size:clamp(38px,6.6vw,104px);line-height:1.02;letter-spacing:-0.024em;margin:0;color:var(--text);max-width:15em;text-wrap:balance;}
+.tagline .nobr{white-space:nowrap;}
 .tagline .grad{background-image:linear-gradient(to left,#6366f1,#a855f7,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
 .hero-sub{margin:calc(14*var(--u)) 0 0;color:var(--hero-sub);opacity:.8;font-size:clamp(16px,1.35vw,19px);line-height:1.75;max-width:36rem;}
 .hero-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:calc(26*var(--u));padding:calc(18*var(--u)) calc(30*var(--u));min-height:48px;border-radius:999px;color:var(--text);font-size:clamp(14px,1.1vw,16px);font-weight:500;letter-spacing:.01em;transition:background .25s var(--ease),transform .25s var(--ease);}
@@ -1041,7 +1042,7 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
   </div>
   <span class="hero-blur" aria-hidden="true"></span>
   <div class="hero-main">
-    <h1 class="tagline">A kiválóság <span class="grad">az első benyomással</span> kezdődik.</h1>
+    <h1 class="tagline">A kiválóság <span class="nobr"><span class="grad">az első benyomással</span></span> kezdődik.</h1>
     <p class="hero-sub" data-i18n="heroSub">Egyedi, gyors és mobilbarát weboldalak Budapestről — az egyoldalas bemutatkozástól a teljesen egyedi prémium élményig. Három szint, rögzített árak, élő prototípusok: görgess lejjebb, és próbáld ki őket.</p>
     <a class="hero-cta liquid-glass" href="#contact" data-i18n="ctaWorkTogether">Dolgozzunk együtt</a>
   </div>
@@ -1947,9 +1948,39 @@ function renderTagline(){
   tagline.textContent = '';
   if(i < 0){ tagline.textContent = full; return; }
   tagline.appendChild(document.createTextNode(full.slice(0, i)));
-  var g = document.createElement('span'); g.className = 'grad'; g.textContent = acc; tagline.appendChild(g);
-  tagline.appendChild(document.createTextNode(full.slice(i + acc.length)));
+  /* the accent and the punctuation that closes the sentence form one unbreakable unit (no lonely "." on a new line) */
+  var rest = full.slice(i + acc.length), punct = (rest.match(/^[.!?,;:…]+/) || [''])[0];
+  var grp = document.createElement('span'); grp.className = 'nobr';
+  var g = document.createElement('span'); g.className = 'grad'; g.textContent = acc;
+  grp.appendChild(g); if(punct) grp.appendChild(document.createTextNode(punct));
+  tagline.appendChild(grp);
+  tagline.appendChild(document.createTextNode(rest.slice(punct.length)));
+  fitTagline();
 }
+/* The gradient part ("la première impression") must stay on ONE line, so it is unbreakable (white-space:nowrap in CSS).
+   If it is wider than the headline box (small phone, long translation) the headline font is reduced until it fits;
+   under a readable minimum the accent is allowed to wrap again rather than being cut off. */
+function fitTagline(){
+  if(!tagline) return;
+  tagline.style.fontSize = '';
+  var g = tagline.querySelector('.nobr'); if(!g) return;
+  g.style.whiteSpace = '';
+  /* available width = the hero column's content box (the headline box itself would grow to fit an unbreakable accent) */
+  var par = tagline.parentElement, pcs = getComputedStyle(par);
+  var avail = par.clientWidth - parseFloat(pcs.paddingLeft) - parseFloat(pcs.paddingRight), need = g.getBoundingClientRect().width;
+  if(!avail || need <= avail) return;
+  var size = parseFloat(getComputedStyle(tagline).fontSize) * avail / need * 0.985;
+  if(size < 22){ size = 22; g.style.whiteSpace = 'normal'; }
+  tagline.style.fontSize = size.toFixed(1) + 'px';
+}
+(function(){
+  var lastW = window.innerWidth, t = 0;
+  window.addEventListener('resize', function(){
+    if(window.innerWidth === lastW) return; /* ignore height-only resizes (mobile URL bar) */
+    lastW = window.innerWidth; clearTimeout(t); t = setTimeout(fitTagline, 120);
+  });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTagline); /* font metrics change once the web font is in */
+})();
 /* Background video: opacity is driven here, not by CSS. 0.5 s fade-in at the start, 0.5 s fade-out at the end; on "ended"
    it goes back to 0, waits 100 ms and replays from 0. No overlay gradient on the video. It is not loaded at all for
    visitors who asked for less motion, enabled data-saver, or have no GPU (they see the still poster instead), and it is
