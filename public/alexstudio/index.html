@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" class="is-loading">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -159,6 +159,24 @@ img{display:block;max-width:100%;}
 /* Sections that receive focus after an in-page jump (see "in-page anchors"
    in the script) are focusable only programmatically — no ring around them. */
 [tabindex="-1"]:focus{outline:none;}
+
+/* ============================================================
+   0. LOADING SCREEN — the logo, centred, on every visit, until fonts are ready (see aisLoaderHide in the inline script
+      right after <body>). Pure CSS so it is on screen from the very first paint.
+   ============================================================ */
+html.is-loading{overflow:hidden;}
+#loader{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 42%,#170b30 0%,#08011a 52%,#05010e 100%);
+  transition:opacity .9s ease,visibility 0s linear .9s;}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-inner{display:flex;flex-direction:column;align-items:center;gap:calc(34*var(--u,1px));animation:loaderIn .9s ease both;}
+.loader-logo{width:min(56vw,360px);height:auto;filter:drop-shadow(0 0 34px rgba(168,85,247,.35));animation:loaderBreath 3s ease-in-out infinite;}
+.loader-bar{width:min(46vw,190px);height:2px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden;}
+.loader-bar span{display:block;width:42%;height:100%;border-radius:2px;background:linear-gradient(90deg,transparent,#6366f1,#a855f7,#fcd34d,transparent);animation:loaderBar 1.5s ease-in-out infinite;}
+@keyframes loaderIn{from{opacity:0;transform:translateY(8px) scale(.98);}to{opacity:1;transform:none;}}
+@keyframes loaderBreath{0%,100%{opacity:.92;transform:scale(1);}50%{opacity:1;transform:scale(1.025);}}
+@keyframes loaderBar{0%{transform:translateX(-110%);}100%{transform:translateX(260%);}}
+@media (prefers-reduced-motion:reduce){.loader-inner,.loader-logo,.loader-bar span{animation:none!important;}.loader-bar span{width:100%;}}
 
 /* ============================================================
    1. BACKGROUND — a plain deep blue-purple (the old 3D Parliament scene was removed on request). The hero carries
@@ -898,6 +916,33 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
 </style>
 </head>
 <body>
+
+<div id="loader" role="status" aria-live="polite" aria-label="AiStudioBudapest">
+  <div class="loader-inner">
+    <img class="loader-logo" src="/alexstudio/logo.png" alt="AiStudioBudapest" width="580" height="303" decoding="async" fetchpriority="high">
+    <div class="loader-bar" aria-hidden="true"><span></span></div>
+  </div>
+</div>
+<script>
+/* Loading screen controller. The site calls aisLoaderHide() once the page and fonts are ready; it stays on
+   screen for at least 1.2 s so the logo never just flashes, and a 6 s failsafe guarantees it can never trap the visitor. */
+(function(){
+  var el = document.getElementById('loader'), t0 = Date.now(), MIN = 1200;
+  window.aisLoaderDone = false;
+  window.aisLoaderHide = function(){
+    if(window.aisLoaderDone) return;
+    window.aisLoaderDone = true;
+    window.aisMark('loader-hide', 'after ' + (Date.now() - t0) + ' ms on screen');
+    setTimeout(function(){
+      el.classList.add('done'); el.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('is-loading');
+      if(window.aisHeroEnter) window.aisHeroEnter();
+      setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 1300);
+    }, Math.max(0, MIN - (Date.now() - t0)));
+  };
+  setTimeout(window.aisLoaderHide, 6000);
+})();
+</script>
 
 <div class="bg" aria-hidden="true">
   <span class="bg-tint"></span>
@@ -2815,10 +2860,20 @@ function startHeroEntrance(){
     setTimeout(function(){ hero.classList.remove('enter','run'); }, 1600);
   }
 }
+window.aisHeroEnter = startHeroEntrance; /* called by the loading screen as it fades out */
 requestAnimationFrame(function(){
   document.body.classList.add('ready');
-  startHeroEntrance();
+  if(window.aisLoaderDone || !document.getElementById('loader')) startHeroEntrance();
 });
+/* Reveal the site once the document and the fonts are ready (the loading screen keeps its 1.2 s minimum on its own). */
+(function(){
+  var go = function(){ if(window.aisLoaderHide) window.aisLoaderHide(); };
+  var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  var domReady = new Promise(function(res){
+    if(document.readyState !== 'loading') res(); else document.addEventListener('DOMContentLoaded', res, {once: true});
+  });
+  Promise.all([fontsReady, domReady]).then(go, go);
+})();
 
 /* ---------------- showcase entrance: plays once, the first time
    it scrolls into view ---------------- */
