@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="hu" class="is-loading">
+<html lang="hu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#07080a">
+<meta name="theme-color" content="#05010e">
 <title>AiStudioBudapest — Prémium Webdesign Portfólió</title>
 <meta name="description" content="AiStudioBudapest — prémium weboldalakat tervezek és fejlesztek. Fedezd fel a három élő prototípust: Esszencia, Presztízs, Prémium.">
 <link rel="preload" as="image" href="/alexstudio/logo.png" fetchpriority="high">
-<link rel="preload" as="image" href="/alexstudio/poster-d.jpg" media="(min-width:821px)" fetchpriority="high">
-<link rel="preload" as="image" href="/alexstudio/poster-m.jpg" media="(max-width:820px)" fetchpriority="high">
+<link rel="preload" as="image" href="/media/hero-bg-poster.jpg" fetchpriority="high">
 <script>
 /* Diagnostic hook. aisMark() is a no-op for normal visitors. Only when the page is opened with ?diag=1 does it record
    timings/errors and load /alexstudio/diag.js (a panel with GPU, connection, load timeline, fps, freezes and a "Copy
@@ -34,28 +33,17 @@
 })();
 </script>
 <script>
-/* Fetch the 3D Parliament scene as early as possible — only for visitors who
-   will actually get it (no reduced-motion, no data-saver). */
+/* No hardware acceleration (Windows "Basic Render Driver", SwiftShader, llvmpipe...): the browser draws everything on the
+   CPU, so blurs, blends and a playing background video make the page stutter (seen in a partner's ?diag=1 report:
+   12-18 fps). Detect it up front: <html class="soft-gl"> switches the heavy decoration off (see the html.soft-gl rules) and
+   the hero shows its still poster instead of playing the video. */
 (function(){try{
-  /* No hardware acceleration (Windows "Basic Render Driver", SwiftShader, llvmpipe...): the browser emulates WebGL on the CPU, so
-     the 3D scene runs at ~10 fps with multi-second freezes (seen in a friend's ?diag=1 report). Detect it up front and use the
-     still photo (plain <img>, no WebGL) instead of waiting for the slow-frame safety net, and don't preload the 3D files either. */
-  try{
-    var c = document.createElement('canvas'), g = c.getContext('webgl') || c.getContext('experimental-webgl');
-    if(g){
-      var x = g.getExtension('WEBGL_debug_renderer_info');
-      window.AIS_SOFT_GL = /basic render|swiftshader|llvmpipe|softpipe|software/i.test(x ? String(g.getParameter(x.UNMASKED_RENDERER_WEBGL)) : '');
-      if(window.AIS_SOFT_GL) document.documentElement.classList.add('soft-gl'); /* lightweight CSS, see .soft-gl rules */
-      var lose = g.getExtension('WEBGL_lose_context'); if(lose) lose.loseContext();
-    }
-  }catch(e){}
-  var rm = matchMedia('(prefers-reduced-motion: reduce)').matches, sd = navigator.connection && navigator.connection.saveData;
-  if(!rm && !sd && !window.AIS_SOFT_GL){
-    var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = '/alexstudio/parliament3d.js'; document.head.appendChild(l);
-    var small = matchMedia('(max-width:820px)').matches || matchMedia('(pointer:coarse)').matches;
-    ['stone_c','stone_n','stone_orm','roof_c','roof_n','roof_orm','gold_c','gold_n','gold_orm','paving_c','paving_n','paving_orm','floor_c','floor_n','floor_orm', small ? 'sky_2k' : 'sky'].forEach(function(n){
-      var i = document.createElement('link'); i.rel = 'preload'; i.as = 'image'; i.crossOrigin = 'anonymous'; i.href = '/alexstudio/tex/' + n + (small && n.indexOf('sky') < 0 ? '_m' : '') + '.jpg'; document.head.appendChild(i); /* phones get the light _m set, like the scene */
-    });
+  var c = document.createElement('canvas'), g = c.getContext('webgl') || c.getContext('experimental-webgl');
+  if(g){
+    var x = g.getExtension('WEBGL_debug_renderer_info');
+    window.AIS_SOFT_GL = /basic render|swiftshader|llvmpipe|softpipe|software/i.test(x ? String(g.getParameter(x.UNMASKED_RENDERER_WEBGL)) : '');
+    if(window.AIS_SOFT_GL) document.documentElement.classList.add('soft-gl');
+    var lose = g.getExtension('WEBGL_lose_context'); if(lose) lose.loseContext();
   }
 }catch(e){}})();
 </script>
@@ -78,6 +66,12 @@
   unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
 @font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;
   src:url('/alexstudio/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url('/alexstudio/fonts/geist-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url('/alexstudio/fonts/geist-latin-ext.woff2') format('woff2');
   unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
 @font-face{font-family:'Prata';font-style:normal;font-weight:400;font-display:swap;
   src:url('/alexstudio/fonts/prata-400-latin.woff2') format('woff2');
@@ -102,17 +96,18 @@
   --vshift:0px;
   --mx:50%; --my:50%;
 
-  --ink:#07080a; --panel:#0d0f13; --panel-2:#12151b; --line:rgba(255,255,255,.12);
+  --ink:#05010e; --panel:#0d0f13; --panel-2:#12151b; --line:rgba(255,255,255,.12);
   /* --muted-2 only reaches ~3.9:1 against --ink — below the 4.5:1 WCAG AA
      floor for normal-size text. Fine for form placeholders (transient,
      backed by a real <label>), never for text that's actually read —
      use --muted (7.8:1) for that instead. */
-  --text:#f2f3f5; --muted:#9aa2ad; --muted-2:#666e79;
+  --text:#f4f3f1; --hero-sub:#d4d2ce; --muted:#9aa2ad; --muted-2:#666e79;
   --cyan:#7fe9de; --cyan-soft:rgba(127,233,222,.16);
   --white:#fbfbfa;
 
   --serif:'Prata', Georgia, serif;
-  --sans:'Hanken Grotesk', system-ui, sans-serif;
+  --sans:'Geist', system-ui, sans-serif;
+  --display:'Hanken Grotesk', system-ui, sans-serif; /* hero headline (General Sans is not self-hostable here) */
 
   --ease:cubic-bezier(.16,1,.3,1);
   --ease-soft:cubic-bezier(.22,.61,.36,1);
@@ -166,55 +161,11 @@ img{display:block;max-width:100%;}
 [tabindex="-1"]:focus{outline:none;}
 
 /* ============================================================
-   0. LOADING SCREEN — the logo, centred, until the 3D Parliament is ready (see aisLoaderHide in the inline script
-      right after <body>). Pure CSS so it is on screen from the very first paint.
+   1. BACKGROUND — a plain deep blue-purple (the old 3D Parliament scene was removed on request). The hero carries
+   its own looping video (section 3); everything below sits on this fixed dark layer with the twinkling stars.
    ============================================================ */
-html.is-loading{overflow:hidden;}
-#loader{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 50% 42%,#111b30 0%,#070a14 52%,#03050b 100%);
-  transition:opacity .9s ease,visibility 0s linear .9s;}
-#loader.done{opacity:0;visibility:hidden;pointer-events:none;}
-.loader-inner{display:flex;flex-direction:column;align-items:center;gap:calc(34*var(--u,1px));animation:loaderIn .9s ease both;}
-.loader-logo{width:min(56vw,360px);height:auto;filter:drop-shadow(0 0 34px rgba(243,213,138,.28));animation:loaderBreath 3s ease-in-out infinite;}
-.loader-bar{width:min(46vw,190px);height:2px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden;}
-.loader-bar span{display:block;width:42%;height:100%;border-radius:2px;background:linear-gradient(90deg,transparent,#7fe9de,#f3d58a,transparent);animation:loaderBar 1.5s ease-in-out infinite;}
-@keyframes loaderIn{from{opacity:0;transform:translateY(8px) scale(.98);}to{opacity:1;transform:none;}}
-@keyframes loaderBreath{0%,100%{opacity:.92;transform:scale(1);}50%{opacity:1;transform:scale(1.025);}}
-@keyframes loaderBar{0%{transform:translateX(-110%);}100%{transform:translateX(260%);}}
-@media (prefers-reduced-motion:reduce){.loader-inner,.loader-logo,.loader-bar span{animation:none!important;}.loader-bar span{width:100%;}}
-
-/* ============================================================
-   1. BACKGROUND — the 3D Parliament, nothing else. There is no space video any more (visitors saw it for a few
-   seconds on every load and did not want it): until the live scene is ready the backdrop is a STILL FRAME OF THE
-   SAME 3D SCENE (poster-d.jpg / poster-m.jpg, rendered from the scene itself at the hero camera), and the canvas
-   fades in over it so the hand-over is invisible. Dark night blue underneath, never a starfield photo.
-   ============================================================ */
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#03050b;}
-.bg-poster{position:absolute;inset:0;background:#03050b url('/alexstudio/poster-d.jpg') center/cover no-repeat;transition:opacity .9s ease;}
-@media (max-width:820px){.bg-poster{background-image:url('/alexstudio/poster-m.jpg');}}
-.bg-poster.off{opacity:0;pointer-events:none;}
-/* This tint sits on the fixed (viewport-relative, not page-relative) space
-   background, so its gradient re-applies at every scroll position — the
-   bottom ~45% of whatever's currently on screen was getting up to 88%
-   black, which is also right where content sections' scroll-reveal (see
-   --rp in onScrollFrame()) actually plays out, so the "fading in" was
-   fighting near-total darkness the whole time. Lightened across the board
-   so the lower half of the viewport stays legible and the reveal is
-   actually visible while it happens. */
-.bg-tint{position:absolute;inset:0;background:
-  linear-gradient(180deg, rgba(5,6,8,.32) 0%, rgba(5,6,8,.4) 55%, rgba(4,5,7,.56) 100%);
-}
-/* The Parliament of Budapest, rendered in 3D by WebGL (see "Parliament camera"
-   in the script) on top of the space video. The canvas is transparent where the
-   photo shows sky, so the Milky Way stays visible above the building. It is
-   100vh (large viewport on phones), not 100% of .bg, so the URL bar
-   collapsing never resizes the canvas. */
-.bg-parl{position:absolute;left:0;top:0;width:100%;height:100vh;opacity:0;transition:opacity 1.6s var(--ease);}
-.bg-parl.on{opacity:1;}
-/* Also the texture source, and the fallback when WebGL is unavailable. */
-.bg-p3d{position:absolute;left:0;top:0;width:100%;height:100vh;opacity:0;pointer-events:none;}
-.bg-parl-img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;opacity:0;pointer-events:none;}
-.bg-parl-img.on{opacity:.92;}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--ink);}
+.bg-tint{position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% 0%,rgba(99,102,241,.10),transparent 70%),radial-gradient(ellipse 70% 50% at 50% 100%,rgba(168,85,247,.07),transparent 70%);}
 .spotlight{
   position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;
   background:radial-gradient(220px circle at var(--mx) var(--my), rgba(127,233,222,.06), transparent 60%);
@@ -252,7 +203,13 @@ header.nav{
   padding:calc(11 * var(--u)) calc(20 * var(--u));border-radius:999px;border:1px solid var(--line);
   transition:border-color .25s var(--ease),background .25s var(--ease);white-space:nowrap;
 }
-.nav-cta:hover{border-color:var(--cyan);background:var(--cyan-soft);}
+.nav-cta{border:0;}
+.nav-cta:hover{background:rgba(255,255,255,.08);}
+header.nav::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;margin-bottom:-3px;background:linear-gradient(to right,transparent,rgba(244,243,241,.2),transparent);pointer-events:none;}
+/* Liquid glass utility (from the design brief). backdrop-filter is switched off on machines without a GPU, see html.soft-gl. */
+.liquid-glass{background:rgba(255,255,255,0.01);background-blend-mode:luminosity;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border:none;box-shadow:inset 0 1px 1px rgba(255,255,255,0.1);position:relative;overflow:hidden;}
+.liquid-glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.4px;background:linear-gradient(180deg,rgba(255,255,255,0.45) 0%,rgba(255,255,255,0.15) 20%,rgba(255,255,255,0) 40%,rgba(255,255,255,0) 60%,rgba(255,255,255,0.15) 80%,rgba(255,255,255,0.45) 100%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
+
 
 .lang-switch{position:relative;}
 .lang-btn{
@@ -319,49 +276,31 @@ header.nav{
 }
 
 /* ============================================================
-   3. HERO — the very first thing you see: a tagline over the
-      space video. The three-project showcase lives further down.
+   3. HERO — full-screen dark hero: looping background video, headline with a gradient accent, subtitle, glass CTA and
+      a marquee pinned to the bottom (navbar on top). Layout from the design brief, adapted to the site.
    ============================================================ */
-.hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-start;text-align:center;
-  padding:calc(112*var(--u)) var(--gutter) calc(40*var(--u)); /* the text sits at the top, in the sky ABOVE the Parliament (never over it) */
-  /* Scrolling shatters the tagline letters far past the screen edges
-     (--ex up to ~230px). Even invisible, those boxes widen the page and make
-     mobile browsers zoom out / scroll sideways, so they are clipped here. */
-  overflow-x:clip;}
-/* soft dark halo behind the hero text so white type stays crisp over the lit facade */
-.hero::before{content:"";position:absolute;left:50%;top:34%;width:min(96vw,980px);height:62%;transform:translate(-50%,-50%);
-  background:radial-gradient(ellipse at center,rgba(3,5,11,.46) 0%,rgba(3,5,11,.22) 46%,rgba(3,5,11,0) 72%);pointer-events:none;z-index:-1;}
-.hero .eyebrow{color:#fff;}
-.hero .tagline,.hero .hero-sub,.hero .eyebrow{text-shadow:0 2px 22px rgba(0,0,0,.85),0 0 3px rgba(0,0,0,.6);}
-.eyebrow-wrap{display:flex;align-items:center;gap:calc(12*var(--u));margin-bottom:calc(10*var(--u));}
-.eyebrow-wrap .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);}
-.eyebrow{font-size:calc(12*var(--u));letter-spacing:.32em;text-transform:uppercase;color:var(--cyan);font-weight:600;}
-
-.tagline{
-  font-family:var(--serif);font-weight:400;letter-spacing:.01em;
-  font-size:calc(56*var(--u));line-height:1.15;max-width:18ch;margin:0;color:#fff;
-}
-
-/* Scroll-scrubbed letter shatter: --p (0-1) is set on .tagline once per
-   scroll frame in onScrollFrame(); every .letter reads it straight through
-   calc()/clamp(), so the whole effect tracks the scrollbar exactly — no
-   per-letter JS, nothing to step or lag behind. --ex/--ey/--er/--ed are
-   fixed per letter at split time (random flight vector + stagger delay);
-   --p is the only thing that ever changes. .word keeps line-wrapping
-   working normally since it, not the letters, is what wraps. */
-.word{display:inline-block;}
-.word:not(:last-child)::after{content:'\00a0';display:inline-block;}
-.letter{
-  display:inline-block;will-change:transform,opacity;
-  --lp:clamp(0, calc((var(--p,0) - var(--ed,0)) * 1.6), 1);
-  transform:
-    translate(calc(var(--ex,0px) * var(--lp)), calc(var(--ey,0px) * var(--lp)))
-    rotate(calc(var(--er,0deg) * var(--lp)))
-    scale(calc(1 - var(--lp) * .4));
-  opacity:calc(1 - var(--lp));
-}
-.hero-sub{margin-top:calc(18*var(--u));color:#fff;font-weight:500;font-size:calc(17*var(--u));line-height:1.55;max-width:44ch;}
+.hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;overflow:hidden;text-align:center;}
+.hero-video-wrap{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--ink) url('/media/hero-bg-poster.jpg') center/cover no-repeat;}
+.hero-video{display:block;width:100%;height:100%;object-fit:cover;opacity:0;} /* opacity driven by the fade loop in the script, no overlay on top of it */
+/* the brief's blurred dark shape behind the text, done as a radial gradient (same look, no 82px blur to repaint) */
+.hero-blur{position:absolute;left:50%;top:50%;width:min(984px,100%);height:min(527px,70%);transform:translate(-50%,-50%);z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(3,7,18,.9) 0%,rgba(3,7,18,.72) 38%,rgba(3,7,18,0) 70%);}
+.hero-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(24*var(--u));}
+.tagline{font-family:var(--display);font-weight:400;font-size:clamp(38px,6.6vw,104px);line-height:1.02;letter-spacing:-0.024em;margin:0;color:var(--text);max-width:15em;text-wrap:balance;}
+.tagline .grad{background-image:linear-gradient(to left,#6366f1,#a855f7,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.hero-sub{margin:calc(14*var(--u)) 0 0;color:var(--hero-sub);opacity:.8;font-size:clamp(16px,1.35vw,19px);line-height:1.75;max-width:36rem;}
+.hero-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:calc(26*var(--u));padding:calc(18*var(--u)) calc(30*var(--u));min-height:48px;border-radius:999px;color:var(--text);font-size:clamp(14px,1.1vw,16px);font-weight:500;letter-spacing:.01em;transition:background .25s var(--ease),transform .25s var(--ease);}
+@media (hover:hover){.hero-cta:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}}
+.hero-marquee{padding:0 var(--gutter) clamp(24px,4vh,40px);}
+.hero-marquee-in{display:flex;align-items:center;gap:calc(48*var(--u));max-width:64rem;margin:0 auto;}
+.marquee-label{margin:0;flex:none;text-align:left;font-size:14px;line-height:1.5;color:rgba(244,243,241,.5);white-space:nowrap;}
+.marquee-viewport{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.marquee-track{display:flex;align-items:center;gap:calc(64*var(--u));width:max-content;animation:marquee 20s linear infinite;}
+.marquee-item{display:flex;align-items:center;gap:calc(10*var(--u));flex:none;white-space:nowrap;}
+.marquee-ico{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text);}
+.marquee-name{font-size:16px;font-weight:600;color:var(--text);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion:reduce){.marquee-track{animation:none;}}
 
 .scroll-arrow{display:flex;flex-direction:column;align-items:center;gap:calc(8*var(--u));
   margin-top:calc(48*var(--u));text-decoration:none;color:var(--muted);}
@@ -387,11 +326,11 @@ header.nav{
   .scroll-arrow-chevrons span{animation:none!important;opacity:.7;}
 }
 
-.hero.enter .eyebrow-wrap,.hero.enter .tagline,.hero.enter .hero-sub{
-  opacity:0;transform:translateY(calc(14*var(--u)));}
-.hero.enter.run .eyebrow-wrap{opacity:1;transform:none;transition:opacity .7s var(--ease) .1s,transform .7s var(--ease) .1s;}
-.hero.enter.run .tagline{opacity:1;transform:none;transition:opacity .9s var(--ease) .25s,transform .9s var(--ease) .25s;}
-.hero.enter.run .hero-sub{opacity:1;transform:none;transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;}
+.hero.enter .tagline,.hero.enter .hero-sub,.hero.enter .hero-cta,.hero.enter .hero-marquee{opacity:0;transform:translateY(calc(14*var(--u)));}
+.hero.enter.run .tagline{opacity:1;transform:none;transition:opacity .9s var(--ease) .1s,transform .9s var(--ease) .1s;}
+.hero.enter.run .hero-sub{opacity:1;transform:none;transition:opacity .8s var(--ease) .3s,transform .8s var(--ease) .3s;}
+.hero.enter.run .hero-cta{opacity:1;transform:none;transition:opacity .8s var(--ease) .45s,transform .8s var(--ease) .45s;}
+.hero.enter.run .hero-marquee{opacity:1;transform:none;transition:opacity .9s var(--ease) .6s,transform .9s var(--ease) .6s;}
 
 /* ============================================================
    4. SHOWCASE — the three-slot cinematic switcher
@@ -584,28 +523,11 @@ body.ready .bg,body.ready .grain{opacity:1;}
   .enter *,.enter{transition:none!important;transform:none!important;opacity:1!important;}
   .bg,.grain{transition:none!important;opacity:1!important;}
   .particles i{animation:none!important;}
-  .bg-parl{transition:none!important;}
   .composition,.side,.frame-shell,.tilt{transition:none!important;}
   .frame-shell{animation:none!important;}
   .orbit-ring{animation:none!important;}
   .spotlight{display:none!important;}
-  .cursor-dot,.cursor-ring{display:none!important;}
 }
-
-/* ============================================================
-   6. CUSTOM CURSOR — dot + lagging ring, grows on interactive
-      targets. Fine pointers only (see script), hidden otherwise.
-   ============================================================ */
-.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:80;opacity:0;}
-.cursor-dot{width:6px;height:6px;background:var(--cyan);transition:opacity .3s ease;}
-.cursor-ring{width:32px;height:32px;border:1px solid rgba(127,233,222,.7);
-  transition:width .35s var(--ease),height .35s var(--ease),opacity .3s ease,background-color .3s ease;}
-.cursor-ring.active{width:56px;height:56px;background:rgba(127,233,222,.12);}
-body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
-@media (pointer:fine){
-  body.cursor-ready,body.cursor-ready a,body.cursor-ready button{cursor:none;}
-}
-@media (pointer:coarse){ .cursor-dot,.cursor-ring{display:none!important;} }
 
 /* ============================================================
    7. HYPERSPACE WARP — full-screen flash played when a project
@@ -655,9 +577,8 @@ body.cursor-visible .cursor-dot,body.cursor-visible .cursor-ring{opacity:1;}
    8. SUPPORTING SECTIONS
    ============================================================ */
 section.band{position:relative;z-index:2;padding:calc(90*var(--u)) var(--gutter);border-top:1px solid var(--line);}
-/* The lit Parliament glows behind the sections: text sits on a soft dark halo
-   and the cards are darker glass, so nothing depends on what part of the
-   building the camera happens to be showing. */
+/* Text sits on a soft dark halo and the cards are dark glass, so nothing
+   depends on what is behind them. */
 section.band h2,section.band p,section.band .eyebrow,.stage .eyebrow{text-shadow:0 1px 16px rgba(3,4,10,.85),0 0 3px rgba(3,4,10,.6);}
 section.band .service-card,section.band .faq-item{background-color:rgba(6,8,16,.68);}
 /* price cards: as opaque as the photographer option box (82%) but still a little see-through */
@@ -679,6 +600,11 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
 .service-card h3{font-family:var(--serif);font-weight:400;font-size:calc(21*var(--u));margin:calc(10*var(--u)) 0 calc(10*var(--u));}
 .service-card p{color:var(--muted);font-size:calc(14*var(--u));margin:0;}
 
+.process-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:calc(20*var(--u));}
+@media (max-width:1000px){.process-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.process-grid{grid-template-columns:1fr;}}
+.process-grid .service-card{border-top:2px solid rgba(127,233,222,.45);}
+.contact-note{color:var(--muted);font-size:calc(14*var(--u));line-height:1.7;text-align:center;margin:calc(18*var(--u)) auto 0;max-width:calc(440*var(--u));}
 .pricing-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));align-items:stretch;}
 @media (max-width:820px){.pricing-grid{grid-template-columns:1fr;}}
 .pricing-card{display:flex;flex-direction:column;padding:calc(32*var(--u)) calc(28*var(--u));
@@ -835,7 +761,6 @@ footer.site-foot a:hover{color:var(--cyan);}
 @media (max-width:1180px){
   .headline{font-size:calc(70*var(--u));}
   .side .frame-shell{width:calc(240*var(--u));}
-  .tagline{font-size:calc(48*var(--u));}
 }
 @media (max-width:980px){
   .composition{grid-template-columns:calc(120*var(--u)) 1fr calc(120*var(--u));gap:calc(4*var(--u));}
@@ -859,7 +784,6 @@ footer.site-foot a:hover{color:var(--cyan);}
   .enter.run .side.left{transform:translateX(calc(-44*var(--u)));}
   .enter.run .side.right{transform:translateX(calc(44*var(--u)));}
   .headline{font-size:calc(46*var(--u));letter-spacing:0;}
-  .tagline{font-size:calc(38*var(--u));max-width:15ch;}
   .description{font-size:calc(14.5*var(--u));max-width:34ch;}
   .cta-row{gap:calc(12*var(--u));}
   .enter-hint{display:none;}
@@ -900,24 +824,20 @@ footer.site-foot a:hover{color:var(--cyan);}
 }
 /* No GPU (software-rendered WebGL/compositing, flagged in <head>): every blur, blend and animated layer is computed on the
    CPU, so drop the purely decorative ones, like on phones. */
-html.soft-gl .grain,html.soft-gl .orbit-wrap,html.soft-gl .frame-glow,html.soft-gl .frame-sheen{display:none;}
+html.soft-gl .grain,html.soft-gl .orbit-wrap,html.soft-gl .frame-glow,html.soft-gl .frame-sheen,html.soft-gl .bg-tint{display:none;}
+html.soft-gl .marquee-track{animation:none;}
 html.soft-gl .frame-shell{animation:none;}
 html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
-/* Phones: the hero text sits at the top so the Parliament shows underneath it (the camera is raised to match). */
-@media (max-width:820px){
-  .hero{justify-content:flex-start;padding:calc(112*var(--u)) var(--gutter) calc(40*var(--u));}
-  .hero .tagline{font-size:calc(36*var(--u));}
-  .hero-sub{font-size:calc(16.5*var(--u));margin-top:calc(16*var(--u));}
-  .hero::before{top:30%;height:56%;}
-}
 /* ============================================================
    PHONES — every size from 280 px wide up (portrait) and landscape phones. Type scales with the phone's width AND
    height, tap targets are >= 44 px, nothing can push the page sideways.
    ============================================================ */
 @media (max-width:820px){
-  .hero{padding-top:clamp(86px,14vh,126px);}
-  .hero .tagline{font-size:clamp(25px,min(9.6vw,5.3vh),40px);}
-  .hero-sub{font-size:clamp(14px,min(4.4vw,2.6vh),17.5px);}
+  .hero-main{padding-top:clamp(96px,16vh,130px);}
+  .tagline{font-size:clamp(34px,10.2vw,64px);}
+  .hero-marquee-in{flex-direction:column;gap:calc(16*var(--u));}
+  .marquee-label{text-align:center;}
+  .marquee-viewport{width:100%;}
   .eyebrow{font-size:clamp(10.5px,3.1vw,12.6px);}
   /* full-screen menu: starts under the logo bar, and shrinks to fit short phones instead of sliding under the logo */
   .mnav{padding:calc(96*var(--u)) var(--gutter) calc(24*var(--u));gap:clamp(8px,2.4vh,27px);overflow-y:auto;}
@@ -938,52 +858,22 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
   .nav-links a,.nav-cta,.lang-btn{min-height:44px;display:inline-flex;align-items:center;}
   .lang-option{min-height:44px;display:flex;align-items:center;}
 }
-/* landscape phones (short and wide): a compact nav and hero so the Parliament stays visible */
+/* landscape phones (short and wide): a compact nav and hero so the video stays visible */
 @media (max-height:520px) and (orientation:landscape){
   header.nav{padding-top:calc(10*var(--u));padding-bottom:calc(10*var(--u));}
   .logo img{height:calc(34*var(--u));}
-  .hero{padding-top:calc(60*var(--u));padding-bottom:calc(20*var(--u));}
-  .hero .tagline{font-size:clamp(20px,7.4vh,34px);max-width:34ch;}
-  .hero-sub{font-size:clamp(12px,3.8vh,15.5px);margin-top:1.6vh;max-width:58ch;}
-  .eyebrow-wrap{margin-bottom:0;}
+  .hero-main{padding-top:calc(60*var(--u));padding-bottom:calc(10*var(--u));}
+  .tagline{font-size:clamp(24px,9vh,44px);max-width:24em;}
+  .hero-sub{font-size:clamp(12px,3.8vh,15.5px);margin-top:1.4vh;max-width:58ch;}
+  .hero-cta{margin-top:1.8vh;padding-top:12px;padding-bottom:12px;min-height:44px;}
+  .hero-marquee-in{flex-direction:row;}
   .mnav{overflow-y:auto;justify-content:flex-start;padding:76px 0 24px;}
 }
 </style>
 </head>
 <body>
 
-<div id="loader" role="status" aria-live="polite" aria-label="AiStudioBudapest">
-  <div class="loader-inner">
-    <img class="loader-logo" src="/alexstudio/logo.png" alt="AiStudioBudapest" width="580" height="303" decoding="async" fetchpriority="high">
-    <div class="loader-bar" aria-hidden="true"><span></span></div>
-  </div>
-</div>
-<script>
-/* Loading screen controller. The site calls aisLoaderHide() once the 3D scene is ready (or has given up); it stays on
-   screen for at least 1.2 s so the logo never just flashes, and a 14 s failsafe guarantees it can never trap the visitor. */
-(function(){
-  var el = document.getElementById('loader'), t0 = Date.now(), MIN = 1200;
-  window.aisLoaderDone = false;
-  window.aisLoaderHide = function(){
-    if(window.aisLoaderDone) return;
-    window.aisLoaderDone = true;
-    window.aisMark('loader-hide', 'after ' + (Date.now() - t0) + ' ms on screen');
-    setTimeout(function(){
-      el.classList.add('done'); el.setAttribute('aria-hidden', 'true');
-      document.documentElement.classList.remove('is-loading');
-      if(window.aisHeroEnter) window.aisHeroEnter();
-      setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 1300);
-    }, Math.max(0, MIN - (Date.now() - t0)));
-  };
-  setTimeout(window.aisLoaderHide, 14000);
-})();
-</script>
-
 <div class="bg" aria-hidden="true">
-  <div class="bg-poster" id="bgPoster"></div>
-  <canvas class="bg-parl" id="parlCanvas"></canvas>
-  <canvas class="bg-p3d" id="p3dCanvas"></canvas>
-  <img class="bg-parl-img" id="parlImg" src="/alexstudio/parlement.jpg" alt="" width="2400" height="1138" decoding="async">
   <span class="bg-tint"></span>
 </div>
 <div class="spotlight" aria-hidden="true"></div>
@@ -991,8 +881,6 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
 <div class="particles" aria-hidden="true" id="particles"></div>
 <div id="warp" aria-hidden="true"></div>
 <div class="scroll-progress" aria-hidden="true" id="scrollProgress"><span></span></div>
-<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <!-- Dormant unless ANALYTICS_ENABLED is flipped to true in the script below
      (see the "cookie consent" section) — the site currently loads no
@@ -1023,7 +911,7 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
     </button>
     <div class="lang-menu" id="langMenu" role="menu"></div>
   </div>
-  <a class="nav-cta" href="#contact" data-i18n="navCta">Projekt indítása</a>
+  <a class="nav-cta liquid-glass" href="#contact" data-i18n="navCta">Projekt indítása</a>
   <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menü megnyitása">
     <span></span><span></span><span></span>
   </button>
@@ -1041,12 +929,21 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
 </div>
 
 <section class="hero enter" id="top">
-  <div class="eyebrow-wrap">
-    <span class="dot"></span>
-    <span class="eyebrow" data-i18n="heroEyebrow">Webdesign</span>
+  <div class="hero-video-wrap" aria-hidden="true">
+    <video class="hero-video" id="heroVideo" muted playsinline preload="none" tabindex="-1"></video>
   </div>
-  <h1 class="tagline">Prémium webdesign, amely az ambiciózus márkákat pályára állítja.</h1>
-  <p class="hero-sub" data-i18n="heroSub">Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.</p>
+  <span class="hero-blur" aria-hidden="true"></span>
+  <div class="hero-main">
+    <h1 class="tagline">Prémium weboldalak, amelyekre <span class="grad">büszke lehetsz</span>.</h1>
+    <p class="hero-sub" data-i18n="heroSub">Egyedi, gyors és mobilbarát weboldalak Budapestről — az egyoldalas bemutatkozástól a teljesen egyedi prémium élményig. Három szint, rögzített árak, élő prototípusok: görgess lejjebb, és próbáld ki őket.</p>
+    <a class="hero-cta liquid-glass" href="#contact" data-i18n="ctaWorkTogether">Dolgozzunk együtt</a>
+  </div>
+  <div class="hero-marquee">
+    <div class="hero-marquee-in">
+      <p class="marquee-label" id="marqueeLabel">Három formula,<br>egy színvonal</p>
+      <div class="marquee-viewport" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"><span class="marquee-item"><span class="marquee-ico liquid-glass">E</span><span class="marquee-name">Esszencia</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">P</span><span class="marquee-name">Presztízs</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">P</span><span class="marquee-name">Prémium</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">E</span><span class="marquee-name">Egyedi kód</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">M</span><span class="marquee-name">Mobilbarát</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">G</span><span class="marquee-name">Gyors átfutás</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">Á</span><span class="marquee-name">Átlátható árak</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">5</span><span class="marquee-name">5 nyelv</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">E</span><span class="marquee-name">Esszencia</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">P</span><span class="marquee-name">Presztízs</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">P</span><span class="marquee-name">Prémium</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">E</span><span class="marquee-name">Egyedi kód</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">M</span><span class="marquee-name">Mobilbarát</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">G</span><span class="marquee-name">Gyors átfutás</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">Á</span><span class="marquee-name">Átlátható árak</span></span><span class="marquee-item"><span class="marquee-ico liquid-glass">5</span><span class="marquee-name">5 nyelv</span></span></div></div>
+    </div>
+  </div>
 </section>
 
 <main id="showcase" class="stage showcase enter">
@@ -1198,9 +1095,39 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
     <p data-i18n="servicesP">Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.</p>
   </div>
   <div class="services-grid">
-    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="service1Title">Egyoldalas weboldalak</h3><p data-i18n="service1Desc">Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást, és hívásokká alakítja a látogatókat.</p></div>
-    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="service2Title">Üzleti weboldalak</h3><p data-i18n="service2Desc">Több szekcióból álló oldalak szolgáltatásokkal, galériákkal, foglalási folyamattal és igény esetén kétnyelvű tartalommal.</p></div>
-    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="service3Title">Prémium élmények</h3><p data-i18n="service3Desc">Teljesen egyedi, animált, több oldalas digitális élmények azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat.</p></div>
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="service1Title">Egyoldalas weboldalak</h3><p data-i18n="service1Desc">Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást: ki vagy, mit kínálsz, mikor vagy elérhető — és hívásokká alakítja a látogatókat. Ideális kisvállalkozásoknak, akik gyorsan és kedvező áron szeretnének professzionális online jelenlétet.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="service2Title">Üzleti weboldalak</h3><p data-i18n="service2Desc">Több szekcióból és oldalból álló weboldal szolgáltatásokkal, fotógalériával, online foglalási folyamattal és igény esetén kétnyelvű (magyar–angol) tartalommal. Azoknak, akik nem csak megjelenni, hanem ügyfeleket szerezni és kiszolgálni szeretnének online.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="service3Title">Prémium élmények</h3><p data-i18n="service3Desc">Teljesen egyedi, animált, többoldalas digitális élmény blogbal, vendégértékelésekkel és saját arculatra szabott mozgásokkal — azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat, és az első másodpercben el akarják nyűgözni a látogatót.</p></div>
+  </div>
+</section>
+
+<section class="band" id="why">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="whyEyebrow">Miért mi</span>
+    <h2 data-i18n="whyH2">Amiért velünk érdemes dolgozni</h2>
+    <p data-i18n="whyP">Nem sablonokat töltünk fel: minden weboldalt a te vállalkozásodra szabunk — gyorsan, átláthatóan és a végéig melletted állva.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="why1Title">Egyedi kód, nem sablon</h3><p data-i18n="why1Desc">Minden oldal a nulláról készül — nincs előre gyártott sablon és nincs oldalépítő, így a weboldalad pontosan olyan, amilyennek a márkádat látod.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="why2Title">Gyors átfutás</h3><p data-i18n="why2Desc">Az Esszencia 3–4, a Presztízs 4–7, a Prémium 7–12 nap alatt elkészül — attól függően, milyen gyorsan érkezik vissza a tartalom és a visszajelzés.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="why3Title">Minden eszközre tervezve</h3><p data-i18n="why3Desc">Telefonon, tableten és asztali gépen egyaránt hibátlanul működik: olvasható szövegek, kényelmesen megérinthető gombok, vízszintes görgetés nélkül.</p></div>
+    <div class="service-card band-reveal"><span class="n">04</span><h3 data-i18n="why4Title">Átlátható árak</h3><p data-i18n="why4Desc">Rögzített tartalmú csomagok, egyértelmű árakkal, rejtett költségek nélkül — a havi karbantartás díját is előre látod.</p></div>
+    <div class="service-card band-reveal"><span class="n">05</span><h3 data-i18n="why5Title">Minden egy kézben</h3><p data-i18n="why5Desc">A tárhely, a domain név, a frissítések, a biztonsági mentések és a kisebb javítások egyetlen havi csomagban — neked nem kell semmilyen technikai ügyet intézned.</p></div>
+    <div class="service-card band-reveal"><span class="n">06</span><h3 data-i18n="why6Title">Személyes kapcsolat</h3><p data-i18n="why6Desc">Közvetlenül velünk, a két alapítóval beszélsz — nincs közvetítő. A szerződést személyesen írjuk alá.</p></div>
+  </div>
+</section>
+
+<section class="band" id="process">
+  <div class="band-head band-reveal">
+    <span class="eyebrow" data-i18n="processEyebrow">Hogyan dolgozunk</span>
+    <h2 data-i18n="processH2">Négy lépés az ötlettől az indulásig</h2>
+    <p data-i18n="processP">Egyszerű, átlátható folyamat — mindig tudod, hol tart a projekted, és mi a következő lépés.</p>
+  </div>
+  <div class="process-grid">
+    <div class="service-card band-reveal"><span class="n">01</span><h3 data-i18n="step1Title">Megbeszélés</h3><p data-i18n="step1Desc">Mesélsz a vállalkozásodról és a céljaidról, mi pedig javaslunk egy hozzád illő szintet, és tisztázzuk, milyen tartalomra van szükség.</p></div>
+    <div class="service-card band-reveal"><span class="n">02</span><h3 data-i18n="step2Title">Szerződés</h3><p data-i18n="step2Desc">Személyesen aláírjuk a szerződést: benne van, mit kapsz, mennyiért és mikorra, az előleg és a fizetés részleteivel együtt.</p></div>
+    <div class="service-card band-reveal"><span class="n">03</span><h3 data-i18n="step3Title">Tervezés és fejlesztés</h3><p data-i18n="step3Desc">Elkészítjük a weboldalt a megadott szövegekkel, fotókkal és elérhetőségekkel, és élő előnézeten mutatjuk meg, hogy visszajelezhess.</p></div>
+    <div class="service-card band-reveal"><span class="n">04</span><h3 data-i18n="step4Title">Indulás és támogatás</h3><p data-i18n="step4Desc">Beállítjuk a tárhelyet és a domain nevet, élesítjük az oldalt — majd a havi karbantartással a továbbiakban is gondoskodunk róla.</p></div>
   </div>
 </section>
 
@@ -1211,6 +1138,8 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
   </div>
   <div class="about">
     <p class="band-reveal" data-i18n="aboutText">Alex és Theo vagyunk, két fiatal vállalkozó, akiket a digitális technológia és a webdesign iránti szenvedély hajt. Modern, nagy teljesítményű weboldalakat készítünk a legújabb mesterséges intelligencia technológiák felhasználásával, hogy segítsünk a vállalkozásoknak javítani online jelenlétüket és növelni üzletüket.</p>
+    <p class="band-reveal" data-i18n="aboutText2">Budapesten dolgozunk, két fős csapatként: közvetlenül velünk beszélsz, nincs közvetítő és nincs ügyfélszolgálati labirintus. Minden projektet mi tervezünk, kódolunk és adunk át — ugyanaz a két ember, aki az első egyeztetésen is ott ült veled szemben.</p>
+    <p class="band-reveal" data-i18n="aboutText3">Hisszük, hogy egy jó weboldal nem kiadás, hanem eszköz: bizalmat épít, bemutatja, mit tudsz, és megkönnyíti, hogy az ügyfeleid megtaláljanak és felvegyék veled a kapcsolatot. Pontosan ezért építjük őket úgy, mintha a saját vállalkozásunk lennének.</p>
   </div>
 </section>
 
@@ -1249,6 +1178,22 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
       <button type="button" class="faq-q" aria-expanded="false"><span>Vállaltok folyamatos karbantartást?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-a-wrap"><div class="faq-a"><p>Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.</p></div></div>
     </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Mobilon is jól fog kinézni a weboldalam?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Igen. Minden weboldalt telefonra, tabletre és asztali gépre egyaránt megtervezünk, és ki is próbálunk ezeken: az oldal alkalmazkodik a képernyő méretéhez, a szöveg olvasható, a gombok kényelmesen megérinthetők.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Milyen anyagokat kell előkészítenem?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Elég a vállalkozásod bemutatása, az elérhetőségek, a nyitvatartás és néhány fotó — ha van logód, azt is használjuk. Ha nincs jó minőségű fotód, opcionálisan profi fotóst is szervezünk (ár kérésre).</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Hogyan zajlik a szerződéskötés és a fizetés?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>A szerződést személyesen írjuk alá. Ebben rögzítjük a csomagot, a határidőt, az előleg összegét és a fizetés részleteit, így az elejétől fogva minden egyértelmű.</p></div></div>
+    </div>
+    <div class="faq-item band-reveal">
+      <button type="button" class="faq-q" aria-expanded="false"><span>Meg fog jelenni a weboldalam a Google-ben?</span><span class="faq-icon" aria-hidden="true"></span></button>
+      <div class="faq-a-wrap"><div class="faq-a"><p>Gyors, tiszta és mobilbarát kódot készítünk, ami jó alap a kereséshez. Konkrét helyezést viszont senki sem garantálhat — a keresők sok tényezőt figyelembe vesznek, és az eredmény idővel épül.</p></div></div>
+    </div>
   </div>
 </section>
 
@@ -1265,11 +1210,12 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
         <a class="mail phone" href="tel:+36309476955"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 5.1 5.1l1.4-2.3L19 14.5V18a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+36 30 947 6955</span></a>
         <a class="mail phone" href="tel:+36703682482"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 5.1 5.1l1.4-2.3L19 14.5V18a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><span>+36 70 368 2482</span></a>
       </div>
+      <p class="contact-note" data-i18n="contactNote">Írj, vagy hívj bátran — az első beszélgetés semmire nem kötelez. Budapesten személyes találkozót is egyeztethetünk.</p>
     </div>
 
     <form class="contact-form" id="contactForm" action="https://formsubmit.co/ajax/aistudiobudapest@gmail.com" method="POST">
       <input type="hidden" name="_subject" id="formSubjectInput" value="Új üzenet az AiStudioBudapest oldalról">
-      <h3 class="form-title" data-i18n="formDivider">Van egy konkrétabb kérdésed?</h3>
+      <h3 class="form-title" data-i18n="formDivider">A te projekted itt kezdődik.</h3>
       <div class="form-row">
         <div>
           <label class="field-label" for="formNameInput" data-i18n="formName">Neved</label>
@@ -1371,8 +1317,11 @@ hu:{
   navAbout:'Rólunk', navFaq:'GYIK', navContact:'Kapcsolat', navCta:'Projekt indítása',
   burgerOpen:'Menü megnyitása', burgerClose:'Menü bezárása', langAria:'Nyelv kiválasztása',
   heroEyebrow:'Webdesign',
-  heroTagline:'Prémium webdesign, amely az ambiciózus márkákat pályára állítja.',
-  heroSub:'Három szintű mesterségbeli tudás, az egyoldalas weboldaltól a teljesen egyedi prémium élményig — görgess lejjebb, hogy élőben felfedezd őket.',
+  heroTagline:"Prémium weboldalak, amelyekre büszke lehetsz.",
+  heroAccent:"büszke lehetsz",
+  marqueeLabel:["Három formula,", "egy színvonal"],
+  marqueeItems:["Esszencia", "Presztízs", "Prémium", "Egyedi kód", "Mobilbarát", "Gyors átfutás", "Átlátható árak", "5 nyelv"],
+  heroSub:"Egyedi, gyors és mobilbarát weboldalak Budapestről — az egyoldalas bemutatkozástól a teljesen egyedi prémium élményig. Három szint, rögzített árak, élő prototípusok: görgess lejjebb, és próbáld ki őket.",
   showcaseEyebrow:'Kiemelt munkák',
   stackTitle:'Belépés az oldalra', enterHint:'Belépés az oldalra ↗',
   ctaViewProject:'Projekt megtekintése ↗', ctaWorkTogether:'Dolgozzunk együtt',
@@ -1393,11 +1342,13 @@ hu:{
   addonPrice:'Ár kérésre', addonCta:'Ajánlatkérés',
   servicesEyebrow:'Amit építünk', servicesH2:'Három szint, egy színvonal',
   servicesP:'Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.',
-  service1Title:'Egyoldalas weboldalak', service1Desc:'Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást, és hívásokká alakítja a látogatókat.',
-  service2Title:'Üzleti weboldalak', service2Desc:'Több szekcióból álló oldalak szolgáltatásokkal, galériákkal, foglalási folyamattal és igény esetén kétnyelvű tartalommal.',
-  service3Title:'Prémium élmények', service3Desc:'Teljesen egyedi, animált, több oldalas digitális élmények azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat.',
+  service1Title:'Egyoldalas weboldalak', service1Desc:"Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást: ki vagy, mit kínálsz, mikor vagy elérhető — és hívásokká alakítja a látogatókat. Ideális kisvállalkozásoknak, akik gyorsan és kedvező áron szeretnének professzionális online jelenlétet.",
+  service2Title:'Üzleti weboldalak', service2Desc:"Több szekcióból és oldalból álló weboldal szolgáltatásokkal, fotógalériával, online foglalási folyamattal és igény esetén kétnyelvű (magyar–angol) tartalommal. Azoknak, akik nem csak megjelenni, hanem ügyfeleket szerezni és kiszolgálni szeretnének online.",
+  service3Title:'Prémium élmények', service3Desc:"Teljesen egyedi, animált, többoldalas digitális élmény blogbal, vendégértékelésekkel és saját arculatra szabott mozgásokkal — azoknak a márkáknak, amelyek vezetni akarják a saját kategóriájukat, és az első másodpercben el akarják nyűgözni a látogatót.",
   aboutEyebrow:'Rólunk',
   aboutText:'Alex és Theo vagyunk, két fiatal vállalkozó, akiket a digitális technológia és a webdesign iránti szenvedély hajt. Modern, nagy teljesítményű weboldalakat készítünk a legújabb mesterséges intelligencia technológiák felhasználásával, hogy segítsünk a vállalkozásoknak javítani online jelenlétüket és növelni üzletüket.',
+  aboutText2:"Budapesten dolgozunk, két fős csapatként: közvetlenül velünk beszélsz, nincs közvetítő és nincs ügyfélszolgálati labirintus. Minden projektet mi tervezünk, kódolunk és adunk át — ugyanaz a két ember, aki az első egyeztetésen is ott ült veled szemben.",
+  aboutText3:"Hisszük, hogy egy jó weboldal nem kiadás, hanem eszköz: bizalmat épít, bemutatja, mit tudsz, és megkönnyíti, hogy az ügyfeleid megtaláljanak és felvegyék veled a kapcsolatot. Pontosan ezért építjük őket úgy, mintha a saját vállalkozásunk lennének.",
   faqEyebrow:'GYIK', faqH2:'Kérdések és válaszok',
   faqP:'Még bizonytalan vagy valamiben? Íme, amit a legtöbben kérdeznek egy projekt indítása előtt.',
   faqItems:[
@@ -1406,11 +1357,42 @@ hu:{
     {q:'Frissíthetem magam a tartalmat indulás után?', a:'Az Esszenciánál és a Presztízsnél bármikor kérhetők kisebb szöveg- vagy fotómódosítások. A Prémium teljesen egyedi felépítése miatt ott a módosítások jellemzően rajtunk keresztül mennek, hogy a dizájn épségben maradjon.'},
     {q:'Ti intézitek a tárhelyet és a domain nevet?', a:'Igen — a nulláról beállítjuk a tárhelyet és a domain nevet, vagy dolgozunk egy már meglévő domaineddel is.'},
     {q:'Mi van, ha később több oldalra vagy funkcióra lesz szükségem?', a:'Minden szint bővíthető. Amint tudjuk, mire van szükséged — egy extra oldalra, egy új szekcióra, egy funkcióra —, azt külön árazzuk, nem kötünk az eredeti tartalomhoz.'},
-    {q:'Vállaltok folyamatos karbantartást?', a:'Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.'}
+    {q:'Vállaltok folyamatos karbantartást?', a:'Igen — a pontos havi díjakat az árak mellett, feljebb találod. Ez fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.'},
+    {q:"Mobilon is jól fog kinézni a weboldalam?", a:"Igen. Minden weboldalt telefonra, tabletre és asztali gépre egyaránt megtervezünk, és ki is próbálunk ezeken: az oldal alkalmazkodik a képernyő méretéhez, a szöveg olvasható, a gombok kényelmesen megérinthetők."},
+    {q:"Milyen anyagokat kell előkészítenem?", a:"Elég a vállalkozásod bemutatása, az elérhetőségek, a nyitvatartás és néhány fotó — ha van logód, azt is használjuk. Ha nincs jó minőségű fotód, opcionálisan profi fotóst is szervezünk (ár kérésre)."},
+    {q:"Hogyan zajlik a szerződéskötés és a fizetés?", a:"A szerződést személyesen írjuk alá. Ebben rögzítjük a csomagot, a határidőt, az előleg összegét és a fizetés részleteit, így az elejétől fogva minden egyértelmű."},
+    {q:"Meg fog jelenni a weboldalam a Google-ben?", a:"Gyors, tiszta és mobilbarát kódot készítünk, ami jó alap a kereséshez. Konkrét helyezést viszont senki sem garantálhat — a keresők sok tényezőt figyelembe vesznek, és az eredmény idővel épül."}
   ],
+  whyEyebrow:"Miért mi",
+  whyH2:"Amiért velünk érdemes dolgozni",
+  whyP:"Nem sablonokat töltünk fel: minden weboldalt a te vállalkozásodra szabunk — gyorsan, átláthatóan és a végéig melletted állva.",
+  why1Title:"Egyedi kód, nem sablon",
+  why1Desc:"Minden oldal a nulláról készül — nincs előre gyártott sablon és nincs oldalépítő, így a weboldalad pontosan olyan, amilyennek a márkádat látod.",
+  why2Title:"Gyors átfutás",
+  why2Desc:"Az Esszencia 3–4, a Presztízs 4–7, a Prémium 7–12 nap alatt elkészül — attól függően, milyen gyorsan érkezik vissza a tartalom és a visszajelzés.",
+  why3Title:"Minden eszközre tervezve",
+  why3Desc:"Telefonon, tableten és asztali gépen egyaránt hibátlanul működik: olvasható szövegek, kényelmesen megérinthető gombok, vízszintes görgetés nélkül.",
+  why4Title:"Átlátható árak",
+  why4Desc:"Rögzített tartalmú csomagok, egyértelmű árakkal, rejtett költségek nélkül — a havi karbantartás díját is előre látod.",
+  why5Title:"Minden egy kézben",
+  why5Desc:"A tárhely, a domain név, a frissítések, a biztonsági mentések és a kisebb javítások egyetlen havi csomagban — neked nem kell semmilyen technikai ügyet intézned.",
+  why6Title:"Személyes kapcsolat",
+  why6Desc:"Közvetlenül velünk, a két alapítóval beszélsz — nincs közvetítő. A szerződést személyesen írjuk alá.",
+  processEyebrow:"Hogyan dolgozunk",
+  processH2:"Négy lépés az ötlettől az indulásig",
+  processP:"Egyszerű, átlátható folyamat — mindig tudod, hol tart a projekted, és mi a következő lépés.",
+  step1Title:"Megbeszélés",
+  step1Desc:"Mesélsz a vállalkozásodról és a céljaidról, mi pedig javaslunk egy hozzád illő szintet, és tisztázzuk, milyen tartalomra van szükség.",
+  step2Title:"Szerződés",
+  step2Desc:"Személyesen aláírjuk a szerződést: benne van, mit kapsz, mennyiért és mikorra, az előleg és a fizetés részleteivel együtt.",
+  step3Title:"Tervezés és fejlesztés",
+  step3Desc:"Elkészítjük a weboldalt a megadott szövegekkel, fotókkal és elérhetőségekkel, és élő előnézeten mutatjuk meg, hogy visszajelezhess.",
+  step4Title:"Indulás és támogatás",
+  step4Desc:"Beállítjuk a tárhelyet és a domain nevet, élesítjük az oldalt — majd a havi karbantartással a továbbiakban is gondoskodunk róla.",
+  contactNote:"Írj, vagy hívj bátran — az első beszélgetés semmire nem kötelez. Budapesten személyes találkozót is egyeztethetünk.",
   contactEyebrow:'Kapcsolat', contactH2:'Építsünk valami prémiumot',
   contactP:'Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.',
-  formDivider:'Van egy konkrétabb kérdésed?', formName:'Neved', formEmail:'E-mail címed',
+  formDivider:"A te projekted itt kezdődik.", formName:'Neved', formEmail:'E-mail címed',
   formMessage:'Mesélj a projektedről vagy a kérdésedről…', formMessageLabel:'Üzeneted', legalImpressum:'Impresszum', legalPrivacy:'Adatvédelmi tájékoztató', legalTerms:'ÁSZF', legalCookies:'Cookie-tájékoztató', formSubmit:'Üzenet küldése', formSending:'Küldés…',
   formSuccess:'Köszönjük — hamarosan jelentkezünk.', formError:'Hiba történt — kérjük, írj közvetlenül e-mailben.',
   formSubject:'Új üzenet az AiStudioBudapest oldalról',
@@ -1424,8 +1406,11 @@ en:{
   navAbout:'About', navFaq:'FAQ', navContact:'Contact', navCta:'Start a project',
   burgerOpen:'Open menu', burgerClose:'Close menu', langAria:'Choose language',
   heroEyebrow:'Web Design',
-  heroTagline:'Premium web design, built to send ambitious brands into orbit.',
-  heroSub:'Three tiers of craft, from a focused one-page site to a fully custom premium experience — scroll down to explore them live.',
+  heroTagline:"Premium websites you can be proud of.",
+  heroAccent:"proud of",
+  marqueeLabel:["Three tiers,", "one standard"],
+  marqueeItems:["Esszencia", "Presztízs", "Prémium", "Custom code", "Mobile-friendly", "Fast turnaround", "Clear pricing", "5 languages"],
+  heroSub:"Custom, fast and mobile-friendly websites from Budapest — from a one-page introduction to a fully bespoke premium experience. Three tiers, fixed prices, live prototypes: scroll down and try them.",
   showcaseEyebrow:'Selected Work',
   stackTitle:'Enter the site', enterHint:'Enter the site ↗',
   ctaViewProject:'View project ↗', ctaWorkTogether:"Let's work together",
@@ -1446,11 +1431,13 @@ en:{
   addonPrice:'Price on request', addonCta:'Request a quote',
   servicesEyebrow:'What I build', servicesH2:'Three tiers, one standard',
   servicesP:'Every project is designed and coded from scratch to fit the ambition — and the budget — of the business behind it.',
-  service1Title:'One-page websites', service1Desc:'A focused, elegant single page that presents a business clearly and converts visitors into calls.',
-  service2Title:'Business websites', service2Desc:'Multi-section sites with services, galleries, booking flows and bilingual content where needed.',
-  service3Title:'Premium experiences', service3Desc:'Fully custom, animated, multi-page digital experiences for brands that want to lead their category.',
+  service1Title:'One-page websites', service1Desc:"A focused, elegant one-page site that shows clearly who you are, what you offer and when you are available — and turns visitors into calls. Ideal for small businesses that want a professional online presence quickly and at a fair price.",
+  service2Title:'Business websites', service2Desc:"A multi-section, multi-page website with services, a photo gallery, an online booking flow and, if needed, bilingual content. For businesses that want not only to appear online but to win and serve customers there.",
+  service3Title:'Premium experiences', service3Desc:"A fully bespoke, animated, multi-page digital experience with a blog, customer reviews and motion designed around your identity — for brands that want to lead their category and impress visitors from the first second.",
   aboutEyebrow:'About',
   aboutText:'We are Alex and Theo, two young entrepreneurs passionate about digital technology and web design. We create modern, high-performance websites using the latest artificial intelligence technologies to help businesses improve their online presence and grow their business.',
+  aboutText2:"We work from Budapest as a two-person team: you talk directly to us, with no middlemen and no customer-service maze. We design, code and deliver every project ourselves — the same two people who sat across from you at the first meeting.",
+  aboutText3:"We believe a good website is not an expense but a tool: it builds trust, shows what you can do and makes it easy for customers to find you and get in touch. That is exactly why we build each one as if it were our own business.",
   faqEyebrow:'FAQ', faqH2:'Questions, answered',
   faqP:"Still unsure about something? Here's what people usually ask before starting a project.",
   faqItems:[
@@ -1459,11 +1446,42 @@ en:{
     {q:'Can I update the content myself after launch?', a:"For Esszencia and Presztízs, small text or photo changes can be requested anytime. Prémium's fully custom build usually goes through us so the design stays intact."},
     {q:'Do you handle hosting and the domain name?', a:'Yes — we can set up hosting and a domain name for you from scratch, or work with a domain you already own.'},
     {q:'What if I need more pages or features later?', a:'Every tier can grow. Once we know what you need — an extra page, a new section, a feature — we quote it separately rather than locking you into the original scope.'},
-    {q:'Do you offer ongoing maintenance?', a:"Yes — you'll find the exact monthly rates next to the prices above. It covers hosting, the domain name, updates, backups and small fixes."}
+    {q:'Do you offer ongoing maintenance?', a:"Yes — you'll find the exact monthly rates next to the prices above. It covers hosting, the domain name, updates, backups and small fixes."},
+    {q:"Will my website look good on mobile?", a:"Yes. We design and test every website on phones, tablets and desktops: the page adapts to the screen size, the text stays readable and the buttons are easy to tap."},
+    {q:"What materials do I need to prepare?", a:"A description of your business, contact details, opening hours and a few photos are enough — and your logo, if you have one. If you don't have good-quality photos, we can optionally arrange a professional photographer (price on request)."},
+    {q:"How do the contract and payment work?", a:"We sign the contract in person. It sets out the package, the deadline, the deposit amount and the payment details, so everything is clear from the start."},
+    {q:"Will my website show up on Google?", a:"We build fast, clean, mobile-friendly code, which is a solid foundation for search. But nobody can guarantee a specific ranking — search engines weigh many factors, and results build over time."}
   ],
+  whyEyebrow:"Why us",
+  whyH2:"Why work with us",
+  whyP:"We don't upload templates: every website is tailored to your business — quickly, transparently, and with us by your side to the end.",
+  why1Title:"Custom code, not a template",
+  why1Desc:"Every site is built from scratch — no ready-made template, no page builder — so your website looks exactly the way you picture your brand.",
+  why2Title:"Fast turnaround",
+  why2Desc:"Esszencia is ready in 3–4 days, Presztízs in 4–7, Prémium in 7–12 — depending on how quickly content and feedback come back.",
+  why3Title:"Built for every device",
+  why3Desc:"Flawless on phones, tablets and desktops: readable text, comfortable tap targets and no sideways scrolling.",
+  why4Title:"Transparent pricing",
+  why4Desc:"Packages with fixed content and clear prices, no hidden costs — you see the monthly maintenance fee upfront too.",
+  why5Title:"Everything in one hand",
+  why5Desc:"Hosting, domain name, updates, backups and minor fixes in a single monthly plan — you never have to deal with anything technical.",
+  why6Title:"A personal relationship",
+  why6Desc:"You speak directly with us, the two founders — no middlemen. We sign the contract in person.",
+  processEyebrow:"How we work",
+  processH2:"Four steps from idea to launch",
+  processP:"A simple, transparent process — you always know where your project stands and what comes next.",
+  step1Title:"Discussion",
+  step1Desc:"You tell us about your business and goals; we recommend the right tier and clarify what content is needed.",
+  step2Title:"Contract",
+  step2Desc:"We sign the contract in person: it states what you get, for how much and by when, including the deposit and payment details.",
+  step3Title:"Design and build",
+  step3Desc:"We build the website with the text, photos and contact details you provide, and show it on a live preview so you can give feedback.",
+  step4Title:"Launch and support",
+  step4Desc:"We set up hosting and the domain name and take the site live — then look after it with the monthly maintenance plan.",
+  contactNote:"Write or call us anytime — the first conversation doesn't commit you to anything. We can also arrange to meet in person in Budapest.",
   contactEyebrow:'Contact', contactH2:"Let's build something premium",
   contactP:"Tell me about your business and I'll recommend the right tier — Esszencia, Presztízs, or Prémium.",
-  formDivider:'Have a more specific request?', formName:'Your name', formEmail:'Your email',
+  formDivider:"Your project starts here.", formName:'Your name', formEmail:'Your email',
   formMessage:'Tell us about your project or question…', formMessageLabel:'Your message', legalImpressum:'Legal notice', legalPrivacy:'Privacy notice', legalTerms:'Terms', legalCookies:'Cookie notice', formSubmit:'Send message', formSending:'Sending…',
   formSuccess:"Thanks — we'll get back to you soon.", formError:'Something went wrong — please email us directly instead.',
   formSubject:'New message from the AiStudioBudapest site',
@@ -1477,8 +1495,11 @@ fr:{
   navAbout:'À propos', navFaq:'FAQ', navContact:'Contact', navCta:'Démarrer un projet',
   burgerOpen:'Ouvrir le menu', burgerClose:'Fermer le menu', langAria:'Choisir la langue',
   heroEyebrow:'Webdesign',
-  heroTagline:'Un webdesign premium, conçu pour propulser les marques ambitieuses en orbite.',
-  heroSub:"Trois niveaux de savoir-faire, du site une page à l'expérience premium entièrement sur mesure — défilez pour les découvrir en direct.",
+  heroTagline:"Des sites web premium dont vous serez fier.",
+  heroAccent:"dont vous serez fier",
+  marqueeLabel:["Trois formules,", "une même exigence"],
+  marqueeItems:["Esszencia", "Presztízs", "Prémium", "Code sur mesure", "Adapté au mobile", "Livraison rapide", "Prix clairs", "5 langues"],
+  heroSub:"Des sites sur mesure, rapides et adaptés au mobile, conçus à Budapest — de la simple page de présentation à l'expérience premium entièrement personnalisée. Trois formules, des prix fixes, des prototypes en direct : faites défiler et essayez-les.",
   showcaseEyebrow:'Travaux sélectionnés',
   stackTitle:'Entrer sur le site', enterHint:'Entrer sur le site ↗',
   ctaViewProject:'Voir le projet ↗', ctaWorkTogether:'Travaillons ensemble',
@@ -1499,11 +1520,13 @@ fr:{
   addonPrice:'Prix sur demande', addonCta:'Demander un devis',
   servicesEyebrow:'Ce que je construis', servicesH2:'Trois niveaux, une seule exigence',
   servicesP:"Chaque projet est conçu et codé à partir de zéro pour correspondre à l'ambition — et au budget — de l'entreprise concernée.",
-  service1Title:'Sites une page', service1Desc:'Une page unique, focalisée et élégante, qui présente clairement une entreprise et transforme les visiteurs en appels.',
-  service2Title:'Sites professionnels', service2Desc:'Sites à plusieurs sections avec services, galeries, prise de rendez-vous et contenu bilingue si besoin.',
-  service3Title:'Expériences premium', service3Desc:'Expériences numériques entièrement sur mesure, animées et multi-pages, pour les marques qui veulent dominer leur catégorie.',
+  service1Title:'Sites une page', service1Desc:"Un site d'une page, élégant et ciblé, qui montre clairement qui vous êtes, ce que vous proposez et quand vous êtes disponible — et transforme les visiteurs en appels. Idéal pour les petites entreprises qui veulent une présence en ligne professionnelle, rapidement et à prix juste.",
+  service2Title:'Sites professionnels', service2Desc:"Un site de plusieurs pages et sections avec services, galerie photo, réservation en ligne et, si besoin, contenu bilingue. Pour les entreprises qui veulent non seulement être visibles en ligne, mais y trouver et servir leurs clients.",
+  service3Title:'Expériences premium', service3Desc:"Une expérience numérique entièrement sur mesure, animée et multipage, avec blog, avis clients et mouvements conçus autour de votre identité — pour les marques qui veulent mener leur catégorie et impressionner dès la première seconde.",
   aboutEyebrow:'À propos',
   aboutText:"Nous sommes Alex et Theo, deux jeunes entrepreneurs passionnés de technologie numérique et de webdesign. Nous créons des sites modernes et performants grâce aux dernières technologies d'intelligence artificielle, pour aider les entreprises à améliorer leur présence en ligne et à développer leur activité.",
+  aboutText2:"Nous travaillons depuis Budapest, en équipe de deux : vous parlez directement avec nous, sans intermédiaire ni labyrinthe de service client. Nous concevons, codons et livrons chaque projet nous-mêmes — les deux mêmes personnes qui étaient en face de vous lors du premier rendez-vous.",
+  aboutText3:"Nous sommes convaincus qu'un bon site n'est pas une dépense, mais un outil : il inspire confiance, montre ce que vous savez faire et permet à vos clients de vous trouver et de vous contacter facilement. C'est précisément pourquoi nous construisons chaque site comme s'il s'agissait de notre propre entreprise.",
   faqEyebrow:'FAQ', faqH2:'Questions fréquentes',
   faqP:"Encore une hésitation ? Voici ce qu'on nous demande le plus souvent avant de démarrer un projet.",
   faqItems:[
@@ -1512,11 +1535,42 @@ fr:{
     {q:'Puis-je modifier le contenu moi-même après le lancement ?', a:"Pour l'Esszencia et le Presztízs, de petites modifications de texte ou de photos peuvent être demandées à tout moment. Pour le Prémium, entièrement sur mesure, les modifications passent généralement par nous afin de préserver le design."},
     {q:'Vous occupez-vous de l’hébergement et du nom de domaine ?', a:"Oui — nous pouvons configurer l'hébergement et un nom de domaine de A à Z, ou travailler avec un domaine que vous possédez déjà."},
     {q:"Et si j'ai besoin de plus de pages ou de fonctionnalités plus tard ?", a:'Chaque formule peut évoluer. Une fois que nous savons ce dont vous avez besoin — une page en plus, une nouvelle section, une fonctionnalité — nous la chiffrons séparément, sans vous enfermer dans le périmètre initial.'},
-    {q:'Proposez-vous une maintenance continue ?', a:"Oui — vous trouverez les tarifs mensuels exacts à côté des prix plus haut. Cela couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections."}
+    {q:'Proposez-vous une maintenance continue ?', a:"Oui — vous trouverez les tarifs mensuels exacts à côté des prix plus haut. Cela couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections."},
+    {q:"Mon site sera-t-il bien lisible sur mobile ?", a:"Oui. Nous concevons et testons chaque site sur téléphone, tablette et ordinateur : la page s'adapte à la taille de l'écran, le texte reste lisible et les boutons sont faciles à toucher."},
+    {q:"Quels éléments dois-je préparer ?", a:"Une présentation de votre activité, vos coordonnées, vos horaires et quelques photos suffisent — ainsi que votre logo, si vous en avez un. Si vous n'avez pas de photos de bonne qualité, nous pouvons en option organiser un photographe professionnel (prix sur demande)."},
+    {q:"Comment se déroulent le contrat et le paiement ?", a:"Le contrat se signe en personne. Il fixe la formule, le délai, le montant de l'acompte et les modalités de paiement, pour que tout soit clair dès le départ."},
+    {q:"Mon site apparaîtra-t-il sur Google ?", a:"Nous construisons un code rapide, propre et adapté au mobile, une base solide pour le référencement. Mais personne ne peut garantir une position précise — les moteurs de recherche pèsent de nombreux facteurs et les résultats se construisent avec le temps."}
   ],
+  whyEyebrow:"Pourquoi nous",
+  whyH2:"Pourquoi travailler avec nous",
+  whyP:"Nous ne remplissons pas des modèles : chaque site est taillé pour votre entreprise — rapidement, en toute transparence, et à vos côtés jusqu'au bout.",
+  why1Title:"Du code sur mesure, pas un modèle",
+  why1Desc:"Chaque site est créé de zéro — ni modèle prêt à l'emploi, ni constructeur de pages — pour que votre site ressemble exactement à l'image que vous vous faites de votre marque.",
+  why2Title:"Livraison rapide",
+  why2Desc:"Esszencia est prêt en 3 à 4 jours, Presztízs en 4 à 7, Prémium en 7 à 12 — selon la rapidité avec laquelle le contenu et vos retours nous parviennent.",
+  why3Title:"Pensé pour tous les écrans",
+  why3Desc:"Impeccable sur téléphone, tablette et ordinateur : textes lisibles, boutons faciles à toucher, aucun défilement horizontal.",
+  why4Title:"Des prix transparents",
+  why4Desc:"Des formules au contenu défini et aux prix clairs, sans coûts cachés — le tarif de la maintenance mensuelle est lui aussi annoncé d'avance.",
+  why5Title:"Tout au même endroit",
+  why5Desc:"Hébergement, nom de domaine, mises à jour, sauvegardes et petites corrections dans un seul forfait mensuel — vous n'avez rien de technique à gérer.",
+  why6Title:"Une relation personnelle",
+  why6Desc:"Vous parlez directement avec nous, les deux fondateurs — sans intermédiaire. Le contrat se signe en personne.",
+  processEyebrow:"Notre méthode",
+  processH2:"Quatre étapes de l'idée au lancement",
+  processP:"Un processus simple et transparent — vous savez toujours où en est votre projet et quelle est la suite.",
+  step1Title:"Échange",
+  step1Desc:"Vous nous parlez de votre entreprise et de vos objectifs ; nous vous recommandons la formule adaptée et précisons le contenu nécessaire.",
+  step2Title:"Contrat",
+  step2Desc:"Nous signons le contrat en personne : il précise ce que vous recevez, pour quel prix et pour quand, avec l'acompte et les modalités de paiement.",
+  step3Title:"Conception et développement",
+  step3Desc:"Nous réalisons le site à partir des textes, photos et coordonnées que vous fournissez, et vous le présentons en aperçu en direct pour recueillir vos retours.",
+  step4Title:"Mise en ligne et suivi",
+  step4Desc:"Nous configurons l'hébergement et le nom de domaine, mettons le site en ligne — puis nous en prenons soin grâce au forfait de maintenance mensuel.",
+  contactNote:"Écrivez-nous ou appelez-nous quand vous voulez — la première discussion ne vous engage à rien. Nous pouvons aussi convenir d'une rencontre en personne à Budapest.",
   contactEyebrow:'Contact', contactH2:'Construisons quelque chose de premium',
   contactP:"Parlez-moi de votre entreprise, et je vous recommanderai la formule adaptée — Esszencia, Presztízs ou Prémium.",
-  formDivider:'Une demande plus précise ?', formName:'Votre nom', formEmail:'Votre e-mail',
+  formDivider:"Votre projet commence ici.", formName:'Votre nom', formEmail:'Votre e-mail',
   formMessage:'Parlez-nous de votre projet ou de votre question…', formMessageLabel:'Votre message', legalImpressum:'Mentions légales', legalPrivacy:'Confidentialité', legalTerms:'Conditions générales', legalCookies:'Cookies', formSubmit:'Envoyer le message', formSending:'Envoi…',
   formSuccess:'Merci — nous revenons vers vous bientôt.', formError:'Une erreur est survenue — écrivez-nous directement par e-mail.',
   formSubject:'Nouveau message du site AiStudioBudapest',
@@ -1530,8 +1584,11 @@ es:{
   navAbout:'Nosotros', navFaq:'Preguntas', navContact:'Contacto', navCta:'Iniciar un proyecto',
   burgerOpen:'Abrir menú', burgerClose:'Cerrar menú', langAria:'Elegir idioma',
   heroEyebrow:'Diseño web',
-  heroTagline:'Diseño web prémium, hecho para poner en órbita a las marcas ambiciosas.',
-  heroSub:'Tres niveles de artesanía digital, desde un sitio de una página hasta una experiencia prémium totalmente a medida — desplázate para descubrirlos en vivo.',
+  heroTagline:"Sitios web prémium de los que sentirte orgulloso.",
+  heroAccent:"de los que sentirte orgulloso",
+  marqueeLabel:["Tres niveles,", "un mismo estándar"],
+  marqueeItems:["Esszencia", "Presztízs", "Prémium", "Código a medida", "Adaptado al móvil", "Entrega rápida", "Precios claros", "5 idiomas"],
+  heroSub:"Sitios web a medida, rápidos y adaptados al móvil, desde Budapest — desde una página de presentación hasta una experiencia prémium totalmente personalizada. Tres niveles, precios fijos, prototipos en vivo: desplázate hacia abajo y pruébalos.",
   showcaseEyebrow:'Trabajos destacados',
   stackTitle:'Entrar al sitio', enterHint:'Entrar al sitio ↗',
   ctaViewProject:'Ver proyecto ↗', ctaWorkTogether:'Trabajemos juntos',
@@ -1552,11 +1609,13 @@ es:{
   addonPrice:'Precio a consultar', addonCta:'Pedir presupuesto',
   servicesEyebrow:'Lo que construimos', servicesH2:'Tres niveles, un mismo estándar',
   servicesP:'Cada proyecto se diseña y programa desde cero para ajustarse a la ambición — y el presupuesto — del negocio detrás de él.',
-  service1Title:'Sitios de una página', service1Desc:'Una página única, enfocada y elegante, que presenta un negocio con claridad y convierte visitantes en llamadas.',
-  service2Title:'Sitios empresariales', service2Desc:'Sitios de varias secciones con servicios, galerías, reservas y contenido bilingüe cuando se necesite.',
-  service3Title:'Experiencias prémium', service3Desc:'Experiencias digitales totalmente a medida, animadas y de varias páginas, para marcas que quieren liderar su categoría.',
+  service1Title:'Sitios de una página', service1Desc:"Un sitio de una página, elegante y enfocado, que muestra con claridad quién eres, qué ofreces y cuándo estás disponible — y convierte a los visitantes en llamadas. Ideal para pequeños negocios que quieren una presencia online profesional, rápido y a buen precio.",
+  service2Title:'Sitios empresariales', service2Desc:"Un sitio de varias páginas y secciones con servicios, galería de fotos, reservas online y, si hace falta, contenido bilingüe. Para negocios que no solo quieren aparecer en internet, sino conseguir y atender allí a sus clientes.",
+  service3Title:'Experiencias prémium', service3Desc:"Una experiencia digital totalmente a medida, animada y de varias páginas, con blog, reseñas de clientes y movimientos diseñados en torno a tu identidad — para marcas que quieren liderar su categoría e impresionar desde el primer segundo.",
   aboutEyebrow:'Nosotros',
   aboutText:'Somos Alex y Theo, dos jóvenes emprendedores apasionados por la tecnología digital y el diseño web. Creamos sitios web modernos y de alto rendimiento usando las últimas tecnologías de inteligencia artificial, para ayudar a los negocios a mejorar su presencia en línea y hacer crecer su actividad.',
+  aboutText2:"Trabajamos desde Budapest como un equipo de dos: hablas directamente con nosotros, sin intermediarios ni laberintos de atención al cliente. Diseñamos, programamos y entregamos cada proyecto nosotros mismos — las mismas dos personas que se sentaron contigo en la primera reunión.",
+  aboutText3:"Creemos que una buena web no es un gasto, sino una herramienta: genera confianza, muestra lo que sabes hacer y facilita que tus clientes te encuentren y te contacten. Precisamente por eso construimos cada una como si fuera nuestro propio negocio.",
   faqEyebrow:'Preguntas frecuentes', faqH2:'Preguntas y respuestas',
   faqP:'¿Aún tienes dudas? Esto es lo que la gente suele preguntar antes de empezar un proyecto.',
   faqItems:[
@@ -1565,11 +1624,42 @@ es:{
     {q:'¿Puedo actualizar el contenido yo mismo después del lanzamiento?', a:'En Esszencia y Presztízs se pueden pedir pequeños cambios de texto o fotos en cualquier momento. Al ser Prémium totalmente a medida, los cambios normalmente pasan por nosotros para que el diseño se mantenga intacto.'},
     {q:'¿Se encargan del hosting y del dominio?', a:'Sí — podemos configurar el hosting y un dominio desde cero, o trabajar con uno que ya tengas.'},
     {q:'¿Y si más adelante necesito más páginas o funciones?', a:'Cada nivel puede crecer. En cuanto sepamos qué necesitas — una página extra, una nueva sección, una función — lo presupuestamos aparte, sin atarte al alcance original.'},
-    {q:'¿Ofrecen mantenimiento continuo?', a:'Sí — encontrarás las tarifas mensuales exactas junto a los precios más arriba. Esto cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.'}
+    {q:'¿Ofrecen mantenimiento continuo?', a:'Sí — encontrarás las tarifas mensuales exactas junto a los precios más arriba. Esto cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.'},
+    {q:"¿Mi web se verá bien en el móvil?", a:"Sí. Diseñamos y probamos cada sitio en móviles, tabletas y ordenadores: la página se adapta al tamaño de la pantalla, el texto sigue siendo legible y los botones son fáciles de pulsar."},
+    {q:"¿Qué materiales tengo que preparar?", a:"Basta con una descripción de tu negocio, los datos de contacto, el horario y algunas fotos — y tu logotipo, si lo tienes. Si no tienes fotos de buena calidad, podemos organizar opcionalmente un fotógrafo profesional (precio bajo petición)."},
+    {q:"¿Cómo funcionan el contrato y el pago?", a:"El contrato se firma en persona. En él se fijan el paquete, el plazo, el importe del anticipo y los detalles de pago, para que todo quede claro desde el principio."},
+    {q:"¿Aparecerá mi web en Google?", a:"Construimos código rápido, limpio y adaptado al móvil, una base sólida para el posicionamiento. Pero nadie puede garantizar una posición concreta — los buscadores valoran muchos factores y los resultados se construyen con el tiempo."}
   ],
+  whyEyebrow:"Por qué nosotros",
+  whyH2:"Por qué trabajar con nosotros",
+  whyP:"No subimos plantillas: cada sitio web se adapta a tu negocio — con rapidez, con transparencia y a tu lado hasta el final.",
+  why1Title:"Código a medida, no plantillas",
+  why1Desc:"Cada sitio se crea desde cero — sin plantillas prefabricadas ni constructores de páginas — para que tu web se vea exactamente como imaginas tu marca.",
+  why2Title:"Entrega rápida",
+  why2Desc:"Esszencia está lista en 3–4 días, Presztízs en 4–7 y Prémium en 7–12 — según la rapidez con la que lleguen el contenido y tus comentarios.",
+  why3Title:"Pensado para todos los dispositivos",
+  why3Desc:"Impecable en móviles, tabletas y ordenadores: textos legibles, botones cómodos de pulsar y sin desplazamiento horizontal.",
+  why4Title:"Precios transparentes",
+  why4Desc:"Paquetes con contenido definido y precios claros, sin costes ocultos — la cuota mensual de mantenimiento también la ves por adelantado.",
+  why5Title:"Todo en un solo lugar",
+  why5Desc:"Alojamiento, nombre de dominio, actualizaciones, copias de seguridad y pequeñas correcciones en un único plan mensual — no tienes que ocuparte de nada técnico.",
+  why6Title:"Trato personal",
+  why6Desc:"Hablas directamente con nosotros, los dos fundadores — sin intermediarios. El contrato se firma en persona.",
+  processEyebrow:"Cómo trabajamos",
+  processH2:"Cuatro pasos de la idea al lanzamiento",
+  processP:"Un proceso sencillo y transparente: siempre sabes en qué punto está tu proyecto y cuál es el siguiente paso.",
+  step1Title:"Conversación",
+  step1Desc:"Nos cuentas sobre tu negocio y tus objetivos; nosotros recomendamos el nivel adecuado y aclaramos qué contenido hace falta.",
+  step2Title:"Contrato",
+  step2Desc:"Firmamos el contrato en persona: recoge qué recibes, por cuánto y para cuándo, junto con el anticipo y los detalles de pago.",
+  step3Title:"Diseño y desarrollo",
+  step3Desc:"Creamos el sitio con los textos, las fotos y los datos de contacto que nos facilitas y te lo mostramos en una vista previa en vivo para que nos des tu opinión.",
+  step4Title:"Lanzamiento y soporte",
+  step4Desc:"Configuramos el alojamiento y el dominio, publicamos el sitio — y después nos ocupamos de él con el plan de mantenimiento mensual.",
+  contactNote:"Escríbenos o llámanos cuando quieras — la primera conversación no te compromete a nada. También podemos quedar en persona en Budapest.",
   contactEyebrow:'Contacto', contactH2:'Construyamos algo prémium',
   contactP:'Cuéntame sobre tu negocio y te recomendaré el nivel adecuado — Esszencia, Presztízs o Prémium.',
-  formDivider:'¿Tienes una solicitud más concreta?', formName:'Tu nombre', formEmail:'Tu correo electrónico',
+  formDivider:"Tu proyecto empieza aquí.", formName:'Tu nombre', formEmail:'Tu correo electrónico',
   formMessage:'Cuéntanos sobre tu proyecto o tu pregunta…', formMessageLabel:'Tu mensaje', legalImpressum:'Aviso legal', legalPrivacy:'Privacidad', legalTerms:'Condiciones', legalCookies:'Cookies', formSubmit:'Enviar mensaje', formSending:'Enviando…',
   formSuccess:'Gracias — te responderemos pronto.', formError:'Algo salió mal — escríbenos directamente por correo, por favor.',
   formSubject:'Nuevo mensaje del sitio AiStudioBudapest',
@@ -1583,8 +1673,11 @@ de:{
   navAbout:'Über uns', navFaq:'FAQ', navContact:'Kontakt', navCta:'Projekt starten',
   burgerOpen:'Menü öffnen', burgerClose:'Menü schließen', langAria:'Sprache wählen',
   heroEyebrow:'Webdesign',
-  heroTagline:'Premium-Webdesign, das ambitionierte Marken in die Umlaufbahn schickt.',
-  heroSub:'Drei Stufen handwerklicher Qualität, von der fokussierten One-Page-Website bis zum vollständig individuellen Premium-Erlebnis — scrolle nach unten, um sie live zu entdecken.',
+  heroTagline:"Premium-Websites, auf die du stolz sein kannst.",
+  heroAccent:"auf die du stolz sein kannst",
+  marqueeLabel:["Drei Stufen,", "ein Anspruch"],
+  marqueeItems:["Esszencia", "Presztízs", "Prémium", "Individueller Code", "Mobilfreundlich", "Schnelle Umsetzung", "Klare Preise", "5 Sprachen"],
+  heroSub:"Individuelle, schnelle und mobilfreundliche Websites aus Budapest — von der einseitigen Vorstellung bis zum vollständig maßgeschneiderten Premium-Erlebnis. Drei Stufen, feste Preise, Live-Prototypen: Scrolle nach unten und probiere sie aus.",
   showcaseEyebrow:'Ausgewählte Arbeiten',
   stackTitle:'Zur Website', enterHint:'Zur Website ↗',
   ctaViewProject:'Projekt ansehen ↗', ctaWorkTogether:'Lass uns zusammenarbeiten',
@@ -1605,11 +1698,13 @@ de:{
   addonPrice:'Preis auf Anfrage', addonCta:'Angebot anfordern',
   servicesEyebrow:'Was wir bauen', servicesH2:'Drei Stufen, ein Qualitätsstandard',
   servicesP:'Jedes Projekt wird von Grund auf entworfen und programmiert, passend zum Anspruch — und zum Budget — des dahinterstehenden Unternehmens.',
-  service1Title:'One-Page-Websites', service1Desc:'Eine fokussierte, elegante Einzelseite, die ein Unternehmen klar präsentiert und Besucher in Anrufe verwandelt.',
-  service2Title:'Business-Websites', service2Desc:'Mehrteilige Seiten mit Leistungen, Galerien, Buchungsabläufen und bei Bedarf zweisprachigen Inhalten.',
-  service3Title:'Premium-Erlebnisse', service3Desc:'Vollständig individuelle, animierte, mehrseitige digitale Erlebnisse für Marken, die ihre Kategorie anführen wollen.',
+  service1Title:'One-Page-Websites', service1Desc:"Eine fokussierte, elegante einseitige Website, die klar zeigt, wer du bist, was du anbietest und wann du erreichbar bist — und Besucher in Anrufe verwandelt. Ideal für kleine Unternehmen, die schnell und zu einem fairen Preis einen professionellen Online-Auftritt wollen.",
+  service2Title:'Business-Websites', service2Desc:"Eine Website mit mehreren Bereichen und Seiten, mit Leistungen, Fotogalerie, Online-Buchung und bei Bedarf zweisprachigen Inhalten. Für Unternehmen, die online nicht nur auftauchen, sondern dort Kunden gewinnen und betreuen wollen.",
+  service3Title:'Premium-Erlebnisse', service3Desc:"Ein vollständig maßgeschneidertes, animiertes, mehrseitiges digitales Erlebnis mit Blog, Kundenbewertungen und auf deine Identität abgestimmten Bewegungen — für Marken, die ihre Kategorie anführen und Besucher vom ersten Moment an beeindrucken wollen.",
   aboutEyebrow:'Über uns',
   aboutText:'Wir sind Alex und Theo, zwei junge Unternehmer mit Leidenschaft für digitale Technologie und Webdesign. Wir erstellen moderne, leistungsstarke Websites mit den neuesten Technologien der künstlichen Intelligenz, um Unternehmen zu helfen, ihre Online-Präsenz zu verbessern und ihr Geschäft auszubauen.',
+  aboutText2:"Wir arbeiten von Budapest aus als Zweierteam: Du sprichst direkt mit uns, ohne Zwischenstation und ohne Kundendienst-Labyrinth. Wir entwerfen, programmieren und übergeben jedes Projekt selbst — dieselben zwei Personen, die beim ersten Treffen mit dir am Tisch saßen.",
+  aboutText3:"Wir glauben, dass eine gute Website keine Ausgabe ist, sondern ein Werkzeug: Sie schafft Vertrauen, zeigt, was du kannst, und macht es Kunden leicht, dich zu finden und Kontakt aufzunehmen. Genau deshalb bauen wir jede so, als wäre es unser eigenes Unternehmen.",
   faqEyebrow:'FAQ', faqH2:'Fragen und Antworten',
   faqP:'Noch unsicher bei etwas? Das wird uns vor Projektbeginn am häufigsten gefragt.',
   faqItems:[
@@ -1618,11 +1713,42 @@ de:{
     {q:'Kann ich Inhalte nach dem Launch selbst aktualisieren?', a:'Bei Esszencia und Presztízs können jederzeit kleine Text- oder Fotoänderungen angefragt werden. Bei der vollständig individuellen Prémium-Umsetzung laufen Änderungen meist über uns, damit das Design intakt bleibt.'},
     {q:'Kümmert ihr euch um Hosting und Domainnamen?', a:'Ja — wir richten Hosting und eine Domain von Grund auf für dich ein, oder arbeiten mit einer bereits vorhandenen Domain.'},
     {q:'Was, wenn ich später mehr Seiten oder Funktionen brauche?', a:'Jede Stufe kann wachsen. Sobald wir wissen, was gebraucht wird — eine zusätzliche Seite, ein neuer Abschnitt, eine Funktion —, kalkulieren wir das separat, ohne dich an den ursprünglichen Umfang zu binden.'},
-    {q:'Bietet ihr laufende Wartung an?', a:'Ja — die genauen monatlichen Preise findest du weiter oben neben den Preisen. Das deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.'}
+    {q:'Bietet ihr laufende Wartung an?', a:'Ja — die genauen monatlichen Preise findest du weiter oben neben den Preisen. Das deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.'},
+    {q:"Sieht meine Website auch auf dem Handy gut aus?", a:"Ja. Wir entwerfen und testen jede Website auf Smartphone, Tablet und Desktop: Die Seite passt sich der Bildschirmgröße an, der Text bleibt lesbar und die Schaltflächen sind leicht anzutippen."},
+    {q:"Welche Unterlagen muss ich vorbereiten?", a:"Eine Beschreibung deines Unternehmens, Kontaktdaten, Öffnungszeiten und ein paar Fotos genügen — und dein Logo, falls vorhanden. Wenn du keine Fotos in guter Qualität hast, können wir optional einen professionellen Fotografen organisieren (Preis auf Anfrage)."},
+    {q:"Wie laufen Vertrag und Zahlung ab?", a:"Den Vertrag unterschreiben wir persönlich. Darin sind Paket, Frist, Höhe der Anzahlung und Zahlungsdetails festgelegt, damit von Anfang an alles klar ist."},
+    {q:"Wird meine Website bei Google angezeigt?", a:"Wir bauen schnellen, sauberen und mobilfreundlichen Code — eine solide Grundlage für die Suche. Eine bestimmte Platzierung kann jedoch niemand garantieren: Suchmaschinen berücksichtigen viele Faktoren, und Ergebnisse wachsen mit der Zeit."}
   ],
+  whyEyebrow:"Warum wir",
+  whyH2:"Warum du mit uns arbeiten solltest",
+  whyP:"Wir laden keine Vorlagen hoch: Jede Website wird auf dein Unternehmen zugeschnitten — schnell, transparent und mit uns an deiner Seite bis zum Schluss.",
+  why1Title:"Individueller Code statt Vorlage",
+  why1Desc:"Jede Seite entsteht von Grund auf — ohne fertige Vorlage und ohne Seitenbaukasten —, damit deine Website genau so aussieht, wie du dir deine Marke vorstellst.",
+  why2Title:"Schnelle Umsetzung",
+  why2Desc:"Esszencia ist in 3–4 Tagen fertig, Presztízs in 4–7, Prémium in 7–12 — je nachdem, wie schnell Inhalte und Feedback zurückkommen.",
+  why3Title:"Für jedes Gerät gemacht",
+  why3Desc:"Einwandfrei auf Smartphone, Tablet und Desktop: gut lesbare Texte, bequem antippbare Schaltflächen und kein seitliches Scrollen.",
+  why4Title:"Transparente Preise",
+  why4Desc:"Pakete mit festem Inhalt und klaren Preisen, ohne versteckte Kosten — auch die monatliche Wartungsgebühr kennst du im Voraus.",
+  why5Title:"Alles aus einer Hand",
+  why5Desc:"Hosting, Domain, Updates, Backups und kleine Korrekturen in einem einzigen Monatspaket — du musst dich um nichts Technisches kümmern.",
+  why6Title:"Persönlicher Kontakt",
+  why6Desc:"Du sprichst direkt mit uns, den beiden Gründern — ohne Zwischenstation. Den Vertrag unterschreiben wir persönlich.",
+  processEyebrow:"So arbeiten wir",
+  processH2:"Vier Schritte von der Idee zum Start",
+  processP:"Ein einfacher, transparenter Ablauf — du weißt immer, wo dein Projekt steht und was als Nächstes kommt.",
+  step1Title:"Gespräch",
+  step1Desc:"Du erzählst uns von deinem Unternehmen und deinen Zielen; wir empfehlen die passende Stufe und klären, welche Inhalte nötig sind.",
+  step2Title:"Vertrag",
+  step2Desc:"Wir unterschreiben den Vertrag persönlich: Er hält fest, was du bekommst, für wie viel und bis wann — samt Anzahlung und Zahlungsdetails.",
+  step3Title:"Gestaltung und Entwicklung",
+  step3Desc:"Wir bauen die Website mit deinen Texten, Fotos und Kontaktdaten und zeigen sie dir in einer Live-Vorschau, damit du Feedback geben kannst.",
+  step4Title:"Start und Betreuung",
+  step4Desc:"Wir richten Hosting und Domain ein und schalten die Website live — danach kümmern wir uns mit dem monatlichen Wartungspaket weiter um sie.",
+  contactNote:"Schreib oder ruf uns jederzeit an — das erste Gespräch verpflichtet dich zu nichts. Wir können uns auch persönlich in Budapest treffen.",
   contactEyebrow:'Kontakt', contactH2:'Lass uns etwas Premium bauen',
   contactP:'Erzähl mir von deinem Unternehmen, und ich empfehle dir die passende Stufe — Esszencia, Presztízs oder Prémium.',
-  formDivider:'Eine konkretere Anfrage?', formName:'Dein Name', formEmail:'Deine E-Mail',
+  formDivider:"Dein Projekt beginnt hier.", formName:'Dein Name', formEmail:'Deine E-Mail',
   formMessage:'Erzähl uns von deinem Projekt oder deiner Frage…', formMessageLabel:'Deine Nachricht', legalImpressum:'Impressum', legalPrivacy:'Datenschutz', legalTerms:'AGB', legalCookies:'Cookies', formSubmit:'Nachricht senden', formSending:'Wird gesendet…',
   formSuccess:'Danke — wir melden uns bald.', formError:'Etwas ist schiefgelaufen — schreib uns bitte direkt per E-Mail.',
   formSubject:'Neue Nachricht von der AiStudioBudapest-Website',
@@ -1673,474 +1799,81 @@ var scrollProgressBar = document.querySelector('#scrollProgress span');
 var burger = document.getElementById('burger');
 var mnav = document.getElementById('mnav');
 var revealEls = [];
-var CASCADE_GRIDS = ['services-grid', 'pricing-grid'];
+var CASCADE_GRIDS = ['services-grid', 'pricing-grid', 'process-grid'];
 
 var projectEls = {};
 document.querySelectorAll('.project').forEach(function(p){
   projectEls[p.getAttribute('data-project')] = p;
 });
 
-/* ---------------- hero tagline: split into letters for the scroll
-   shatter effect. Grouped by word (see .word in CSS) so normal line
-   wrapping still happens at word boundaries, not mid-word. Each letter
-   gets a random flight vector + stagger delay baked in once, up front —
-   from here on, driving the effect is just one CSS custom property
-   (--p) updated per scroll frame; see onScrollFrame(). Callable again
-   on every language change (see applyLang()), since the tagline text
-   itself changes — a fresh set of random vectors each time is fine,
-   this only runs on an explicit language switch, never per frame. */
-function splitTagline(text){
-  if(!tagline || reduceMotion){ if(tagline) tagline.textContent = text; return; }
-  var taglineWords = text.split(' ').filter(Boolean);
-  var totalLetters = taglineWords.reduce(function(n,w){ return n + w.length; }, 0);
-  var letterIdx = 0;
-  var taglineFrag = document.createDocumentFragment();
-  taglineWords.forEach(function(word){
-    var wordEl = document.createElement('span');
-    wordEl.className = 'word';
-    word.split('').forEach(function(ch){
-      var letterEl = document.createElement('span');
-      letterEl.className = 'letter';
-      letterEl.textContent = ch;
-      var angle = Math.random() * Math.PI * 2;
-      var dist = 70 + Math.random() * 160;
-      letterEl.style.setProperty('--ex', (Math.cos(angle) * dist).toFixed(1) + 'px');
-      letterEl.style.setProperty('--ey', (Math.sin(angle) * dist - 40).toFixed(1) + 'px');
-      letterEl.style.setProperty('--er', ((Math.random() * 2 - 1) * 220).toFixed(0) + 'deg');
-      letterEl.style.setProperty('--ed', (0.35 * (letterIdx / Math.max(1, totalLetters - 1))).toFixed(3));
-      letterIdx++;
-      wordEl.appendChild(letterEl);
-    });
-    taglineFrag.appendChild(wordEl);
-  });
+/* ---------------- hero headline (gradient accent), marquee and background video ---------------- */
+/* heroTagline is the whole sentence; heroAccent is the part of it that gets the indigo-purple-amber gradient. */
+function renderTagline(){
+  if(!tagline) return;
+  var tx = T[currentLang], full = tx.heroTagline, acc = tx.heroAccent, i = acc ? full.indexOf(acc) : -1;
   tagline.textContent = '';
-  tagline.appendChild(taglineFrag);
-  /* --p lives on .tagline itself (set per scroll frame in onScrollFrame),
-     not on the letters being replaced here, so it survives this swap
-     untouched — no need to re-seed it. */
+  if(i < 0){ tagline.textContent = full; return; }
+  tagline.appendChild(document.createTextNode(full.slice(0, i)));
+  var g = document.createElement('span'); g.className = 'grad'; g.textContent = acc; tagline.appendChild(g);
+  tagline.appendChild(document.createTextNode(full.slice(i + acc.length)));
 }
-/* First split happens inside applyLang(currentLang), called once
-   everything else below is set up — see the initial-mount block. */
-
-/* ---------------- Parliament camera ----------------
-   The Hungarian Parliament at night (one photo, /alexstudio/parlement.jpg) is
-   the 3D subject in front of the Milky Way video. A WebGL shader turns it into
-   a 2.5D scene: a depth map deduced from the photo's luminance (lit building =
-   near, sky = far) drives (1) a dolly zoom where near parts grow faster than
-   far ones and (2) parallax when the camera drifts or the mouse moves, plus a
-   cursor "torch", a shimmering Danube and a sky that goes transparent so the
-   stars show through. The camera flies to a different part of the building for
-   every section (PARL_STOPS) as the page scrolls. Without WebGL the same photo
-   is zoomed in 2D; with prefers-reduced-motion it stays still. */
-var PARL_STOPS = [
-  {id:'top',      fx:.495, fy:.41, ay:.80, z:2.1,  dim:.28},  /* the dome */
-  {id:'showcase', fx:.495, fy:.47, ay:.50, z:1.25, dim:.42},  /* pulled back: the whole facade */
-  {id:'pricing',  fx:.370, fy:.53, ay:.50, z:2.5,  dim:.55},  /* left wing */
-  {id:'services', fx:.620, fy:.53, ay:.50, z:2.5,  dim:.58},  /* right wing */
-  {id:'about',    fx:.495, fy:.60, ay:.50, z:2.8,  dim:.64},  /* the lit arcades */
-  {id:'faq',      fx:.495, fy:.33, ay:.50, z:2.8,  dim:.58},  /* the spire among the stars */
-  {id:'contact',  fx:.560, fy:.80, ay:.50, z:1.9,  dim:.50}   /* the Danube and its reflections */
-];
-var parlCanvas = document.getElementById('parlCanvas');
-var parlImg = document.getElementById('parlImg');
-var Parl = {
-  mode: 'off', gl: null, u: {}, W: 0, H: 0, dpr: 1, dprCap: isCoarse ? 1.15 : 1.35, IW: 2400, IH: 1138,
-  cam: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
-  tgt: {fx: PARL_STOPS[0].fx, fy: PARL_STOPS[0].fy, ay: PARL_STOPS[0].ay, lz: Math.log(PARL_STOPS[0].z), dim: PARL_STOPS[0].dim, prog: 0},
-  mx: 0, my: 0, mouse: false, msx: 0, msy: 0, lx: .5, ly: .5,
-  running: false, lastT: 0, lastDraw: 0, active: 0, frames: 0, slow: 0, lost: false, ys: [],
-  p3d: null, p3Appear: 0, p3Chk: 0, p3W: 0, p3H: 0, p3Cap: isCoarse ? ((navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ? .85 : 1) : 1.5, p3Frames: 0, p3Slow: 0
-};
-/* ?diag=1 only (see the head hook): the panel in diag.js reads the scene state through this. */
-if(window.__diagQ) window.aisDiagState = function(){
-  var s = {mode: Parl.mode, p3d: !!Parl.p3d, appear: +Parl.p3Appear.toFixed(2), cap: Parl.p3Cap, lost: !!Parl.p3lost, fellBack: !!Parl.fellBack, size: Parl.p3W + 'x' + Parl.p3H};
-  try{
-    if(Parl.p3d){
-      s.tier = Parl.p3d.quality(); s.info = Parl.p3d.info();
-      var r = Parl.p3d.renderer;
-      if(r){
-        s.tex = r.info.memory.textures; s.geo = r.info.memory.geometries;
-        if(Parl.diagGpu === undefined){
-          var gl = r.getContext(), d = gl.getExtension('WEBGL_debug_renderer_info');
-          Parl.diagGpu = d ? gl.getParameter(d.UNMASKED_VENDOR_WEBGL) + ' / ' + gl.getParameter(d.UNMASKED_RENDERER_WEBGL) : '';
-        }
-        s.gpu = Parl.diagGpu;
-      }
-    }
-  }catch(err){}
-  return s;
-};
-function parlClamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
-
-/* Where the photo lands on screen for a camera state (used by the shader
-   uniforms and by the 2D fallback). z is relative to the "cover" fit; on
-   portrait screens the cover fit already zooms in a lot, so the extra zoom is
-   scaled down. */
-function parlMap(c){
-  var W = Parl.W, H = Parl.H, ar = W / H;
-  var zk = ar >= 1 ? 1 : parlClamp(.55 + ar * .45, .55, 1);
-  var z = 1 + (Math.exp(c.lz) - 1) * zk;
-  var s = Math.max(W / Parl.IW, H / Parl.IH) * 1.04 * z;
-  var dw = Parl.IW * s, dh = Parl.IH * s;
-  return {
-    ox: parlClamp(W * .5 - c.fx * dw, W - dw, 0),
-    oy: parlClamp(H * c.ay - c.fy * dh, H - dh, 0),
-    dw: dw, dh: dh, z: z
-  };
-}
-
-/* Scroll → camera target. Each section has a stop (the scroll position that
-   centres it on screen); between two stops the camera glides from one part of
-   the building to the next with a soft ease and a small pull-back mid-way, so
-   it feels like flying rather than cross-fading. Reads layout only. */
-function parlAim(sy, vh, docH){
-  var n = PARL_STOPS.length, ys = Parl.ys, i, r, el;
-  for(i = 0; i < n; i++){
-    el = PARL_STOPS[i].el || (PARL_STOPS[i].el = document.getElementById(PARL_STOPS[i].id));
-    if(i === 0 || !el){ ys[i] = 0; continue; }
-    r = el.getBoundingClientRect();
-    ys[i] = Math.max(0, r.top + sy + r.height / 2 - vh / 2);
+/* The marquee shows what the agency really offers (the three formulas and its working principles), not client logos:
+   the site has no client logos to show and must not invent any. The list is rendered twice for the seamless -50% loop. */
+function renderMarquee(){
+  var tx = T[currentLang], label = document.getElementById('marqueeLabel'), track = document.getElementById('marqueeTrack');
+  if(label){
+    label.textContent = '';
+    tx.marqueeLabel.forEach(function(line, i){ if(i) label.appendChild(document.createElement('br')); label.appendChild(document.createTextNode(line)); });
   }
-  if(docH > 0) ys[n - 1] = Math.min(ys[n - 1], docH);
-  for(i = n - 2; i >= 1; i--) ys[i] = Math.min(ys[i], ys[i + 1] - 40);
-  for(i = 1; i < n; i++) if(ys[i] <= ys[i - 1] + 1) ys[i] = ys[i - 1] + 1;
-  i = 0;
-  while(i < n - 2 && sy >= ys[i + 1]) i++;
-  var f = parlClamp((sy - ys[i]) / (ys[i + 1] - ys[i]), 0, 1);
-  var e = f * f * (3 - 2 * f), a = PARL_STOPS[i], b = PARL_STOPS[i + 1], t = Parl.tgt;
-  t.fx = a.fx + (b.fx - a.fx) * e;
-  t.fy = a.fy + (b.fy - a.fy) * e;
-  t.ay = a.ay + (b.ay - a.ay) * e;
-  t.dim = a.dim + (b.dim - a.dim) * e;
-  t.lz = Math.log(a.z) + (Math.log(b.z) - Math.log(a.z)) * e - .13 * Math.sin(Math.PI * e);
-  t.prog = i + e;
-  Parl.active = performance.now();
-  parlKick();
-}
-
-var PARL_VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
-var PARL_FS = [
-  '#ifdef GL_FRAGMENT_PRECISION_HIGH', 'precision highp float;', '#else', 'precision mediump float;', '#endif',
-  'uniform sampler2D u_img,u_depth,u_mask;uniform vec2 u_res,u_off,u_isz,u_par,u_piv,u_light;',
-  'uniform float u_time,u_dim,u_lit,u_water,u_dolly;',
-  'const vec3 K=vec3(0.299,0.587,0.114);',
-  'void main(){',
-  ' vec2 px=vec2(gl_FragCoord.x,u_res.y-gl_FragCoord.y);',
-  ' vec2 iuv=(px-u_off)/u_isz; float asp=u_isz.x/u_isz.y;',
-  ' float wa=smoothstep(u_water,u_water+0.05,iuv.y); float ph=iuv.y*230.0;',
-  ' iuv.x+=wa*(sin(ph+u_time*1.7+sin(iuv.x*60.0+u_time*0.6)*2.0)*0.0011+sin(ph*0.5-u_time*1.1)*0.0007)*(0.4+(iuv.y-u_water)*2.0);',
-  ' float d=texture2D(u_depth,iuv).r;',
-  ' iuv=u_piv+(iuv-u_piv)/(1.0+(d-0.35)*u_dolly);',
-  ' iuv+=u_par*(d-0.35);',
-  ' vec3 c=texture2D(u_img,iuv).rgb; float l=dot(c,K);',
-  ' float e=0.007; float dx=texture2D(u_depth,iuv+vec2(e,0.0)).r-texture2D(u_depth,iuv-vec2(e,0.0)).r;',
-  ' float dy=texture2D(u_depth,iuv+vec2(0.0,e*asp)).r-texture2D(u_depth,iuv-vec2(0.0,e*asp)).r;',
-  ' vec3 n=normalize(vec3(-dx*5.0,-dy*5.0,1.0)); vec2 lv=(u_light-iuv)*vec2(asp,1.0); float ld=length(lv);',
-  ' vec3 L=normalize(vec3(lv,0.28)); float diff=max(dot(n,L),0.0); float fall=exp(-ld*ld*7.0);',
-  ' c*=1.0+u_lit*fall*(0.3+0.8*diff);',
-  ' float a=texture2D(u_mask,iuv).r;',
-  ' c=mix(c,c*vec3(0.86,0.98,1.16),1.0-smoothstep(0.0,0.5,l));',
-  ' c*=1.0-u_dim;',
-  ' vec2 q=px/u_res-0.5; c*=smoothstep(1.1,0.32,length(q*vec2(1.0,1.1)));',
-  ' float g=fract(sin(dot(px+fract(u_time)*100.0,vec2(12.9898,78.233)))*43758.5453); c+=(g-0.5)*0.02*a;',
-  ' gl_FragColor=vec4(c*a,a);}'
-].join('\n');
-
-function parlBlur(src, w, h, r){
-  var out = new Float32Array(w * h), tmp = new Float32Array(w * h), x, y, k, sum, cnt;
-  for(y = 0; y < h; y++) for(x = 0; x < w; x++){ sum = 0; cnt = 0; for(k = -r; k <= r; k++){ sum += src[y * w + parlClamp(x + k, 0, w - 1)]; cnt++; } tmp[y * w + x] = sum / cnt; }
-  for(y = 0; y < h; y++) for(x = 0; x < w; x++){ sum = 0; cnt = 0; for(k = -r; k <= r; k++){ sum += tmp[parlClamp(y + k, 0, h - 1) * w + x]; cnt++; } out[y * w + x] = sum / cnt; }
-  return out;
-}
-/* Fake depth: bright (lit building) = near, dark sky = far, lower in the image
-   = nearer (the river). Small on purpose: 192 px wide, blurred twice. */
-function parlDepth(img){
-  var w = 192, h = Math.max(2, Math.round(w * img.naturalHeight / img.naturalWidth)), cv = document.createElement('canvas'), x, y, i;
-  cv.width = w; cv.height = h;
-  var g = cv.getContext('2d'); g.drawImage(img, 0, 0, w, h);
-  var d = g.getImageData(0, 0, w, h).data, L = new Float32Array(w * h), mx = .0001;
-  for(i = 0; i < w * h; i++) L[i] = (.299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2]) / 255;
-  L = parlBlur(parlBlur(L, w, h, 3), w, h, 3);
-  for(i = 0; i < w * h; i++) if(L[i] > mx) mx = L[i];
-  var out = new Uint8Array(w * h);
-  for(y = 0; y < h; y++) for(x = 0; x < w; x++){
-    out[y * w + x] = Math.round(parlClamp(.6 * Math.pow(L[y * w + x] / mx, .7) + .4 * (y / h), 0, 1) * 255);
-  }
-  return {data: out, w: w, h: h};
-}
-/* Opacity mask: 0 = sky (the video shows through), 1 = building / skyline /
-   river. The night sky is the only blue part of the photo (blue minus red is
-   ~0.16; the dark skyline, the river and the lit building are neutral or warm),
-   so that difference tells them apart. Built once, at half resolution. */
-function parlMask(img){
-  var w = 1200, h = Math.round(w * img.naturalHeight / img.naturalWidth), cv = document.createElement('canvas'), x, y, i;
-  cv.width = w; cv.height = h;
-  var g = cv.getContext('2d'); g.drawImage(img, 0, 0, w, h);
-  var d = g.getImageData(0, 0, w, h).data, out = new Uint8Array(w * h);
-  for(y = 0; y < h; y++) for(x = 0; x < w; x++){
-    i = y * w + x;
-    var t = parlClamp(((d[i * 4 + 2] - d[i * 4]) / 255 - .065) / .07, 0, 1), sky = t * t * (3 - 2 * t);
-    var yy = y / h, r = parlClamp((yy - .585) / .035, 0, 1);
-    out[y * w + x] = Math.round(255 * Math.max(1 - sky, r * r * (3 - 2 * r)));
-  }
-  return {data: out, w: w, h: h};
-}
-function parlShader(gl, type, code){
-  var sh = gl.createShader(type); gl.shaderSource(sh, code); gl.compileShader(sh);
-  if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){ if(window.console) console.warn(gl.getShaderInfoLog(sh)); return null; }
-  return sh;
-}
-function parlSize(force){
-  var w = parlCanvas.clientWidth, h = parlCanvas.clientHeight;
-  /* phones: ignore height-only changes (URL bar), a resize would flash the canvas */
-  if(!force && isCoarse && Math.abs(w - Parl.W) < 2 && Math.abs(h - Parl.H) < 160) return;
-  Parl.dpr = Math.min(window.devicePixelRatio || 1, Parl.dprCap);
-  Parl.W = w; Parl.H = h;
-  if(Parl.mode === 'gl'){
-    parlCanvas.width = Math.round(w * Parl.dpr); parlCanvas.height = Math.round(h * Parl.dpr);
-    Parl.gl.viewport(0, 0, parlCanvas.width, parlCanvas.height);
+  if(!track) return;
+  track.textContent = '';
+  for(var rep = 0; rep < 2; rep++){
+    tx.marqueeItems.forEach(function(name){
+      var it = document.createElement('span'); it.className = 'marquee-item';
+      var ico = document.createElement('span'); ico.className = 'marquee-ico liquid-glass'; ico.textContent = name.charAt(0);
+      var nm = document.createElement('span'); nm.className = 'marquee-name'; nm.textContent = name;
+      it.appendChild(ico); it.appendChild(nm); track.appendChild(it);
+    });
   }
 }
-var PARL_SOFT = !!window.AIS_SOFT_GL; /* detected in <head>, see the preload script */
-function parlInitGL(){
-  if(PARL_SOFT) return false; /* photo fallback stays a plain <img> */
-  var gl = null;
-  try{ gl = parlCanvas.getContext('webgl', {alpha: true, premultipliedAlpha: true, antialias: false, powerPreference: 'high-performance'}) || parlCanvas.getContext('experimental-webgl'); }catch(e){}
-  if(!gl) return false;
-  var vs = parlShader(gl, gl.VERTEX_SHADER, PARL_VS), fs = parlShader(gl, gl.FRAGMENT_SHADER, PARL_FS);
-  if(!vs || !fs) return false;
-  var pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
-  if(!gl.getProgramParameter(pr, gl.LINK_STATUS)) return false;
-  gl.useProgram(pr);
-  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  function tex(unit){
-    var tx = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, tx);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+/* Background video: opacity is driven here, not by CSS. 0.5 s fade-in at the start, 0.5 s fade-out at the end; on "ended"
+   it goes back to 0, waits 100 ms and replays from 0. No overlay gradient on the video. It is not loaded at all for
+   visitors who asked for less motion, enabled data-saver, or have no GPU (they see the still poster instead), and it is
+   paused while the hero is off screen or the tab is hidden. */
+(function(){
+  var v = document.getElementById('heroVideo');
+  if(!v) return;
+  var saveData = navigator.connection && navigator.connection.saveData;
+  if(reduceMotion || saveData || window.AIS_SOFT_GL){ aisMark('hero-video', 'poster only (reduced motion, data-saver or no GPU)'); return; }
+  var FADE = 0.5, raf = 0, visible = true;
+  function tick(){
+    raf = 0;
+    var d = v.duration, t = v.currentTime;
+    if(d && isFinite(d)){ v.style.opacity = String(Math.max(0, Math.min(1, t / FADE, (d - t) / FADE))); }
+    if(!v.paused && !v.ended) raf = requestAnimationFrame(tick);
   }
-  tex(0);
-  try{ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, parlImg); }catch(e){ return false; }
-  var dp = parlDepth(parlImg); tex(1); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, dp.w, dp.h, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, dp.data);
-  var mk = parlMask(parlImg); tex(2);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, mk.w, mk.h, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, mk.data);
-  var names = ['u_img', 'u_depth', 'u_mask', 'u_res', 'u_off', 'u_isz', 'u_par', 'u_piv', 'u_light', 'u_time', 'u_dim', 'u_lit', 'u_water', 'u_dolly'], k;
-  for(k = 0; k < names.length; k++) Parl.u[names[k]] = gl.getUniformLocation(pr, names[k]);
-  gl.uniform1i(Parl.u.u_img, 0); gl.uniform1i(Parl.u.u_depth, 1); gl.uniform1i(Parl.u.u_mask, 2); gl.uniform1f(Parl.u.u_water, .72);
-  gl.clearColor(0, 0, 0, 0);
-  Parl.gl = gl; Parl.mode = 'gl'; Parl.lost = false;
-  return true;
-}
-
-function parlDraw(now){
-  var gl = Parl.gl, c = Parl.cam, m = parlMap(c), d = Parl.dpr, u = Parl.u, tt = (now / 1000) % 4000;
-  var zs = Math.max(1, m.z);
-  /* orbit drift + mouse: near parts of the building shift more than far ones */
-  var px = Math.sin(c.prog * 1.5 + tt * .11) * .010 + Parl.msx * .010;
-  var py = Math.cos(c.prog * 1.1 + tt * .09) * .005 + Parl.msy * .006;
-  var lx, ly, lit;
-  if(Parl.mouse){ lx = (Parl.mx - m.ox) / m.dw; ly = (Parl.my - m.oy) / m.dh; lit = .8; }
-  else { lx = c.fx + Math.sin(tt * .23) * .05 / zs; ly = c.fy + Math.sin(tt * .17) * .03 / zs; lit = .45; }
-  Parl.lx += (lx - Parl.lx) * .1; Parl.ly += (ly - Parl.ly) * .1;
-  gl.uniform2f(u.u_res, parlCanvas.width, parlCanvas.height);
-  gl.uniform2f(u.u_off, m.ox * d, m.oy * d); gl.uniform2f(u.u_isz, m.dw * d, m.dh * d);
-  gl.uniform2f(u.u_par, px / Math.sqrt(zs), py / Math.sqrt(zs));
-  gl.uniform2f(u.u_piv, c.fx, c.fy); gl.uniform2f(u.u_light, Parl.lx, Parl.ly);
-  gl.uniform1f(u.u_time, tt); gl.uniform1f(u.u_dim, c.dim); gl.uniform1f(u.u_lit, lit);
-  gl.uniform1f(u.u_dolly, Math.min(.32, .11 * (zs - 1)));
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
-}
-function parlDrawImg(){
-  var m = parlMap(Parl.cam);
-  parlImg.style.width = m.dw.toFixed(1) + 'px'; parlImg.style.height = m.dh.toFixed(1) + 'px';
-  parlImg.style.transform = 'translate3d(' + m.ox.toFixed(1) + 'px,' + m.oy.toFixed(1) + 'px,0)';
-}
-var bgPoster = document.getElementById('bgPoster');
-function posterHide(off){ if(bgPoster) bgPoster.classList.toggle('off', !!off); }
-function parlFrame(t){
-  Parl.running = false;
-  if(document.hidden || Parl.lost || Parl.mode === 'off') return;
-  var dt = Math.min(.05, Parl.lastT ? (t - Parl.lastT) / 1000 : .016); Parl.lastT = t;
-  var c = Parl.cam, g = Parl.tgt, k = 1 - Math.exp(-dt * 5.5), moving = false, key;
-  for(key in g){
-    var diff = g[key] - c[key];
-    if(Math.abs(diff) > .0004){ c[key] += diff * k; moving = true; } else c[key] = g[key];
-  }
-  Parl.msx += (Parl.mx / Math.max(1, Parl.W) * 2 - 1 - Parl.msx) * (Parl.mouse ? k : 0);
-  Parl.msy += (Parl.my / Math.max(1, Parl.H) * 2 - 1 - Parl.msy) * (Parl.mouse ? k : 0);
-  if(moving) Parl.active = t;
-  var idle = t - Parl.active > 1600;
-  if(Parl.p3d){
-    if(Parl.p3lost) return;
-    if(Parl.p3Appear >= 1 && !Parl.posterOff){ Parl.posterOff = true; posterHide(true); } /* the live scene fully covers it now */ /* GL context lost (tab in the background, GPU reset): the restore handler restarts the loop */
-    Parl.p3Appear = Math.min(1, Parl.p3Appear + dt * .8);
-    /* safety net for missed resize events (rotation, browser zoom, devtools) */
-    if(t - Parl.p3Chk > 1000){ Parl.p3Chk = t; p3Size(false); }
-    /* at most ~60 renders/s on phones (120 Hz screens would otherwise double the GPU work for nothing), 30/s when idle */
-    if(t - Parl.lastDraw >= (idle ? 30 : (isCoarse ? 15 : 7))){
-      Parl.lastDraw = t;
-      try{
-        Parl.p3d.render(t, c.prog, {dim: c.dim, appear: Parl.p3Appear});
-      }catch(err){
-        /* any failure in the 3D scene: give the background back to the photo and the video */
-        aisMark('fallback-trigger', 'render error: ' + (err && err.message));
-        Parl.p3d = null; document.getElementById('p3dCanvas').style.opacity = '0'; Parl.fellBack = false; parlFallback();
-      }
-      /* very slow GPU: lower the render resolution, twice at most */
-      if(++Parl.p3Frames > 40 && !idle){
-        if(dt > .04) Parl.p3Slow++;
-        if(Parl.p3Frames % 90 === 0){
-          if(Parl.p3Slow > 45){
-            if(Parl.p3d.degrade && Parl.p3d.degrade()){ /* one quality tier down: reflections/MSAA, then bloom */ aisMark('degrade', 'too slow: quality tier lowered to ' + Parl.p3d.quality()); }
-            else if(Parl.p3Cap > .8){ Parl.p3Cap = Parl.p3Cap > 1 ? 1 : .8; aisMark('degrade', 'too slow: render scale lowered to ' + Parl.p3Cap); p3Size(true); }
-          }
-          Parl.p3Slow = 0;
-        }
-      }
-    }
-  } else if(Parl.mode === 'gl'){
-    /* idle = only the river shimmer and the drift move: 24 fps is plenty */
-    if(!(idle && t - Parl.lastDraw < 40)){
-      Parl.lastDraw = t; parlDraw(t);
-      /* very slow GPU: lower the render resolution once */
-      if(++Parl.frames > 30 && Parl.frames <= 120 && !idle){
-        if(dt > .034) Parl.slow++;
-        if(Parl.frames === 120 && Parl.slow > 60 && Parl.dprCap > 1){ Parl.dprCap = 1; parlSize(true); }
-      }
-    }
-  } else if(moving){
-    parlDrawImg();
-  }
-  if(Parl.mode === 'gl' || Parl.p3d || moving){ Parl.running = true; requestAnimationFrame(parlFrame); }
-}
-function parlKick(){
-  if(Parl.running || Parl.mode === 'off' || document.hidden) return;
-  Parl.running = true; requestAnimationFrame(parlFrame);
-}
-/* The real 3D Parliament (scene3d/parliament3d.js, one self-contained file
-   built by `npm run build:3d`) is the only Parliament a visitor should see: the
-   old photo is NOT shown while it loads (a still frame of the 3D scene is there meanwhile).
-   The photo is only a fallback — reduced motion, data saver, no WebGL, an
-   error, or a scene that takes more than ~9 s. */
-function p3Size(force){
-  var cv = document.getElementById('p3dCanvas');
-  if(!Parl.p3d || !cv) return;
-  var w = cv.clientWidth, h = cv.clientHeight;
-  if(w < 2 || h < 2) return; /* hidden tab / zero-size canvas: keep the last good size */
-  if(!force){
-    if(w === Parl.p3W && h === Parl.p3H) return;
-    if(isCoarse && Math.abs(w - Parl.p3W) < 2 && Math.abs(h - Parl.p3H) < 160) return;
-  }
-  Parl.p3W = w; Parl.p3H = h;
-  Parl.p3d.resize(w, h, Math.min(window.devicePixelRatio || 1, Parl.p3Cap));
-}
-function parlFallback(){
-  if(Parl.p3d || Parl.fellBack) return;
-  Parl.fellBack = true;
-  aisMark('photo-fallback-start');
-  if(Parl.mode === '3d') Parl.mode = 'off';
-  Parl.posterOff = true; posterHide(true); /* the photo fallback draws its own Parliament: no second one underneath */
-  if(window.aisLoaderHide) window.aisLoaderHide();
-  if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto, {once: true});
-}
-/* One reload, at most once a minute, as the very last resort (a lost GL context that never comes back). */
-function parlReloadOnce(){
-  try{
-    var k = 'aistudio_p3_reload', t = +sessionStorage.getItem(k) || 0;
-    if(Date.now() - t < 60000) return;
-    sessionStorage.setItem(k, String(Date.now()));
-  }catch(err){}
-  location.reload();
-}
-/* A failed dynamic import is remembered by the browser for that URL, so the retries use a different query string. */
-function parlImport(tries){
-  return import('/alexstudio/parliament3d.js' + (tries ? '?r=' + tries : '')).catch(function(err){
-    if(tries >= 2) throw err;
-    return new Promise(function(res){ setTimeout(res, 1200 * (tries + 1)); }).then(function(){ return parlImport(tries + 1); });
+  function kick(){ if(!raf) raf = requestAnimationFrame(tick); }
+  v.addEventListener('playing', kick);
+  v.addEventListener('ended', function(){
+    v.style.opacity = '0';
+    setTimeout(function(){ v.currentTime = 0; var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }, 100);
   });
-}
-function parlLoad3D(){
-  if(Parl.p3Tried) return;
-  Parl.p3Tried = true;
-  /* The 3D scene takes over whenever it is ready, even after the photo fallback has started, so this timeout is only
-     for a genuinely stuck load (slow first visit: ~5 MB of files and a scene to build). Until then the visitor sees the
-     still of the scene, never the old photo or a space video. */
-  var arm = function(){ setTimeout(function(){ if(Parl.p3d) return; if(document.hidden){ arm(); return; } aisMark('fallback-trigger', 'timeout 30 s: the 3D scene was still not ready'); parlFallback(); }, 30000); };
-  arm();
-  /* let the first frame paint before the (synchronous) scene build */
-  (function(){ setTimeout(function(){
-    var tBuild = 0;
-    aisMark('import-start', 'downloading parliament3d.js');
-    parlImport(0).then(function(mod){
-      aisMark('import-done', 'module downloaded + parsed');
-      tBuild = performance.now();
-      return mod.loadParliament(document.getElementById('p3dCanvas'), {mobile: (isCoarse || window.innerWidth <= 820) && !/[?&]p3d=hq/.test(location.search), base: '/alexstudio/tex/'});
-    }).then(function(api){
-      aisMark('scene-built', Math.round(performance.now() - tBuild) + ' ms (textures download + scene build + shader compile)');
-      var cv = document.getElementById('p3dCanvas');
-      /* Mobile browsers (and desktop ones after a GPU reset) drop the GL context when the tab goes to the background.
-         It used to switch to the photo for good, so the visitor came back to the old look until a manual refresh.
-         Now: keep the scene, show its still frame meanwhile, and carry on when the context is restored. */
-      cv.addEventListener('webglcontextlost', function(e){
-        aisMark('ctx-lost', 'WebGL context lost (GPU reset or tab in background)');
-        e.preventDefault(); Parl.p3lost = true; cv.style.opacity = '0';
-        Parl.posterOff = false; posterHide(false); /* the still of the scene covers the gap until the context is back */
-        clearTimeout(Parl.p3lostT);
-        Parl.p3lostT = setTimeout(function(){ if(Parl.p3lost) parlReloadOnce(); }, 6000);
-      });
-      cv.addEventListener('webglcontextrestored', function(){
-        aisMark('ctx-restored');
-        clearTimeout(Parl.p3lostT); Parl.p3lost = false; Parl.p3Appear = 0; Parl.lastT = 0;
-        try{ p3Size(true); }catch(err){ parlReloadOnce(); return; }
-        parlKick();
-      });
-      Parl.p3d = api; Parl.p3Appear = 0;
-      try{ p3Size(true); }catch(err){ aisMark('fallback-trigger', 'resize error: ' + (err && err.message)); Parl.p3d = null; parlFallback(); return; }
-      Parl.mode = '3d'; /* also when the photo fallback had started or had failed to start: the loop must run */
-      aisMark('scene-ready');
-      if(window.aisLoaderHide) window.aisLoaderHide(); /* the scene is ready: reveal the site */
-      /* no fly-in from the top if the page was opened part-way down */
-      Object.keys(Parl.tgt).forEach(function(k){ Parl.cam[k] = Parl.tgt[k]; });
-      if(/[?&]p3d=1/.test(location.search)) window.__p3d = api;
-      parlCanvas.classList.remove('on'); parlImg.classList.remove('on');
-      parlKick();
-    }).catch(function(err){ aisMark('fallback-trigger', '3D load/build failed: ' + (err && err.message ? err.message : err)); parlFallback(); });
-  }, 60); })();
-}
-function parlStartPhoto(){
-  if(!parlImg.naturalWidth) return;
-  Parl.IW = parlImg.naturalWidth; Parl.IH = parlImg.naturalHeight;
-  parlSize(true);
-  if(parlInitGL()){
-    parlSize(true);
-    parlCanvas.classList.add('on');
-    if(reduceMotion) parlDraw(0); else parlKick();
-  } else {
-    Parl.mode = 'img'; parlImg.classList.add('on'); parlDrawImg();
+  function start(){
+    var src = document.createElement('source'); src.src = '/media/hero-bg.mp4'; v.appendChild(src);
+    v.load();
+    var pr = v.play(); if(pr && pr.catch) pr.catch(function(){ /* autoplay blocked: the poster stays */ });
   }
-  if(reduceMotion) return;
-  parlAim(window.scrollY, viewH, document.documentElement.scrollHeight - viewH);
-}
-if(parlCanvas && parlImg){
-  parlCanvas.addEventListener('webglcontextlost', function(e){ e.preventDefault(); Parl.lost = true; parlCanvas.classList.remove('on'); });
-  parlCanvas.addEventListener('webglcontextrestored', function(){ Parl.u = {}; Parl.mode = 'off'; parlStartPhoto(); });
-  window.addEventListener('resize', function(){ p3Size(false); parlSize(false); if(Parl.mode === 'gl'){ if(reduceMotion) parlDraw(0); else parlKick(); } else if(Parl.mode === 'img') parlDrawImg(); });
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden){ Parl.lastT = 0; parlKick(); } });
-  /* No pointer tracking for the Parliament on purpose: the mouse must never move it (parallax, torch, tilt). Parl.mouse stays false. */
-  if(reduceMotion || PARL_SOFT || (navigator.connection && navigator.connection.saveData)){
-    aisMark('photo-mode', reduceMotion ? 'prefers-reduced-motion is on' : PARL_SOFT ? 'no GPU acceleration (software WebGL)' : 'browser data-saver is on');
-    Parl.posterOff = true; posterHide(true);
-    if(document.readyState === 'complete') window.aisLoaderHide && window.aisLoaderHide(); else window.addEventListener('load', function(){ window.aisLoaderHide && window.aisLoaderHide(); }, {once: true});
-    if(parlImg.complete && parlImg.naturalWidth) parlStartPhoto(); else parlImg.addEventListener('load', parlStartPhoto);
-  } else {
-    Parl.mode = '3d'; parlSize(true);
-    parlAim(window.scrollY, viewH, document.documentElement.scrollHeight - viewH);
-    parlLoad3D();
+  if(document.readyState === 'complete') start(); else window.addEventListener('load', start, {once: true});
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){
+      visible = en[0].isIntersecting;
+      if(!visible) v.pause(); else if(v.currentSrc && !document.hidden){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
+    }).observe(document.getElementById('top'));
   }
-}
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) v.pause(); else if(visible && v.currentSrc){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
+  });
+})();
 
 /* Move the actual DOM node for `key` into `targetEl`, keeping its iframe's
    live state (playing video, scroll position, everything) intact.
@@ -2502,7 +2235,8 @@ function applyLang(lang){
   var subjectInput = document.getElementById('formSubjectInput');
   if(subjectInput) subjectInput.value = T[lang].formSubject;
 
-  splitTagline(T[lang].heroTagline);
+  renderTagline();
+  renderMarquee();
   renderPricing();
   renderFaq();
   refreshRevealEls();
@@ -2534,32 +2268,11 @@ applyLang(currentLang);
       f.removeAttribute('data-src');
     });
   }
-  /* The Parliament comes first: the three demo sites (each with its own scripts, fonts and video) started at the same
-     time as the 3D scene's ~5 MB and made a first visit slow. They now wait until the scene is up (or has given up,
-     or 12 s have passed). */
-  function afterParliament(cb){
-    var waited = 0;
-    (function poll(){
-      if(Parl.p3d || Parl.mode !== '3d' || waited >= 12000){ setTimeout(cb, 300); return; }
-      waited += 250; setTimeout(poll, 250);
-    })();
-  }
-  /* No GPU: three live websites rendered on the CPU are the heaviest thing on the page, so they start only when the
-     showcase is about to be seen (as soon as it scrolls into view), not at page load. */
-  if(window.AIS_SOFT_GL){
-    var sc = document.getElementById('showcase');
-    if(sc && 'IntersectionObserver' in window){
-      var io = new IntersectionObserver(function(en){ if(en[0].isIntersecting){ io.disconnect(); loadFrames(); } }, {rootMargin:'0px 0px -80px 0px'});
-      io.observe(sc);
-    } else window.addEventListener('scroll', function(){ loadFrames(); }, {once:true, passive:true});
-    return;
-  }
-  if(!window.matchMedia('(max-width:1024px), (pointer:coarse)').matches){ afterParliament(loadFrames); return; }
+  /* Desktop: start right away (nothing heavy competes with them any more). */
+  if(!window.matchMedia('(max-width:1024px), (pointer:coarse)').matches){ loadFrames(); return; }
   function whenIdle(){
-    afterParliament(function(){
-      if(window.requestIdleCallback) window.requestIdleCallback(loadFrames, {timeout:2500});
-      else setTimeout(loadFrames, 1200);
-    });
+    if(window.requestIdleCallback) window.requestIdleCallback(loadFrames, {timeout:2500});
+    else setTimeout(loadFrames, 1200);
   }
   if(document.readyState === 'complete') whenIdle();
   else window.addEventListener('load', whenIdle, {once:true});
@@ -2763,7 +2476,7 @@ stack.addEventListener('click', function(){
    (where `persisted` is true), so unconditionally clearing everything
    enterSite() touches here is a cheap, safe reset either way. */
 window.addEventListener('pageshow', function(){
-  if(Parl.p3d && !Parl.p3lost){ Parl.lastT = 0; parlKick(); }
+
   isAnimating = false;
   warp.classList.remove('active');
   [document.querySelector('header.nav'), stage.querySelector('.eyebrow-wrap'), headline,
@@ -2833,31 +2546,6 @@ function attachSideTilt(sideEl){
 }
 attachSideTilt(sideLeft);
 attachSideTilt(sideRight);
-
-/* ---------------- custom cursor: dot + lagging ring ---------------- */
-(function(){
-  var fine = window.matchMedia('(pointer: fine)').matches;
-  if(!fine || reduceMotion) return;
-  var dot = document.getElementById('cursorDot');
-  var ring = document.getElementById('cursorRing');
-  document.body.classList.add('cursor-ready');
-  var mx = -100, my = -100, rx = -100, ry = -100, shown = false;
-  window.addEventListener('mousemove', function(e){
-    mx = e.clientX; my = e.clientY;
-    dot.style.transform = 'translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
-    if(!shown){ shown = true; document.body.classList.add('cursor-visible'); }
-  });
-  window.addEventListener('mouseover', function(e){
-    var t = e.target.closest && e.target.closest('a, button, [data-cursor]');
-    ring.classList.toggle('active', Boolean(t));
-  });
-  (function loop(){
-    rx += (mx - rx) * 0.18;
-    ry += (my - ry) * 0.18;
-    ring.style.transform = 'translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';
-    requestAnimationFrame(loop);
-  })();
-})();
 
 /* ---------------- mobile menu ---------------- */
 function setMenu(open){
@@ -2956,8 +2644,6 @@ if(!reduceMotion){
       tops[i] = revealEls[i].getBoundingClientRect().top - (revealEls[i].__revealOffset || 0);
     }
 
-    if(Parl.mode !== 'off') parlAim(sy, vh, docH);
-
     /* --- writes --- */
     if(scrollProgressBar) scrollProgressBar.style.width = (docH > 0 ? Math.min(100, sy / docH * 100) : 0).toFixed(2) + '%';
 
@@ -2966,7 +2652,6 @@ if(!reduceMotion){
       lastHeroP = heroP;
       hero.style.opacity = String(Math.max(0, 1 - heroP * 1.25));
       hero.style.transform = 'translateY(' + (heroP * 70).toFixed(1) + 'px) scale(' + (1 - heroP * 0.05).toFixed(3) + ')';
-      if(tagline) tagline.style.setProperty('--p', heroP.toFixed(4));
     }
 
     if(orbitWrap) orbitWrap.style.transform = 'rotate(' + (sy * 0.025).toFixed(2) + 'deg)';
@@ -3013,10 +2698,9 @@ function startHeroEntrance(){
     setTimeout(function(){ hero.classList.remove('enter','run'); }, 1600);
   }
 }
-window.aisHeroEnter = startHeroEntrance; /* called by the loading screen as it fades out */
 requestAnimationFrame(function(){
   document.body.classList.add('ready');
-  if(window.aisLoaderDone || !document.getElementById('loader')) startHeroEntrance();
+  startHeroEntrance();
 });
 
 /* ---------------- showcase entrance: plays once, the first time

@@ -112,7 +112,7 @@ function runNet(){
   ping(1).then(function(){ return ping(2); }).then(function(){ return ping(3); }).then(function(){
     net.rtt = median(rtts);
     var t = now();
-    return fetch('/alexstudio/tex/stone_c.jpg?diag=' + tag, {cache: 'no-store'}).then(function(r){ return r.arrayBuffer(); }).then(function(b){
+    return fetch('/media/hero-bg.mp4?diag=' + tag, {cache: 'no-store'}).then(function(r){ return r.arrayBuffer(); }).then(function(b){
       net.bytes = b.byteLength; net.mbps = b.byteLength * 8 / 1e6 / Math.max(.001, (now() - t) / 1000);
     }).catch(function(){ net.mbps = -1; });
   }).then(function(){
