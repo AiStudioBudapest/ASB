@@ -444,7 +444,8 @@ header.nav{
   font-size:calc(10*var(--u));color:var(--muted);display:flex;align-items:center;padding:0 calc(12*var(--u));
   letter-spacing:.03em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
-.frame-view{position:relative;width:100%;aspect-ratio:16/10.2;overflow:hidden;background:#0b0d10;}
+.frame-view{position:relative;width:100%;aspect-ratio:16/10.2;overflow:hidden;background:linear-gradient(135deg,#0d0a1c,#17102e);}
+.frame-view.frame-off iframe{visibility:hidden;}
 .frame-view iframe{
   position:absolute;top:0;left:0;border:0;pointer-events:none;
   width:var(--dw-px);height:var(--dh-px);
@@ -862,6 +863,12 @@ html.pm-open{overflow:hidden;}
   /* a full-screen mix-blend-mode layer over a playing video is one of the
      most expensive things a mobile GPU can be asked to do, for a 5% noise. */
   .grain{display:none;}
+}
+/* Touch screens: no permanent compositor layers for the scroll-reveal cards (dozens of them) and static stars; fast scrolling
+   on a phone was crashing the tab (memory). The reveal itself still runs, it just does not keep every card on its own layer. */
+@media (pointer:coarse), (max-width:820px){
+  .band-reveal{will-change:auto;}
+  .particles i{animation:none;opacity:.3;}
 }
 /* Phones: the decorative extras cost far more than they add on a small
    screen. The orbit rings alone are two ~1000px rotating layers (tens of MB
@@ -1901,6 +1908,8 @@ var lastViewW = window.innerWidth;
 var isCoarse = window.matchMedia('(pointer:coarse)').matches;
 var featured = 'premium';
 var isAnimating = false;
+var liteFrames = false;            /* phones/tablets: only the featured demo iframe is alive, see the iframe block below */
+var syncLiveFrames = function(){};
 
 var hero = document.querySelector('.hero');
 var tagline = document.querySelector('.tagline');
@@ -2183,6 +2192,7 @@ function show(next, newLeft, newRight){
       pending -= 1;
       if(pending <= 0){
         isAnimating = false;
+        syncLiveFrames();
         headlineGroup.classList.remove('enter','run');
       }
     };
@@ -2375,12 +2385,31 @@ applyLang(currentLang);
   }
   /* Desktop: start right away (nothing heavy competes with them any more). */
   if(!window.matchMedia('(max-width:1024px), (pointer:coarse)').matches){ loadFrames(); return; }
-  function whenIdle(){
-    if(window.requestIdleCallback) window.requestIdleCallback(loadFrames, {timeout:2500});
-    else setTimeout(loadFrames, 1200);
+  /* Phones / tablets / touch: each demo is a whole 1440 px website (the Prémium one with animations and a video) drawn
+     scaled down. Three of them alive at once, plus the page's own scroll effects, exhausted the memory of phones and the
+     browser tab crashed when the page was scrolled fast. So only ONE demo is ever alive: the featured (centre) one, and
+     only while the showcase is near the screen. The others stay empty (dark placeholder) until they are brought to the
+     centre; scrolling far away unloads the live one. data-src always keeps each demo's URL. */
+  liteFrames = true;
+  var near = false;
+  function frameOf(key){ return projectEls[key] && projectEls[key].querySelector('iframe'); }
+  function setLive(key, on){
+    var f = frameOf(key); if(!f) return;
+    var url = f.getAttribute('data-src'), cur = f.getAttribute('src');
+    var live = !!cur && cur !== 'about:blank';
+    if(on && !live){ f.setAttribute('src', url); }
+    else if(!on && live){ f.setAttribute('src', 'about:blank'); }
+    var view = f.parentNode; if(view && view.classList) view.classList.toggle('frame-off', !on);
   }
-  if(document.readyState === 'complete') whenIdle();
-  else window.addEventListener('load', whenIdle, {once:true});
+  syncLiveFrames = function(){
+    ORDER.forEach(function(k){ setLive(k, near && !isAnimating && k === featured); });
+  };
+  ORDER.forEach(function(k){ var f = frameOf(k); if(f && f.parentNode) f.parentNode.classList.add('frame-off'); });
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){ near = en[0].isIntersecting; syncLiveFrames(); }, {rootMargin: '25% 0px -8% 0px'}).observe(stage);
+  } else {
+    near = true; window.addEventListener('load', syncLiveFrames, {once:true});
+  }
 })();
 
 /* ---------------- language switcher: desktop dropdown + mobile button
