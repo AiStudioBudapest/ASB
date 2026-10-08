@@ -305,12 +305,7 @@ header.nav{
 .hero-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(70*var(--u));}
 .tagline{font-family:var(--display);font-weight:400;font-size:clamp(38px,6.6vw,104px);line-height:1.02;letter-spacing:-0.024em;margin:0;color:var(--text);max-width:15em;text-wrap:balance;}
 .tagline .nobr{white-space:nowrap;}
-.tagline .grad{background-image:linear-gradient(to left,#6366f1,#a855f7,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
-#contactTitle .grad{background-image:linear-gradient(90deg,#a5f3fc,#c4b5fd,#f9a8d4,#fde68a,#a5f3fc);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;animation:grad-shift 5s linear infinite;filter:drop-shadow(0 0 14px rgba(196,181,253,.45));}
-@keyframes grad-shift{to{background-position:-300% 0;}}
-@media (prefers-reduced-motion:reduce){#contactTitle .grad{animation:none;}}
-@media (max-width:820px){#contactTitle .grad{filter:none;}}
-html.soft-gl #contactTitle .grad{animation:none;filter:none;}
+.tagline .grad,#contactTitle .grad{background-image:linear-gradient(to left,#6366f1,#a855f7,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
 .hero-sub{margin:calc(14*var(--u)) 0 0;color:var(--hero-sub);opacity:.8;font-size:clamp(16px,1.35vw,19px);line-height:1.75;max-width:36rem;}
 .hero-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:calc(26*var(--u));padding:calc(18*var(--u)) calc(30*var(--u));min-height:48px;border-radius:999px;color:var(--text);font-size:clamp(14px,1.1vw,16px);font-weight:500;letter-spacing:.01em;transition:background .25s var(--ease),transform .25s var(--ease);}
 @media (hover:hover){.hero-cta:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}}
