@@ -305,7 +305,7 @@ header.nav{
 .hero-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(120*var(--u)) var(--gutter) calc(70*var(--u));}
 .tagline{font-family:var(--display);font-weight:400;font-size:clamp(38px,6.6vw,104px);line-height:1.02;letter-spacing:-0.024em;margin:0;color:var(--text);max-width:15em;text-wrap:balance;}
 .tagline .nobr{white-space:nowrap;}
-.tagline .grad{background-image:linear-gradient(to left,#6366f1,#a855f7,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.tagline .grad,#contactTitle .grad{background-image:linear-gradient(to left,#6366f1,#a855f7,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
 .hero-sub{margin:calc(14*var(--u)) 0 0;color:var(--hero-sub);opacity:.8;font-size:clamp(16px,1.35vw,19px);line-height:1.75;max-width:36rem;}
 .hero-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:calc(26*var(--u));padding:calc(18*var(--u)) calc(30*var(--u));min-height:48px;border-radius:999px;color:var(--text);font-size:clamp(14px,1.1vw,16px);font-weight:500;letter-spacing:.01em;transition:background .25s var(--ease),transform .25s var(--ease);}
 @media (hover:hover){.hero-cta:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}}
@@ -1298,7 +1298,7 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
 <section class="band" id="contact">
   <div class="band-head band-reveal">
     <span class="eyebrow" data-i18n="contactEyebrow">Kapcsolat</span>
-    <h2 data-i18n="contactH2">Építsünk valami prémiumot</h2>
+    <h2 id="contactTitle">Építsünk valami <span class="grad">egyedit</span></h2>
     <p data-i18n="contactP">Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.</p>
   </div>
   <div class="contact band-reveal">
@@ -1495,7 +1495,7 @@ hu:{
   detailQuote:"Ajánlatkérés",
   detailClose:"Bezárás",
   detailOption:"Opció",
-  contactEyebrow:'Kapcsolat', contactH2:'Építsünk valami prémiumot',
+  contactEyebrow:'Kapcsolat', contactH2:'Építsünk valami egyedit', contactH2Accent:'egyedit',
   contactP:'Mesélj a vállalkozásodról, és javaslok egy hozzá illő szintet — Esszencia, Presztízs vagy Prémium.',
   formDivider:"A te projekted itt kezdődik.", formName:'Neved', formEmail:'E-mail címed',
   formMessage:'Mesélj a projektedről vagy a kérdésedről…', formMessageLabel:'Üzeneted', legalImpressum:'Impresszum', legalPrivacy:'Adatvédelmi tájékoztató', legalTerms:'ÁSZF', legalCookies:'Cookie-tájékoztató', formSubmit:'Üzenet küldése', formSending:'Küldés…',
@@ -1591,7 +1591,7 @@ en:{
   detailQuote:"Request a quote",
   detailClose:"Close",
   detailOption:"Option",
-  contactEyebrow:'Contact', contactH2:"Let's build something premium",
+  contactEyebrow:'Contact', contactH2:"Let's build something unique", contactH2Accent:'unique',
   contactP:"Tell me about your business and I'll recommend the right tier — Esszencia, Presztízs, or Prémium.",
   formDivider:"Your project starts here.", formName:'Your name', formEmail:'Your email',
   formMessage:'Tell us about your project or question…', formMessageLabel:'Your message', legalImpressum:'Legal notice', legalPrivacy:'Privacy notice', legalTerms:'Terms', legalCookies:'Cookie notice', formSubmit:'Send message', formSending:'Sending…',
@@ -1687,7 +1687,7 @@ fr:{
   detailQuote:"Demander un devis",
   detailClose:"Fermer",
   detailOption:"Option",
-  contactEyebrow:'Contact', contactH2:'Construisons quelque chose de premium',
+  contactEyebrow:'Contact', contactH2:"Construisons quelque chose d'unique", contactH2Accent:"d'unique",
   contactP:"Parlez-moi de votre entreprise, et je vous recommanderai la formule adaptée — Esszencia, Presztízs ou Prémium.",
   formDivider:"Votre projet commence ici.", formName:'Votre nom', formEmail:'Votre e-mail',
   formMessage:'Parlez-nous de votre projet ou de votre question…', formMessageLabel:'Votre message', legalImpressum:'Mentions légales', legalPrivacy:'Confidentialité', legalTerms:'Conditions générales', legalCookies:'Cookies', formSubmit:'Envoyer le message', formSending:'Envoi…',
@@ -1783,7 +1783,7 @@ es:{
   detailQuote:"Pedir presupuesto",
   detailClose:"Cerrar",
   detailOption:"Opción",
-  contactEyebrow:'Contacto', contactH2:'Construyamos algo prémium',
+  contactEyebrow:'Contacto', contactH2:'Construyamos algo único', contactH2Accent:'único',
   contactP:'Cuéntame sobre tu negocio y te recomendaré el nivel adecuado — Esszencia, Presztízs o Prémium.',
   formDivider:"Tu proyecto empieza aquí.", formName:'Tu nombre', formEmail:'Tu correo electrónico',
   formMessage:'Cuéntanos sobre tu proyecto o tu pregunta…', formMessageLabel:'Tu mensaje', legalImpressum:'Aviso legal', legalPrivacy:'Privacidad', legalTerms:'Condiciones', legalCookies:'Cookies', formSubmit:'Enviar mensaje', formSending:'Enviando…',
@@ -1879,7 +1879,7 @@ de:{
   detailQuote:"Angebot anfragen",
   detailClose:"Schließen",
   detailOption:"Option",
-  contactEyebrow:'Kontakt', contactH2:'Lass uns etwas Premium bauen',
+  contactEyebrow:'Kontakt', contactH2:'Lass uns etwas Einzigartiges bauen', contactH2Accent:'Einzigartiges',
   contactP:'Erzähl mir von deinem Unternehmen, und ich empfehle dir die passende Stufe — Esszencia, Presztízs oder Prémium.',
   formDivider:"Dein Projekt beginnt hier.", formName:'Dein Name', formEmail:'Deine E-Mail',
   formMessage:'Erzähl uns von deinem Projekt oder deiner Frage…', formMessageLabel:'Deine Nachricht', legalImpressum:'Impressum', legalPrivacy:'Datenschutz', legalTerms:'AGB', legalCookies:'Cookies', formSubmit:'Nachricht senden', formSending:'Wird gesendet…',
@@ -1960,6 +1960,16 @@ function renderTagline(){
 /* The gradient part ("la première impression") must stay on ONE line, so it is unbreakable (white-space:nowrap in CSS).
    If it is wider than the headline box (small phone, long translation) the headline font is reduced until it fits;
    under a readable minimum the accent is allowed to wrap again rather than being cut off. */
+function renderContactTitle(){
+  var h = document.getElementById('contactTitle'); if(!h) return;
+  var tx = T[currentLang], full = tx.contactH2, acc = tx.contactH2Accent, i = acc ? full.indexOf(acc) : -1;
+  h.textContent = '';
+  if(i < 0){ h.textContent = full; return; }
+  h.appendChild(document.createTextNode(full.slice(0, i)));
+  var g = document.createElement('span'); g.className = 'grad'; g.textContent = acc;
+  h.appendChild(g);
+  h.appendChild(document.createTextNode(full.slice(i + acc.length)));
+}
 function fitTagline(){
   if(!tagline) return;
   tagline.style.fontSize = '';
@@ -2382,6 +2392,7 @@ function applyLang(lang){
   if(subjectInput) subjectInput.value = T[lang].formSubject;
 
   renderTagline();
+  renderContactTitle();
   renderPricing();
   renderFaq();
   if(typeof pm !== 'undefined' && pm && !pm.hidden && pmKey) renderProject(pmKey);
