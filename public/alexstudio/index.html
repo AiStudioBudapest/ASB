@@ -641,20 +641,32 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
 .pricing-shop{--gold:#fcd34d;max-width:calc(1100*var(--u));margin:calc(20*var(--u)) auto 0;display:flex;align-items:center;justify-content:space-between;gap:calc(32*var(--u));
   padding:calc(22*var(--u)) calc(30*var(--u));border-radius:calc(16*var(--u));border:1.5px solid rgba(252,211,77,.8);
   background:linear-gradient(135deg,rgba(252,211,77,.14),rgba(252,211,77,.05)),rgba(6,8,16,.82);}
-.shop-main{display:flex;align-items:center;gap:calc(18*var(--u));min-width:0;}
-.shop-icon{flex:none;width:calc(34*var(--u));height:calc(34*var(--u));color:var(--gold);}
-.shop-tag{display:block;font-size:calc(12*var(--u));letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--gold);margin-bottom:calc(5*var(--u));}
-.pricing-shop .shop-lead{margin:0;font-size:calc(15*var(--u));line-height:1.55;color:#fff;font-weight:500;max-width:36ch;text-wrap:balance;}
+.shop-main{flex:1 1 0;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"icon tag" "icon lead";
+  column-gap:calc(18*var(--u));row-gap:calc(5*var(--u));align-items:center;}
+.shop-icon{grid-area:icon;width:calc(34*var(--u));height:calc(34*var(--u));color:var(--gold);}
+.shop-tag{grid-area:tag;align-self:end;font-size:calc(12*var(--u));letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--gold);}
+/* The question line ("Vous voulez vendre des produits sur votre site ?") must never wrap: each line is nowrap and
+   fitShopLead() (JS) shrinks the font just enough on narrow screens. */
+.pricing-shop .shop-lead{grid-area:lead;align-self:start;margin:0;min-width:0;font-size:calc(15*var(--u));line-height:1.55;color:#fff;font-weight:500;}
+.shop-lead span{display:block;white-space:nowrap;}
 .shop-amounts{flex:none;display:flex;gap:calc(28*var(--u));}
 .shop-amount{display:flex;flex-direction:column;gap:calc(2*var(--u));padding-left:calc(28*var(--u));border-left:1px solid rgba(252,211,77,.35);}
 .shop-amount strong{font-size:calc(23*var(--u));color:var(--gold);font-weight:700;white-space:nowrap;}
 .shop-amount span{font-size:calc(13.5*var(--u));color:#e6e9ee;max-width:26ch;text-wrap:balance;}
-@media (max-width:980px){
-  .pricing-shop{flex-direction:column;align-items:stretch;gap:calc(16*var(--u));padding:calc(22*var(--u)) calc(22*var(--u));}
-  .shop-amounts{flex-direction:column;gap:0;}
-  .shop-amount{padding:calc(12*var(--u)) 0 0;margin-top:calc(12*var(--u));border-left:0;border-top:1px solid rgba(252,211,77,.3);}
-  .shop-amount:first-child{margin-top:0;}
+@media (max-width:1180px){
+  .pricing-shop{flex-direction:column;align-items:stretch;gap:calc(16*var(--u));padding:calc(22*var(--u));}
+  .shop-main{flex:none;}
+  .shop-amounts{gap:0;padding-top:calc(16*var(--u));border-top:1px solid rgba(252,211,77,.3);}
+  .shop-amount{flex:1 1 0;padding:0 calc(20*var(--u));}
+  .shop-amount:first-child{padding-left:0;border-left:0;}
   .shop-amount span{max-width:none;}
+}
+@media (max-width:640px){
+  .pricing-shop{padding:calc(20*var(--u)) calc(16*var(--u));}
+  .shop-main{grid-template-areas:"icon tag" "lead lead";row-gap:calc(10*var(--u));}
+  .shop-amounts{flex-direction:column;}
+  .shop-amount{padding:0;border-left:0;}
+  .shop-amount + .shop-amount{margin-top:calc(12*var(--u));padding-top:calc(12*var(--u));border-top:1px solid rgba(252,211,77,.3);}
 }
 .pricing-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(13*var(--u));}
 .pricing-card li{position:relative;padding-left:calc(22*var(--u));color:var(--muted);font-size:calc(14.5*var(--u));line-height:1.5;}
@@ -1200,10 +1212,8 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
   <div class="pricing-shop band-reveal" id="pricingShop">
     <div class="shop-main">
       <svg class="shop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2 11h10.6l2-8H6.4"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>
-      <div>
-        <span class="shop-tag" data-i18n="shopTag">Webshop</span>
-        <p class="shop-lead" data-i18n="shopLead">Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell:</p>
-      </div>
+      <span class="shop-tag" data-i18n="shopTag">Webshop</span>
+      <p class="shop-lead"><span class="shop-q" data-i18n="shopQ">Ha termékeket szeretnél árulni a weboldaladon,</span><span class="shop-a" data-i18n="shopA">kötelezően a Prémium csomag kell:</span></p>
     </div>
     <div class="shop-amounts">
       <div class="shop-amount"><strong data-i18n="shopPlusAmt">+&nbsp;49&nbsp;900&nbsp;Ft</strong><span data-i18n="shopPlus">felár a csomag árára</span></div>
@@ -1478,7 +1488,8 @@ hu:{
   addonDesc:'Bármelyik csomaghoz kérhető: egy profi fotós elkészíti a vállalkozásod fotóit, így a weboldalad professzionális fotókkal és videókkal jelenik meg.',
   addonPrice:'Ár kérésre', addonCta:'Ajánlatkérés',
   shopTag:'Webshop',
-  shopLead:'Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell:',
+  shopQ:'Ha termékeket szeretnél árulni a weboldaladon,',
+  shopA:'kötelezően a Prémium csomag kell:',
   shopPlusAmt:'+\u00a049\u00a0900\u00a0Ft', shopMaintAmt:'49\u00a0990\u00a0Ft/hó',
   shopPlus:'felár a csomag árára',
   shopMaint:'karbantartás, 34\u00a0990 helyett',
@@ -1579,7 +1590,8 @@ en:{
   addonDesc:'Available with any tier: a professional photographer takes photos of your business, so your website launches with professional photos and videos.',
   addonPrice:'Price on request', addonCta:'Request a quote',
   shopTag:'Online shop',
-  shopLead:'Want to sell products on your website? The Premium tier is required:',
+  shopQ:'Want to sell products on your website?',
+  shopA:'The Premium tier is required:',
   shopPlusAmt:'+\u00a049,900\u00a0Ft', shopMaintAmt:'49,990\u00a0Ft/month',
   shopPlus:'surcharge on the plan price',
   shopMaint:'maintenance, instead of 34,990\u00a0Ft',
@@ -1680,7 +1692,8 @@ fr:{
   addonDesc:"Disponible avec toutes les formules : un photographe professionnel réalise les photos de votre entreprise, pour que votre site soit mis en ligne avec des photos et vidéos professionnelles.",
   addonPrice:'Prix sur demande', addonCta:'Demander un devis',
   shopTag:'Boutique en ligne',
-  shopLead:'Vous voulez vendre des produits sur votre site ? La formule Premium est obligatoire :',
+  shopQ:'Vous voulez vendre des produits sur votre site\u00a0?',
+  shopA:'La formule Premium est obligatoire\u00a0:',
   shopPlusAmt:'+\u00a049\u00a0900\u00a0Ft', shopMaintAmt:'49\u00a0990\u00a0Ft/mois',
   shopPlus:'de supplément sur le prix de la formule',
   shopMaint:'de maintenance par mois, au lieu de 34\u00a0990\u00a0Ft',
@@ -1781,7 +1794,8 @@ es:{
   addonDesc:'Disponible con cualquier plan: un fotógrafo profesional hace las fotos de tu negocio, para que tu web se publique con fotos y vídeos profesionales.',
   addonPrice:'Precio a consultar', addonCta:'Pedir presupuesto',
   shopTag:'Tienda online',
-  shopLead:'¿Quieres vender productos en tu web? El plan Premium es obligatorio:',
+  shopQ:'¿Quieres vender productos en tu web?',
+  shopA:'El plan Premium es obligatorio:',
   shopPlusAmt:'+\u00a049\u00a0900\u00a0Ft', shopMaintAmt:'49\u00a0990\u00a0Ft/mes',
   shopPlus:'de suplemento sobre el precio del plan',
   shopMaint:'de mantenimiento al mes, en lugar de 34\u00a0990\u00a0Ft',
@@ -1882,7 +1896,8 @@ de:{
   addonDesc:'Bei jedem Paket buchbar: Ein professioneller Fotograf erstellt die Fotos deines Unternehmens, damit deine Website mit professionellen Fotos und Videos online geht.',
   addonPrice:'Preis auf Anfrage', addonCta:'Angebot anfordern',
   shopTag:'Onlineshop',
-  shopLead:'Möchtest du auf deiner Website Produkte verkaufen? Dafür ist das Premium-Paket Pflicht:',
+  shopQ:'Möchtest du auf deiner Website Produkte verkaufen?',
+  shopA:'Dafür ist das Premium-Paket Pflicht:',
   shopPlusAmt:'+\u00a049.900\u00a0Ft', shopMaintAmt:'49.990\u00a0Ft/Monat',
   shopPlus:'Aufpreis auf den Paketpreis',
   shopMaint:'Wartung, statt 34.990\u00a0Ft',
@@ -2057,6 +2072,30 @@ function fitTagline(){
     lastW = window.innerWidth; clearTimeout(t); t = setTimeout(fitTagline, 120);
   });
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTagline); /* font metrics change once the web font is in */
+})();
+/* Online-shop banner: its question line ("Vous voulez vendre des produits sur votre site ?") must never wrap. It is
+   unbreakable in CSS (white-space:nowrap); when it is wider than its column (small phone, long translation) the font
+   is reduced just enough to fit, down to 11 px; under that the lines may wrap again rather than run off the screen. */
+function fitShopLead(){
+  var lead = document.querySelector('#pricingShop .shop-lead');
+  if(!lead) return;
+  var lines = lead.querySelectorAll('span');
+  lead.style.fontSize = '';
+  lines.forEach(function(l){ l.style.whiteSpace = ''; });
+  var avail = lead.clientWidth, need = 0;
+  lines.forEach(function(l){ need = Math.max(need, l.scrollWidth); });
+  if(!avail || need <= avail) return;
+  var size = parseFloat(getComputedStyle(lead).fontSize) * avail / need * 0.985;
+  if(size < 11){ size = 11; lines.forEach(function(l){ l.style.whiteSpace = 'normal'; }); }
+  lead.style.fontSize = size.toFixed(1) + 'px';
+}
+(function(){
+  var lastW = window.innerWidth, t = 0;
+  window.addEventListener('resize', function(){
+    if(window.innerWidth === lastW) return;
+    lastW = window.innerWidth; clearTimeout(t); t = setTimeout(fitShopLead, 120);
+  });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitShopLead);
 })();
 /* Background video: opacity is driven here, not by CSS. 0.5 s fade-in at the start, 0.5 s fade-out at the end; on "ended"
    it goes back to 0, waits 100 ms and replays from 0. No overlay gradient on the video. It is not loaded at all for
@@ -2461,6 +2500,7 @@ function applyLang(lang){
   renderTagline();
   renderContactTitle();
   renderPricing();
+  fitShopLead();
   renderFaq();
   if(typeof pm !== 'undefined' && pm && !pm.hidden && pmKey) renderProject(pmKey);
   refreshRevealEls();
