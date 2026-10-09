@@ -602,6 +602,9 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
   overflow-wrap:anywhere;}
 .band-head p{color:var(--muted);margin-top:calc(14*var(--u));font-size:calc(15*var(--u));}
 .band-head .process-lead{margin-bottom:0;}
+/* Pricing sub-title on ONE line on desktop: the default 640u-wide .band-head wrapped it onto two lines. */
+#pricing .band-head{max-width:calc(1100*var(--u));}
+@media (min-width:1000px){#pricing .band-head .pricing-lead{white-space:nowrap;}}
 .band-head .process-sub{margin-top:calc(2*var(--u));margin-bottom:0;}
 
 .services-grid{max-width:calc(1100*var(--u));margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));}
@@ -632,17 +635,27 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
   border-radius:calc(14*var(--u));padding:calc(9*var(--u)) calc(16*var(--u));margin:0 0 calc(24*var(--u));}
 .pricing-card .maint-rate{font-size:calc(14.5*var(--u));font-weight:600;letter-spacing:.015em;}
 .pricing-card .maint-note{font-size:calc(12.5*var(--u));font-weight:500;letter-spacing:.01em;opacity:.82;}
-/* "Online shop" condition, inside the Premium card. Warm gold (hero gradient's yellow) + cart icon on purpose: the
-   photographer add-on below is cyan/dashed, and the two must not read as the same kind of box. No glow. */
-.pricing-card .card-shop{--gold:#fcd34d;margin:0 0 calc(18*var(--u));padding:calc(16*var(--u)) calc(18*var(--u));border-radius:calc(14*var(--u));
-  border:1.5px solid rgba(252,211,77,.8);background:linear-gradient(180deg,rgba(252,211,77,.14),rgba(252,211,77,.05));}
-.pricing-card .card-shop-head{display:flex;align-items:center;gap:calc(9*var(--u));margin-bottom:calc(8*var(--u));color:var(--gold);}
-.pricing-card .card-shop-head svg{flex:none;width:calc(22*var(--u));height:calc(22*var(--u));}
-.pricing-card .card-shop-tag{font-size:calc(12*var(--u));letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--gold);}
-.pricing-card .card-shop-lead{margin:0 0 calc(10*var(--u));font-size:calc(14.5*var(--u));line-height:1.5;color:#fff;font-weight:500;}
-.pricing-card .card-shop-row{display:flex;flex-direction:column;gap:calc(1*var(--u));padding:calc(8*var(--u)) 0;border-top:1px solid rgba(252,211,77,.3);}
-.pricing-card .card-shop-row strong{font-size:calc(21*var(--u));color:var(--gold);font-weight:700;}
-.pricing-card .card-shop-row span{font-size:calc(13.5*var(--u));color:#e6e9ee;}
+/* "Online shop" condition: full-width gold banner right under the three tiers. It used to sit inside the Premium card,
+   which made the two other cards stretch to the same height. Gold + cart on purpose: the photographer add-on below
+   is cyan/dashed and the two must not read as the same kind of box. No glow, no button. */
+.pricing-shop{--gold:#fcd34d;max-width:calc(1100*var(--u));margin:calc(20*var(--u)) auto 0;display:flex;align-items:center;justify-content:space-between;gap:calc(32*var(--u));
+  padding:calc(22*var(--u)) calc(30*var(--u));border-radius:calc(16*var(--u));border:1.5px solid rgba(252,211,77,.8);
+  background:linear-gradient(135deg,rgba(252,211,77,.14),rgba(252,211,77,.05)),rgba(6,8,16,.82);}
+.shop-main{display:flex;align-items:center;gap:calc(18*var(--u));min-width:0;}
+.shop-icon{flex:none;width:calc(34*var(--u));height:calc(34*var(--u));color:var(--gold);}
+.shop-tag{display:block;font-size:calc(12*var(--u));letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--gold);margin-bottom:calc(5*var(--u));}
+.pricing-shop .shop-lead{margin:0;font-size:calc(15*var(--u));line-height:1.55;color:#fff;font-weight:500;max-width:36ch;text-wrap:balance;}
+.shop-amounts{flex:none;display:flex;gap:calc(28*var(--u));}
+.shop-amount{display:flex;flex-direction:column;gap:calc(2*var(--u));padding-left:calc(28*var(--u));border-left:1px solid rgba(252,211,77,.35);}
+.shop-amount strong{font-size:calc(23*var(--u));color:var(--gold);font-weight:700;white-space:nowrap;}
+.shop-amount span{font-size:calc(13.5*var(--u));color:#e6e9ee;max-width:26ch;text-wrap:balance;}
+@media (max-width:980px){
+  .pricing-shop{flex-direction:column;align-items:stretch;gap:calc(16*var(--u));padding:calc(22*var(--u)) calc(22*var(--u));}
+  .shop-amounts{flex-direction:column;gap:0;}
+  .shop-amount{padding:calc(12*var(--u)) 0 0;margin-top:calc(12*var(--u));border-left:0;border-top:1px solid rgba(252,211,77,.3);}
+  .shop-amount:first-child{margin-top:0;}
+  .shop-amount span{max-width:none;}
+}
 .pricing-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(13*var(--u));}
 .pricing-card li{position:relative;padding-left:calc(22*var(--u));color:var(--muted);font-size:calc(14.5*var(--u));line-height:1.5;}
 .pricing-card li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;
@@ -1145,7 +1158,7 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
   <div class="band-head band-reveal">
     <span class="eyebrow" data-i18n="pricingEyebrow">Csomagok és árak</span>
     <h2 data-i18n="pricingH2">Három szint, egyértelmű árakkal</h2>
-    <p data-i18n="pricingP">Válaszd a vállalkozásodhoz illő szintet — mindegyik rögzített tartalommal, nem induló ártól.</p>
+    <p class="pricing-lead" data-i18n="pricingP">Válaszd a vállalkozásodhoz illő szintet — mindegyik rögzített tartalommal, nem induló ártól.</p>
   </div>
   <div class="pricing-grid">
     <div class="pricing-card band-reveal">
@@ -1174,15 +1187,6 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
       <h3>Prémium</h3>
       <div class="price">349&nbsp;900&nbsp;Ft</div>
       <p class="maint" id="pricingPremMaint"><span class="maint-rate">+ 34&nbsp;990&nbsp;Ft/hó karbantartás</span><span class="maint-note">(2 hét ingyenes)</span></p>
-      <div class="card-shop" id="pricingShop">
-        <div class="card-shop-head">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2 11h10.6l2-8H6.4"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>
-          <span class="card-shop-tag" data-i18n="shopTag">Webshop</span>
-        </div>
-        <p class="card-shop-lead" data-i18n="shopLead">Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell:</p>
-        <div class="card-shop-row"><strong data-i18n="shopPlusAmt">+ 49&nbsp;900&nbsp;Ft</strong><span data-i18n="shopPlus">felár a csomag árára</span></div>
-        <div class="card-shop-row"><strong data-i18n="shopMaintAmt">49&nbsp;990&nbsp;Ft/hó</strong><span data-i18n="shopMaint">karbantartás, 34&nbsp;990 helyett</span></div>
-      </div>
       <ul id="pricingPremList">
         <li>Minden, ami a Presztízsben</li>
         <li>5 vagy több oldal</li>
@@ -1191,6 +1195,19 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
         <li>Vendégértékelések</li>
         <li>Egyedi dizájn és animációk</li>
       </ul>
+    </div>
+  </div>
+  <div class="pricing-shop band-reveal" id="pricingShop">
+    <div class="shop-main">
+      <svg class="shop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2 11h10.6l2-8H6.4"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>
+      <div>
+        <span class="shop-tag" data-i18n="shopTag">Webshop</span>
+        <p class="shop-lead" data-i18n="shopLead">Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell:</p>
+      </div>
+    </div>
+    <div class="shop-amounts">
+      <div class="shop-amount"><strong data-i18n="shopPlusAmt">+&nbsp;49&nbsp;900&nbsp;Ft</strong><span data-i18n="shopPlus">felár a csomag árára</span></div>
+      <div class="shop-amount"><strong data-i18n="shopMaintAmt">49&nbsp;990&nbsp;Ft/hó</strong><span data-i18n="shopMaint">karbantartás, 34&nbsp;990 helyett</span></div>
     </div>
   </div>
   <div class="pricing-addon band-reveal" id="pricingAddon">
@@ -1453,18 +1470,18 @@ hu:{
   pricingEsszFeatures:['1 oldalas weboldal','Bemutatkozás és elérhetőségek','Nyitvatartás és fotók'],
   pricingPresztFeatures:['Minden, ami az Esszenciában','2 oldalas weboldal','Online időpontfoglalás','Fotógaléria','Kapcsolati űrlap'],
   pricingPremFeatures:['Minden, ami a Presztízsben','5 vagy több oldal','Több szolgáltatás bemutatása','Blog','Vendégértékelések','Egyedi dizájn és animációk'],
-  pricingEsszMaint:{rate:'+ 14 990 Ft/hó karbantartás', note:'az indulástól'},
-  pricingPresztMaint:{rate:'+ 19 990 Ft/hó karbantartás', note:'(1 hét ingyenes)'},
-  pricingPremMaint:{rate:'+ 34 990 Ft/hó karbantartás', note:'(2 hét ingyenes)'},
+  pricingEsszMaint:{rate:'+\u00a014\u00a0990\u00a0Ft/hó karbantartás', note:'az indulástól'},
+  pricingPresztMaint:{rate:'+\u00a019\u00a0990\u00a0Ft/hó karbantartás', note:'(1 hét ingyenes)'},
+  pricingPremMaint:{rate:'+\u00a034\u00a0990\u00a0Ft/hó karbantartás', note:'(2 hét ingyenes)'},
   pricingMaintNote:'A havi karbantartás fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.',
   addonTag:'Opció', addonTitle:'Professzionális fotós',
   addonDesc:'Bármelyik csomaghoz kérhető: egy profi fotós elkészíti a vállalkozásod fotóit, így a weboldalad professzionális fotókkal és videókkal jelenik meg.',
   addonPrice:'Ár kérésre', addonCta:'Ajánlatkérés',
   shopTag:'Webshop',
   shopLead:'Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell:',
-  shopPlusAmt:'+ 49 900 Ft', shopMaintAmt:'49 990 Ft/hó',
+  shopPlusAmt:'+\u00a049\u00a0900\u00a0Ft', shopMaintAmt:'49\u00a0990\u00a0Ft/hó',
   shopPlus:'felár a csomag árára',
-  shopMaint:'karbantartás, 34 990 helyett',
+  shopMaint:'karbantartás, 34\u00a0990 helyett',
   servicesEyebrow:'Amit építünk', servicesH2:'Három szint, egy színvonal',
   servicesP:'Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.',
   service1Title:'Egyoldalas weboldalak', service1Desc:"Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást: ki vagy, mit kínálsz, mikor vagy elérhető — és hívásokká alakítja a látogatókat. Ideális kisvállalkozásoknak, akik gyorsan és kedvező áron szeretnének professzionális online jelenlétet.",
@@ -1554,18 +1571,18 @@ en:{
   pricingEsszFeatures:['1-page website','Introduction and contact details','Opening hours and photos'],
   pricingPresztFeatures:['Everything in Esszencia','2-page website','Online appointment booking','Photo gallery','Contact form'],
   pricingPremFeatures:['Everything in Presztízs','5 or more pages','Multiple services presented','Blog','Guest reviews','Custom design and animations'],
-  pricingEsszMaint:{rate:'+ 14,990 Ft/month maintenance', note:'from launch'},
-  pricingPresztMaint:{rate:'+ 19,990 Ft/month maintenance', note:'(1 week free)'},
-  pricingPremMaint:{rate:'+ 34,990 Ft/month maintenance', note:'(2 weeks free)'},
+  pricingEsszMaint:{rate:'+\u00a014,990\u00a0Ft/month maintenance', note:'from launch'},
+  pricingPresztMaint:{rate:'+\u00a019,990\u00a0Ft/month maintenance', note:'(1 week free)'},
+  pricingPremMaint:{rate:'+\u00a034,990\u00a0Ft/month maintenance', note:'(2 weeks free)'},
   pricingMaintNote:'Monthly maintenance covers hosting, the domain name, updates, backups and small fixes.',
   addonTag:'Option', addonTitle:'Professional photographer',
   addonDesc:'Available with any tier: a professional photographer takes photos of your business, so your website launches with professional photos and videos.',
   addonPrice:'Price on request', addonCta:'Request a quote',
   shopTag:'Online shop',
   shopLead:'Want to sell products on your website? The Premium tier is required:',
-  shopPlusAmt:'+ 49,900 Ft', shopMaintAmt:'49,990 Ft/month',
+  shopPlusAmt:'+\u00a049,900\u00a0Ft', shopMaintAmt:'49,990\u00a0Ft/month',
   shopPlus:'surcharge on the plan price',
-  shopMaint:'maintenance, instead of 34,990 Ft',
+  shopMaint:'maintenance, instead of 34,990\u00a0Ft',
   servicesEyebrow:'What I build', servicesH2:'Three tiers, one standard',
   servicesP:'Every project is designed and coded from scratch to fit the ambition — and the budget — of the business behind it.',
   service1Title:'One-page websites', service1Desc:"A focused, elegant one-page site that shows clearly who you are, what you offer and when you are available — and turns visitors into calls. Ideal for small businesses that want a professional online presence quickly and at a fair price.",
@@ -1655,18 +1672,18 @@ fr:{
   pricingEsszFeatures:['Site web 1 page','Présentation et coordonnées','Horaires et photos'],
   pricingPresztFeatures:["Tout ce qu'il y a dans Esszencia",'Site web 2 pages','Prise de rendez-vous en ligne','Galerie photo','Formulaire de contact'],
   pricingPremFeatures:["Tout ce qu'il y a dans Presztízs",'5 pages ou plus','Présentation de plusieurs services','Blog','Avis clients','Design et animations sur mesure'],
-  pricingEsszMaint:{rate:'+ 14 990 Ft/mois d\'entretien', note:'dès le lancement'},
-  pricingPresztMaint:{rate:'+ 19 990 Ft/mois d\'entretien', note:'(1 semaine offerte)'},
-  pricingPremMaint:{rate:'+ 34 990 Ft/mois d\'entretien', note:'(2 semaines offertes)'},
+  pricingEsszMaint:{rate:'+\u00a014\u00a0990\u00a0Ft/mois d\'entretien', note:'dès le lancement'},
+  pricingPresztMaint:{rate:'+\u00a019\u00a0990\u00a0Ft/mois d\'entretien', note:'(1 semaine offerte)'},
+  pricingPremMaint:{rate:'+\u00a034\u00a0990\u00a0Ft/mois d\'entretien', note:'(2 semaines offertes)'},
   pricingMaintNote:"L'entretien mensuel couvre l'hébergement, le nom de domaine, les mises à jour, les sauvegardes et les petites corrections.",
   addonTag:'Option', addonTitle:'Photographe professionnel',
   addonDesc:"Disponible avec toutes les formules : un photographe professionnel réalise les photos de votre entreprise, pour que votre site soit mis en ligne avec des photos et vidéos professionnelles.",
   addonPrice:'Prix sur demande', addonCta:'Demander un devis',
   shopTag:'Boutique en ligne',
   shopLead:'Vous voulez vendre des produits sur votre site ? La formule Premium est obligatoire :',
-  shopPlusAmt:'+ 49 900 Ft', shopMaintAmt:'49 990 Ft/mois',
+  shopPlusAmt:'+\u00a049\u00a0900\u00a0Ft', shopMaintAmt:'49\u00a0990\u00a0Ft/mois',
   shopPlus:'de supplément sur le prix de la formule',
-  shopMaint:'de maintenance par mois, au lieu de 34 990 Ft',
+  shopMaint:'de maintenance par mois, au lieu de 34\u00a0990\u00a0Ft',
   servicesEyebrow:'Ce que je construis', servicesH2:'Trois niveaux, une seule exigence',
   servicesP:"Chaque projet est conçu et codé à partir de zéro pour correspondre à l'ambition — et au budget — de l'entreprise concernée.",
   service1Title:'Sites une page', service1Desc:"Un site d'une page, élégant et ciblé, qui montre clairement qui vous êtes, ce que vous proposez et quand vous êtes disponible — et transforme les visiteurs en appels. Idéal pour les petites entreprises qui veulent une présence en ligne professionnelle, rapidement et à prix juste.",
@@ -1756,18 +1773,18 @@ es:{
   pricingEsszFeatures:['Sitio web de 1 página','Presentación y datos de contacto','Horario y fotos'],
   pricingPresztFeatures:['Todo lo de Esszencia','Sitio web de 2 páginas','Reserva de citas en línea','Galería de fotos','Formulario de contacto'],
   pricingPremFeatures:['Todo lo de Presztízs','5 páginas o más','Presentación de varios servicios','Blog','Reseñas de clientes','Diseño y animaciones a medida'],
-  pricingEsszMaint:{rate:'+ 14 990 Ft/mes de mantenimiento', note:'desde el lanzamiento'},
-  pricingPresztMaint:{rate:'+ 19 990 Ft/mes de mantenimiento', note:'(1 semana gratis)'},
-  pricingPremMaint:{rate:'+ 34 990 Ft/mes de mantenimiento', note:'(2 semanas gratis)'},
+  pricingEsszMaint:{rate:'+\u00a014\u00a0990\u00a0Ft/mes de mantenimiento', note:'desde el lanzamiento'},
+  pricingPresztMaint:{rate:'+\u00a019\u00a0990\u00a0Ft/mes de mantenimiento', note:'(1 semana gratis)'},
+  pricingPremMaint:{rate:'+\u00a034\u00a0990\u00a0Ft/mes de mantenimiento', note:'(2 semanas gratis)'},
   pricingMaintNote:'El mantenimiento mensual cubre el hosting, el nombre de dominio, las actualizaciones, las copias de seguridad y los pequeños ajustes.',
   addonTag:'Opción', addonTitle:'Fotógrafo profesional',
   addonDesc:'Disponible con cualquier plan: un fotógrafo profesional hace las fotos de tu negocio, para que tu web se publique con fotos y vídeos profesionales.',
   addonPrice:'Precio a consultar', addonCta:'Pedir presupuesto',
   shopTag:'Tienda online',
   shopLead:'¿Quieres vender productos en tu web? El plan Premium es obligatorio:',
-  shopPlusAmt:'+ 49 900 Ft', shopMaintAmt:'49 990 Ft/mes',
+  shopPlusAmt:'+\u00a049\u00a0900\u00a0Ft', shopMaintAmt:'49\u00a0990\u00a0Ft/mes',
   shopPlus:'de suplemento sobre el precio del plan',
-  shopMaint:'de mantenimiento al mes, en lugar de 34 990 Ft',
+  shopMaint:'de mantenimiento al mes, en lugar de 34\u00a0990\u00a0Ft',
   servicesEyebrow:'Lo que construimos', servicesH2:'Tres niveles, un mismo estándar',
   servicesP:'Cada proyecto se diseña y programa desde cero para ajustarse a la ambición — y el presupuesto — del negocio detrás de él.',
   service1Title:'Sitios de una página', service1Desc:"Un sitio de una página, elegante y enfocado, que muestra con claridad quién eres, qué ofreces y cuándo estás disponible — y convierte a los visitantes en llamadas. Ideal para pequeños negocios que quieren una presencia online profesional, rápido y a buen precio.",
@@ -1857,18 +1874,18 @@ de:{
   pricingEsszFeatures:['1-seitige Website','Vorstellung und Kontaktdaten','Öffnungszeiten und Fotos'],
   pricingPresztFeatures:['Alles aus Esszencia','2-seitige Website','Online-Terminbuchung','Fotogalerie','Kontaktformular'],
   pricingPremFeatures:['Alles aus Presztízs','5 oder mehr Seiten','Vorstellung mehrerer Leistungen','Blog','Kundenbewertungen','Individuelles Design und Animationen'],
-  pricingEsszMaint:{rate:'+ 14.990 Ft/Monat Wartung', note:'ab dem Start'},
-  pricingPresztMaint:{rate:'+ 19.990 Ft/Monat Wartung', note:'(1 Woche kostenlos)'},
-  pricingPremMaint:{rate:'+ 34.990 Ft/Monat Wartung', note:'(2 Wochen kostenlos)'},
+  pricingEsszMaint:{rate:'+\u00a014.990\u00a0Ft/Monat Wartung', note:'ab dem Start'},
+  pricingPresztMaint:{rate:'+\u00a019.990\u00a0Ft/Monat Wartung', note:'(1 Woche kostenlos)'},
+  pricingPremMaint:{rate:'+\u00a034.990\u00a0Ft/Monat Wartung', note:'(2 Wochen kostenlos)'},
   pricingMaintNote:'Die monatliche Wartung deckt Hosting, den Domainnamen, Updates, Backups und kleine Korrekturen ab.',
   addonTag:'Option', addonTitle:'Professioneller Fotograf',
   addonDesc:'Bei jedem Paket buchbar: Ein professioneller Fotograf erstellt die Fotos deines Unternehmens, damit deine Website mit professionellen Fotos und Videos online geht.',
   addonPrice:'Preis auf Anfrage', addonCta:'Angebot anfordern',
   shopTag:'Onlineshop',
   shopLead:'Möchtest du auf deiner Website Produkte verkaufen? Dafür ist das Premium-Paket Pflicht:',
-  shopPlusAmt:'+ 49.900 Ft', shopMaintAmt:'49.990 Ft/Monat',
+  shopPlusAmt:'+\u00a049.900\u00a0Ft', shopMaintAmt:'49.990\u00a0Ft/Monat',
   shopPlus:'Aufpreis auf den Paketpreis',
-  shopMaint:'Wartung, statt 34.990 Ft',
+  shopMaint:'Wartung, statt 34.990\u00a0Ft',
   servicesEyebrow:'Was wir bauen', servicesH2:'Drei Stufen, ein Qualitätsstandard',
   servicesP:'Jedes Projekt wird von Grund auf entworfen und programmiert, passend zum Anspruch — und zum Budget — des dahinterstehenden Unternehmens.',
   service1Title:'One-Page-Websites', service1Desc:"Eine fokussierte, elegante einseitige Website, die klar zeigt, wer du bist, was du anbietest und wann du erreichbar bist — und Besucher in Anrufe verwandelt. Ideal für kleine Unternehmen, die schnell und zu einem fairen Preis einen professionellen Online-Auftritt wollen.",
