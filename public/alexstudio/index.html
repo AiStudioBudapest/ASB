@@ -632,6 +632,9 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
   border-radius:calc(14*var(--u));padding:calc(9*var(--u)) calc(16*var(--u));margin:0 0 calc(24*var(--u));}
 .pricing-card .maint-rate{font-size:calc(14.5*var(--u));font-weight:600;letter-spacing:.015em;}
 .pricing-card .maint-note{font-size:calc(12.5*var(--u));font-weight:500;letter-spacing:.01em;opacity:.82;}
+.pricing-card .card-shop{margin:0 0 calc(18*var(--u));padding:calc(14*var(--u)) calc(16*var(--u));border-radius:calc(14*var(--u));border:1.5px solid var(--cyan);background:rgba(255,255,255,.06);}
+.pricing-card .card-shop-tag{display:block;font-size:calc(11.5*var(--u));letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--cyan);margin-bottom:calc(6*var(--u));}
+.pricing-card .card-shop p{margin:0;font-size:calc(14*var(--u));line-height:1.55;color:#fff;font-weight:500;}
 .pricing-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(13*var(--u));}
 .pricing-card li{position:relative;padding-left:calc(22*var(--u));color:var(--muted);font-size:calc(14.5*var(--u));line-height:1.5;}
 .pricing-card li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;
@@ -640,13 +643,6 @@ section.band .about p{padding:calc(26*var(--u)) calc(32*var(--u));border:1px sol
 
 /* Optional add-on (professional photographer), shown under the three tiers:
    dashed border + camera icon so it reads as "extra, on top of any tier". */
-.pricing-shop{max-width:calc(1100*var(--u));margin:calc(20*var(--u)) auto 0;display:flex;align-items:center;gap:calc(26*var(--u));padding:calc(26*var(--u)) calc(32*var(--u));border-radius:calc(22*var(--u));border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);}
-.pricing-shop .addon-body p{max-width:70ch;}
-.pricing-shop .addon-price{font-size:calc(19*var(--u));white-space:normal;text-align:center;}
-@media (max-width:820px){
-  .pricing-shop{flex-direction:column;text-align:center;gap:calc(16*var(--u));padding:calc(26*var(--u)) calc(22*var(--u));}
-  .pricing-shop p{margin-left:auto;margin-right:auto;}
-}
 .pricing-addon{max-width:calc(1100*var(--u));margin:calc(20*var(--u)) auto 0;display:flex;align-items:center;gap:calc(26*var(--u));
   padding:calc(26*var(--u)) calc(32*var(--u));border:1.5px dashed rgba(127,233,222,.85);border-radius:calc(16*var(--u));
   /* was a 3% cyan wash: nearly invisible over the lit Parliament. Now a dark glass panel (82%, a touch more solid than the
@@ -1170,6 +1166,10 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
       <h3>Prémium</h3>
       <div class="price">349&nbsp;900&nbsp;Ft</div>
       <p class="maint" id="pricingPremMaint"><span class="maint-rate">+ 35&nbsp;000&nbsp;Ft/hó karbantartás</span><span class="maint-note">(2 hét ingyenes)</span></p>
+      <div class="card-shop" id="pricingShop">
+        <span class="card-shop-tag" data-i18n="shopTag">Webshop</span>
+        <p data-i18n="shopDesc">Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell: +50&nbsp;000&nbsp;Ft felár, és a havi karbantartás 35&nbsp;000 helyett 50&nbsp;000&nbsp;Ft.</p>
+      </div>
       <ul id="pricingPremList">
         <li>Minden, ami a Presztízsben</li>
         <li>5 vagy több oldal</li>
@@ -1192,20 +1192,6 @@ html.soft-gl *,html.soft-gl *::before,html.soft-gl *::after{backdrop-filter:none
     <div class="addon-cta">
       <span class="addon-price" data-i18n="addonPrice">Ár kérésre</span>
       <a class="btn-secondary" href="#contact" data-i18n="addonCta">Ajánlatkérés</a>
-    </div>
-  </div>
-  <div class="pricing-shop pricing-addon band-reveal" id="pricingShop">
-    <span class="addon-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2 11h10.6l2-8H6.4"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>
-    </span>
-    <div class="addon-body">
-      <span class="addon-tag" data-i18n="shopTag">Webshop</span>
-      <h3 data-i18n="shopTitle">Termékek árusítása a weboldalon</h3>
-      <p data-i18n="shopDesc">Ha a weboldaladon termékeket szeretnél eladni, a Prémium csomag szükséges. Ez 50&nbsp;000&nbsp;Ft felárral jár, és a havi karbantartás ilyenkor 35&nbsp;000&nbsp;Ft helyett 50&nbsp;000&nbsp;Ft.</p>
-    </div>
-    <div class="addon-cta">
-      <span class="addon-price" data-i18n="shopPrice">Prémium + 50 000 Ft</span>
-      <a class="btn-secondary" href="#contact" data-i18n="shopCta">Ajánlatkérés</a>
     </div>
   </div>
   <p class="pricing-note band-reveal" data-i18n="pricingMaintNote">A havi karbantartás fedezi a tárhelyet, a domain nevet, a frissítéseket, a biztonsági mentéseket és a kisebb javításokat.</p>
@@ -1461,9 +1447,8 @@ hu:{
   addonTag:'Opció', addonTitle:'Professzionális fotós',
   addonDesc:'Bármelyik csomaghoz kérhető: egy profi fotós elkészíti a vállalkozásod fotóit, így a weboldalad professzionális fotókkal és videókkal jelenik meg.',
   addonPrice:'Ár kérésre', addonCta:'Ajánlatkérés',
-  shopTag:'Webshop', shopTitle:'Termékek árusítása a weboldalon',
-  shopDesc:'Ha a weboldaladon termékeket szeretnél eladni, a Prémium csomag szükséges. Ez 50 000 Ft felárral jár, és a havi karbantartás ilyenkor 35 000 Ft helyett 50 000 Ft.',
-  shopPrice:'Prémium + 50 000 Ft', shopCta:'Ajánlatkérés',
+  shopTag:'Webshop',
+  shopDesc:'Ha termékeket szeretnél árulni a weboldaladon, kötelezően a Prémium csomag kell: +50 000 Ft felár, és a havi karbantartás 35 000 helyett 50 000 Ft.',
   servicesEyebrow:'Amit építünk', servicesH2:'Három szint, egy színvonal',
   servicesP:'Minden projektet a nulláról tervezünk és kódolunk, hogy illeszkedjen a mögötte álló vállalkozás ambícióihoz — és költségvetéséhez.',
   service1Title:'Egyoldalas weboldalak', service1Desc:"Fókuszált, elegáns egyoldalas megoldás, amely világosan mutatja be a vállalkozást: ki vagy, mit kínálsz, mikor vagy elérhető — és hívásokká alakítja a látogatókat. Ideális kisvállalkozásoknak, akik gyorsan és kedvező áron szeretnének professzionális online jelenlétet.",
@@ -1560,9 +1545,8 @@ en:{
   addonTag:'Option', addonTitle:'Professional photographer',
   addonDesc:'Available with any tier: a professional photographer takes photos of your business, so your website launches with professional photos and videos.',
   addonPrice:'Price on request', addonCta:'Request a quote',
-  shopTag:'Online shop', shopTitle:'Selling products on your website',
-  shopDesc:'If you want to sell products on your website, the Premium tier is required. It comes with a 50,000 Ft surcharge, and monthly maintenance is then 50,000 Ft instead of 35,000 Ft.',
-  shopPrice:'Premium + 50,000 Ft', shopCta:'Request a quote',
+  shopTag:'Online shop',
+  shopDesc:'Want to sell products on your website? Premium is required: +50,000 Ft surcharge, and monthly maintenance is 50,000 Ft instead of 35,000 Ft.',
   servicesEyebrow:'What I build', servicesH2:'Three tiers, one standard',
   servicesP:'Every project is designed and coded from scratch to fit the ambition — and the budget — of the business behind it.',
   service1Title:'One-page websites', service1Desc:"A focused, elegant one-page site that shows clearly who you are, what you offer and when you are available — and turns visitors into calls. Ideal for small businesses that want a professional online presence quickly and at a fair price.",
@@ -1659,9 +1643,8 @@ fr:{
   addonTag:'Option', addonTitle:'Photographe professionnel',
   addonDesc:"Disponible avec toutes les formules : un photographe professionnel réalise les photos de votre entreprise, pour que votre site soit mis en ligne avec des photos et vidéos professionnelles.",
   addonPrice:'Prix sur demande', addonCta:'Demander un devis',
-  shopTag:'Boutique en ligne', shopTitle:'Vendre des produits sur votre site',
-  shopDesc:'Si vous voulez vendre des produits sur votre site, la formule Premium est nécessaire. Elle comporte un supplément de 50 000 Ft, et la maintenance mensuelle passe alors à 50 000 Ft au lieu de 35 000 Ft.',
-  shopPrice:'Premium + 50 000 Ft', shopCta:'Demander un devis',
+  shopTag:'Boutique en ligne',
+  shopDesc:'Vous voulez vendre des produits sur votre site ? La formule Premium est obligatoire : +50 000 Ft de supplément, et la maintenance passe à 50 000 Ft/mois au lieu de 35 000 Ft.',
   servicesEyebrow:'Ce que je construis', servicesH2:'Trois niveaux, une seule exigence',
   servicesP:"Chaque projet est conçu et codé à partir de zéro pour correspondre à l'ambition — et au budget — de l'entreprise concernée.",
   service1Title:'Sites une page', service1Desc:"Un site d'une page, élégant et ciblé, qui montre clairement qui vous êtes, ce que vous proposez et quand vous êtes disponible — et transforme les visiteurs en appels. Idéal pour les petites entreprises qui veulent une présence en ligne professionnelle, rapidement et à prix juste.",
@@ -1758,9 +1741,8 @@ es:{
   addonTag:'Opción', addonTitle:'Fotógrafo profesional',
   addonDesc:'Disponible con cualquier plan: un fotógrafo profesional hace las fotos de tu negocio, para que tu web se publique con fotos y vídeos profesionales.',
   addonPrice:'Precio a consultar', addonCta:'Pedir presupuesto',
-  shopTag:'Tienda online', shopTitle:'Vender productos en tu web',
-  shopDesc:'Si quieres vender productos en tu web, es necesario el plan Premium. Tiene un suplemento de 50 000 Ft, y el mantenimiento mensual pasa entonces a 50 000 Ft en lugar de 35 000 Ft.',
-  shopPrice:'Premium + 50 000 Ft', shopCta:'Pedir presupuesto',
+  shopTag:'Tienda online',
+  shopDesc:'¿Quieres vender productos en tu web? El plan Premium es obligatorio: +50 000 Ft de suplemento, y el mantenimiento mensual pasa a 50 000 Ft en lugar de 35 000 Ft.',
   servicesEyebrow:'Lo que construimos', servicesH2:'Tres niveles, un mismo estándar',
   servicesP:'Cada proyecto se diseña y programa desde cero para ajustarse a la ambición — y el presupuesto — del negocio detrás de él.',
   service1Title:'Sitios de una página', service1Desc:"Un sitio de una página, elegante y enfocado, que muestra con claridad quién eres, qué ofreces y cuándo estás disponible — y convierte a los visitantes en llamadas. Ideal para pequeños negocios que quieren una presencia online profesional, rápido y a buen precio.",
@@ -1857,9 +1839,8 @@ de:{
   addonTag:'Option', addonTitle:'Professioneller Fotograf',
   addonDesc:'Bei jedem Paket buchbar: Ein professioneller Fotograf erstellt die Fotos deines Unternehmens, damit deine Website mit professionellen Fotos und Videos online geht.',
   addonPrice:'Preis auf Anfrage', addonCta:'Angebot anfordern',
-  shopTag:'Onlineshop', shopTitle:'Produkte auf deiner Website verkaufen',
-  shopDesc:'Wenn du auf deiner Website Produkte verkaufen möchtest, ist das Premium-Paket erforderlich. Es kostet 50.000 Ft Aufpreis, und die monatliche Wartung beträgt dann 50.000 Ft statt 35.000 Ft.',
-  shopPrice:'Premium + 50.000 Ft', shopCta:'Angebot anfordern',
+  shopTag:'Onlineshop',
+  shopDesc:'Möchtest du auf deiner Website Produkte verkaufen? Dafür ist das Premium-Paket Pflicht: +50.000 Ft Aufpreis, und die Wartung beträgt 50.000 Ft/Monat statt 35.000 Ft.',
   servicesEyebrow:'Was wir bauen', servicesH2:'Drei Stufen, ein Qualitätsstandard',
   servicesP:'Jedes Projekt wird von Grund auf entworfen und programmiert, passend zum Anspruch — und zum Budget — des dahinterstehenden Unternehmens.',
   service1Title:'One-Page-Websites', service1Desc:"Eine fokussierte, elegante einseitige Website, die klar zeigt, wer du bist, was du anbietest und wann du erreichbar bist — und Besucher in Anrufe verwandelt. Ideal für kleine Unternehmen, die schnell und zu einem fairen Preis einen professionellen Online-Auftritt wollen.",
