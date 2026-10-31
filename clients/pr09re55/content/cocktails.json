@@ -1,0 +1,72 @@
+{
+  "_info": "Signature koktélok. Csak az ügyféltől kapott adatok kerüljenek ide (név, leírás, összetevők, történet, fotó). Üres mező = nem jelenik meg.",
+  "demo": true,
+  "items": [
+    {
+      "slug": "koktel-1",
+      "name": {
+        "hu": "Koktél neve",
+        "en": "Cocktail name"
+      },
+      "story": {
+        "hu": "Itt a koktél története vagy ihletője áll majd, az ügyfél szavaival.",
+        "en": "The story or inspiration of the cocktail will go here, in the client’s words."
+      },
+      "ingredients": {
+        "hu": [],
+        "en": []
+      },
+      "person": null,
+      "image": "asztal-poharak.webp"
+    },
+    {
+      "slug": "koktel-2",
+      "name": {
+        "hu": "Koktél neve",
+        "en": "Cocktail name"
+      },
+      "story": {
+        "hu": "Helyőrző szöveg, a végleges tartalom az ügyféltől érkezik.",
+        "en": "Placeholder text, the final content will come from the client."
+      },
+      "ingredients": {
+        "hu": [],
+        "en": []
+      },
+      "person": null,
+      "image": "asztal-menu.webp"
+    },
+    {
+      "slug": "koktel-3",
+      "name": {
+        "hu": "Koktél neve",
+        "en": "Cocktail name"
+      },
+      "story": {
+        "hu": "Helyőrző szöveg, a végleges tartalom az ügyféltől érkezik.",
+        "en": "Placeholder text, the final content will come from the client."
+      },
+      "ingredients": {
+        "hu": [],
+        "en": []
+      },
+      "person": null,
+      "image": "asztal-logo.webp"
+    }
+  ],
+  "_classicsInfo": "A főoldal 3 klasszikusa: [itallap-oldal slugja, koktél neve a menu.json szerint]. Az ügyféllel megerősítendő (2026-10-31).",
+  "classics": [
+    [
+      "koktelok",
+      "Negroni"
+    ],
+    [
+      "koktelok",
+      "pr09re55 Sbagliato"
+    ],
+    [
+      "koktelok",
+      "French 75"
+    ]
+  ]
+}

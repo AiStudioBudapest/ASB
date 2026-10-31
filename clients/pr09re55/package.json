@@ -1,0 +1,10 @@
+{
+  "name": "pr09re55-site",
+  "private": true,
+  "description": "pr09re55 (Cocktail Lounge & Concept Store, Budapest): static site generator, no dependencies",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node build.mjs --preview"
+  },
+  "engines": { "node": ">=18" }
+}

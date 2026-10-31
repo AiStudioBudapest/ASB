@@ -1,0 +1,256 @@
+{
+  "_info": [
+    "A bolt termékei. Új termék: másold le egy blokkot, adj neki új 'slug'-ot (csak kisbetű, szám, kötőjel).",
+    "price: forintban, egész szám; null = 'Ár kérésre'. currency: HUF.",
+    "stock: 'in' (raktáron), 'low' (utolsó darabok), 'out' (elfogyott), 'ask' (érdeklődj).",
+    "bestseller: true = megjelenik a Kedvencek között; bestsellerOrder: kisebb szám = előrébb.",
+    "featured: true = a hónap válogatásában szerepel (lásd monthly.json).",
+    "demo: true = mintaadat, a valódi adatok még hiányoznak; az oldalon 'Mintaadat' jelzést kap.",
+    "tone: a termékkép mögötti háttérszín (halvány, a termékhez illő)."
+  ],
+  "products": [
+    {
+      "slug": "trudon-mystique",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Mystique",
+        "en": "Mystique"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": true,
+      "bestsellerOrder": 1,
+      "featured": false,
+      "demo": true,
+      "tone": "#efe4e1",
+      "images": [
+        "trudon-mystique.webp"
+      ],
+      "description": {
+        "hu": "Eau de parfum a párizsi Trudon háztól, amely 1643 óta önt gyertyákat. A pr09re55 polcairól.",
+        "en": "Eau de parfum from the Paris house of Trudon, candle makers since 1643. From the pr09re55 shelves."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "Párizs"
+        ],
+        "en": [
+          "Eau de parfum",
+          "Paris"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-elae",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Elae",
+        "en": "Elae"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": true,
+      "bestsellerOrder": 2,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3e6da",
+      "images": [
+        "trudon-elae.webp"
+      ],
+      "description": {
+        "hu": "Eau de parfum ugyanattól a párizsi háztól, a Trudon illatcsaládjából.",
+        "en": "Eau de parfum from the same Paris house, part of the Trudon fragrance line."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "Párizs"
+        ],
+        "en": [
+          "Eau de parfum",
+          "Paris"
+        ]
+      }
+    },
+    {
+      "slug": "santa-maria-novella-olio-cosmetico",
+      "brand": "Santa Maria Novella",
+      "name": {
+        "hu": "Olio Cosmetico",
+        "en": "Olio Cosmetico"
+      },
+      "category": "kozmetikum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": true,
+      "bestsellerOrder": 3,
+      "featured": true,
+      "demo": true,
+      "tone": "#e3e9ee",
+      "images": [
+        "santa-maria-novella.webp"
+      ],
+      "description": {
+        "hu": "A firenzei Officina Profumo-Farmaceutica di Santa Maria Novella kozmetikuma.",
+        "en": "Skincare from the Officina Profumo-Farmaceutica di Santa Maria Novella in Florence."
+      },
+      "details": {
+        "hu": [
+          "Kozmetikum",
+          "Firenze"
+        ],
+        "en": [
+          "Skincare",
+          "Florence"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-illatgyertyak",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Illatgyertyák és pálcás illatosító",
+        "en": "Scented candles and diffuser"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": true,
+      "bestsellerOrder": 4,
+      "featured": true,
+      "demo": true,
+      "tone": "#ebe6d8",
+      "images": [
+        "trudon-bougies.webp"
+      ],
+      "description": {
+        "hu": "Trudon gyertyák és lakásillatok, ahogy a pr09re55 polcain állnak.",
+        "en": "Trudon candles and home fragrance, as they stand on the pr09re55 shelves."
+      },
+      "details": {
+        "hu": [
+          "Illatgyertya",
+          "Lakásillat"
+        ],
+        "en": [
+          "Scented candle",
+          "Home fragrance"
+        ]
+      }
+    },
+    {
+      "slug": "minta-kiegeszito",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: kiegészítő",
+        "en": "Sample: accessory"
+      },
+      "category": "kiegeszito",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#e6eaf2",
+      "images": [
+        "nature-morte.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ]
+      }
+    },
+    {
+      "slug": "minta-ekszer",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: ékszer",
+        "en": "Sample: jewellery"
+      },
+      "category": "ekszer",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1e7d6",
+      "images": [
+        "plage.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ]
+      }
+    }
+  ],
+  "_categoriesInfo": "A Butik oldal kategória-képei (ideiglenes fotók). \"slug\" = a kategóriaoldal címe nyelvenként.",
+  "categories": [
+    {
+      "key": "parfum",
+      "slug": {
+        "hu": "parfum",
+        "en": "perfume"
+      },
+      "image": "mag-trudon-bruma.webp"
+    },
+    {
+      "key": "kozmetikum",
+      "slug": {
+        "hu": "kozmetikum",
+        "en": "skincare"
+      },
+      "image": "santa-maria-novella.webp"
+    },
+    {
+      "key": "otthon",
+      "slug": {
+        "hu": "otthon",
+        "en": "home"
+      },
+      "image": "trudon-bougies.webp"
+    },
+    {
+      "key": "kiegeszito",
+      "slug": {
+        "hu": "kiegeszito",
+        "en": "accessories"
+      },
+      "image": "mag-barkocsi.webp"
+    },
+    {
+      "key": "ekszer",
+      "slug": {
+        "hu": "ekszer",
+        "en": "jewellery"
+      },
+      "image": "mag-gyuruk.webp"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "_info": "A hónap válogatása. Havonta: írd át a címet, a bevezetőt, és a products.json-ban állítsd a 'featured' mezőt. A rovat neve is szabadon módosítható.",
+  "label": { "hu": "A hónap tárgyai", "en": "Objects of the month" },
+  "issue": { "hu": "2026. november", "en": "November 2026" },
+  "title": { "hu": "Illatok a sötétedő estékhez", "en": "Scents for darkening evenings" },
+  "intro": {
+    "hu": "Mintaszöveg: a havi válogatás bevezetője az ügyfél szövegével váltható.",
+    "en": "Sample text: the monthly selection intro will be replaced with the client’s own words."
+  },
+  "demo": true,
+  "brands": ["Trudon", "Santa Maria Novella"]
+}

@@ -1,0 +1,17 @@
+{
+  "_info": "Szezonális kiemelések (a főoldal két fekete-fehér kártyája ide vezet). Évszakonként cserélendő. A fotók egyelőre ideiglenesek: az ügyfél küldi a véglegeseket. Butik: \"product\" = a products.json slugja. Italok: \"menu\" = [itallap-oldal slugja, tétel neve pontosan, ahogy a menu.json-ban szerepel]; a név, az összetevők és az ár onnan jön.",
+  "demo": true,
+  "season": { "hu": "Ősz 2026", "en": "Autumn 2026" },
+  "shop": [
+    { "product": "trudon-mystique", "image": "trudon-mystique.webp" },
+    { "product": "trudon-illatgyertyak", "image": "trudon-bougies.webp" },
+    { "product": "santa-maria-novella-olio-cosmetico", "image": "santa-maria-novella.webp" },
+    { "product": "trudon-elae", "image": "trudon-elae.webp" }
+  ],
+  "drinks": [
+    { "menu": ["koktelok", "pr09re55 Sbagliato"], "image": "asztal-poharak.webp" },
+    { "menu": ["koktelok", "French 75"], "image": "mag-pezsgo.webp" },
+    { "menu": ["pezsgok", "Ruinart Blanc de Blancs"], "image": "asztal-logo.webp" },
+    { "menu": ["roze-voros", "Whispering Angel, Côtes de Provence ’24"], "image": "interieur.webp" }
+  ]
+}

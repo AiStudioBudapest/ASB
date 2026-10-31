@@ -1,0 +1,1190 @@
+{
+  "_info": "Az itallap, oldalanként, ahogy a nyomtatott menüben (2026. októberi fotók alapján). price: forint, egész szám. name/desc: szöveg, vagy {hu,en} ha a két nyelv eltér. cols: az ároszlopok fejléce. A 'toc' mezős oldalak kerülnek a tartalomjegyzékbe.",
+  "demo": false,
+  "updated": "2026-10-26",
+  "pages": [
+    {
+      "slug": "fedlap",
+      "kind": "jacket"
+    },
+    {
+      "slug": "borito",
+      "kind": "cover",
+      "tagline": "The Little Jewelbox of Pozsonyi",
+      "sub": "Concept store & cocktail terrace",
+      "list": [
+        "Fragrances",
+        "Home Scents",
+        "Skincare",
+        "Sunglasses",
+        "Accessories",
+        "Cocktails"
+      ],
+      "contact": [
+        "Pozsonyi út 43, Budapest, 1137",
+        "WhatsApp: +33 7 66 20 34 97",
+        "Phone: +36 20 391 9739",
+        "Instagram: @pr09re55"
+      ]
+    },
+    {
+      "slug": "zita",
+      "kind": "letter",
+      "lang": "en",
+      "text": [
+        "What is pr09re55? Well, it’s my tiny little jewel box. It’s a feeling, a mood and everything I’d love to introduce to the people who share the same values as I do. A place where I feel good, at home… a place where I’m happy to receive the precious few who are attracted to the warmth and unpretentious sophistication it exudes.",
+        "Perfumes, skincare for ladies and gents, scented candles, home fragrances, accessories, niche jewelry, small interior design articles and furnitures, teas and much, much more. And, of course, a small selection of our specialty cocktails, long-drinks, bubbles and wines that you can enjoy on our terrace, in the store space or in our cozy hide-away corner upstairs.",
+        "Read my personal story on the pages of our magazine style webshop that I’m excited to launch and share with you soon! You’ll find amazing, short but detailed description of our products, in-depth introductions to our beloved brands, some meaningful gift ideas and other interesting content."
+      ],
+      "sign": "My name is Zita Mészáros, welcome to pr09re55."
+    },
+    {
+      "slug": "koktelok",
+      "toc": {
+        "hu": "Koktélok",
+        "en": "Cocktails"
+      },
+      "title": {
+        "hu": "Koktél menü",
+        "en": "Cocktail card"
+      },
+      "sections": [
+        {
+          "layout": "centered",
+          "items": [
+            {
+              "name": "Negroni",
+              "desc": "Bobby’s Dry Gin, Campari, Vermouth",
+              "prices": [
+                6030
+              ]
+            },
+            {
+              "name": "pr09re55 Sbagliato",
+              "desc": "Bobby’s Dry Gin, Campari, Vermouth, Kreinbacher Rosé",
+              "prices": [
+                6260
+              ]
+            },
+            {
+              "name": "French 75",
+              "desc": "Mrs. Millicent Speakeasy Gin, Kreinbacher Rosé, Lemon Juice, Lemon Peel",
+              "prices": [
+                6460
+              ]
+            },
+            {
+              "name": "Revolver",
+              "desc": "Bulleit Bourbon, Kahlúa, Angostura Orange Bitters, Orange Peel",
+              "prices": [
+                6030
+              ]
+            },
+            {
+              "name": "Espresso Martini",
+              "desc": "Espresso, Amaro Averna, Kahlúa, Coffee Beans",
+              "prices": [
+                6810
+              ]
+            },
+            {
+              "name": "Manhattan",
+              "desc": "Bulleit Bourbon, Vermouth, Angostura Orange Bitters, Maraschino Cherry",
+              "prices": [
+                6240
+              ]
+            },
+            {
+              "name": "Mrs. James Bond",
+              "desc": "Mrs. Millicent Speakeasy Gin, Squadron Reservoir Auxiliaire Vodka, Martini Bianco, Lemon Peel… « Shaken, not stirred… »",
+              "prices": [
+                6260
+              ]
+            },
+            {
+              "name": "Volcán Margarita",
+              "desc": "Volcán Añejo Cristalino Tequila, Cointreau, Lemon Juice",
+              "prices": [
+                7690
+              ]
+            },
+            {
+              "name": "Old Fashioned",
+              "desc": "Redemption Bourbon, Angostura Orange Bitters, Muscovado Sugar, Tonka Bean",
+              "prices": [
+                6310
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "long-drinks",
+      "toc": {
+        "hu": "Long drinkek",
+        "en": "Long drinks"
+      },
+      "title": {
+        "hu": "Long drinks",
+        "en": "Long drinks"
+      },
+      "sections": [
+        {
+          "layout": "centered",
+          "items": [
+            {
+              "name": "Paradise GT",
+              "desc": "Mrs. Millicent Speakeasy Gin, Flowers & Spices, Honeybush Orange Tonic",
+              "prices": [
+                6260
+              ]
+            },
+            {
+              "name": "Bobby’s GT",
+              "desc": "Bobby’s Dry Gin, J. Gasco Dry Bitter Tonic, Hibiscus, Lime",
+              "prices": [
+                5240
+              ]
+            },
+            {
+              "name": "Tom Collins",
+              "desc": "Bobby’s Dry Gin, Lemon Juice, Cane Sugar, Club Soda, Maraschino Cherry",
+              "prices": [
+                6590
+              ]
+            },
+            {
+              "name": "Moscow Mule",
+              "desc": "Squadron Reservoir Auxiliaire Vodka, Ginger Beer, Lime Juice",
+              "prices": [
+                6590
+              ]
+            },
+            {
+              "name": "Raspberry Mule",
+              "desc": "Squadron Reservoir Auxiliaire Vodka, Ginger Beer, Lime Juice, Raspberry Purée",
+              "prices": [
+                6920
+              ]
+            },
+            {
+              "name": "Royal Aperol Spritz",
+              "desc": "Aperol, Kreinbacher Rosé, Angostura Bitter, Orange Slices, Club Soda",
+              "prices": [
+                6530
+              ]
+            },
+            {
+              "name": "Dolce Vita",
+              "desc": "Bobby’s Dry Gin, Campari, Vermouth, Aperitivo Bitter Tonic",
+              "prices": [
+                5380
+              ]
+            },
+            {
+              "name": "Gimber Twist",
+              "desc": "Squadron Reservoir Auxiliaire Vodka, Gimber, Club Soda, Lime, Anis",
+              "prices": [
+                5380
+              ]
+            },
+            {
+              "name": "Garibaldi",
+              "desc": "Campari, Orange Juice, Angostura Bitter, Orange Wheel",
+              "prices": [
+                4720
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nyari",
+      "toc": {
+        "hu": "Nyári ajánlat és snackek",
+        "en": "Summer specials and snacks"
+      },
+      "title": {
+        "hu": "Nyári ajánlat",
+        "en": "Summer specials"
+      },
+      "sections": [
+        {
+          "layout": "centered",
+          "items": [
+            {
+              "name": "Bloody Mary",
+              "desc": "Opera Standard Edition Vodka, Tomato Juice, Tabasco Sauce, Celery Stick",
+              "prices": [
+                5480
+              ]
+            },
+            {
+              "name": "Mimosa",
+              "desc": "Kreinbacher Rosé Brut, Freshly Pressed Orange Juice, Rose Bud",
+              "prices": [
+                5480
+              ]
+            },
+            {
+              "name": "Hugo Deluxe",
+              "desc": "Kreinbacher Brut Nature, Elderflower Syrup, Lime Cubes, Mint Leaves, Club Soda",
+              "prices": [
+                5480
+              ]
+            },
+            {
+              "name": "Noam Bavaria Berlin",
+              "desc": "Lager Beer, 5,2%",
+              "prices": [
+                3610
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Snackek",
+            "en": "Snacks"
+          },
+          "cols": [
+            {
+              "hu": "kicsi",
+              "en": "small"
+            },
+            {
+              "hu": "közepes",
+              "en": "medium"
+            }
+          ],
+          "items": [
+            {
+              "name": "Olives",
+              "prices": [
+                1080,
+                1750
+              ]
+            },
+            {
+              "name": "Go Nuts",
+              "prices": [
+                1410,
+                2160
+              ]
+            },
+            {
+              "name": "Fruity",
+              "prices": [
+                1080,
+                1750
+              ]
+            },
+            {
+              "name": "The Combo",
+              "prices": [
+                3170,
+                5260
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "pezsgok",
+      "toc": {
+        "hu": "Pezsgők",
+        "en": "Bubbles"
+      },
+      "title": {
+        "hu": "Pezsgők",
+        "en": "Bubbles"
+      },
+      "sections": [
+        {
+          "title": {
+            "hu": "Pezsgő",
+            "en": "Sparkling"
+          },
+          "cols": [
+            {
+              "hu": "100 ml",
+              "en": "100 ml"
+            },
+            {
+              "hu": "üveg",
+              "en": "bottle"
+            }
+          ],
+          "items": [
+            {
+              "name": "Kreinbacher Brut Nature",
+              "prices": [
+                3280,
+                21980
+              ]
+            },
+            {
+              "name": "Kreinbacher Rosé",
+              "prices": [
+                3280,
+                21980
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Champagne",
+            "en": "Champagne"
+          },
+          "cols": [
+            {
+              "hu": "üveg",
+              "en": "bottle"
+            }
+          ],
+          "items": [
+            {
+              "name": "Billecart-Salmon Brut Réserve",
+              "prices": [
+                64890
+              ]
+            },
+            {
+              "name": "Deutz Brut Classic",
+              "prices": [
+                64890
+              ]
+            },
+            {
+              "name": "Ruinart Brut",
+              "prices": [
+                70390
+              ]
+            },
+            {
+              "name": "Ruinart Blanc de Blancs",
+              "prices": [
+                81390
+              ]
+            },
+            {
+              "name": "Bollinger Spécial Cuvée",
+              "prices": [
+                76890
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "prosecco",
+      "title": {
+        "hu": "Prosecco",
+        "en": "Prosecco"
+      },
+      "sections": [
+        {
+          "cols": [
+            {
+              "hu": "100 ml",
+              "en": "100 ml"
+            },
+            {
+              "hu": "üveg",
+              "en": "bottle"
+            }
+          ],
+          "items": [
+            {
+              "name": "Sig. Brombe",
+              "desc": "Prosecco DOC Spumante Brut",
+              "prices": [
+                2180,
+                15170
+              ]
+            },
+            {
+              "name": "Bortolomiol Prior",
+              "desc": "Prosecco DOCG Brut",
+              "prices": [
+                2360,
+                16200
+              ]
+            },
+            {
+              "name": "Casa Paolin Asolo",
+              "desc": "Prosecco Superiore DOCG Brut",
+              "prices": [
+                2540,
+                17680
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "feherbor",
+      "toc": {
+        "hu": "Borlap",
+        "en": "Wine list"
+      },
+      "title": {
+        "hu": "Borlap",
+        "en": "Wine list"
+      },
+      "sections": [
+        {
+          "title": {
+            "hu": "Fehérbor",
+            "en": "White wine"
+          },
+          "cols": [
+            {
+              "hu": "100 ml",
+              "en": "100 ml"
+            },
+            {
+              "hu": "üveg",
+              "en": "bottle"
+            }
+          ],
+          "items": [
+            {
+              "name": "Béla & Bandi Zöldveltelini ’24",
+              "prices": [
+                2180,
+                15170
+              ]
+            },
+            {
+              "name": "Légli Chardonnay ’24",
+              "prices": [
+                2460,
+                17250
+              ]
+            },
+            {
+              "name": "Rezeda Olaszrizling, Köveskál ’24",
+              "prices": [
+                2400,
+                16790
+              ]
+            },
+            {
+              "name": "Laposa 4 Hegy Olaszrizling, Badacsony ’24",
+              "prices": [
+                2570,
+                17590
+              ]
+            },
+            {
+              "name": "Villebois Sauvignon Blanc ’24",
+              "prices": [
+                2570,
+                17590
+              ]
+            },
+            {
+              "name": "Montes Alpha Chardonnay ’24",
+              "prices": [
+                3070,
+                19790
+              ]
+            },
+            {
+              "name": "Matua Sauvignon Blanc, Marlborough ’24",
+              "prices": [
+                2940,
+                18580
+              ]
+            },
+            {
+              "name": "Szepsy Tokaji Furmint ’23",
+              "prices": [
+                3840,
+                25290
+              ]
+            },
+            {
+              "name": "Domaine Lavantureux Chablis ’23",
+              "prices": [
+                4610,
+                28040
+              ]
+            },
+            {
+              "name": "Pascal Jolivet Sancerre Blanc ’23",
+              "prices": [
+                4830,
+                32990
+              ]
+            },
+            {
+              "name": "Pascal Jolivet Fumé Blanc ’23",
+              "prices": [
+                4830,
+                32990
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "roze-voros",
+      "title": {
+        "hu": "Borlap",
+        "en": "Wine list"
+      },
+      "sections": [
+        {
+          "title": {
+            "hu": "Rozé",
+            "en": "Rosé"
+          },
+          "cols": [
+            {
+              "hu": "100 ml",
+              "en": "100 ml"
+            },
+            {
+              "hu": "üveg",
+              "en": "bottle"
+            }
+          ],
+          "items": [
+            {
+              "name": "Figuière Méditerranée, Côtes de Provence ’24",
+              "prices": [
+                2570,
+                15590
+              ]
+            },
+            {
+              "name": "Whispering Angel, Côtes de Provence ’24",
+              "prices": [
+                4380,
+                29690
+              ]
+            },
+            {
+              "name": "Château La Coste, Côtes de Provence ’24",
+              "prices": [
+                3180,
+                20880
+              ]
+            },
+            {
+              "name": "Pannonhalmi Tricollis ’24",
+              "prices": [
+                2180,
+                15170
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Vörösbor",
+            "en": "Red wine"
+          },
+          "cols": [
+            {
+              "hu": "100 ml",
+              "en": "100 ml"
+            },
+            {
+              "hu": "üveg",
+              "en": "bottle"
+            }
+          ],
+          "items": [
+            {
+              "name": "Ruppert Kandúr, Villányi Cuvée ’22",
+              "prices": [
+                2180,
+                15170
+              ]
+            },
+            {
+              "name": "Ruppert Merlot, Diósviszló ’18",
+              "prices": [
+                2730,
+                17590
+              ]
+            },
+            {
+              "name": "Montes Alpha Syrah, Valle de Colchagua ’22",
+              "prices": [
+                3180,
+                20880
+              ]
+            },
+            {
+              "name": "Néprica Primitivo, Puglia ’23",
+              "prices": [
+                2510,
+                17560
+              ]
+            },
+            {
+              "name": "Château Pey La Tour, Bordeaux Supérieur ’20",
+              "prices": [
+                3180,
+                20880
+              ]
+            },
+            {
+              "name": "Chapelle de Potensac, Médoc ’19",
+              "prices": [
+                3830,
+                26390
+              ]
+            },
+            {
+              "name": "Perrin Réserve Côtes du Rhône ’21",
+              "prices": [
+                2740,
+                19170
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "rovidital",
+      "toc": {
+        "hu": "Röviditalok",
+        "en": "Spirits"
+      },
+      "title": {
+        "hu": "Röviditalok",
+        "en": "Spirits"
+      },
+      "sections": [
+        {
+          "title": {
+            "hu": "Rum",
+            "en": "Rum"
+          },
+          "cols": [
+            {
+              "hu": "4 cl",
+              "en": "4 cl"
+            }
+          ],
+          "items": [
+            {
+              "name": "Diplomático Reserva Exclusiva",
+              "prices": [
+                5050
+              ]
+            },
+            {
+              "name": "Plantation Original Dark Barbados",
+              "prices": [
+                3280
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Vodka",
+            "en": "Vodka"
+          },
+          "cols": [
+            {
+              "hu": "4 cl",
+              "en": "4 cl"
+            }
+          ],
+          "items": [
+            {
+              "name": "Opera Standard Edition",
+              "prices": [
+                3610
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Gin",
+            "en": "Gin"
+          },
+          "cols": [
+            {
+              "hu": "4 cl",
+              "en": "4 cl"
+            }
+          ],
+          "items": [
+            {
+              "name": "Mrs. Millicent Speakeasy Gin",
+              "prices": [
+                3950
+              ]
+            },
+            {
+              "name": "Bobby’s Schiedam Dry Gin",
+              "prices": [
+                3780
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Tequila",
+            "en": "Tequila"
+          },
+          "cols": [
+            {
+              "hu": "4 cl",
+              "en": "4 cl"
+            }
+          ],
+          "items": [
+            {
+              "name": "Volcán Cristalino",
+              "prices": [
+                6040
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Whisky",
+            "en": "Whisky"
+          },
+          "cols": [
+            {
+              "hu": "4 cl",
+              "en": "4 cl"
+            }
+          ],
+          "items": [
+            {
+              "name": "Nikka From the Barrel",
+              "prices": [
+                5090
+              ]
+            },
+            {
+              "name": "Redemption Bourbon",
+              "prices": [
+                3950
+              ]
+            },
+            {
+              "name": "Glenmorangie Single Malt Scotch 12 yrs",
+              "prices": [
+                3590
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Pálinka",
+            "en": "Pálinka"
+          },
+          "cols": [
+            {
+              "hu": "4 cl",
+              "en": "4 cl"
+            }
+          ],
+          "items": [
+            {
+              "name": "Bestillo Gönci Barack",
+              "prices": [
+                4110
+              ]
+            },
+            {
+              "name": "Bestillo Piros Vilmoskörte",
+              "prices": [
+                4110
+              ]
+            }
+          ],
+          "note": {
+            "hu": "2 cl rendelése esetén a 4 cl árának 70%-át számítjuk fel.",
+            "en": "A 2 cl serving costs 70% of the 4 cl price."
+          }
+        }
+      ]
+    },
+    {
+      "slug": "kave-tea",
+      "toc": {
+        "hu": "Kávé és tea",
+        "en": "Coffee and tea"
+      },
+      "title": {
+        "hu": "Forró italok",
+        "en": "Hot beverages"
+      },
+      "sections": [
+        {
+          "title": {
+            "hu": "Kávé",
+            "en": "Coffee"
+          },
+          "items": [
+            {
+              "name": "Ristretto / Espresso*",
+              "prices": [
+                1420
+              ]
+            },
+            {
+              "name": "Americano*",
+              "prices": [
+                1740
+              ]
+            },
+            {
+              "name": "Macchiato",
+              "prices": [
+                1740
+              ]
+            },
+            {
+              "name": "Cappuccino",
+              "prices": [
+                2080
+              ]
+            },
+            {
+              "name": "Cortado",
+              "prices": [
+                1740
+              ]
+            },
+            {
+              "name": "Latte",
+              "prices": [
+                2400
+              ]
+            },
+            {
+              "name": "Espresso Tonic",
+              "prices": [
+                2950
+              ]
+            },
+            {
+              "name": "Baileys Coffee",
+              "prices": [
+                3280
+              ]
+            },
+            {
+              "name": "Kis Mérges",
+              "desc": {
+                "hu": "Espresso, 1 cl rum, méz",
+                "en": "Espresso, 1 cl rum, honey"
+              },
+              "prices": [
+                2730
+              ]
+            }
+          ],
+          "note": {
+            "hu": "* Saját pr09re55 kávé blendünk megvásárolható üzletünkben 250 g-os kiszerelésben 7 280 Ft áron. Vásárlás esetén a fogyasztás ingyenes!",
+            "en": "* You can purchase our very own pr09re55 coffee blend in 250 g packages for 8 010 Ft. Buy one and get your coffee for free!"
+          }
+        },
+        {
+          "items": [
+            {
+              "name": "Manna",
+              "desc": {
+                "hu": "Rooibos tea, 2 cl rum, méz",
+                "en": "Rooibos tea, 2 cl rum, honey"
+              },
+              "prices": [
+                3650
+              ]
+            },
+            {
+              "name": {
+                "hu": "Gimber gyömbér hottie",
+                "en": "Gimber ginger hottie"
+              },
+              "prices": [
+                2960
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Kusmi Tea Paris**",
+            "en": "Kusmi Tea Paris**"
+          },
+          "items": [
+            {
+              "name": {
+                "hu": "Egyszemélyes",
+                "en": "Tea for one"
+              },
+              "desc": {
+                "hu": "Kérje tea menünket",
+                "en": "Ask for the tea card"
+              },
+              "prices": [
+                3270
+              ]
+            },
+            {
+              "name": {
+                "hu": "Kétszemélyes",
+                "en": "Tea for two"
+              },
+              "prices": [
+                5370
+              ]
+            }
+          ],
+          "note": {
+            "hu": "** Kusmi tea kínálatunk megvásárolható üzletünkben 100 g-os kiszerelésben. Vásárlás esetén a fogyasztás ingyenes!",
+            "en": "** You can purchase your Kusmi tea choice in our store, in 100 g boxes. Buy one and get your tea for free!"
+          }
+        },
+        {
+          "title": {
+            "hu": "Our liquid blankets for a cozy hot beverage",
+            "en": "Our liquid blankets for a cozy hot beverage"
+          },
+          "items": [
+            {
+              "name": {
+                "hu": "+ 2 cl rum / Bailey’s",
+                "en": "+ 2 cl rum / Bailey’s"
+              },
+              "prices": [
+                1750
+              ]
+            },
+            {
+              "name": {
+                "hu": "+ 4 cl rum / Bailey’s",
+                "en": "+ 4 cl rum / Bailey’s"
+              },
+              "prices": [
+                2440
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "alkoholmentes",
+      "toc": {
+        "hu": "Alkoholmentes",
+        "en": "Alcohol-free"
+      },
+      "title": {
+        "hu": "Alkoholmentes",
+        "en": "Alcohol-free"
+      },
+      "sections": [
+        {
+          "title": {
+            "hu": "Üdítők",
+            "en": "Soft drinks"
+          },
+          "items": [
+            {
+              "name": {
+                "hu": "Házi limonádé",
+                "en": "Lemonade « maison »"
+              },
+              "prices": [
+                3120
+              ]
+            },
+            {
+              "name": {
+                "hu": "Bodzás limonádé",
+                "en": "Elderberry lemonade"
+              },
+              "prices": [
+                3120
+              ]
+            },
+            {
+              "name": {
+                "hu": "Málnás limonádé",
+                "en": "Raspberry lemonade"
+              },
+              "prices": [
+                3120
+              ]
+            },
+            {
+              "name": {
+                "hu": "Jeges tea",
+                "en": "Ice tea"
+              },
+              "prices": [
+                2740
+              ]
+            },
+            {
+              "name": {
+                "hu": "Tonik",
+                "en": "Tonic water"
+              },
+              "prices": [
+                2690
+              ]
+            },
+            {
+              "name": {
+                "hu": "Almárium",
+                "en": "Apple juice"
+              },
+              "prices": [
+                2050
+              ]
+            },
+            {
+              "name": {
+                "hu": "Gyömbér sör",
+                "en": "Ginger ale"
+              },
+              "prices": [
+                2690
+              ]
+            },
+            {
+              "name": {
+                "hu": "Gyömbér shot (4 cl)",
+                "en": "Ginger shot (4 cl)"
+              },
+              "prices": [
+                2080
+              ]
+            },
+            {
+              "name": {
+                "hu": "Gyömbér fröccs",
+                "en": "Ginger spritzer"
+              },
+              "prices": [
+                3120
+              ]
+            },
+            {
+              "name": {
+                "hu": "Kristályvíz",
+                "en": "Crystal water"
+              },
+              "prices": [
+                380
+              ],
+              "unit": {
+                "hu": "/ dl",
+                "en": "/ dl"
+              }
+            },
+            {
+              "name": {
+                "hu": "Szóda",
+                "en": "Soda water"
+              },
+              "prices": [
+                490
+              ],
+              "unit": {
+                "hu": "/ dl",
+                "en": "/ dl"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Ásványvizek",
+            "en": "Mineral water"
+          },
+          "items": [
+            {
+              "name": {
+                "hu": "Vis Vitalis szénsavmentes 0,4 l",
+                "en": "Vis Vitalis still 0.4 l"
+              },
+              "prices": [
+                1420
+              ]
+            },
+            {
+              "name": {
+                "hu": "Vis Vitalis szénsavas 0,4 l",
+                "en": "Vis Vitalis sparkling 0.4 l"
+              },
+              "prices": [
+                1420
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Alkoholmentes koktélok",
+            "en": "Alcohol-free cocktails"
+          },
+          "items": [
+            {
+              "name": "Virgin Aperol Spritz",
+              "prices": [
+                4930
+              ]
+            },
+            {
+              "name": "Virgin Gin Tonic",
+              "prices": [
+                4930
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "hu": "Cookies",
+            "en": "Cookies"
+          },
+          "items": [
+            {
+              "name": {
+                "hu": "Csokis, citromos, sós karamellás",
+                "en": "Chocolate, lemon, caramel"
+              },
+              "prices": [
+                920
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "hatlap",
+      "kind": "backjacket"
+    }
+  ]
+}
