@@ -1,0 +1,214 @@
+{
+  "_info": "Általános adatok. Ezeket a mezőket bárki szerkesztheti; a build minden oldalon ezeket használja.",
+  "baseUrl": "https://www.pr09re55.com",
+  "name": "PR09RE55",
+  "nameAlt": "Progress",
+  "address": {
+    "street": "Pozsonyi út 43.",
+    "postalCode": "1137",
+    "city": "Budapest",
+    "country": "HU"
+  },
+  "mapsUrl": "https://www.google.com/maps/search/?api=1&query=pr09re55%20Pozsonyi%20%C3%BAt%2043%20Budapest",
+  "phone": "+36 20 391 9739",
+  "phoneHref": "tel:+36203919739",
+  "instagram": "https://www.instagram.com/pr09re55/",
+  "instagramHandle": "@pr09re55",
+  "facebook": "https://www.facebook.com/pr09re55/",
+  "hours": {
+    "_info": "Percben, hétfőtől vasárnapig: [nyitás, zárás]. Forrás: Google, 2026. október. Az ügyféllel megerősítendő.",
+    "verified": false,
+    "week": [
+      [
+        1020,
+        1320
+      ],
+      [
+        1020,
+        1320
+      ],
+      [
+        1020,
+        1320
+      ],
+      [
+        1020,
+        1320
+      ],
+      [
+        1020,
+        1320
+      ],
+      [
+        1020,
+        1320
+      ],
+      [
+        1020,
+        1320
+      ]
+    ]
+  },
+  "rating": {
+    "_info": "Kézzel frissítendő a Google-profilból. checkedOn = az ellenőrzés napja.",
+    "value": 4.8,
+    "count": 132,
+    "source": "Google",
+    "checkedOn": "2026-10-24",
+    "url": "https://www.google.com/maps/search/?api=1&query=pr09re55%20Pozsonyi%20%C3%BAt%2043%20Budapest"
+  },
+  "reviews": [
+    {
+      "author": "Tamás L.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Ez a hely egy csoda! Varázslatos hangulat!",
+      "translation": {
+        "en": "This place is a wonder! A magical atmosphere!"
+      }
+    },
+    {
+      "author": "Andrea B.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Egy igazi párizsi, utánozhatatlan hangulat!",
+      "translation": {
+        "en": "A truly Parisian, inimitable atmosphere!"
+      }
+    },
+    {
+      "author": "Arran S.",
+      "rating": 5,
+      "lang": "en",
+      "text": "The aperol spritz she made was the best we’ve had in all of Budapest!",
+      "translation": {
+        "hu": "Az aperol spritz, amit készített, a legjobb volt, amit egész Budapesten ittunk!"
+      }
+    },
+    {
+      "author": "Franciska F.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Ez a hely egy ékszerdoboz, különleges párizsi hangulatot és életérzést varázsol Budapestre!",
+      "translation": {
+        "en": "This place is a jewelbox: it brings a special Parisian atmosphere and way of life to Budapest!"
+      }
+    },
+    {
+      "author": "Aletta L.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "A hely hangulata pedig egyszerűen varázslatos – egy igazi ékszerdoboz a Pozsonyi úton.",
+      "translation": {
+        "en": "And the atmosphere is simply magical: a true jewelbox on Pozsonyi út."
+      }
+    },
+    {
+      "author": "Balázs K.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Igényes pici hely, nyáron hangulatos terasszal. … Finom koktélok, kedves kiszolgálás.",
+      "translation": {
+        "en": "A refined little place with a lovely terrace in summer. … Delicious cocktails, kind service."
+      }
+    },
+    {
+      "author": "Bettina P.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Finom minőségi koktélok, barátságos kiszolgálás, inspiráló környezet.",
+      "translation": {
+        "en": "Delicious quality cocktails, friendly service, an inspiring setting."
+      }
+    },
+    {
+      "author": "Boglárka N.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "A legjobb hely a környéken, igazi kis ékszerdoboz, őszinte a vendégszeretet.",
+      "translation": {
+        "en": "The best place in the area, a real little jewelbox, with genuine hospitality."
+      }
+    },
+    {
+      "author": "Erzsébet P.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "A legjobb hely! Imádom! Kedves kiszolgálás, csodás miliő.",
+      "translation": {
+        "en": "The best place! I love it! Kind service, a wonderful setting."
+      }
+    },
+    {
+      "author": "Balázs M.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Csoda kis hely, igazi bohém párizsi hangulat.",
+      "translation": {
+        "en": "A wonderful little place, a truly bohemian Parisian atmosphere."
+      }
+    },
+    {
+      "author": "Kira K.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Csodálatos minőség, nagyon jó hangulat, jó zene és kiszolgálás!",
+      "translation": {
+        "en": "Wonderful quality, a great atmosphere, good music and service!"
+      }
+    },
+    {
+      "author": "Zsolt I.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Egyedi hangulat, minőségi italkínálat, tüneményes tulaj, kedves kiszolgálás.",
+      "translation": {
+        "en": "A unique atmosphere, quality drinks, a delightful owner, kind service."
+      }
+    },
+    {
+      "author": "Gellért",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Egyedi hely! Mintha nem is Magyarországon lenne az ember. Élmény volt!",
+      "translation": {
+        "en": "A unique place! You'd think you weren't in Hungary. It was an experience!"
+      }
+    },
+    {
+      "author": "Hajnalka V.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Nagyon jó hangulatú hely, kellemes zenével a háttérben, finom borokkal.",
+      "translation": {
+        "en": "A place with a great atmosphere, pleasant music in the background and fine wines."
+      }
+    },
+    {
+      "author": "Apple I.",
+      "rating": 5,
+      "lang": "hu",
+      "text": "Gyönyörű és hangulatos. … De a legjobb: Bobby’s GT. A legjobb GT, amit eddig kóstoltam!",
+      "translation": {
+        "en": "Beautiful and cosy. … But the best part: Bobby’s GT. The best G&T I have ever tasted!"
+      }
+    }
+  ],
+  "press": [
+    {
+      "outlet": "We Love Budapest",
+      "date": "2021-11-30",
+      "title": {
+        "hu": "Egy párizsi modell budoárja",
+        "en": "A Paris model’s boudoir"
+      },
+      "url": "https://welovebudapest.com/cikk/2021/11/30/shopping-egy-parizsi-modell-budoarja-a-pozsonyi-uti-pr09re55-ben-jartunk/"
+    }
+  ],
+  "reserve": {
+    "_info": "Online foglalás, átvétel és fizetés a boltban. A foglalást a vásárló WhatsApp-üzenetként küldi el a bolt számára (a menükártyán szereplő WhatsApp-szám). Ha később e-mailes űrlap-szolgáltatás kerül beállításra (pl. FormSubmit), a 'formEndpoint' mezőbe kerül a címe, és akkor az oldal oda küldi a foglalást. Fizetés NEM történik online.",
+    "whatsapp": "+33766203497",
+    "formEndpoint": null
+  },
+  "_reviewsInfo": "Rövid, szó szerinti részletek valódi, 5 csillagos Google-véleményekből (kigyűjtve 2026-10-31; ékezetek pótolva). Ötösével váltakoznak a főoldalon."
+}

@@ -1,0 +1,60 @@
+{
+  "_info": "A Történet oldal fejezetei. status: 'verified' (nyilvános forrás, megadva), 'tbc' (ügyféllel megerősítendő), 'missing' (hiányzik, helyőrző jelenik meg).",
+  "chapters": [
+    {
+      "key": "origin",
+      "status": "tbc",
+      "source": "We Love Budapest, 2021.11.30.",
+      "title": {
+        "hu": "Párizsból a Pozsonyi útra",
+        "en": "From Paris to Pozsonyi út"
+      },
+      "text": {
+        "hu": "Mészáros Zita több mint húsz évet töltött a párizsi divatban: a Lanvin modellje és Alber Elbaz utolsó múzsája volt, tizenkét évig a Chloénál dolgozott. A pr09re55 az ő budapesti ékszerdoboza, ahová mindazt hozza, amit a francia sikkről tud.",
+        "en": "Zita Mészáros spent more than twenty years in Paris fashion: a Lanvin model and Alber Elbaz’s last muse, then twelve years with Chloé. pr09re55 is her Budapest jewelbox, where she brings everything she knows about French chic."
+      },
+      "image": "interieur.webp"
+    },
+    {
+      "key": "philosophy",
+      "status": "verified",
+      "source": "Instagram @pr09re55",
+      "title": {
+        "hu": "A ház mottója",
+        "en": "The house motto"
+      },
+      "quote": "A nonchalant escape for the global citizen. Unpretentious mixology meets niche retail.",
+      "text": {
+        "hu": "Igényes italok, nagyképűség nélkül. Tárgyak, amelyeknek történetük van.",
+        "en": "Serious drinks without the pretence. Objects that come with a story."
+      }
+    },
+    {
+      "key": "worlds",
+      "status": "verified",
+      "source": "Google cégprofil",
+      "title": {
+        "hu": "Bár, bolt, szalon",
+        "en": "Bar, shop, salon"
+      },
+      "text": {
+        "hu": "Bor, pezsgő és signature koktélok, gondosan válogatott playlistekkel. A polcokon niche parfümök, luxus illatgyertyák és lakásillatok, kozmetikumok, kézzel készült játékok, kiegészítők, tea és kávé.",
+        "en": "Wine, bubbles and signature cocktails to carefully built playlists. On the shelves: niche perfume, luxury candles and home fragrance, skincare, handmade toys, accessories, tea and coffee."
+      },
+      "image": "trudon-bougies.webp"
+    },
+    {
+      "key": "evolution",
+      "status": "missing",
+      "title": {
+        "hu": "Az évek",
+        "en": "The years"
+      },
+      "text": {
+        "hu": "Helyőrző: a nyitás pontos dátuma és a hely története az ügyféltől érkezik. Annyi biztos, hogy 2021 novemberében már nyitva volt.",
+        "en": "Placeholder: the exact opening date and the story of the place will come from the client. What is certain is that it was already open in November 2021."
+      },
+      "image": "mag-terasz.webp"
+    }
+  ]
+}

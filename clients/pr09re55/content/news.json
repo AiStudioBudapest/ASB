@@ -1,0 +1,38 @@
+{
+  "_info": [
+    "Mi újság? / What's new? — események és újdonságok, a legújabb legyen elöl.",
+    "Új bejegyzés: másold le egy blokkot. dateStart/dateEnd: ÉÉÉÉ-HH-NN (dateEnd elhagyható). image: kép neve az assets/img mappában, vagy null.",
+    "Csak megerősített információ kerüljön ide (helyszín, időpont, program)."
+  ],
+  "items": [
+    {
+      "slug": "elle-pop-up",
+      "kind": {
+        "hu": "Esemény",
+        "en": "Event"
+      },
+      "dateStart": "2026-11-20",
+      "dateEnd": "2026-11-22",
+      "title": {
+        "hu": "ELLE pop-up",
+        "en": "ELLE pop-up"
+      },
+      "text": {
+        "hu": "A pr09re55 is részt vesz az ELLE pop-upon, november 20. és 22. között. A helyszínt és a részleteket itt és az Instagramon jelezzük.",
+        "en": "pr09re55 takes part in the ELLE pop-up, 20 to 22 November. We will share the venue and details here and on Instagram."
+      },
+      "image": null
+    }
+  ],
+  "club": {
+    "_info": "A Club Card előnyei még nincsenek meghatározva: ne írj ide kedvezményt vagy feltételt, amíg az ügyfél nem erősíti meg.",
+    "title": {
+      "hu": "Club Card",
+      "en": "Club Card"
+    },
+    "text": {
+      "hu": "A ház saját klubkártyája. A részletekről személyesen mesélünk: kérdezz rá a butikban.",
+      "en": "The house's own club card. We share the details in person: ask us in the boutique."
+    }
+  }
+}
