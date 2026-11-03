@@ -1,0 +1,25 @@
+name: Contrôle mobile et tablette
+
+# À chaque modification proposée (PR), on ouvre le site en taille de téléphone et de
+# tablette et on vérifie qu'on ne peut pas défiler à droite, qu'aucune erreur JS
+# n'apparaît et que les champs de formulaire font au moins 16 px.
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm i --no-save playwright
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check:mobile
+      - name: Site client pr09re55
+        run: node clients/pr09re55/build.mjs && node scripts/check-mobile.mjs --dir clients/pr09re55/dist

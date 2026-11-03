@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "check:mobile": "node scripts/check-mobile.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
