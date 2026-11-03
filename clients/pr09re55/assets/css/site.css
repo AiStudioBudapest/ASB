@@ -13,7 +13,7 @@
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:90px}
+html{overflow-x:clip;-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:90px}
 body{margin:0;background:var(--paper);color:var(--ink);font:300 17px/1.7 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
@@ -897,3 +897,18 @@ address,.big-link a,.brands,.mt-cats li{font-family:var(--sans);font-weight:600;
 @keyframes ldBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes ldSafety{to{opacity:0;visibility:hidden}}
 @media (prefers-reduced-motion:reduce){.ld-mark,.ld-bar i{animation:none}}
+
+/* ---------------- Garde-fous mobile / tablette (ne pas retirer) ----------------
+   Sur téléphone, un seul élément trop large élargit toute la page (« zoom arrière » + défilement
+   à droite) ; body{overflow-x:hidden} ne l'empêche pas. `clip` sur html ET body contient le
+   débordement sans casser position:sticky. Les cellules de grille ne peuvent plus gonfler
+   à cause d'un mot long ou d'un prix. Contrôlé par `npm run check:mobile` (voir CLAUDE.md). */
+html,body{overflow-x:clip}
+img,video,svg,iframe{max-width:100%}
+h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
+.pcard,.pcard-link,.pcard-txt>*{min-width:0}
+@media (max-width:820px){
+  .best-grid,.month-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mh-row{gap:10px}
+  .logo{min-width:0}
+}
