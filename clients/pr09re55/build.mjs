@@ -300,7 +300,7 @@ function home(l) {
     <h1 id="coverT" class="hero-word">${logo('hero-logo')}<span class="sr-only">pr09re55 · ${esc(t.tagline)} · Budapest</span></h1>
     <figure class="hero-ph">${pic(path, 'mag-pezsgo', l === 'hu' ? 'Pezsgő a pr09re55 magazinjából' : 'Sparkling wine, from the pr09re55 magazine', '(max-width: 820px) 70vw, 30vw', false)}</figure>
     <div class="hero-txt">
-      <ul class="hero-tags"><li>Cocktail lounge <b>+</b></li><li>Concept store <b>+</b></li><li>${esc(t.city)} <span class="hero-addr">${esc(l === 'hu' ? SITE.address.street : SITE.address.street.replace(/\.$/, ''))}</span></li></ul>
+      <ul class="hero-tags"><li>Cocktail lounge</li><li>Concept store</li><li>${esc(t.city)} <span class="hero-addr">${esc(l === 'hu' ? SITE.address.street : SITE.address.street.replace(/\.$/, ''))}</span></li></ul>
       <p class="hero-line">${t.coverTitle}</p>
       <p class="hero-intro" lang="en">${esc(t.coverIntro).replace('. ', '.<br>')}</p>
       <p class="hero-ctas"><a class="btn btn-solid" href="${link(path, ROUTES.shop[l])}">${esc(t.coverCta)} ${ICON.arrow}</a><a class="btn" href="${link(path, ROUTES.menu[l])}">${esc(t.nav.menu)}</a></p>
