@@ -128,7 +128,8 @@
       "demo": true,
       "tone": "#ebe6d8",
       "images": [
-        "trudon-bougies.webp"
+        "trudon-marbre.webp",
+        "trudon-baies.webp"
       ],
       "description": {
         "hu": "Trudon gyertyák és lakásillatok, ahogy a pr09re55 polcain állnak.",
@@ -142,6 +143,74 @@
         "en": [
           "Scented candle",
           "Home fragrance"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-abd-el-kader",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Abd el Kader gyertya",
+        "en": "Abd el Kader candle"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 5,
+      "featured": false,
+      "demo": true,
+      "tone": "#e9dccb",
+      "images": [
+        "trudon-abd-el-kader.webp"
+      ],
+      "description": {
+        "hu": "Illatgyertya a Trudon Klasszikus gyűjteményéből, a mentateás hangulat jegyében. Az elérhetőség és az ár a boltban kérdezhető.",
+        "en": "Scented candle from the Trudon Classique collection, inspired by mint tea. Availability and price on request in store."
+      },
+      "details": {
+        "hu": [
+          "Illatgyertya",
+          "Klasszikus gyűjtemény"
+        ],
+        "en": [
+          "Scented candle",
+          "Classique collection"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-ernesto",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Ernesto gyertya",
+        "en": "Ernesto candle"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 6,
+      "featured": false,
+      "demo": true,
+      "tone": "#e6d6bf",
+      "images": [
+        "trudon-ernesto.webp"
+      ],
+      "description": {
+        "hu": "Illatgyertya a Trudon Klasszikus gyűjteményéből, a dohánylevelek világában. Az elérhetőség és az ár a boltban kérdezhető.",
+        "en": "Scented candle from the Trudon Classique collection, inspired by tobacco leaf. Availability and price on request in store."
+      },
+      "details": {
+        "hu": [
+          "Illatgyertya",
+          "Klasszikus gyűjtemény"
+        ],
+        "en": [
+          "Scented candle",
+          "Classique collection"
         ]
       }
     },
@@ -234,7 +303,7 @@
         "hu": "otthon",
         "en": "home"
       },
-      "image": "trudon-bougies.webp"
+      "image": "trudon-marbre.webp"
     },
     {
       "key": "kiegeszito",
