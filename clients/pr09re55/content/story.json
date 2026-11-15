@@ -44,6 +44,20 @@
       "image": "trudon-bougies.webp"
     },
     {
+      "key": "trudon",
+      "status": "verified",
+      "source": "Trudon katalógus, 2026. november",
+      "title": {
+        "hu": "Trudon: 1643 óta",
+        "en": "Trudon: since 1643"
+      },
+      "text": {
+        "hu": "A polcainkon álló gyertyák és illatok a világ legrégebbi, ma is működő gyertyaműhelyéből, a Trudonból érkeznek. Claude Trudon 1643-ban vette át a párizsi rue Saint-Honoré egyik üzletét, ahol fűszereket és gyertyákat árult. A manufaktúra később a francia udvar, majd I. Napóleon hivatalos szállítója lett. A gyertyák ma is Normandiában készülnek, minden üvegük egyedi, Toszkánában kézzel formázott.",
+        "en": "The candles and fragrances on our shelves come from Trudon, the oldest candlemaker in the world still active today. In 1643 Claude Trudon took over a shop on rue Saint-Honoré in Paris, selling spices and candles. The manufacture later became official supplier to the French Court, then to Napoléon I. The candles are still made in Normandy, each glass unique and hand-crafted in Tuscany."
+      },
+      "image": "trudon-marbre.webp"
+    },
+    {
       "key": "evolution",
       "status": "missing",
       "title": {

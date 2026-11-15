@@ -385,6 +385,176 @@
       }
     },
     {
+      "slug": "trudon-absolu",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Absolu",
+        "en": "Absolu"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 20,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3f0e0",
+      "images": [
+        "trudon-absolu.webp"
+      ],
+      "description": {
+        "hu": "Mámorító illat: kardamom, mandarin és sáfrány nyitja, szíve tömjén, írisz és narancsvirág absolue, XIV. Lajos kedvenc virágának tiszteletére. Alapjai a guajákfa, a cédrus és a tonkababo adják a meleget és a mélységet. Antoine Lie alkotása.",
+        "en": "An intoxicating scent that opens with cardamom, mandarin and saffron, revealing a heart of incense, iris and orange blossom absolute, a nod to Louis XIV. Rich base notes of guaiac wood, cedar and tonka bean. Created by Antoine Lie."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-carmen",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Carmen",
+        "en": "Carmen"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 21,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1e3c8",
+      "images": [
+        "trudon-carmen.webp"
+      ],
+      "description": {
+        "hu": "Dohány, rum érintésével mélyítve és nemesítve; finomított, szemcséhez közel megmunkált bőr; fák és gyanták adják a szerkezetet, a pacsuli pedig kortárs rezgést visz bele. Felejthetetlen jelenlét, érzékeny és megzabolázhatatlan szabadság.",
+        "en": "Tobacco gains depth and nobility, lit by a hint of rum. The leather is refined, worked close to the grain. Woods and resins structure the whole, while a highly pure patchouli brings a contemporary vibration. An unforgettable presence, a sensitive and indomitable freedom."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-mortel-noir",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Mortel Noir",
+        "en": "Mortel Noir"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 22,
+      "featured": false,
+      "demo": true,
+      "tone": "#ece3d2",
+      "images": [
+        "trudon-mortel-noir.webp"
+      ],
+      "description": {
+        "hu": "A Mortel Noir újjászületett: ösztönösebb, intenzívebb arcát mutatja meg. Nyers energia és erős természetes akkordok hajtják. Yann Vasnier alkotása.",
+        "en": "Mortel Noir is reborn. It reveals a new side: more instinctive, more intense. Driven by raw energy and powerful natural accords. Created by Yann Vasnier."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-45",
+      "brand": "Trudon",
+      "name": {
+        "hu": "45°",
+        "en": "45°"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 23,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3dcd6",
+      "images": [
+        "trudon-45.webp"
+      ],
+      "description": {
+        "hu": "A 45° egyre emelkedő hőmérséklettel kacérkodik: szenvedélyt és vágyat sugall. A vanília hármasára épül, érzékiséget teremt. Yann Vasnier alkotása a Nuit Rouge kollekcióból (20% parfümkoncentráció).",
+        "en": "45° flirts with a rising temperature: this original fragrance suggests passion and desire. Built around a trio of vanilla, it achieves sensuality. Created by Yann Vasnier, from the Nuit Rouge collection (20% fragrance concentration)."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-midnight-omen",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Midnight Omen",
+        "en": "Midnight Omen"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 24,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3dcd6",
+      "images": [
+        "trudon-midnight-omen.webp"
+      ],
+      "description": {
+        "hu": "Az ismeretlen vonzása. Rejtélyes és merész, jósjeleket sejtet, jókat vagy rosszakat, és találgatásra készteti viselőjét. Csábítás, veszély, intrika: minden jegy egy titkot suttog. Emilie Bouge alkotása a Nuit Rouge kollekcióból (20% parfümkoncentráció).",
+        "en": "The pull of the unknown. Enigmatic and bold, it hints at omens, good or bad, and keeps the wearer guessing. Seduction, danger, intrigue: each note whispers a secret. Created by Emilie Bouge, from the Nuit Rouge collection (20% fragrance concentration)."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
       "slug": "trudon-szappan-medie",
       "brand": "Trudon",
       "name": {
@@ -665,6 +835,108 @@
         "en": [
           "Fragrance object",
           "Cameo: about 8 hours"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-cameo-gyertya",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Cameo oszlopgyertya",
+        "en": "Cameo pillar candle"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 27,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1ede4",
+      "images": [
+        "trudon-cameo-pillar.webp"
+      ],
+      "description": {
+        "hu": "Madame de Pompadour tiszteletére készült oszlopgyertya: a gliptika és a gyertyakészítés két ősi tudása találkozik. Normandiai műhelyben marják, színezik és díszítik. Egy méretben: átmérő 8 cm, magasság 15 cm. Színek: fehér, fekete, sötétkék, bordó, rózsaszín, mimóza, kő és khaki.",
+        "en": "An ode to Madame de Pompadour, combining two ancestral know-hows: the art of glyptic and the craft of candle making. Each pillar candle is milled, colored and decorated in a Normandy atelier. One size: diameter 8 cm, height 15 cm. Colors: white, black, navy blue, burgundy, pink, mimosa, stone and khaki."
+      },
+      "details": {
+        "hu": [
+          "Oszlopgyertya",
+          "Ø 8 cm · magasság 15 cm"
+        ],
+        "en": [
+          "Pillar candle",
+          "Ø 8 cm · height 15 cm"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-cloche",
+      "brand": "Trudon",
+      "name": {
+        "hu": "La Cloche üvegbúra",
+        "en": "La Cloche glass dome"
+      },
+      "category": "kiegeszito",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 25,
+      "featured": false,
+      "demo": true,
+      "tone": "#eceae2",
+      "images": [
+        "trudon-cloche.webp"
+      ],
+      "description": {
+        "hu": "Üvegbúra a gyertyák otthoni bemutatására, Trudon logóval díszítve, kézzel csiszolt fa talapzaton.",
+        "en": "A glass dome to display your candles at home, adorned with the Trudon logo and set on a hand-polished wooden base."
+      },
+      "details": {
+        "hu": [
+          "Kiegészítő",
+          "Üveg és fa"
+        ],
+        "en": [
+          "Accessory",
+          "Glass and wood"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-eteignoir",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Fáklyaoltó (hengeres)",
+        "en": "Wick dipper (cylinder)"
+      },
+      "category": "kiegeszito",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 26,
+      "featured": false,
+      "demo": true,
+      "tone": "#eceae2",
+      "images": [
+        "trudon-eteignoir.webp"
+      ],
+      "description": {
+        "hu": "Pauline Deltour tervezte pontossági eszköz: a kanócot a viaszba merítve füst nélkül oltja el a gyertyát, majd felemelve és középre igazítva a viasszal bevont kanóc könnyen újra meggyújtható.",
+        "en": "Designed by Pauline Deltour, a precision tool: it dips the wick in the wax to extinguish the candle without smoke; once raised and centered, the wax-coated wick is easy to light again."
+      },
+      "details": {
+        "hu": [
+          "Kiegészítő",
+          "Kanócmerítő"
+        ],
+        "en": [
+          "Accessory",
+          "Wick dipper"
         ]
       }
     },
