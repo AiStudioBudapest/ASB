@@ -215,6 +215,248 @@
       }
     },
     {
+      "slug": "trudon-medie",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Médie",
+        "en": "Médie"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 7,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3f0e2",
+      "images": [
+        "trudon-medie.webp"
+      ],
+      "description": {
+        "hu": "Könnyed utazás citrusszívvel. Frissesség, amely végigfut a bőrön, és borostyán és bőr kívánatos nyomát hagyja maga után. Yann Vasnier alkotása.",
+        "en": "A blithe journey with a citrus heart. A freshness that runs on the skin, leaving a desirable trace of amber and leather. Created by Yann Vasnier."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-mortel",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Mortel",
+        "en": "Mortel"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 8,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3ead0",
+      "images": [
+        "trudon-mortel.webp"
+      ],
+      "description": {
+        "hu": "Misztikus, mélyen gyökerező, fűszeres jelenlét. A bőrök egymáshoz simulnak, a tömjén, a mirrha és a benzoin pedig felfedi a tiszta Cistus erotikus varázsát. Yann Vasnier alkotása.",
+        "en": "A mystical presence, deeply rooted and spicy. Frankincense, myrrh and benzoin reveal the erotic spell of pure Cistus. Created by Yann Vasnier."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-revolution",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Révolution",
+        "en": "Révolution"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 9,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3ead4",
+      "images": [
+        "trudon-revolution.webp"
+      ],
+      "description": {
+        "hu": "Füstös hírnöke egy kezdetnek és egy végnek. Átjárja a bőrt, és a nap folyamán épül fel az érzelmeken, rejtélyt és intrikát hagyva maga körül. Lyn Harris alkotása.",
+        "en": "A smoky messenger of both a beginning and an end. It permeates the skin and builds up on emotions throughout the day. Created by Lyn Harris."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-ii",
+      "brand": "Trudon",
+      "name": {
+        "hu": "II",
+        "en": "II"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 10,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1f0e0",
+      "images": [
+        "trudon-ii.webp"
+      ],
+      "description": {
+        "hu": "Zöld jegy, amely összeköt. Az új kezdetekről szól: az erdő élete, amely áthatja az évszakokat. Kölni, amely egy varázslatos hely felé mutat. Lyn Harris alkotása.",
+        "en": "A green note that unites. About new beginnings: the life of a forest that permeates the seasons. A cologne that points at a magical place. Created by Lyn Harris."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-aphelie",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Aphélie",
+        "en": "Aphélie"
+      },
+      "category": "parfum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 11,
+      "featured": false,
+      "demo": true,
+      "tone": "#f3efdf",
+      "images": [
+        "trudon-aphelie.webp"
+      ],
+      "description": {
+        "hu": "Egyedi módon tűnik ki: mint az aphélium, a Naptól legtávolabbi pálya pont, megvilágosodik. Titokzatos, a kozmoszhoz kötődik. Antoine Lie alkotása.",
+        "en": "Aphélie stands out in a unique manner: like an aphelion, the point furthest from the sun, she lights up. Mysterious, connected to the cosmos. Created by Antoine Lie."
+      },
+      "details": {
+        "hu": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-cyrnos",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Cyrnos gyertya",
+        "en": "Cyrnos candle"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 12,
+      "featured": false,
+      "demo": true,
+      "tone": "#e8e0d0",
+      "images": [
+        "trudon-cyrnos.webp"
+      ],
+      "description": {
+        "hu": "Mediterrán aromák. A napsütötte Cyrnos villa citrusos illatkertje, fügefák és napernyőfenyők árnyéka, a provence-i levendula száraz illatával elegyedve.",
+        "en": "Mediterranean aromas. The aromatic citrus garden of the sunny Cyrnos villa, in the shade of fig trees and parasol pines, mixed with the dry aromas of Provence."
+      },
+      "details": {
+        "hu": [
+          "Illatgyertya",
+          "Klasszikus gyűjtemény",
+          "270 g · 50–55 óra égési idő"
+        ],
+        "en": [
+          "Scented candle",
+          "Classique collection",
+          "270 g · 50–55 hours burn time"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-josephine",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Joséphine gyertya",
+        "en": "Joséphine candle"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 13,
+      "featured": false,
+      "demo": true,
+      "tone": "#dfe5f0",
+      "images": [
+        "trudon-josephine.webp"
+      ],
+      "description": {
+        "hu": "Virágoskert. A hajnal tompa fénye átcsúszik a virágágyásokon, vékony árnyék oson a rózsák között.",
+        "en": "Floral garden. The muffled light of dawn slips through the flower beds, a fine shadow sneaks among the roses."
+      },
+      "details": {
+        "hu": [
+          "Illatgyertya",
+          "Klasszikus gyűjtemény",
+          "270 g · 50–55 óra égési idő"
+        ],
+        "en": [
+          "Scented candle",
+          "Classique collection",
+          "270 g · 50–55 hours burn time"
+        ]
+      }
+    },
+    {
       "slug": "minta-kiegeszito",
       "brand": "—",
       "name": {
