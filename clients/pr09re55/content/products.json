@@ -385,6 +385,114 @@
       }
     },
     {
+      "slug": "trudon-szappan-medie",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Médie kézmosó szappan",
+        "en": "Médie hand soap"
+      },
+      "category": "kozmetikum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 14,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1ece0",
+      "images": [
+        "trudon-szappan-medie.webp"
+      ],
+      "description": {
+        "hu": "Illatos kézmosó szappan, grépfrút, szambák jázmin és cédrusfa jegyekkel. A karcsú, vájt zöld üveg a ház jegyeit őrzi: arany színű pumpa és a parfüm nevével vésett arany címer. Marseille-i szappan hagyományai szerint főzve, 97%-ban természetes összetevőkből.",
+        "en": "Scented hand soap with grapefruit, sambac jasmine and cedarwood. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients."
+      },
+      "details": {
+        "hu": [
+          "Kézmosó szappan",
+          "350 ml",
+          "500 ml-es utántöltő külön kapható"
+        ],
+        "en": [
+          "Hand soap",
+          "350 ml",
+          "Separate 500 ml refill available"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-szappan-vixi",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Vixi kézmosó szappan",
+        "en": "Vixi hand soap"
+      },
+      "category": "kozmetikum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 15,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1ece0",
+      "images": [
+        "trudon-szappan-vixi.webp"
+      ],
+      "description": {
+        "hu": "Illatos kézmosó szappan, petit grain, zsálya és bio szantálfa jegyekkel. A karcsú, vájt zöld üveg a ház jegyeit őrzi: arany színű pumpa és a parfüm nevével vésett arany címer. Marseille-i szappan hagyományai szerint főzve, 97%-ban természetes összetevőkből.",
+        "en": "Scented hand soap with petit grain, sage natural essence and organic sandalwood. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients."
+      },
+      "details": {
+        "hu": [
+          "Kézmosó szappan",
+          "350 ml",
+          "500 ml-es utántöltő külön kapható"
+        ],
+        "en": [
+          "Hand soap",
+          "350 ml",
+          "Separate 500 ml refill available"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-szappan-carmen",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Carmen kézmosó szappan",
+        "en": "Carmen hand soap"
+      },
+      "category": "kozmetikum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 16,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1ece0",
+      "images": [
+        "trudon-szappan-carmen.webp"
+      ],
+      "description": {
+        "hu": "Illatos kézmosó szappan, bergamott, dohány akkord és pacsuli jegyekkel. A karcsú, vájt zöld üveg a ház jegyeit őrzi: arany színű pumpa és a parfüm nevével vésett arany címer. Marseille-i szappan hagyományai szerint főzve, 97%-ban természetes összetevőkből.",
+        "en": "Scented hand soap with bergamot, tobacco accord and patchouli. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients."
+      },
+      "details": {
+        "hu": [
+          "Kézmosó szappan",
+          "350 ml",
+          "500 ml-es utántöltő külön kapható"
+        ],
+        "en": [
+          "Hand soap",
+          "350 ml",
+          "Separate 500 ml refill available"
+        ]
+      }
+    },
+    {
       "slug": "trudon-cyrnos",
       "brand": "Trudon",
       "name": {
@@ -421,6 +529,76 @@
       }
     },
     {
+      "slug": "trudon-diffuzor",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Pálcás illatosító (klasszikus, 350 ml)",
+        "en": "Reed diffuser (classic, 350 ml)"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 17,
+      "featured": false,
+      "demo": true,
+      "tone": "#e9e6d8",
+      "images": [
+        "trudon-diffuzor.webp"
+      ],
+      "description": {
+        "hu": "Ugyanabból a jellegzetes Trudon üvegből készül, mint a gyertyák, arany címerrel és újrahasznosítható alumínium gyűrűvel; 8 fekete rattanpálcát kell beletenni. Passzív illatosítás, a klasszikus méretnél 3–4 hónapig. Illatok: Abd el Kader, Cyrnos, Ernesto, Gabriel, Joséphine és Spiritus Sancti.",
+        "en": "Shaped from the same emblematic Trudon glass as the candles, with a gold emblem and a 100% recyclable aluminium ring; you place 8 black rattan sticks through it. Passive diffusion, 3 to 4 months for the classic size. Scents: Abd el Kader, Cyrnos, Ernesto, Gabriel, Joséphine and Spiritus Sancti."
+      },
+      "details": {
+        "hu": [
+          "Pálcás illatosító",
+          "350 ml",
+          "Utántöltő külön kapható"
+        ],
+        "en": [
+          "Reed diffuser",
+          "350 ml",
+          "Separate refills available"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-spray",
+      "brand": "Trudon",
+      "name": {
+        "hu": "Illatosító spray (375 ml)",
+        "en": "Room spray (375 ml)"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 18,
+      "featured": false,
+      "demo": true,
+      "tone": "#e7e6d6",
+      "images": [
+        "trudon-spray.webp"
+      ],
+      "description": {
+        "hu": "A ház jellegzetes illatai szobaspray formájában is kaphatók, nagy, 375 ml-es üvegben.",
+        "en": "Trudon's signature scents are also available as room sprays, in large 375 ml glass bottles."
+      },
+      "details": {
+        "hu": [
+          "Szobaspray",
+          "375 ml"
+        ],
+        "en": [
+          "Room spray",
+          "375 ml"
+        ]
+      }
+    },
+    {
       "slug": "trudon-josephine",
       "brand": "Trudon",
       "name": {
@@ -453,6 +631,40 @@
           "Scented candle",
           "Classique collection",
           "270 g · 50–55 hours burn time"
+        ]
+      }
+    },
+    {
+      "slug": "trudon-promeneuse",
+      "brand": "Trudon",
+      "name": {
+        "hu": "La Promeneuse illatosító",
+        "en": "La Promeneuse"
+      },
+      "category": "otthon",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 19,
+      "featured": false,
+      "demo": true,
+      "tone": "#eeeadb",
+      "images": [
+        "trudon-promeneuse.webp"
+      ],
+      "description": {
+        "hu": "Dekoratív tárgy a Trudon illatok szétáramoltatására: tegyen egy illatos kamea-t a kerámia tálkába, és gyújtson alá egy mécsest. A felmelegedett kamea megolvad, és gyorsan szétárasztja az illatot. Egy kamea kb. 8 órán át tart; az illat könnyen cserélhető.",
+        "en": "A decorative object designed to diffuse Trudon fragrances. Place a scented cameo in the ceramic dish and light a night-light beneath it: the heated cameo melts and spreads its fragrance rapidly into the air. One cameo lasts about 8 hours, and fragrances are easy to swap."
+      },
+      "details": {
+        "hu": [
+          "Illatosító tárgy",
+          "Kamea: kb. 8 óra"
+        ],
+        "en": [
+          "Fragrance object",
+          "Cameo: about 8 hours"
         ]
       }
     },
