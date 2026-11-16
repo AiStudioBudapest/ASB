@@ -357,6 +357,10 @@ function home(l) {
   </article>`; }).join('')}</div>
 </section>
 
+<section class="deco wrap" aria-hidden="true">
+  ${['trudon-josephine-800', 'trudon-abd-el-kader-800', 'trudon-ernesto-800'].map(f => `<figure><img src="${asset(path, 'img/' + f + '.webp')}" alt="" loading="lazy"></figure>`).join('')}
+</section>
+
 <section class="month" aria-labelledby="moT">
   <div class="wrap month-grid">
     <header class="month-head">
@@ -516,18 +520,25 @@ function product(p, l) {
 
 function cocktailsPage(l) {
   const t = UI[l], path = ROUTES.cocktails[l];
+  const groups = ['koktelok', 'long-drinks', 'nyari'].map(slug => { const pg = MENU.pages.find(x => x.slug === slug); return { title: tx(pg.title, l), items: pg.sections[0].items }; });
+  const featured = COCKTAILS.classics.map((ref, i) => ({ ...menuItem(ref).it, image: COCKTAILS.items[i].image }));
+  const card = (it, n) => `<li class="cg-card cg-${n % 4}"><h3>${esc(tx(it.name, l))}</h3>${it.desc ? `<p>${esc(tx(it.desc, l))}</p>` : ''}<p class="cg-price">${menuNum(it.prices[0])} Ft</p></li>`;
   const body = `
 <section class="page-head wrap">
-  <p class="kicker">${tri()} ${esc(t.cocktailsKicker)} ${COCKTAILS.demo ? demoTag(t) : ''}</p>
+  <p class="kicker">${tri()} ${esc(t.cocktailsKicker)}</p>
   <h1 class="display">${t.cocktailsTitle}</h1>
   <p class="lede">${esc(t.cocktailsPageIntro)}</p>
 </section>
 <section class="ck-spreads wrap">
-  ${COCKTAILS.items.map((c, i) => `<article class="spread ${i % 2 ? 'spread-r' : ''}">
+  ${featured.map((c, i) => `<article class="spread ${i % 2 ? 'spread-r' : ''}">
     <figure class="reveal-img"><img src="${asset(path, 'img/' + c.image)}" alt="" loading="lazy"></figure>
-    <div><p class="ck-n">N° ${i + 1}</p><h2>${esc(c.name[l])}</h2><p class="lede">${esc(c.story[l])}</p>
-    ${c.ingredients[l].length ? `<p class="label">${esc(t.ingredients)}</p><p>${c.ingredients[l].map(esc).join(' · ')}</p>` : ''}</div>
+    <div><p class="ck-n">N° ${i + 1}</p><h2>${esc(tx(c.name, l))}</h2>${c.desc ? `<p class="label">${esc(t.ingredients)}</p><p class="lede">${esc(tx(c.desc, l))}</p>` : ''}<p class="ck-price">${menuNum(c.prices[0])} Ft</p></div>
   </article>`).join('')}
+</section>
+<section class="cg wrap" aria-labelledby="cgT">
+  <h2 id="cgT" class="h-small">${esc(t.cocktailsFull)}</h2>
+  ${groups.map((g, gi) => `<div class="cg-group cg-g${gi}"><h3 class="cg-title">${esc(g.title)}</h3><ul class="cg-grid">${g.items.map((it, n) => card(it, n)).join('')}</ul></div>`).join('')}
+  <p class="cg-link"><a class="tlink" href="${link(path, ROUTES.menu[l])}">${esc(t.menuAll)} ${ICON.arrow}</a></p>
 </section>`;
   return page({ l, key: 'cocktails', path, alt: ROUTES.cocktails, title: t.meta.cocktails[0], desc: t.meta.cocktails[1], body });
 }

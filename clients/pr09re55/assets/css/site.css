@@ -897,6 +897,36 @@ address,.big-link a,.brands,.mt-cats li{font-family:var(--sans);font-weight:600;
 @keyframes ldSafety{to{opacity:0;visibility:hidden}}
 @media (prefers-reduced-motion:reduce){.ld-mark,.ld-bar i{animation:none}}
 
+/* Mix noir et blanc / couleur (demande du 16/11) : produits, catégories, cocktails et sélection en couleur ; portraits du magazine restent en N&B (couleur au survol) */
+.pcard-ph img,.shop-strip img,.mt-grid img,.ck img,.spread img,.cat-tile img,.hl-card img,.place-ph img,.gal-main img,.cart-list img{filter:none}
+.cat-tile::after{background:rgba(10,10,10,.28)}
+.month{background:linear-gradient(180deg,#fdf1f6 0%,#eefaf4 100%)}
+.pcard-ph{background:#fbf7f1}
+/* Carte complète des cocktails : cartes pastel */
+.cg{padding-bottom:clamp(70px,9vw,130px)}
+.cg > .h-small{border-top:2px solid var(--ink);padding-top:22px;margin-bottom:clamp(26px,3.4vw,48px)}
+.cg-group{margin-bottom:clamp(36px,5vw,70px)}
+.cg-title{font:400 clamp(26px,2.4vw,36px)/1 var(--cond);text-transform:uppercase;letter-spacing:.01em;margin-bottom:18px;display:inline-block;position:relative;isolation:isolate}
+.cg-title::after{content:"";position:absolute;z-index:-1;left:-.15em;bottom:.02em;width:calc(100% + .3em);height:.45em;background:var(--acc);mix-blend-mode:multiply}
+.cg-g0{--acc:var(--mint)}.cg-g1{--acc:var(--pink)}.cg-g2{--acc:var(--yellow)}
+.cg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.cg-card{border-radius:var(--r);padding:clamp(18px,2vw,28px);display:flex;flex-direction:column;gap:8px;min-width:0}
+.cg-0{background:#e6faf1}.cg-1{background:#ffeaf4}.cg-2{background:#eaeeff}.cg-3{background:#fffbd0}
+.cg-card h3{font:400 clamp(24px,2.1vw,30px)/1 var(--cond);text-transform:uppercase;letter-spacing:.01em}
+.cg-card p{font-size:15px;line-height:1.5;color:var(--ink-2)}
+.cg-card .cg-price{margin-top:auto;padding-top:6px;font-weight:600;color:var(--ink)}
+.cg-link{margin-top:10px}
+@media (max-width:980px){.cg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cg-grid{grid-template-columns:minmax(0,1fr)}}
+.spread .ck-price{font-weight:600;margin-top:18px}
+
+/* Bande de photos décoratives (couleur) */
+.deco{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.4vw,20px);margin-bottom:clamp(60px,8vw,120px)}
+.deco figure{border-radius:var(--r);overflow:hidden;aspect-ratio:4/3}
+.deco img{width:100%;height:100%;object-fit:cover}
+@media (max-width:560px){.deco{grid-template-columns:minmax(0,1fr)}.deco figure:nth-child(3){display:none}}
+.hero-ph img,.hcard img{filter:none}
+
 /* ---------------- Garde-fous mobile / tablette (ne pas retirer) ----------------
    Sur téléphone, un seul élément trop large élargit toute la page (« zoom arrière » + défilement
    à droite) ; body{overflow-x:hidden} ne l'empêche pas. `clip` sur html ET body contient le
