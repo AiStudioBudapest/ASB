@@ -307,7 +307,7 @@
     var catalog = {}, cfg = {s:{}};
     try { catalog = JSON.parse($('[data-catalog]', cart).textContent); cfg = JSON.parse($('[data-cart-cfg]', cart).textContent); } catch(e){}
     var S = cfg.s, list = $('[data-cart-list]', cart), form = $('[data-cart-form]', cart), cmsg = $('[data-cart-msg]', cart), clearBtn = $('[data-cart-clear]', cart);
-    var money = function(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, cfg.lang === 'hu' ? ' ' : ',') + ' Ft'; };
+    var money = function(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, cfg.lang === 'en' ? ',' : ' ') + ' Ft'; };
     var el = function(tag, cls, text){ var e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; };
     var items = function(){ // only products that are still in the catalogue
       var b = readBag(), out = [];

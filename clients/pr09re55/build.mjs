@@ -3,13 +3,15 @@
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, existsSync } from 'node:fs';
 import { dirname, join, relative, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { UI } from './src/ui.mjs';
+import { UI, LANG_NAMES } from './src/ui.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const OUT = join(ROOT, 'dist');
 const PREVIEW = process.argv.includes('--preview');
-// Menu text is either one string for both languages or { hu, en }.
+// Menu text is either one string for all languages or { hu, en, fr }.
 const tx = (v, l) => (v && typeof v === 'object') ? v[l] : (v ?? '');
+// Pick the text of the current language: pick(l, hu, en, fr).
+const pick = (l, hu, en, fr) => ({ hu, en, fr })[l];
 const read = f => JSON.parse(readFileSync(join(ROOT, 'content', f), 'utf8'));
 const SITE = read('site.json');
 const PRODUCTS = read('products.json').products;
@@ -20,7 +22,7 @@ const STORY = read('story.json');
 const NEWS = read('news.json');
 const HL = read('highlights.json');
 const CATS = read('products.json').categories;
-const LANGS = ['hu', 'en'];
+const LANGS = ['hu', 'en', 'fr'];
 
 /* ---------------- Checks: a broken content file should fail loudly, not silently ---------------- */
 const slugs = new Set();
@@ -65,19 +67,19 @@ for (const n of NEWS.items) {
 
 /* ---------------- Routes: one path per page and language ---------------- */
 const ROUTES = {
-  home: { hu: '', en: 'en/' },
-  shop: { hu: 'butik/', en: 'en/boutique/' },
-  hlShop: { hu: 'kiemelt/butik/', en: 'en/highlights/boutique/' },
-  hlDrinks: { hu: 'kiemelt/italok/', en: 'en/highlights/drinks/' },
-  best: { hu: 'kedvencek/', en: 'en/bestsellers/' },
-  cocktails: { hu: 'koktelok/', en: 'en/cocktails/' },
-  menu: { hu: 'itallap/', en: 'en/menu/' },
-  story: { hu: 'tortenet/', en: 'en/story/' },
-  cart: { hu: 'kosar/', en: 'en/cart/' },
-  news: { hu: 'mi-ujsag/', en: 'en/whats-new/' }
+  home: { hu: '', en: 'en/', fr: 'fr/' },
+  shop: { hu: 'butik/', en: 'en/boutique/', fr: 'fr/boutique/' },
+  hlShop: { hu: 'kiemelt/butik/', en: 'en/highlights/boutique/', fr: 'fr/selection/boutique/' },
+  hlDrinks: { hu: 'kiemelt/italok/', en: 'en/highlights/drinks/', fr: 'fr/selection/boissons/' },
+  best: { hu: 'kedvencek/', en: 'en/bestsellers/', fr: 'fr/coups-de-coeur/' },
+  cocktails: { hu: 'koktelok/', en: 'en/cocktails/', fr: 'fr/cocktails/' },
+  menu: { hu: 'itallap/', en: 'en/menu/', fr: 'fr/carte/' },
+  story: { hu: 'tortenet/', en: 'en/story/', fr: 'fr/histoire/' },
+  cart: { hu: 'kosar/', en: 'en/cart/', fr: 'fr/panier/' },
+  news: { hu: 'mi-ujsag/', en: 'en/whats-new/', fr: 'fr/quoi-de-neuf/' }
 };
-const productRoute = slug => ({ hu: `butik/${slug}/`, en: `en/boutique/${slug}/` });
-const catRoute = c => ({ hu: `butik/${c.slug.hu}/`, en: `en/boutique/${c.slug.en}/` });
+const productRoute = slug => ({ hu: `butik/${slug}/`, en: `en/boutique/${slug}/`, fr: `fr/boutique/${slug}/` });
+const catRoute = c => ({ hu: `butik/${c.slug.hu}/`, en: `en/boutique/${c.slug.en}/`, fr: `fr/boutique/${c.slug.fr}/` });
 
 // Link from the page at `from` to the page at `to` (both are route paths like 'bolt/x/').
 function link(from, to, hash = '') {
@@ -89,8 +91,8 @@ function asset(from, file) { return PREVIEW ? (posix.relative('/' + from, '/asse
 const abs = path => SITE.baseUrl + '/' + path;
 
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const fmtPrice = (n, l) => new Intl.NumberFormat(l === 'hu' ? 'hu-HU' : 'en-GB').format(n).replace(/\s/g, ' ') + ' Ft';
-const fmtDate = (iso, l) => new Intl.DateTimeFormat(l === 'hu' ? 'hu-HU' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(iso));
+const fmtPrice = (n, l) => new Intl.NumberFormat(({ hu: 'hu-HU', en: 'en-GB', fr: 'fr-FR' })[l]).format(n).replace(/\s/g, ' ') + ' Ft';
+const fmtDate = (iso, l) => new Intl.DateTimeFormat(({ hu: 'hu-HU', en: 'en-GB', fr: 'fr-FR' })[l], { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(iso));
 const hm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
 // The house triangle (the shop's mark), always small and quiet: a wink, never the logo.
 const MARK = '<polyline points="50,74 94,10 140,74"/><polyline points="72,74 94,42 182,160 12,160 44,115"/>';
@@ -116,6 +118,7 @@ const ICON = {
 /* ---------------- Layout ---------------- */
 function page({ l, key, path, alt, title, desc, image, body, jsonld = [], bodyClass = '', noindex = false }) {
   const t = UI[l];
+  const others = LANGS.filter(x => x !== l);
   const navItems = ['shop', 'best', 'cocktails', 'menu', 'story', 'news'];
   const nav = navItems.map(k => `<a href="${link(path, ROUTES[k][l])}"${key === k ? ' aria-current="page"' : ''}>${esc(t.nav[k])}</a>`).join('');
   const visit = link(path, ROUTES.home[l], '#latogatas');
@@ -129,8 +132,7 @@ function page({ l, key, path, alt, title, desc, image, body, jsonld = [], bodyCl
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">${noindex ? '\n<meta name="robots" content="noindex">' : ''}
 <link rel="canonical" href="${abs(path)}">
-<link rel="alternate" hreflang="hu" href="${abs(alt.hu)}">
-<link rel="alternate" hreflang="en" href="${abs(alt.en)}">
+${LANGS.map(x => `<link rel="alternate" hreflang="${x}" href="${abs(alt[x])}">`).join('\n')}
 <link rel="alternate" hreflang="x-default" href="${abs(alt.hu)}">
 <meta property="og:type" content="${key === 'product' ? 'product' : 'website'}">
 <meta property="og:site_name" content="pr09re55">
@@ -156,7 +158,7 @@ ${ld}
     <a class="logo" href="${link(path, ROUTES.home[l])}" aria-label="pr09re55 · ${esc(t.home)}">${logo('logo-word')}${tri('logo-mark')}</a>
     <div class="mh-tools">
       <a class="mh-visit" href="${visit}">${esc(t.nav.visit)}</a>
-      <a class="mh-lang" href="${link(path, alt[t.other])}" hreflang="${t.other}" lang="${t.other}" aria-label="${esc(t.otherLabel)}">${t.other.toUpperCase()}</a>
+      ${others.map(x => `<a class="mh-lang" href="${link(path, alt[x])}" hreflang="${x}" lang="${x}" aria-label="${esc(LANG_NAMES[x])}">${x.toUpperCase()}</a>`).join('\n      ')}
       <a class="mh-ig" href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ICON.ig}</a>
       <a class="mh-cart" href="${link(path, ROUTES.cart[l])}" data-cart-link aria-label="${esc(t.cart)}"${key === 'cart' ? ' aria-current="page"' : ''}>${ICON_BAG}<span class="mh-cart-n" data-cart-count hidden></span></a>
       <button class="burger" type="button" aria-expanded="false" aria-controls="drawer"><span class="sr-only">${esc(t.menu)}</span><i></i><i></i></button>
@@ -165,7 +167,7 @@ ${ld}
 </header>
 <div class="drawer" id="drawer" hidden>
   <nav aria-label="${esc(t.menu)}">${nav}<a href="${visit}">${esc(t.nav.visit)}</a></nav>
-  <p class="drawer-foot"><a href="${link(path, alt[t.other])}" hreflang="${t.other}">${esc(t.otherLabel)}</a> · <a href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a> · <a href="${SITE.facebook}" target="_blank" rel="noopener">Facebook</a></p>
+  <p class="drawer-foot">${others.map(x => `<a class="drawer-lang" href="${link(path, alt[x])}" hreflang="${x}" lang="${x}">${esc(LANG_NAMES[x])}</a>`).join(' · ')} · <a href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a> · <a href="${SITE.facebook}" target="_blank" rel="noopener">Facebook</a></p>
 </div>
 <main id="main">
 ${body}
@@ -188,7 +190,7 @@ ${body}
     </div>
     <div>
       <p class="label">${esc(t.langLabel)}</p>
-      <p class="foot-lang"><a href="${link(path, alt.hu)}" hreflang="hu" lang="hu"${l === 'hu' ? ' aria-current="true"' : ''}>Magyar</a> / <a href="${link(path, alt.en)}" hreflang="en" lang="en"${l === 'en' ? ' aria-current="true"' : ''}>English</a></p>
+      <p class="foot-lang">${LANGS.map(x => `<a href="${link(path, alt[x])}" hreflang="${x}" lang="${x}"${l === x ? ' aria-current="true"' : ''}>${esc(LANG_NAMES[x])}</a>`).join(' / ')}</p>
     </div>
   </div>
   <div class="wrap foot-bottom">
@@ -240,7 +242,7 @@ function reviewsBlock(l) {
   <header class="sec-head">
     <p class="kicker">${tri()} ${esc(t.reviewsKicker)}</p>
     <h2 id="rvT">${t.reviewsTitle}</h2>
-    <p class="rating"><b>${String(r.value).replace('.', l === 'hu' ? ',' : '.')}</b> <span class="stars" aria-hidden="true">★★★★★</span><br><small>${esc(t.ratingLine(String(r.value).replace('.', l === 'hu' ? ',' : '.'), r.count, fmtDate(r.checkedOn, l)))}</small></p>
+    <p class="rating"><b>${String(r.value).replace('.', l === 'en' ? '.' : ',')}</b> <span class="stars" aria-hidden="true">★★★★★</span><br><small>${esc(t.ratingLine(String(r.value).replace('.', l === 'en' ? '.' : ','), r.count, fmtDate(r.checkedOn, l)))}</small></p>
   </header>
   <div class="rq-carousel" data-reviews>
     ${sets.map((set, k) => `<div class="rq-set" id="rq-set-${k}" role="group" aria-label="${esc(t.reviewsSet(k * per + 1, k * per + set.length))}"${k ? ' data-off' : ''}>${set.map(quote).join('')}</div>`).join('')}
@@ -298,7 +300,7 @@ function home(l) {
 <section class="hero" aria-labelledby="coverT">
   <div class="hero-sheet wrap-wide">
     <h1 id="coverT" class="hero-word">${logo('hero-logo')}<span class="sr-only">pr09re55 · ${esc(t.tagline)} · Budapest</span></h1>
-    <figure class="hero-ph">${pic(path, 'mag-pezsgo', l === 'hu' ? 'Pezsgő a pr09re55 magazinjából' : 'Sparkling wine, from the pr09re55 magazine', '(max-width: 820px) 70vw, 30vw', false)}</figure>
+    <figure class="hero-ph">${pic(path, 'mag-pezsgo', pick(l, 'Pezsgő a pr09re55 magazinjából', 'Sparkling wine, from the pr09re55 magazine', 'Du champagne, tiré du magazine pr09re55'), '(max-width: 820px) 70vw, 30vw', false)}</figure>
     <div class="hero-txt">
       <ul class="hero-tags"><li>Cocktail lounge</li><li>Concept store</li><li>${esc(t.city)} <span class="hero-addr">${esc(l === 'hu' ? SITE.address.street : SITE.address.street.replace(/\.$/, ''))}</span></li></ul>
       <p class="hero-line">${t.coverTitle}</p>
@@ -338,7 +340,7 @@ function home(l) {
 
 <section class="place" aria-labelledby="placeT">
   <div class="place-txt wrap">
-    <figure class="place-ph reveal-img">${pic(path, 'mag-terasz', l === 'hu' ? 'Négy nő egy teraszon, a pr09re55 magazinjából' : 'Four women on a terrace, from the pr09re55 magazine', '(max-width: 820px) 100vw, 40vw')}</figure>
+    <figure class="place-ph reveal-img">${pic(path, 'mag-terasz', pick(l, 'Négy nő egy teraszon, a pr09re55 magazinjából', 'Four women on a terrace, from the pr09re55 magazine', 'Quatre femmes sur une terrasse, tiré du magazine pr09re55'), '(max-width: 820px) 100vw, 40vw')}</figure>
     <p class="kicker">${tri()} ${esc(t.placeKicker)}</p>
     <h2 id="placeT" class="display">${esc(t.placeTitle)}</h2>
     <p class="lede">${esc(t.placeText)}</p>
@@ -377,7 +379,7 @@ function home(l) {
 
 <section class="menu-teaser wrap" aria-labelledby="mnT">
   <div class="mt-grid">
-    <figure class="reveal-img"><img src="${asset(path, 'img/asztal-menu.webp')}" alt="${l === 'hu' ? 'Asztal felülről a pr09re55 menükártyájával' : 'A table from above with the pr09re55 menu card'}" loading="lazy"><figcaption>${l === 'hu' ? 'Fotó' : 'Photo'}: Gulyás Attila</figcaption></figure>
+    <figure class="reveal-img"><img src="${asset(path, 'img/asztal-menu.webp')}" alt="${pick(l, 'Asztal felülről a pr09re55 menükártyájával', 'A table from above with the pr09re55 menu card', 'Une table vue du dessus avec la carte de pr09re55')}" loading="lazy"><figcaption>${pick(l, 'Fotó', 'Photo', 'Photo')}: Gulyás Attila</figcaption></figure>
     <div>
       <p class="kicker">${tri()} ${esc(t.menuKicker)} ${MENU.demo ? demoTag(t) : ''}</p>
       <h2 id="mnT">${t.menuTitle}</h2>
@@ -473,7 +475,7 @@ function product(p, l) {
   const price = p.price ? fmtPrice(p.price, l) : t.priceOnRequest;
   const title = `${p.brand !== '—' ? p.brand + ' · ' : ''}${p.name[l]} · pr09re55`;
   const related = PRODUCTS.filter(x => x.slug !== p.slug && x.category === p.category).concat(PRODUCTS.filter(x => x.slug !== p.slug && x.category !== p.category)).slice(0, 3);
-  const msg = encodeURIComponent((l === 'hu' ? 'Szia! Érdekelne: ' : 'Hello! I’m interested in: ') + `${p.brand !== '—' ? p.brand + ' ' : ''}${p.name[l]} – ${abs(path)}`);
+  const msg = encodeURIComponent(pick(l, 'Szia! Érdekelne: ', 'Hello! I’m interested in: ', 'Bonjour ! Je suis intéressé(e) par : ') + `${p.brand !== '—' ? p.brand + ' ' : ''}${p.name[l]} – ${abs(path)}`);
   const ld = { '@context': 'https://schema.org', '@type': 'Product', name: p.name[l], brand: { '@type': 'Brand', name: p.brand }, description: p.description[l], image: p.images.map(i => abs('assets/img/' + i)), url: abs(path) };
   if (p.price) ld.offers = { '@type': 'Offer', price: p.price, priceCurrency: p.currency, availability: { in: 'https://schema.org/InStock', low: 'https://schema.org/LimitedAvailability', out: 'https://schema.org/OutOfStock' }[p.stock] || 'https://schema.org/InStoreOnly', url: abs(path) };
   const body = `
@@ -572,7 +574,7 @@ function menuLeaf(pg, i, l, t) {
       <ul class="mp-cats" lang="en">${pg.list.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <address class="mp-addr" lang="en">${pg.contact.map(esc).join('<br>')}</address></div>`;
   } else if (pg.kind === 'letter') {
-    inner = `${brand}<div class="mp-letter" lang="${pg.lang}"><h2 id="${id}-h" class="sr-only">${l === 'hu' ? 'Zita levele' : 'A letter from Zita'}</h2>${pg.text.map(p => `<p>${esc(p)}</p>`).join('')}<p class="mp-sign">${esc(pg.sign)}</p></div>`;
+    inner = `${brand}<div class="mp-letter" lang="${pg.lang}"><h2 id="${id}-h" class="sr-only">${pick(l, 'Zita levele', 'A letter from Zita', 'Une lettre de Zita')}</h2>${pg.text.map(p => `<p>${esc(p)}</p>`).join('')}<p class="mp-sign">${esc(pg.sign)}</p></div>`;
   } else {
     inner = `${brand}<h2 id="${id}-h" class="mp-title">${esc(tx(pg.title, l))}</h2><div class="mp-body">${pg.sections.map(sec => menuSection(sec, l)).join('')}</div>`;
   }
@@ -632,13 +634,16 @@ function storyPage(l) {
 
 /* ---------------- What's new: events and news ---------------- */
 const MONTHS = { hu: ['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'],
-  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] };
-const MON3 = { hu: ['JAN', 'FEB', 'MÁR', 'ÁPR', 'MÁJ', 'JÚN', 'JÚL', 'AUG', 'SZEP', 'OKT', 'NOV', 'DEC'], en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'] };
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'] };
+const MON3 = { hu: ['JAN', 'FEB', 'MÁR', 'ÁPR', 'MÁJ', 'JÚN', 'JÚL', 'AUG', 'SZEP', 'OKT', 'NOV', 'DEC'], en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+  fr: ['JANV', 'FÉVR', 'MARS', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOÛT', 'SEPT', 'OCT', 'NOV', 'DÉC'] };
 const ymd = iso => iso.split('-').map(Number);
-function newsDate(n, l) { // "2026. november 20–22." / "20–22 November 2026"
+function newsDate(n, l) { // "2026. november 20–22." / "20–22 November 2026" / "20–22 novembre 2026"
   const [y, m, d] = ymd(n.dateStart), [y2, m2, d2] = n.dateEnd ? ymd(n.dateEnd) : [y, m, d];
   if (l === 'hu') return m === m2 ? `${y}. ${MONTHS.hu[m - 1]} ${d}${d2 !== d ? '–' + d2 : ''}.` : `${y}. ${MONTHS.hu[m - 1]} ${d}. – ${MONTHS.hu[m2 - 1]} ${d2}.`;
-  return m === m2 ? `${d}${d2 !== d ? '–' + d2 : ''} ${MONTHS.en[m - 1]} ${y}` : `${d} ${MONTHS.en[m - 1]} – ${d2} ${MONTHS.en[m2 - 1]} ${y}`;
+  const M = MONTHS[l]; // en and fr: day first
+  return m === m2 ? `${d}${d2 !== d ? '–' + d2 : ''} ${M[m - 1]} ${y}` : `${d} ${M[m - 1]} – ${d2} ${M[m2 - 1]} ${y}`;
 }
 function newsCard(n, l) {
   const [, m, d] = ymd(n.dateStart), d2 = n.dateEnd ? ymd(n.dateEnd)[2] : null;

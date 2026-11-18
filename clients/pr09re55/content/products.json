@@ -14,7 +14,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Mystique",
-        "en": "Mystique"
+        "en": "Mystique",
+        "fr": "Mystique"
       },
       "category": "parfum",
       "price": null,
@@ -30,7 +31,8 @@
       ],
       "description": {
         "hu": "Eau de parfum a párizsi Trudon háztól, amely 1643 óta önt gyertyákat. A pr09re55 polcairól.",
-        "en": "Eau de parfum from the Paris house of Trudon, candle makers since 1643. From the pr09re55 shelves."
+        "en": "Eau de parfum from the Paris house of Trudon, candle makers since 1643. From the pr09re55 shelves.",
+        "fr": "Eau de parfum de la maison parisienne Trudon, cirier depuis 1643. Sur les étagères de pr09re55."
       },
       "details": {
         "hu": [
@@ -38,6 +40,10 @@
           "Párizs"
         ],
         "en": [
+          "Eau de parfum",
+          "Paris"
+        ],
+        "fr": [
           "Eau de parfum",
           "Paris"
         ]
@@ -48,7 +54,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Elae",
-        "en": "Elae"
+        "en": "Elae",
+        "fr": "Elae"
       },
       "category": "parfum",
       "price": null,
@@ -64,7 +71,8 @@
       ],
       "description": {
         "hu": "Eau de parfum ugyanattól a párizsi háztól, a Trudon illatcsaládjából.",
-        "en": "Eau de parfum from the same Paris house, part of the Trudon fragrance line."
+        "en": "Eau de parfum from the same Paris house, part of the Trudon fragrance line.",
+        "fr": "Eau de parfum de la même maison parisienne, issue de la ligne de parfums Trudon."
       },
       "details": {
         "hu": [
@@ -72,6 +80,10 @@
           "Párizs"
         ],
         "en": [
+          "Eau de parfum",
+          "Paris"
+        ],
+        "fr": [
           "Eau de parfum",
           "Paris"
         ]
@@ -82,7 +94,8 @@
       "brand": "Santa Maria Novella",
       "name": {
         "hu": "Olio Cosmetico",
-        "en": "Olio Cosmetico"
+        "en": "Olio Cosmetico",
+        "fr": "Olio Cosmetico"
       },
       "category": "kozmetikum",
       "price": null,
@@ -98,7 +111,8 @@
       ],
       "description": {
         "hu": "A firenzei Officina Profumo-Farmaceutica di Santa Maria Novella kozmetikuma.",
-        "en": "Skincare from the Officina Profumo-Farmaceutica di Santa Maria Novella in Florence."
+        "en": "Skincare from the Officina Profumo-Farmaceutica di Santa Maria Novella in Florence.",
+        "fr": "Soin de la peau de l’Officina Profumo-Farmaceutica di Santa Maria Novella, à Florence."
       },
       "details": {
         "hu": [
@@ -108,6 +122,10 @@
         "en": [
           "Skincare",
           "Florence"
+        ],
+        "fr": [
+          "Soin",
+          "Florence"
         ]
       }
     },
@@ -116,7 +134,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Illatgyertyák és pálcás illatosító",
-        "en": "Scented candles and diffuser"
+        "en": "Scented candles and diffuser",
+        "fr": "Bougies parfumées et diffuseur"
       },
       "category": "otthon",
       "price": null,
@@ -133,7 +152,8 @@
       ],
       "description": {
         "hu": "Trudon gyertyák és lakásillatok, ahogy a pr09re55 polcain állnak.",
-        "en": "Trudon candles and home fragrance, as they stand on the pr09re55 shelves."
+        "en": "Trudon candles and home fragrance, as they stand on the pr09re55 shelves.",
+        "fr": "Bougies et parfums d’intérieur Trudon, tels qu’ils se présentent sur les étagères de pr09re55."
       },
       "details": {
         "hu": [
@@ -143,6 +163,10 @@
         "en": [
           "Scented candle",
           "Home fragrance"
+        ],
+        "fr": [
+          "Bougie parfumée",
+          "Parfum d’intérieur"
         ]
       }
     },
@@ -151,7 +175,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Abd el Kader gyertya",
-        "en": "Abd el Kader candle"
+        "en": "Abd el Kader candle",
+        "fr": "Bougie Abd el Kader"
       },
       "category": "otthon",
       "price": null,
@@ -167,7 +192,8 @@
       ],
       "description": {
         "hu": "Illatgyertya a Trudon Klasszikus gyűjteményéből, a mentateás hangulat jegyében. Az elérhetőség és az ár a boltban kérdezhető.",
-        "en": "Scented candle from the Trudon Classique collection, inspired by mint tea. Availability and price on request in store."
+        "en": "Scented candle from the Trudon Classique collection, inspired by mint tea. Availability and price on request in store.",
+        "fr": "Bougie parfumée de la collection Trudon Classique, inspirée du thé à la menthe. Disponibilité et prix sur demande en boutique."
       },
       "details": {
         "hu": [
@@ -177,6 +203,10 @@
         "en": [
           "Scented candle",
           "Classique collection"
+        ],
+        "fr": [
+          "Bougie parfumée",
+          "Collection Classique"
         ]
       }
     },
@@ -185,7 +215,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Ernesto gyertya",
-        "en": "Ernesto candle"
+        "en": "Ernesto candle",
+        "fr": "Bougie Ernesto"
       },
       "category": "otthon",
       "price": null,
@@ -201,7 +232,8 @@
       ],
       "description": {
         "hu": "Illatgyertya a Trudon Klasszikus gyűjteményéből, a dohánylevelek világában. Az elérhetőség és az ár a boltban kérdezhető.",
-        "en": "Scented candle from the Trudon Classique collection, inspired by tobacco leaf. Availability and price on request in store."
+        "en": "Scented candle from the Trudon Classique collection, inspired by tobacco leaf. Availability and price on request in store.",
+        "fr": "Bougie parfumée de la collection Trudon Classique, inspirée de la feuille de tabac. Disponibilité et prix sur demande en boutique."
       },
       "details": {
         "hu": [
@@ -211,6 +243,10 @@
         "en": [
           "Scented candle",
           "Classique collection"
+        ],
+        "fr": [
+          "Bougie parfumée",
+          "Collection Classique"
         ]
       }
     },
@@ -219,7 +255,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Médie",
-        "en": "Médie"
+        "en": "Médie",
+        "fr": "Médie"
       },
       "category": "parfum",
       "price": null,
@@ -235,7 +272,8 @@
       ],
       "description": {
         "hu": "Könnyed utazás citrusszívvel. Frissesség, amely végigfut a bőrön, és borostyán és bőr kívánatos nyomát hagyja maga után. Yann Vasnier alkotása.",
-        "en": "A blithe journey with a citrus heart. A freshness that runs on the skin, leaving a desirable trace of amber and leather. Created by Yann Vasnier."
+        "en": "A blithe journey with a citrus heart. A freshness that runs on the skin, leaving a desirable trace of amber and leather. Created by Yann Vasnier.",
+        "fr": "Un voyage insouciant au cœur d’agrumes. Une fraîcheur qui court sur la peau et laisse un sillage désirable d’ambre et de cuir. Créé par Yann Vasnier."
       },
       "details": {
         "hu": [
@@ -243,6 +281,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -253,7 +295,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Mortel",
-        "en": "Mortel"
+        "en": "Mortel",
+        "fr": "Mortel"
       },
       "category": "parfum",
       "price": null,
@@ -269,7 +312,8 @@
       ],
       "description": {
         "hu": "Misztikus, mélyen gyökerező, fűszeres jelenlét. A bőrök egymáshoz simulnak, a tömjén, a mirrha és a benzoin pedig felfedi a tiszta Cistus erotikus varázsát. Yann Vasnier alkotása.",
-        "en": "A mystical presence, deeply rooted and spicy. Frankincense, myrrh and benzoin reveal the erotic spell of pure Cistus. Created by Yann Vasnier."
+        "en": "A mystical presence, deeply rooted and spicy. Frankincense, myrrh and benzoin reveal the erotic spell of pure Cistus. Created by Yann Vasnier.",
+        "fr": "Une présence mystique, profondément enracinée et épicée. L’encens, la myrrhe et le benjoin révèlent le sortilège érotique du pur ciste. Créé par Yann Vasnier."
       },
       "details": {
         "hu": [
@@ -277,6 +321,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -287,7 +335,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Révolution",
-        "en": "Révolution"
+        "en": "Révolution",
+        "fr": "Révolution"
       },
       "category": "parfum",
       "price": null,
@@ -303,7 +352,8 @@
       ],
       "description": {
         "hu": "Füstös hírnöke egy kezdetnek és egy végnek. Átjárja a bőrt, és a nap folyamán épül fel az érzelmeken, rejtélyt és intrikát hagyva maga körül. Lyn Harris alkotása.",
-        "en": "A smoky messenger of both a beginning and an end. It permeates the skin and builds up on emotions throughout the day. Created by Lyn Harris."
+        "en": "A smoky messenger of both a beginning and an end. It permeates the skin and builds up on emotions throughout the day. Created by Lyn Harris.",
+        "fr": "Un messager fumé, à la fois début et fin. Il imprègne la peau et s’épanouit au gré des émotions tout au long de la journée. Créé par Lyn Harris."
       },
       "details": {
         "hu": [
@@ -311,6 +361,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -321,7 +375,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "II",
-        "en": "II"
+        "en": "II",
+        "fr": "II"
       },
       "category": "parfum",
       "price": null,
@@ -337,7 +392,8 @@
       ],
       "description": {
         "hu": "Zöld jegy, amely összeköt. Az új kezdetekről szól: az erdő élete, amely áthatja az évszakokat. Kölni, amely egy varázslatos hely felé mutat. Lyn Harris alkotása.",
-        "en": "A green note that unites. About new beginnings: the life of a forest that permeates the seasons. A cologne that points at a magical place. Created by Lyn Harris."
+        "en": "A green note that unites. About new beginnings: the life of a forest that permeates the seasons. A cologne that points at a magical place. Created by Lyn Harris.",
+        "fr": "Une note verte qui réunit. Elle parle de nouveaux départs : la vie d’une forêt qui traverse les saisons. Une cologne qui évoque un lieu magique. Créé par Lyn Harris."
       },
       "details": {
         "hu": [
@@ -345,6 +401,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -355,7 +415,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Aphélie",
-        "en": "Aphélie"
+        "en": "Aphélie",
+        "fr": "Aphélie"
       },
       "category": "parfum",
       "price": null,
@@ -371,7 +432,8 @@
       ],
       "description": {
         "hu": "Egyedi módon tűnik ki: mint az aphélium, a Naptól legtávolabbi pálya pont, megvilágosodik. Titokzatos, a kozmoszhoz kötődik. Antoine Lie alkotása.",
-        "en": "Aphélie stands out in a unique manner: like an aphelion, the point furthest from the sun, she lights up. Mysterious, connected to the cosmos. Created by Antoine Lie."
+        "en": "Aphélie stands out in a unique manner: like an aphelion, the point furthest from the sun, she lights up. Mysterious, connected to the cosmos. Created by Antoine Lie.",
+        "fr": "Aphélie se distingue à sa façon : comme l’aphélie, le point le plus éloigné du soleil, elle s’illumine. Mystérieuse, reliée au cosmos. Créé par Antoine Lie."
       },
       "details": {
         "hu": [
@@ -379,6 +441,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -389,7 +455,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Absolu",
-        "en": "Absolu"
+        "en": "Absolu",
+        "fr": "Absolu"
       },
       "category": "parfum",
       "price": null,
@@ -405,7 +472,8 @@
       ],
       "description": {
         "hu": "Mámorító illat: kardamom, mandarin és sáfrány nyitja, szíve tömjén, írisz és narancsvirág absolue, XIV. Lajos kedvenc virágának tiszteletére. Alapjai a guajákfa, a cédrus és a tonkababo adják a meleget és a mélységet. Antoine Lie alkotása.",
-        "en": "An intoxicating scent that opens with cardamom, mandarin and saffron, revealing a heart of incense, iris and orange blossom absolute, a nod to Louis XIV. Rich base notes of guaiac wood, cedar and tonka bean. Created by Antoine Lie."
+        "en": "An intoxicating scent that opens with cardamom, mandarin and saffron, revealing a heart of incense, iris and orange blossom absolute, a nod to Louis XIV. Rich base notes of guaiac wood, cedar and tonka bean. Created by Antoine Lie.",
+        "fr": "Un parfum enivrant qui s’ouvre sur la cardamome, la mandarine et le safran, puis dévoile un cœur d’encens, d’iris et d’absolue de fleur d’oranger, clin d’œil à Louis XIV. Un fond riche de bois de gaïac, de cèdre et de fève tonka. Créé par Antoine Lie."
       },
       "details": {
         "hu": [
@@ -413,6 +481,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -423,7 +495,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Carmen",
-        "en": "Carmen"
+        "en": "Carmen",
+        "fr": "Carmen"
       },
       "category": "parfum",
       "price": null,
@@ -439,7 +512,8 @@
       ],
       "description": {
         "hu": "Dohány, rum érintésével mélyítve és nemesítve; finomított, szemcséhez közel megmunkált bőr; fák és gyanták adják a szerkezetet, a pacsuli pedig kortárs rezgést visz bele. Felejthetetlen jelenlét, érzékeny és megzabolázhatatlan szabadság.",
-        "en": "Tobacco gains depth and nobility, lit by a hint of rum. The leather is refined, worked close to the grain. Woods and resins structure the whole, while a highly pure patchouli brings a contemporary vibration. An unforgettable presence, a sensitive and indomitable freedom."
+        "en": "Tobacco gains depth and nobility, lit by a hint of rum. The leather is refined, worked close to the grain. Woods and resins structure the whole, while a highly pure patchouli brings a contemporary vibration. An unforgettable presence, a sensitive and indomitable freedom.",
+        "fr": "Le tabac gagne en profondeur et en noblesse, éclairé par une pointe de rhum. Le cuir est raffiné, travaillé au plus près du grain. Bois et résines structurent l’ensemble, tandis qu’un patchouli très pur apporte une vibration contemporaine. Une présence inoubliable, une liberté sensible et indomptable."
       },
       "details": {
         "hu": [
@@ -447,6 +521,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -457,7 +535,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Mortel Noir",
-        "en": "Mortel Noir"
+        "en": "Mortel Noir",
+        "fr": "Mortel Noir"
       },
       "category": "parfum",
       "price": null,
@@ -473,7 +552,8 @@
       ],
       "description": {
         "hu": "A Mortel Noir újjászületett: ösztönösebb, intenzívebb arcát mutatja meg. Nyers energia és erős természetes akkordok hajtják. Yann Vasnier alkotása.",
-        "en": "Mortel Noir is reborn. It reveals a new side: more instinctive, more intense. Driven by raw energy and powerful natural accords. Created by Yann Vasnier."
+        "en": "Mortel Noir is reborn. It reveals a new side: more instinctive, more intense. Driven by raw energy and powerful natural accords. Created by Yann Vasnier.",
+        "fr": "Mortel Noir renaît. Il révèle une facette nouvelle : plus instinctive, plus intense. Porté par une énergie brute et de puissants accords naturels. Créé par Yann Vasnier."
       },
       "details": {
         "hu": [
@@ -481,6 +561,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -491,7 +575,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "45°",
-        "en": "45°"
+        "en": "45°",
+        "fr": "45°"
       },
       "category": "parfum",
       "price": null,
@@ -507,7 +592,8 @@
       ],
       "description": {
         "hu": "A 45° egyre emelkedő hőmérséklettel kacérkodik: szenvedélyt és vágyat sugall. A vanília hármasára épül, érzékiséget teremt. Yann Vasnier alkotása a Nuit Rouge kollekcióból (20% parfümkoncentráció).",
-        "en": "45° flirts with a rising temperature: this original fragrance suggests passion and desire. Built around a trio of vanilla, it achieves sensuality. Created by Yann Vasnier, from the Nuit Rouge collection (20% fragrance concentration)."
+        "en": "45° flirts with a rising temperature: this original fragrance suggests passion and desire. Built around a trio of vanilla, it achieves sensuality. Created by Yann Vasnier, from the Nuit Rouge collection (20% fragrance concentration).",
+        "fr": "45° joue avec la montée de la température : ce parfum original évoque la passion et le désir. Construit autour d’un trio de vanilles, il atteint la sensualité. Créé par Yann Vasnier, de la collection Nuit Rouge (concentration en parfum de 20 %)."
       },
       "details": {
         "hu": [
@@ -515,6 +601,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -525,7 +615,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Midnight Omen",
-        "en": "Midnight Omen"
+        "en": "Midnight Omen",
+        "fr": "Midnight Omen"
       },
       "category": "parfum",
       "price": null,
@@ -541,7 +632,8 @@
       ],
       "description": {
         "hu": "Az ismeretlen vonzása. Rejtélyes és merész, jósjeleket sejtet, jókat vagy rosszakat, és találgatásra készteti viselőjét. Csábítás, veszély, intrika: minden jegy egy titkot suttog. Emilie Bouge alkotása a Nuit Rouge kollekcióból (20% parfümkoncentráció).",
-        "en": "The pull of the unknown. Enigmatic and bold, it hints at omens, good or bad, and keeps the wearer guessing. Seduction, danger, intrigue: each note whispers a secret. Created by Emilie Bouge, from the Nuit Rouge collection (20% fragrance concentration)."
+        "en": "The pull of the unknown. Enigmatic and bold, it hints at omens, good or bad, and keeps the wearer guessing. Seduction, danger, intrigue: each note whispers a secret. Created by Emilie Bouge, from the Nuit Rouge collection (20% fragrance concentration).",
+        "fr": "L’attrait de l’inconnu. Énigmatique et audacieux, il laisse entrevoir des présages, bons ou mauvais, et tient celui qui le porte en haleine. Séduction, danger, intrigue : chaque note murmure un secret. Créé par Emilie Bouge, de la collection Nuit Rouge (concentration en parfum de 20 %)."
       },
       "details": {
         "hu": [
@@ -549,6 +641,10 @@
           "100 ml · 15 ml"
         ],
         "en": [
+          "Eau de parfum",
+          "100 ml · 15 ml"
+        ],
+        "fr": [
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
@@ -559,7 +655,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Médie kézmosó szappan",
-        "en": "Médie hand soap"
+        "en": "Médie hand soap",
+        "fr": "Savon pour les mains Médie"
       },
       "category": "kozmetikum",
       "price": null,
@@ -575,7 +672,8 @@
       ],
       "description": {
         "hu": "Illatos kézmosó szappan, grépfrút, szambák jázmin és cédrusfa jegyekkel. A karcsú, vájt zöld üveg a ház jegyeit őrzi: arany színű pumpa és a parfüm nevével vésett arany címer. Marseille-i szappan hagyományai szerint főzve, 97%-ban természetes összetevőkből.",
-        "en": "Scented hand soap with grapefruit, sambac jasmine and cedarwood. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients."
+        "en": "Scented hand soap with grapefruit, sambac jasmine and cedarwood. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients.",
+        "fr": "Savon parfumé pour les mains au pamplemousse, au jasmin sambac et au bois de cèdre. Le flacon de verre cannelé et élancé reprend les codes de la Maison : pompe dorée et écusson doré gravé du nom du parfum. Cuit selon la tradition du savon de Marseille, avec 97 % d’ingrédients d’origine naturelle."
       },
       "details": {
         "hu": [
@@ -587,6 +685,11 @@
           "Hand soap",
           "350 ml",
           "Separate 500 ml refill available"
+        ],
+        "fr": [
+          "Savon pour les mains",
+          "350 ml",
+          "Recharge de 500 ml vendue séparément"
         ]
       }
     },
@@ -595,7 +698,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Vixi kézmosó szappan",
-        "en": "Vixi hand soap"
+        "en": "Vixi hand soap",
+        "fr": "Savon pour les mains Vixi"
       },
       "category": "kozmetikum",
       "price": null,
@@ -611,7 +715,8 @@
       ],
       "description": {
         "hu": "Illatos kézmosó szappan, petit grain, zsálya és bio szantálfa jegyekkel. A karcsú, vájt zöld üveg a ház jegyeit őrzi: arany színű pumpa és a parfüm nevével vésett arany címer. Marseille-i szappan hagyományai szerint főzve, 97%-ban természetes összetevőkből.",
-        "en": "Scented hand soap with petit grain, sage natural essence and organic sandalwood. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients."
+        "en": "Scented hand soap with petit grain, sage natural essence and organic sandalwood. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients.",
+        "fr": "Savon parfumé pour les mains au petit grain, à l’essence naturelle de sauge et au santal biologique. Le flacon de verre cannelé et élancé reprend les codes de la Maison : pompe dorée et écusson doré gravé du nom du parfum. Cuit selon la tradition du savon de Marseille, avec 97 % d’ingrédients d’origine naturelle."
       },
       "details": {
         "hu": [
@@ -623,6 +728,11 @@
           "Hand soap",
           "350 ml",
           "Separate 500 ml refill available"
+        ],
+        "fr": [
+          "Savon pour les mains",
+          "350 ml",
+          "Recharge de 500 ml vendue séparément"
         ]
       }
     },
@@ -631,7 +741,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Carmen kézmosó szappan",
-        "en": "Carmen hand soap"
+        "en": "Carmen hand soap",
+        "fr": "Savon pour les mains Carmen"
       },
       "category": "kozmetikum",
       "price": null,
@@ -647,7 +758,8 @@
       ],
       "description": {
         "hu": "Illatos kézmosó szappan, bergamott, dohány akkord és pacsuli jegyekkel. A karcsú, vájt zöld üveg a ház jegyeit őrzi: arany színű pumpa és a parfüm nevével vésett arany címer. Marseille-i szappan hagyományai szerint főzve, 97%-ban természetes összetevőkből.",
-        "en": "Scented hand soap with bergamot, tobacco accord and patchouli. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients."
+        "en": "Scented hand soap with bergamot, tobacco accord and patchouli. The slender fluted glass bottle keeps the codes of the Maison: gold pump and a gold crest engraved with the fragrance name. Cooked in the Marseille soap tradition from 97% natural ingredients.",
+        "fr": "Savon parfumé pour les mains à la bergamote, à l’accord tabac et au patchouli. Le flacon de verre cannelé et élancé reprend les codes de la Maison : pompe dorée et écusson doré gravé du nom du parfum. Cuit selon la tradition du savon de Marseille, avec 97 % d’ingrédients d’origine naturelle."
       },
       "details": {
         "hu": [
@@ -659,6 +771,11 @@
           "Hand soap",
           "350 ml",
           "Separate 500 ml refill available"
+        ],
+        "fr": [
+          "Savon pour les mains",
+          "350 ml",
+          "Recharge de 500 ml vendue séparément"
         ]
       }
     },
@@ -667,7 +784,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Cyrnos gyertya",
-        "en": "Cyrnos candle"
+        "en": "Cyrnos candle",
+        "fr": "Bougie Cyrnos"
       },
       "category": "otthon",
       "price": null,
@@ -683,7 +801,8 @@
       ],
       "description": {
         "hu": "Mediterrán aromák. A napsütötte Cyrnos villa citrusos illatkertje, fügefák és napernyőfenyők árnyéka, a provence-i levendula száraz illatával elegyedve.",
-        "en": "Mediterranean aromas. The aromatic citrus garden of the sunny Cyrnos villa, in the shade of fig trees and parasol pines, mixed with the dry aromas of Provence."
+        "en": "Mediterranean aromas. The aromatic citrus garden of the sunny Cyrnos villa, in the shade of fig trees and parasol pines, mixed with the dry aromas of Provence.",
+        "fr": "Arômes méditerranéens. Le jardin d’agrumes aromatique de la villa ensoleillée Cyrnos, à l’ombre des figuiers et des pins parasols, mêlé aux arômes secs de la Provence."
       },
       "details": {
         "hu": [
@@ -695,6 +814,11 @@
           "Scented candle",
           "Classique collection",
           "270 g · 50–55 hours burn time"
+        ],
+        "fr": [
+          "Bougie parfumée",
+          "Collection Classique",
+          "270 g · 50–55 heures de combustion"
         ]
       }
     },
@@ -703,7 +827,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Pálcás illatosító (klasszikus, 350 ml)",
-        "en": "Reed diffuser (classic, 350 ml)"
+        "en": "Reed diffuser (classic, 350 ml)",
+        "fr": "Diffuseur à tiges (classique, 350 ml)"
       },
       "category": "otthon",
       "price": null,
@@ -719,7 +844,8 @@
       ],
       "description": {
         "hu": "Ugyanabból a jellegzetes Trudon üvegből készül, mint a gyertyák, arany címerrel és újrahasznosítható alumínium gyűrűvel; 8 fekete rattanpálcát kell beletenni. Passzív illatosítás, a klasszikus méretnél 3–4 hónapig. Illatok: Abd el Kader, Cyrnos, Ernesto, Gabriel, Joséphine és Spiritus Sancti.",
-        "en": "Shaped from the same emblematic Trudon glass as the candles, with a gold emblem and a 100% recyclable aluminium ring; you place 8 black rattan sticks through it. Passive diffusion, 3 to 4 months for the classic size. Scents: Abd el Kader, Cyrnos, Ernesto, Gabriel, Joséphine and Spiritus Sancti."
+        "en": "Shaped from the same emblematic Trudon glass as the candles, with a gold emblem and a 100% recyclable aluminium ring; you place 8 black rattan sticks through it. Passive diffusion, 3 to 4 months for the classic size. Scents: Abd el Kader, Cyrnos, Ernesto, Gabriel, Joséphine and Spiritus Sancti.",
+        "fr": "Façonné dans le même verre emblématique Trudon que les bougies, avec un emblème doré et une bague en aluminium 100 % recyclable ; on y glisse 8 tiges de rotin noir. Diffusion passive, 3 à 4 mois pour le format classique. Parfums : Abd el Kader, Cyrnos, Ernesto, Gabriel, Joséphine et Spiritus Sancti."
       },
       "details": {
         "hu": [
@@ -731,6 +857,11 @@
           "Reed diffuser",
           "350 ml",
           "Separate refills available"
+        ],
+        "fr": [
+          "Diffuseur à tiges",
+          "350 ml",
+          "Recharges vendues séparément"
         ]
       }
     },
@@ -739,7 +870,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Illatosító spray (375 ml)",
-        "en": "Room spray (375 ml)"
+        "en": "Room spray (375 ml)",
+        "fr": "Spray d’intérieur (375 ml)"
       },
       "category": "otthon",
       "price": null,
@@ -755,7 +887,8 @@
       ],
       "description": {
         "hu": "A ház jellegzetes illatai szobaspray formájában is kaphatók, nagy, 375 ml-es üvegben.",
-        "en": "Trudon's signature scents are also available as room sprays, in large 375 ml glass bottles."
+        "en": "Trudon's signature scents are also available as room sprays, in large 375 ml glass bottles.",
+        "fr": "Les parfums signature de Trudon existent aussi en sprays d’intérieur, dans de grands flacons de verre de 375 ml."
       },
       "details": {
         "hu": [
@@ -765,6 +898,10 @@
         "en": [
           "Room spray",
           "375 ml"
+        ],
+        "fr": [
+          "Spray d’intérieur",
+          "375 ml"
         ]
       }
     },
@@ -773,7 +910,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Joséphine gyertya",
-        "en": "Joséphine candle"
+        "en": "Joséphine candle",
+        "fr": "Bougie Joséphine"
       },
       "category": "otthon",
       "price": null,
@@ -789,7 +927,8 @@
       ],
       "description": {
         "hu": "Virágoskert. A hajnal tompa fénye átcsúszik a virágágyásokon, vékony árnyék oson a rózsák között.",
-        "en": "Floral garden. The muffled light of dawn slips through the flower beds, a fine shadow sneaks among the roses."
+        "en": "Floral garden. The muffled light of dawn slips through the flower beds, a fine shadow sneaks among the roses.",
+        "fr": "Jardin fleuri. La lumière feutrée de l’aube se glisse entre les parterres, une ombre légère se faufile parmi les roses."
       },
       "details": {
         "hu": [
@@ -801,6 +940,11 @@
           "Scented candle",
           "Classique collection",
           "270 g · 50–55 hours burn time"
+        ],
+        "fr": [
+          "Bougie parfumée",
+          "Collection Classique",
+          "270 g · 50–55 heures de combustion"
         ]
       }
     },
@@ -809,7 +953,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "La Promeneuse illatosító",
-        "en": "La Promeneuse"
+        "en": "La Promeneuse",
+        "fr": "La Promeneuse"
       },
       "category": "otthon",
       "price": null,
@@ -825,7 +970,8 @@
       ],
       "description": {
         "hu": "Dekoratív tárgy a Trudon illatok szétáramoltatására: tegyen egy illatos kamea-t a kerámia tálkába, és gyújtson alá egy mécsest. A felmelegedett kamea megolvad, és gyorsan szétárasztja az illatot. Egy kamea kb. 8 órán át tart; az illat könnyen cserélhető.",
-        "en": "A decorative object designed to diffuse Trudon fragrances. Place a scented cameo in the ceramic dish and light a night-light beneath it: the heated cameo melts and spreads its fragrance rapidly into the air. One cameo lasts about 8 hours, and fragrances are easy to swap."
+        "en": "A decorative object designed to diffuse Trudon fragrances. Place a scented cameo in the ceramic dish and light a night-light beneath it: the heated cameo melts and spreads its fragrance rapidly into the air. One cameo lasts about 8 hours, and fragrances are easy to swap.",
+        "fr": "Un objet décoratif conçu pour diffuser les parfums Trudon. Posez un camée parfumé dans la coupelle en céramique et allumez une veilleuse dessous : le camée chauffé fond et répand rapidement son parfum dans l’air. Un camée dure environ 8 heures, et les parfums se changent facilement."
       },
       "details": {
         "hu": [
@@ -835,6 +981,10 @@
         "en": [
           "Fragrance object",
           "Cameo: about 8 hours"
+        ],
+        "fr": [
+          "Objet parfumé",
+          "Camée : environ 8 heures"
         ]
       }
     },
@@ -843,7 +993,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Cameo oszlopgyertya",
-        "en": "Cameo pillar candle"
+        "en": "Cameo pillar candle",
+        "fr": "Bougie pilier Camée"
       },
       "category": "otthon",
       "price": null,
@@ -859,7 +1010,8 @@
       ],
       "description": {
         "hu": "Madame de Pompadour tiszteletére készült oszlopgyertya: a gliptika és a gyertyakészítés két ősi tudása találkozik. Normandiai műhelyben marják, színezik és díszítik. Egy méretben: átmérő 8 cm, magasság 15 cm. Színek: fehér, fekete, sötétkék, bordó, rózsaszín, mimóza, kő és khaki.",
-        "en": "An ode to Madame de Pompadour, combining two ancestral know-hows: the art of glyptic and the craft of candle making. Each pillar candle is milled, colored and decorated in a Normandy atelier. One size: diameter 8 cm, height 15 cm. Colors: white, black, navy blue, burgundy, pink, mimosa, stone and khaki."
+        "en": "An ode to Madame de Pompadour, combining two ancestral know-hows: the art of glyptic and the craft of candle making. Each pillar candle is milled, colored and decorated in a Normandy atelier. One size: diameter 8 cm, height 15 cm. Colors: white, black, navy blue, burgundy, pink, mimosa, stone and khaki.",
+        "fr": "Une ode à Madame de Pompadour, qui réunit deux savoir-faire ancestraux : l’art de la glyptique et le métier de cirier. Chaque bougie pilier est fraisée, colorée et décorée dans un atelier normand. Une seule taille : diamètre 8 cm, hauteur 15 cm. Coloris : blanc, noir, bleu marine, bordeaux, rose, mimosa, pierre et kaki."
       },
       "details": {
         "hu": [
@@ -869,6 +1021,10 @@
         "en": [
           "Pillar candle",
           "Ø 8 cm · height 15 cm"
+        ],
+        "fr": [
+          "Bougie pilier",
+          "Ø 8 cm · hauteur 15 cm"
         ]
       }
     },
@@ -877,7 +1033,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "La Cloche üvegbúra",
-        "en": "La Cloche glass dome"
+        "en": "La Cloche glass dome",
+        "fr": "Cloche en verre La Cloche"
       },
       "category": "kiegeszito",
       "price": null,
@@ -893,7 +1050,8 @@
       ],
       "description": {
         "hu": "Üvegbúra a gyertyák otthoni bemutatására, Trudon logóval díszítve, kézzel csiszolt fa talapzaton.",
-        "en": "A glass dome to display your candles at home, adorned with the Trudon logo and set on a hand-polished wooden base."
+        "en": "A glass dome to display your candles at home, adorned with the Trudon logo and set on a hand-polished wooden base.",
+        "fr": "Une cloche en verre pour exposer vos bougies chez vous, ornée du logo Trudon et posée sur un socle en bois poli à la main."
       },
       "details": {
         "hu": [
@@ -903,6 +1061,10 @@
         "en": [
           "Accessory",
           "Glass and wood"
+        ],
+        "fr": [
+          "Accessoire",
+          "Verre et bois"
         ]
       }
     },
@@ -911,7 +1073,8 @@
       "brand": "Trudon",
       "name": {
         "hu": "Fáklyaoltó (hengeres)",
-        "en": "Wick dipper (cylinder)"
+        "en": "Wick dipper (cylinder)",
+        "fr": "Plongeur de mèche (cylindre)"
       },
       "category": "kiegeszito",
       "price": null,
@@ -927,7 +1090,8 @@
       ],
       "description": {
         "hu": "Pauline Deltour tervezte pontossági eszköz: a kanócot a viaszba merítve füst nélkül oltja el a gyertyát, majd felemelve és középre igazítva a viasszal bevont kanóc könnyen újra meggyújtható.",
-        "en": "Designed by Pauline Deltour, a precision tool: it dips the wick in the wax to extinguish the candle without smoke; once raised and centered, the wax-coated wick is easy to light again."
+        "en": "Designed by Pauline Deltour, a precision tool: it dips the wick in the wax to extinguish the candle without smoke; once raised and centered, the wax-coated wick is easy to light again.",
+        "fr": "Conçu par Pauline Deltour, un outil de précision : il plonge la mèche dans la cire pour éteindre la bougie sans fumée ; une fois relevée et recentrée, la mèche enrobée de cire se rallume facilement."
       },
       "details": {
         "hu": [
@@ -937,6 +1101,10 @@
         "en": [
           "Accessory",
           "Wick dipper"
+        ],
+        "fr": [
+          "Accessoire",
+          "Plongeur de mèche"
         ]
       }
     },
@@ -945,7 +1113,8 @@
       "brand": "—",
       "name": {
         "hu": "Minta: kiegészítő",
-        "en": "Sample: accessory"
+        "en": "Sample: accessory",
+        "fr": "Exemple : accessoire"
       },
       "category": "kiegeszito",
       "price": null,
@@ -961,7 +1130,8 @@
       ],
       "description": {
         "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
-        "en": "Placeholder product. The exact name, brand and price will come from the client."
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
       },
       "details": {
         "hu": [
@@ -969,6 +1139,9 @@
         ],
         "en": [
           "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
         ]
       }
     },
@@ -977,7 +1150,8 @@
       "brand": "—",
       "name": {
         "hu": "Minta: ékszer",
-        "en": "Sample: jewellery"
+        "en": "Sample: jewellery",
+        "fr": "Exemple : bijou"
       },
       "category": "ekszer",
       "price": null,
@@ -993,7 +1167,8 @@
       ],
       "description": {
         "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
-        "en": "Placeholder product. The exact name, brand and price will come from the client."
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
       },
       "details": {
         "hu": [
@@ -1001,6 +1176,9 @@
         ],
         "en": [
           "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
         ]
       }
     }
@@ -1011,7 +1189,8 @@
       "key": "parfum",
       "slug": {
         "hu": "parfum",
-        "en": "perfume"
+        "en": "perfume",
+        "fr": "parfum"
       },
       "image": "mag-trudon-bruma.webp"
     },
@@ -1019,7 +1198,8 @@
       "key": "kozmetikum",
       "slug": {
         "hu": "kozmetikum",
-        "en": "skincare"
+        "en": "skincare",
+        "fr": "soin"
       },
       "image": "santa-maria-novella.webp"
     },
@@ -1027,7 +1207,8 @@
       "key": "otthon",
       "slug": {
         "hu": "otthon",
-        "en": "home"
+        "en": "home",
+        "fr": "maison"
       },
       "image": "trudon-marbre.webp"
     },
@@ -1035,7 +1216,8 @@
       "key": "kiegeszito",
       "slug": {
         "hu": "kiegeszito",
-        "en": "accessories"
+        "en": "accessories",
+        "fr": "accessoires"
       },
       "image": "mag-barkocsi.webp"
     },
@@ -1043,7 +1225,8 @@
       "key": "ekszer",
       "slug": {
         "hu": "ekszer",
-        "en": "jewellery"
+        "en": "jewellery",
+        "fr": "bijoux"
       },
       "image": "mag-gyuruk.webp"
     }
