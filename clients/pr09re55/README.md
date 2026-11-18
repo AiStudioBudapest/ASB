@@ -2,7 +2,7 @@
 
 Style (27/10/2026, d'après 2 images Pinterest choisies par l'utilisateur) : fond gris clair, gros titres Montserrat (fin + gras), titres étroits en capitales (Bebas Neue), photos en noir et blanc (couleur au survol ; la photo de la fiche produit reste en couleur), coins arrondis, boutons en pilule, aplats de couleur fluo posés sur les photos. Tout ce style est la dernière partie de `assets/css/site.css`. L'accueil s'ouvre sur un grand « pr09re55 » avec une photo et deux cartes (boissons / boutique). L'ancien style blanc à empattements est gardé dans `../magazine-v4-serif/`.
 
-Site statique généré par un petit script Node, sans dépendance. Hongrois par défaut (`/`), anglais sous `/en/`.
+Site statique généré par un petit script Node, sans dépendance. Hongrois par défaut (`/`), anglais sous `/en/`, français sous `/fr/` (ajouté le 18/11/2026).
 
 ## Lancer
 
@@ -50,3 +50,7 @@ Mise à jour du mois : modifier `monthly.json`, cocher `featured`/`bestseller` d
 Ce dossier est un projet Vercel à part, distinct du site AiStudioBudapest, même s'il vit dans le même dépôt GitHub. Réglages du projet Vercel : *Root Directory* = `clients/pr09re55`, *Framework Preset* = Other ; le reste est lu dans `vercel.json` (construction `node build.mjs`, dossier publié `dist`). Chaque fusion sur `main` remet le site à jour.
 
 Tant que le site n'est pas lancé officiellement, `vercel.json` envoie l'en-tête `X-Robots-Tag: noindex` (Google ne l'indexe pas : il contient encore des contenus provisoires). Au lancement, avec le nom de domaine du client : supprimer ce bloc `headers` et vérifier `baseUrl` dans `content/site.json`.
+
+## Langues (hu / en / fr)
+
+Chaque texte traduisible existe en trois langues : `{ hu, en, fr }` dans `content/*.json` (produits, détails, catégories avec leur `slug.fr`, actualités, histoire, carte, avis…) et dans `src/ui.mjs` pour l'interface. Le script refuse de construire si une traduction produit/actualité/catégorie manque. Pour une nouvelle langue : ajouter son code à `LANGS`, ses routes à `ROUTES`, ses mois à `MONTHS`/`MON3` dans `build.mjs`, son bloc dans `src/ui.mjs` et `LANG_NAMES`. Les extraits d'avis Google gardent leur langue d'origine ; leur traduction française (`translation.fr`) est ajoutée comme les autres. Les textes imprimés de la carte (lettre de Zita, couverture) restent en anglais, comme sur la carte papier. Sur téléphone (≤ 560 px), les liens de langue sont dans le menu (tiroir) et le pied de page ; sur grand écran, ils sont aussi dans l'en-tête.

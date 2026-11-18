@@ -42,11 +42,13 @@
       "slug": "koktelok",
       "toc": {
         "hu": "Koktélok",
-        "en": "Cocktails"
+        "en": "Cocktails",
+        "fr": "Cocktails"
       },
       "title": {
         "hu": "Koktél menü",
-        "en": "Cocktail card"
+        "en": "Cocktail card",
+        "fr": "Carte des cocktails"
       },
       "sections": [
         {
@@ -123,11 +125,13 @@
       "slug": "long-drinks",
       "toc": {
         "hu": "Long drinkek",
-        "en": "Long drinks"
+        "en": "Long drinks",
+        "fr": "Long drinks"
       },
       "title": {
         "hu": "Long drinks",
-        "en": "Long drinks"
+        "en": "Long drinks",
+        "fr": "Long drinks"
       },
       "sections": [
         {
@@ -204,11 +208,13 @@
       "slug": "nyari",
       "toc": {
         "hu": "Nyári ajánlat és snackek",
-        "en": "Summer specials and snacks"
+        "en": "Summer specials and snacks",
+        "fr": "Spécialités d’été et en-cas"
       },
       "title": {
         "hu": "Nyári ajánlat",
-        "en": "Summer specials"
+        "en": "Summer specials",
+        "fr": "Spécialités d’été"
       },
       "sections": [
         {
@@ -247,16 +253,19 @@
         {
           "title": {
             "hu": "Snackek",
-            "en": "Snacks"
+            "en": "Snacks",
+            "fr": "En-cas"
           },
           "cols": [
             {
               "hu": "kicsi",
-              "en": "small"
+              "en": "small",
+              "fr": "petit"
             },
             {
               "hu": "közepes",
-              "en": "medium"
+              "en": "medium",
+              "fr": "moyen"
             }
           ],
           "items": [
@@ -296,26 +305,31 @@
       "slug": "pezsgok",
       "toc": {
         "hu": "Pezsgők",
-        "en": "Bubbles"
+        "en": "Bubbles",
+        "fr": "Bulles"
       },
       "title": {
         "hu": "Pezsgők",
-        "en": "Bubbles"
+        "en": "Bubbles",
+        "fr": "Bulles"
       },
       "sections": [
         {
           "title": {
             "hu": "Pezsgő",
-            "en": "Sparkling"
+            "en": "Sparkling",
+            "fr": "Effervescents"
           },
           "cols": [
             {
               "hu": "100 ml",
-              "en": "100 ml"
+              "en": "100 ml",
+              "fr": "100 ml"
             },
             {
               "hu": "üveg",
-              "en": "bottle"
+              "en": "bottle",
+              "fr": "bouteille"
             }
           ],
           "items": [
@@ -338,12 +352,14 @@
         {
           "title": {
             "hu": "Champagne",
-            "en": "Champagne"
+            "en": "Champagne",
+            "fr": "Champagne"
           },
           "cols": [
             {
               "hu": "üveg",
-              "en": "bottle"
+              "en": "bottle",
+              "fr": "bouteille"
             }
           ],
           "items": [
@@ -385,18 +401,21 @@
       "slug": "prosecco",
       "title": {
         "hu": "Prosecco",
-        "en": "Prosecco"
+        "en": "Prosecco",
+        "fr": "Prosecco"
       },
       "sections": [
         {
           "cols": [
             {
               "hu": "100 ml",
-              "en": "100 ml"
+              "en": "100 ml",
+              "fr": "100 ml"
             },
             {
               "hu": "üveg",
-              "en": "bottle"
+              "en": "bottle",
+              "fr": "bouteille"
             }
           ],
           "items": [
@@ -432,26 +451,31 @@
       "slug": "feherbor",
       "toc": {
         "hu": "Borlap",
-        "en": "Wine list"
+        "en": "Wine list",
+        "fr": "Carte des vins"
       },
       "title": {
         "hu": "Borlap",
-        "en": "Wine list"
+        "en": "Wine list",
+        "fr": "Carte des vins"
       },
       "sections": [
         {
           "title": {
             "hu": "Fehérbor",
-            "en": "White wine"
+            "en": "White wine",
+            "fr": "Vin blanc"
           },
           "cols": [
             {
               "hu": "100 ml",
-              "en": "100 ml"
+              "en": "100 ml",
+              "fr": "100 ml"
             },
             {
               "hu": "üveg",
-              "en": "bottle"
+              "en": "bottle",
+              "fr": "bouteille"
             }
           ],
           "items": [
@@ -540,22 +564,26 @@
       "slug": "roze-voros",
       "title": {
         "hu": "Borlap",
-        "en": "Wine list"
+        "en": "Wine list",
+        "fr": "Carte des vins"
       },
       "sections": [
         {
           "title": {
             "hu": "Rozé",
-            "en": "Rosé"
+            "en": "Rosé",
+            "fr": "Rosé"
           },
           "cols": [
             {
               "hu": "100 ml",
-              "en": "100 ml"
+              "en": "100 ml",
+              "fr": "100 ml"
             },
             {
               "hu": "üveg",
-              "en": "bottle"
+              "en": "bottle",
+              "fr": "bouteille"
             }
           ],
           "items": [
@@ -592,16 +620,19 @@
         {
           "title": {
             "hu": "Vörösbor",
-            "en": "Red wine"
+            "en": "Red wine",
+            "fr": "Vin rouge"
           },
           "cols": [
             {
               "hu": "100 ml",
-              "en": "100 ml"
+              "en": "100 ml",
+              "fr": "100 ml"
             },
             {
               "hu": "üveg",
-              "en": "bottle"
+              "en": "bottle",
+              "fr": "bouteille"
             }
           ],
           "items": [
@@ -662,22 +693,26 @@
       "slug": "rovidital",
       "toc": {
         "hu": "Röviditalok",
-        "en": "Spirits"
+        "en": "Spirits",
+        "fr": "Spiritueux"
       },
       "title": {
         "hu": "Röviditalok",
-        "en": "Spirits"
+        "en": "Spirits",
+        "fr": "Spiritueux"
       },
       "sections": [
         {
           "title": {
             "hu": "Rum",
-            "en": "Rum"
+            "en": "Rum",
+            "fr": "Rhum"
           },
           "cols": [
             {
               "hu": "4 cl",
-              "en": "4 cl"
+              "en": "4 cl",
+              "fr": "4 cl"
             }
           ],
           "items": [
@@ -698,12 +733,14 @@
         {
           "title": {
             "hu": "Vodka",
-            "en": "Vodka"
+            "en": "Vodka",
+            "fr": "Vodka"
           },
           "cols": [
             {
               "hu": "4 cl",
-              "en": "4 cl"
+              "en": "4 cl",
+              "fr": "4 cl"
             }
           ],
           "items": [
@@ -718,12 +755,14 @@
         {
           "title": {
             "hu": "Gin",
-            "en": "Gin"
+            "en": "Gin",
+            "fr": "Gin"
           },
           "cols": [
             {
               "hu": "4 cl",
-              "en": "4 cl"
+              "en": "4 cl",
+              "fr": "4 cl"
             }
           ],
           "items": [
@@ -744,12 +783,14 @@
         {
           "title": {
             "hu": "Tequila",
-            "en": "Tequila"
+            "en": "Tequila",
+            "fr": "Tequila"
           },
           "cols": [
             {
               "hu": "4 cl",
-              "en": "4 cl"
+              "en": "4 cl",
+              "fr": "4 cl"
             }
           ],
           "items": [
@@ -764,12 +805,14 @@
         {
           "title": {
             "hu": "Whisky",
-            "en": "Whisky"
+            "en": "Whisky",
+            "fr": "Whisky"
           },
           "cols": [
             {
               "hu": "4 cl",
-              "en": "4 cl"
+              "en": "4 cl",
+              "fr": "4 cl"
             }
           ],
           "items": [
@@ -796,12 +839,14 @@
         {
           "title": {
             "hu": "Pálinka",
-            "en": "Pálinka"
+            "en": "Pálinka",
+            "fr": "Pálinka"
           },
           "cols": [
             {
               "hu": "4 cl",
-              "en": "4 cl"
+              "en": "4 cl",
+              "fr": "4 cl"
             }
           ],
           "items": [
@@ -820,7 +865,8 @@
           ],
           "note": {
             "hu": "2 cl rendelése esetén a 4 cl árának 70%-át számítjuk fel.",
-            "en": "A 2 cl serving costs 70% of the 4 cl price."
+            "en": "A 2 cl serving costs 70% of the 4 cl price.",
+            "fr": "Une dose de 2 cl coûte 70 % du prix de la dose de 4 cl."
           }
         }
       ]
@@ -829,17 +875,20 @@
       "slug": "kave-tea",
       "toc": {
         "hu": "Kávé és tea",
-        "en": "Coffee and tea"
+        "en": "Coffee and tea",
+        "fr": "Café et thé"
       },
       "title": {
         "hu": "Forró italok",
-        "en": "Hot beverages"
+        "en": "Hot beverages",
+        "fr": "Boissons chaudes"
       },
       "sections": [
         {
           "title": {
             "hu": "Kávé",
-            "en": "Coffee"
+            "en": "Coffee",
+            "fr": "Café"
           },
           "items": [
             {
@@ -894,7 +943,8 @@
               "name": "Kis Mérges",
               "desc": {
                 "hu": "Espresso, 1 cl rum, méz",
-                "en": "Espresso, 1 cl rum, honey"
+                "en": "Espresso, 1 cl rum, honey",
+                "fr": "Espresso, 1 cl de rhum, miel"
               },
               "prices": [
                 2730
@@ -903,7 +953,8 @@
           ],
           "note": {
             "hu": "* Saját pr09re55 kávé blendünk megvásárolható üzletünkben 250 g-os kiszerelésben 7 280 Ft áron. Vásárlás esetén a fogyasztás ingyenes!",
-            "en": "* You can purchase our very own pr09re55 coffee blend in 250 g packages for 8 010 Ft. Buy one and get your coffee for free!"
+            "en": "* You can purchase our very own pr09re55 coffee blend in 250 g packages for 8 010 Ft. Buy one and get your coffee for free!",
+            "fr": "* Notre propre mélange de café pr09re55 est en vente en paquets de 250 g pour 8 010 Ft. Achetez-en un et votre café est offert !"
           }
         },
         {
@@ -912,7 +963,8 @@
               "name": "Manna",
               "desc": {
                 "hu": "Rooibos tea, 2 cl rum, méz",
-                "en": "Rooibos tea, 2 cl rum, honey"
+                "en": "Rooibos tea, 2 cl rum, honey",
+                "fr": "Thé rooibos, 2 cl de rhum, miel"
               },
               "prices": [
                 3650
@@ -921,7 +973,8 @@
             {
               "name": {
                 "hu": "Gimber gyömbér hottie",
-                "en": "Gimber ginger hottie"
+                "en": "Gimber ginger hottie",
+                "fr": "Gimber ginger hottie"
               },
               "prices": [
                 2960
@@ -932,17 +985,20 @@
         {
           "title": {
             "hu": "Kusmi Tea Paris**",
-            "en": "Kusmi Tea Paris**"
+            "en": "Kusmi Tea Paris**",
+            "fr": "Kusmi Tea Paris**"
           },
           "items": [
             {
               "name": {
                 "hu": "Egyszemélyes",
-                "en": "Tea for one"
+                "en": "Tea for one",
+                "fr": "Thé pour une personne"
               },
               "desc": {
                 "hu": "Kérje tea menünket",
-                "en": "Ask for the tea card"
+                "en": "Ask for the tea card",
+                "fr": "Demandez la carte des thés"
               },
               "prices": [
                 3270
@@ -951,7 +1007,8 @@
             {
               "name": {
                 "hu": "Kétszemélyes",
-                "en": "Tea for two"
+                "en": "Tea for two",
+                "fr": "Thé pour deux"
               },
               "prices": [
                 5370
@@ -960,19 +1017,22 @@
           ],
           "note": {
             "hu": "** Kusmi tea kínálatunk megvásárolható üzletünkben 100 g-os kiszerelésben. Vásárlás esetén a fogyasztás ingyenes!",
-            "en": "** You can purchase your Kusmi tea choice in our store, in 100 g boxes. Buy one and get your tea for free!"
+            "en": "** You can purchase your Kusmi tea choice in our store, in 100 g boxes. Buy one and get your tea for free!",
+            "fr": "** Votre thé Kusmi préféré est en vente dans notre boutique, en boîtes de 100 g. Achetez-en une et votre thé est offert !"
           }
         },
         {
           "title": {
             "hu": "Our liquid blankets for a cozy hot beverage",
-            "en": "Our liquid blankets for a cozy hot beverage"
+            "en": "Our liquid blankets for a cozy hot beverage",
+            "fr": "Nos couvertures liquides pour une boisson chaude et réconfortante"
           },
           "items": [
             {
               "name": {
                 "hu": "+ 2 cl rum / Bailey’s",
-                "en": "+ 2 cl rum / Bailey’s"
+                "en": "+ 2 cl rum / Bailey’s",
+                "fr": "+ 2 cl de rhum / Bailey’s"
               },
               "prices": [
                 1750
@@ -981,7 +1041,8 @@
             {
               "name": {
                 "hu": "+ 4 cl rum / Bailey’s",
-                "en": "+ 4 cl rum / Bailey’s"
+                "en": "+ 4 cl rum / Bailey’s",
+                "fr": "+ 4 cl de rhum / Bailey’s"
               },
               "prices": [
                 2440
@@ -995,23 +1056,27 @@
       "slug": "alkoholmentes",
       "toc": {
         "hu": "Alkoholmentes",
-        "en": "Alcohol-free"
+        "en": "Alcohol-free",
+        "fr": "Sans alcool"
       },
       "title": {
         "hu": "Alkoholmentes",
-        "en": "Alcohol-free"
+        "en": "Alcohol-free",
+        "fr": "Sans alcool"
       },
       "sections": [
         {
           "title": {
             "hu": "Üdítők",
-            "en": "Soft drinks"
+            "en": "Soft drinks",
+            "fr": "Boissons sans alcool"
           },
           "items": [
             {
               "name": {
                 "hu": "Házi limonádé",
-                "en": "Lemonade « maison »"
+                "en": "Lemonade « maison »",
+                "fr": "Limonade « maison »"
               },
               "prices": [
                 3120
@@ -1020,7 +1085,8 @@
             {
               "name": {
                 "hu": "Bodzás limonádé",
-                "en": "Elderberry lemonade"
+                "en": "Elderberry lemonade",
+                "fr": "Limonade au sureau"
               },
               "prices": [
                 3120
@@ -1029,7 +1095,8 @@
             {
               "name": {
                 "hu": "Málnás limonádé",
-                "en": "Raspberry lemonade"
+                "en": "Raspberry lemonade",
+                "fr": "Limonade à la framboise"
               },
               "prices": [
                 3120
@@ -1038,7 +1105,8 @@
             {
               "name": {
                 "hu": "Jeges tea",
-                "en": "Ice tea"
+                "en": "Ice tea",
+                "fr": "Thé glacé"
               },
               "prices": [
                 2740
@@ -1047,7 +1115,8 @@
             {
               "name": {
                 "hu": "Tonik",
-                "en": "Tonic water"
+                "en": "Tonic water",
+                "fr": "Tonic"
               },
               "prices": [
                 2690
@@ -1056,7 +1125,8 @@
             {
               "name": {
                 "hu": "Almárium",
-                "en": "Apple juice"
+                "en": "Apple juice",
+                "fr": "Jus de pomme"
               },
               "prices": [
                 2050
@@ -1065,7 +1135,8 @@
             {
               "name": {
                 "hu": "Gyömbér sör",
-                "en": "Ginger ale"
+                "en": "Ginger ale",
+                "fr": "Ginger ale"
               },
               "prices": [
                 2690
@@ -1074,7 +1145,8 @@
             {
               "name": {
                 "hu": "Gyömbér shot (4 cl)",
-                "en": "Ginger shot (4 cl)"
+                "en": "Ginger shot (4 cl)",
+                "fr": "Shot de gingembre (4 cl)"
               },
               "prices": [
                 2080
@@ -1083,7 +1155,8 @@
             {
               "name": {
                 "hu": "Gyömbér fröccs",
-                "en": "Ginger spritzer"
+                "en": "Ginger spritzer",
+                "fr": "Spritzer au gingembre"
               },
               "prices": [
                 3120
@@ -1092,27 +1165,31 @@
             {
               "name": {
                 "hu": "Kristályvíz",
-                "en": "Crystal water"
+                "en": "Crystal water",
+                "fr": "Crystal water"
               },
               "prices": [
                 380
               ],
               "unit": {
                 "hu": "/ dl",
-                "en": "/ dl"
+                "en": "/ dl",
+                "fr": "/ dl"
               }
             },
             {
               "name": {
                 "hu": "Szóda",
-                "en": "Soda water"
+                "en": "Soda water",
+                "fr": "Eau gazeuse"
               },
               "prices": [
                 490
               ],
               "unit": {
                 "hu": "/ dl",
-                "en": "/ dl"
+                "en": "/ dl",
+                "fr": "/ dl"
               }
             }
           ]
@@ -1120,13 +1197,15 @@
         {
           "title": {
             "hu": "Ásványvizek",
-            "en": "Mineral water"
+            "en": "Mineral water",
+            "fr": "Eau minérale"
           },
           "items": [
             {
               "name": {
                 "hu": "Vis Vitalis szénsavmentes 0,4 l",
-                "en": "Vis Vitalis still 0.4 l"
+                "en": "Vis Vitalis still 0.4 l",
+                "fr": "Vis Vitalis plate 0,4 l"
               },
               "prices": [
                 1420
@@ -1135,7 +1214,8 @@
             {
               "name": {
                 "hu": "Vis Vitalis szénsavas 0,4 l",
-                "en": "Vis Vitalis sparkling 0.4 l"
+                "en": "Vis Vitalis sparkling 0.4 l",
+                "fr": "Vis Vitalis pétillante 0,4 l"
               },
               "prices": [
                 1420
@@ -1146,7 +1226,8 @@
         {
           "title": {
             "hu": "Alkoholmentes koktélok",
-            "en": "Alcohol-free cocktails"
+            "en": "Alcohol-free cocktails",
+            "fr": "Cocktails sans alcool"
           },
           "items": [
             {
@@ -1166,13 +1247,15 @@
         {
           "title": {
             "hu": "Cookies",
-            "en": "Cookies"
+            "en": "Cookies",
+            "fr": "Cookies"
           },
           "items": [
             {
               "name": {
                 "hu": "Csokis, citromos, sós karamellás",
-                "en": "Chocolate, lemon, caramel"
+                "en": "Chocolate, lemon, caramel",
+                "fr": "Chocolat, citron, caramel"
               },
               "prices": [
                 920

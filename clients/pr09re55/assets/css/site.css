@@ -941,3 +941,9 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
   .mh-row{gap:10px}
   .logo{min-width:0}
 }
+
+/* Third language (fr): the header shows the two other languages; on small phones they live in the drawer and footer only. */
+.drawer-foot .drawer-lang{display:inline-block;padding:12px 4px;min-height:44px}
+@media (max-width:560px){
+  .mh-tools .mh-lang{display:none}
+}
