@@ -151,7 +151,7 @@ ${ld}
 </head>
 <body class="${bodyClass}" data-lang="${l}">
 <div class="loader" id="loader" aria-hidden="true"><svg class="ld-mark" viewBox="0 0 194 170"><defs><linearGradient id="ldGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9cf95"/><stop offset=".45" stop-color="#b98d4e"/><stop offset=".7" stop-color="#f0d9a2"/><stop offset="1" stop-color="#a77a3f"/></linearGradient></defs><g fill="none" stroke="url(#ldGold)" stroke-width="4">${MARK}</g></svg><span class="ld-bar"><i></i></span></div>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="goldLogo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8f6420"/><stop offset=".28" stop-color="#e3c06f"/><stop offset=".5" stop-color="#a97a2c"/><stop offset=".74" stop-color="#f1d58c"/><stop offset="1" stop-color="#8a5f1d"/></linearGradient></defs></svg>
+
 <a class="skip" href="#main">${esc(t.skip)}</a>
 <header class="masthead" id="masthead">
   <div class="mh-row">
@@ -566,7 +566,7 @@ function menuLeaf(pg, i, l, t) {
   const brand = `<p class="mp-brand" aria-hidden="true">${logo()}</p>`;
   let inner;
   if (pg.kind === 'jacket') { // the black linen cover of the printed menu, with the gold triangle
-    inner = `<div class="mp-jacket"><h2 id="${id}-h" class="sr-only">pr09re55 · ${esc(t.nav.menu)}</h2><svg class="jk-mark" viewBox="0 0 194 170" aria-hidden="true"><defs><linearGradient id="jkGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9cf95"/><stop offset=".45" stop-color="#b98d4e"/><stop offset=".7" stop-color="#f0d9a2"/><stop offset="1" stop-color="#a77a3f"/></linearGradient></defs><g fill="none" stroke="url(#jkGold)" stroke-width="3.4">${MARK}</g></svg></div>`;
+    inner = `<div class="mp-jacket"><h2 id="${id}-h" class="sr-only">pr09re55 · ${esc(t.nav.menu)}</h2><svg class="jk-mark" viewBox="0 0 194 170" aria-hidden="true"><defs><linearGradient id="jkGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".18" stop-color="#f4d77f"/><stop offset=".36" stop-color="#b8861f"/><stop offset=".5" stop-color="#ffe9a0"/><stop offset=".66" stop-color="#d6a23a"/><stop offset=".84" stop-color="#fbe6a0"/><stop offset="1" stop-color="#9a6a17"/></linearGradient></defs><g fill="none" stroke="url(#jkGold)" stroke-width="4.6" stroke-linejoin="round">${MARK}</g><g fill="none" stroke="#fffbe6" stroke-opacity=".55" stroke-width=".9" stroke-linejoin="round" transform="translate(-.8 -.8)">${MARK}</g></svg></div>`;
   } else if (pg.kind === 'backjacket') { // the back of the printed menu: click it to close the book
     inner = `<div class="mp-jacket mp-back"><h2 id="${id}-h" class="sr-only">${esc(t.menuEnd)}</h2><button type="button" class="jk-close" data-close-book><span class="sr-only">${esc(t.menuClose)}</span><svg class="jk-mini" viewBox="0 0 194 170" aria-hidden="true"><g fill="none" stroke="#b98d4e" stroke-width="7">${MARK}</g></svg></button></div>`;
   } else if (pg.kind === 'cover') {
