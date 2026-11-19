@@ -1,0 +1,16 @@
+# progressmenu — menu des boissons de pr09re55 (QR code)
+
+Site statique d'une seule page, généré par `node build.mjs` (aucune dépendance) dans `dist/`. Il est déployé comme un **projet Vercel séparé** (Root Directory `clients/progressmenu`, réglages dans `vercel.json`, `noindex`). Domaine prévu : progressmenu.com (à acheter et brancher par l'utilisateur, rien n'est acheté).
+
+Page consultée sur téléphone en scannant un QR code : une seule requête HTML (CSS et JS intégrés, 62 Ko), polices Prata + Geist auto-hébergées. Langues HU / EN / FR dans la même page (choix mémorisé ; au premier passage : hongrois si le téléphone est en hongrois, français s'il est en français, sinon anglais).
+
+Style volontairement différent du site pr09re55 : fond jungle (palmes dessinées par le script, 3 plans avec parallaxe au défilement, bokeh, rayons de lumière), cartes en verre sombre aux couleurs de chaque famille, image de la boisson qui dépasse de la carte (inclinaison 3D à la souris, apparition en ressort au défilement). Sur téléphone : pas de rayons, pas de flou sur les palmes ; `prefers-reduced-motion` coupe les animations.
+
+## Contenu
+`content/menu.json` = copie de la carte de `clients/pr09re55/content/menu.json` (noms, descriptions, prix, HU/EN/FR). Si la carte change, la mettre à jour dans les deux. `content/photos.json` : quelles boissons ont une grande carte avec image (les vins, spiritueux, snacks, eaux sont de simples lignes).
+
+## Images des boissons
+Déposer des PNG ou WebP **à fond transparent** dans `assets/img/drinks/` : `<slug>.webp` ou `<slug>.png`, le slug étant le nom anglais en minuscules, sans accents, avec des tirets (`volcan-margarita.png`). S'il existe `assets/img/drinks/manifest.json` (slug → nom de la boisson), il remplace le slug automatique. Taille conseillée : ~540 × 810 px, WebP (poids léger = QR code rapide). Une boisson sans image affiche un verre dessiné aux couleurs de sa famille ; la liste des boissons sans image est affichée à chaque construction.
+
+## Ne rien inventer
+Prix, noms et descriptions viennent uniquement de la carte imprimée. Note : la phrase du café maison indique 7 280 Ft en hongrois mais 8 010 Ft en anglais/français dans la source (`menu.json`) — à confirmer avec la cliente.

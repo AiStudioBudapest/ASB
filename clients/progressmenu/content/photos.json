@@ -1,0 +1,5 @@
+{
+  "_info": "Quelles boissons ont une grande carte avec image (les autres sont de simples lignes). Les images détourées vont dans assets/img/drinks/<slug>.webp (ou .png), le slug étant le nom anglais en minuscules sans accents, tirets entre les mots (Volcán Margarita -> volcan-margarita). Si assets/img/drinks/manifest.json existe (slug -> nom de la boisson), il remplace le slug automatique. Une carte sans image affiche un verre dessiné à la place.",
+  "cardSections": ["koktelok", "long-drinks", "nyari:0", "kave-tea:0", "kave-tea:1", "alkoholmentes:2"],
+  "cardNames": ["Lemonade « maison »", "Elderberry lemonade", "Raspberry lemonade"]
+}
