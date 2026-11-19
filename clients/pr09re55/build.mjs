@@ -19,7 +19,6 @@ const MONTH = read('monthly.json');
 const COCKTAILS = read('cocktails.json');
 const MENU = read('menu.json');
 const STORY = read('story.json');
-const NEWS = read('news.json');
 const HL = read('highlights.json');
 const CATS = read('products.json').categories;
 const LANGS = ['hu', 'en', 'fr'];
@@ -58,12 +57,6 @@ for (const h of HL.shop) { img(h.image); if (!slugs.has(h.product)) throw new Er
 for (const h of HL.drinks) { img(h.image); menuItem(h.menu); }
 for (const c of COCKTAILS.classics) menuItem(c);
 
-for (const n of NEWS.items) {
-  if (!/^[a-z0-9-]+$/.test(n.slug)) throw new Error(`news.json: invalid slug "${n.slug}"`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(n.dateStart) || (n.dateEnd && !/^\d{4}-\d{2}-\d{2}$/.test(n.dateEnd))) throw new Error(`news.json: "${n.slug}" dates must be YYYY-MM-DD`);
-  for (const l of LANGS) if (!n.title?.[l] || !n.text?.[l]) throw new Error(`news.json: "${n.slug}" is missing title/text in ${l}`);
-  if (n.image && !existsSync(join(ROOT, 'assets/img', n.image))) throw new Error(`news.json: image not found assets/img/${n.image}`);
-}
 
 /* ---------------- Routes: one path per page and language ---------------- */
 const ROUTES = {
@@ -75,8 +68,7 @@ const ROUTES = {
   cocktails: { hu: 'koktelok/', en: 'en/cocktails/', fr: 'fr/cocktails/' },
   menu: { hu: 'itallap/', en: 'en/menu/', fr: 'fr/carte/' },
   story: { hu: 'tortenet/', en: 'en/story/', fr: 'fr/histoire/' },
-  cart: { hu: 'kosar/', en: 'en/cart/', fr: 'fr/panier/' },
-  news: { hu: 'mi-ujsag/', en: 'en/whats-new/', fr: 'fr/quoi-de-neuf/' }
+  cart: { hu: 'kosar/', en: 'en/cart/', fr: 'fr/panier/' }
 };
 const productRoute = slug => ({ hu: `butik/${slug}/`, en: `en/boutique/${slug}/`, fr: `fr/boutique/${slug}/` });
 const catRoute = c => ({ hu: `butik/${c.slug.hu}/`, en: `en/boutique/${c.slug.en}/`, fr: `fr/boutique/${c.slug.fr}/` });
@@ -119,7 +111,7 @@ const ICON = {
 function page({ l, key, path, alt, title, desc, image, body, jsonld = [], bodyClass = '', noindex = false }) {
   const t = UI[l];
   const others = LANGS.filter(x => x !== l);
-  const navItems = ['shop', 'best', 'cocktails', 'menu', 'story', 'news'];
+  const navItems = ['shop', 'best', 'cocktails', 'menu', 'story'];
   const nav = navItems.map(k => `<a href="${link(path, ROUTES[k][l])}"${key === k ? ' aria-current="page"' : ''}>${esc(t.nav[k])}</a>`).join('');
   const visit = link(path, ROUTES.home[l], '#latogatas');
   const og = image ? abs('assets/img/' + image) : abs('assets/img/facade-wide.webp');
@@ -321,14 +313,6 @@ function home(l) {
     <h2 id="houseT">${t.houseTitle}</h2>
   </header>
   <div class="house-cols">${t.houseCols.map((c, i) => `<div class="hc"><p class="hc-n">0${i + 1}</p><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p></div>`).join('')}</div>
-</section>
-
-<section class="news-teaser wrap" aria-labelledby="newsT">
-  <header class="sec-head sec-head-row">
-    <div><p class="kicker">${tri()} ${esc(t.newsKicker)}</p><h2 id="newsT">${esc(t.newsTitle)}</h2></div>
-    <a class="tlink" href="${link(path, ROUTES.news[l])}">${esc(t.newsAll)} ${ICON.arrow}</a>
-  </header>
-  <div class="nt-grid">${NEWS.items.slice(0, 1).map(n => newsCard(n, l).replace('IMG', n.image ? asset(path, 'img/' + n.image) : '').replace(`id="${n.slug}"`, '')).join('')}${clubCard(l)}</div>
 </section>
 
 <section class="best wrap" aria-labelledby="bestT">
@@ -633,57 +617,6 @@ function storyPage(l) {
   return page({ l, key: 'story', path, alt: ROUTES.story, title: t.meta.story[0], desc: t.meta.story[1], body });
 }
 
-/* ---------------- What's new: events and news ---------------- */
-const MONTHS = { hu: ['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'],
-  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'] };
-const MON3 = { hu: ['JAN', 'FEB', 'MÁR', 'ÁPR', 'MÁJ', 'JÚN', 'JÚL', 'AUG', 'SZEP', 'OKT', 'NOV', 'DEC'], en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-  fr: ['JANV', 'FÉVR', 'MARS', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOÛT', 'SEPT', 'OCT', 'NOV', 'DÉC'] };
-const ymd = iso => iso.split('-').map(Number);
-function newsDate(n, l) { // "2026. november 20–22." / "20–22 November 2026" / "20–22 novembre 2026"
-  const [y, m, d] = ymd(n.dateStart), [y2, m2, d2] = n.dateEnd ? ymd(n.dateEnd) : [y, m, d];
-  if (l === 'hu') return m === m2 ? `${y}. ${MONTHS.hu[m - 1]} ${d}${d2 !== d ? '–' + d2 : ''}.` : `${y}. ${MONTHS.hu[m - 1]} ${d}. – ${MONTHS.hu[m2 - 1]} ${d2}.`;
-  const M = MONTHS[l]; // en and fr: day first
-  return m === m2 ? `${d}${d2 !== d ? '–' + d2 : ''} ${M[m - 1]} ${y}` : `${d} ${M[m - 1]} – ${d2} ${M[m2 - 1]} ${y}`;
-}
-function newsCard(n, l) {
-  const [, m, d] = ymd(n.dateStart), d2 = n.dateEnd ? ymd(n.dateEnd)[2] : null;
-  return `<article class="news-card" id="${esc(n.slug)}">
-  <p class="nc-date" aria-hidden="true"><b>${d}${d2 && d2 !== d ? '–' + d2 : ''}</b><span>${MON3[l][m - 1]}</span></p>
-  <div class="nc-txt">
-    <p class="kicker">${tri()} ${esc(tx(n.kind, l))} · <time datetime="${n.dateStart}">${esc(newsDate(n, l))}</time></p>
-    <h3>${esc(n.title[l])}</h3>
-    <p>${esc(n.text[l])}</p>
-  </div>
-  ${n.image ? `<figure class="nc-ph"><img src="IMG" alt="" loading="lazy"></figure>` : ''}
-</article>`;
-}
-function clubCard(l) {
-  const t = UI[l], c = NEWS.club;
-  return `<aside class="club" aria-labelledby="clubT-${l}">
-  <div class="club-card" aria-hidden="true"><svg class="cc-mark" viewBox="0 0 194 170"><g fill="none" stroke="#d6b77c" stroke-width="7">${MARK}</g></svg>${logo('cc-logo')}<span class="cc-name">CLUB CARD</span></div>
-  <div class="club-txt">
-    <p class="kicker">${tri()} ${esc(t.clubKicker)}</p>
-    <h3 id="clubT-${l}">${esc(c.title[l])}</h3>
-    <p>${esc(c.text[l])}</p>
-    <a class="tlink" href="#latogatas">${esc(t.clubAsk)} ${ICON.arrow}</a>
-  </div>
-</aside>`;
-}
-function newsPage(l) {
-  const t = UI[l], path = ROUTES.news[l];
-  const body = `
-<section class="page-head wrap">
-  <p class="kicker">${tri()} ${esc(t.newsKicker)}</p>
-  <h1 class="display">${esc(t.newsTitle)}</h1>
-  <p class="lede">${esc(t.newsIntro)}</p>
-</section>
-<section class="news wrap">
-  <div class="news-list">${NEWS.items.length ? NEWS.items.map(n => newsCard(n, l).replace('IMG', n.image ? asset(path, 'img/' + n.image) : '')).join('') : `<p class="lede">${esc(t.newsEmpty)}</p>`}</div>
-  ${clubCard(l).replace('href="#latogatas"', `href="${link(path, ROUTES.home[l], '#latogatas')}"`)}
-</section>`;
-  return page({ l, key: 'news', path, alt: ROUTES.news, title: t.meta.news[0], desc: t.meta.news[1], body });
-}
 
 function cartPage(l) {
   const t = UI[l], path = ROUTES.cart[l];
@@ -744,7 +677,6 @@ for (const l of LANGS) {
   emit(ROUTES.cocktails[l], cocktailsPage(l));
   emit(ROUTES.menu[l], menuPage(l));
   emit(ROUTES.story[l], storyPage(l));
-  emit(ROUTES.news[l], newsPage(l));
   emit(ROUTES.cart[l], cartPage(l), false); // personal page, kept out of the sitemap
   for (const p of PRODUCTS) emit(productRoute(p.slug)[l], product(p, l));
 }

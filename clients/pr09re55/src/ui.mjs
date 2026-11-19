@@ -3,8 +3,7 @@ export const UI = {
   hu: {
     lang: 'hu', locale: 'hu_HU',
     skip: 'Ugrás a tartalomra', menu: 'Menü', close: 'Bezárás',
-    nav: { shop: 'Butik', best: 'Kedvencek', cocktails: 'Koktélok', menu: 'Itallap', story: 'Történet', news: 'Mi újság?', visit: 'Látogatás' },
-    newsKicker: 'Események és újdonságok', newsTitle: 'Mi újság?', newsIntro: 'Események, pop-upok és újdonságok a pr09re55 háza tájáról.', newsAll: 'Minden újdonság', newsEmpty: 'Hamarosan új hírekkel jelentkezünk.', clubKicker: 'Csak tagoknak', clubAsk: 'Kérdezz rá a butikban',
+    nav: { shop: 'Butik', best: 'Kedvencek', cocktails: 'Koktélok', menu: 'Itallap', story: 'Történet', visit: 'Látogatás' },
     tagline: 'Cocktail Lounge & Concept Store',
     city: 'Budapest XIII.',
     hlKicker: 'Szezonális kiemelések', hlSeeAll: 'A teljes válogatás megtekintése', hlShopIntro: 'Néhány darab, amit most különösen szeretünk a polcokon. A válogatás évszakonként változik.', hlDrinksIntro: 'Amit most a legszívesebben töltünk a poharakba. A válogatás évszakonként változik.',
@@ -79,14 +78,12 @@ export const UI = {
       cart: ['Foglalás · pr09re55 Budapest', 'Foglalás online, átvétel és fizetés a pr09re55 butikban.'],
       hlShop: ['Szezonális kiemelések: butik · pr09re55', 'A pr09re55 butik szezonális kiemelései.'],
       hlDrinks: ['Szezonális kiemelések: italok · pr09re55', 'Koktél, bor és pezsgő: a pr09re55 szezonális kiemelései.'],
-      news: ['Mi újság? · pr09re55 Budapest', 'Események, pop-upok és újdonságok a pr09re55-nél.']
     }
   },
   en: {
     lang: 'en', locale: 'en_GB',
     skip: 'Skip to content', menu: 'Menu', close: 'Close',
-    nav: { shop: 'Boutique', best: 'Bestsellers', cocktails: 'Cocktails', menu: 'Menu', story: 'Story', news: "What's new?", visit: 'Visit' },
-    newsKicker: 'Events and news', newsTitle: "What's new?", newsIntro: 'Events, pop-ups and news from around the pr09re55 house.', newsAll: 'All news', newsEmpty: 'New stories coming soon.', clubKicker: 'Members only', clubAsk: 'Ask us in the boutique',
+    nav: { shop: 'Boutique', best: 'Bestsellers', cocktails: 'Cocktails', menu: 'Menu', story: 'Story', visit: 'Visit' },
     tagline: 'Cocktail Lounge & Concept Store',
     city: 'Budapest XIII',
     hlKicker: 'Seasonal highlights', hlSeeAll: 'See the full selection', hlShopIntro: 'A few pieces we especially love on the shelves right now. The selection changes with the seasons.', hlDrinksIntro: 'What we most enjoy pouring right now. The selection changes with the seasons.',
@@ -161,14 +158,12 @@ export const UI = {
       cart: ['Reservation · pr09re55 Budapest', 'Reserve online, collect and pay in the pr09re55 shop.'],
       hlShop: ['Seasonal highlights: boutique · pr09re55', 'Seasonal highlights from the pr09re55 boutique.'],
       hlDrinks: ['Seasonal highlights: drinks · pr09re55', 'Cocktails, wine and bubbles: seasonal highlights at pr09re55.'],
-      news: ["What's new? · pr09re55 Budapest", 'Events, pop-ups and news at pr09re55.']
     }
   },
   fr: {
     lang: 'fr', locale: 'fr_FR',
     skip: 'Aller au contenu', menu: 'Menu', close: 'Fermer',
-    nav: { shop: 'Boutique', best: 'Coups de cœur', cocktails: 'Cocktails', menu: 'Carte', story: 'Histoire', news: 'Quoi de neuf ?', visit: 'Visite' },
-    newsKicker: 'Événements et nouveautés', newsTitle: 'Quoi de neuf ?', newsIntro: 'Événements, pop-ups et nouveautés autour de la maison pr09re55.', newsAll: 'Toutes les nouveautés', newsEmpty: 'De nouvelles actualités arrivent bientôt.', clubKicker: 'Réservé aux membres', clubAsk: 'Demandez-nous en boutique',
+    nav: { shop: 'Boutique', best: 'Coups de cœur', cocktails: 'Cocktails', menu: 'Carte', story: 'Histoire', visit: 'Visite' },
     tagline: 'Cocktail Lounge & Concept Store',
     city: 'Budapest XIIIe',
     hlKicker: 'Coups de projecteur de saison', hlSeeAll: 'Voir toute la sélection', hlShopIntro: 'Quelques pièces que nous aimons tout particulièrement en ce moment sur les étagères. La sélection change au fil des saisons.', hlDrinksIntro: 'Ce que nous aimons le plus servir en ce moment. La sélection change au fil des saisons.',
@@ -243,7 +238,6 @@ export const UI = {
       cart: ['Réservation · pr09re55 Budapest', 'Réservez en ligne, retirez et payez dans la boutique pr09re55.'],
       hlShop: ['Coups de projecteur de saison : boutique · pr09re55', 'Les coups de projecteur de saison de la boutique pr09re55.'],
       hlDrinks: ['Coups de projecteur de saison : boissons · pr09re55', 'Cocktails, vin et bulles : les coups de projecteur de saison chez pr09re55.'],
-      news: ['Quoi de neuf ? · pr09re55 Budapest', 'Événements, pop-ups et nouveautés chez pr09re55.']
     }
   }
 };
