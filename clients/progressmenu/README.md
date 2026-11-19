@@ -7,6 +7,8 @@ Page consultée sur téléphone en scannant un QR code : une seule requête HTML
 Style volontairement différent du site pr09re55 : fond jungle (palmes dessinées par le script, 3 plans avec parallaxe au défilement, bokeh, rayons de lumière), cartes en verre sombre aux couleurs de chaque famille, image de la boisson qui dépasse de la carte (inclinaison 3D à la souris, apparition en ressort au défilement). Sur téléphone : pas de rayons, pas de flou sur les palmes ; `prefers-reduced-motion` coupe les animations.
 
 ## Contenu
+**Depuis le 19/11/2026, le menu n'affiche que les cocktails, les long drinks et l'offre d'été avec snacks** (22 articles, demande de l'utilisateur) : les autres familles restent dans `content/menu.json` mais ne sont plus rendues (liste `GROUPS` dans `build.mjs`). Images cartoon disponibles : Garibaldi et Bobby's GT ; les autres cartes affichent un verre dessiné en attendant. `aperol.png` du dossier partagé est le Virgin Aperol Spritz (sans alcool), il n'est donc pas utilisé pour le Royal Aperol Spritz.
+
 `content/menu.json` = copie de la carte de `clients/pr09re55/content/menu.json` (noms, descriptions, prix, HU/EN/FR). Si la carte change, la mettre à jour dans les deux. `content/photos.json` : quelles boissons ont une grande carte avec image (les vins, spiritueux, snacks, eaux sont de simples lignes).
 
 ## Images des boissons

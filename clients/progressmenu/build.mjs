@@ -53,11 +53,8 @@ const GROUPS = [
   { id: 'cocktails', pages: ['koktelok'], icon: 'coupe', a: '255 107 94', title: T('Koktélok', 'Cocktails', 'Cocktails') },
   { id: 'long', pages: ['long-drinks'], icon: 'tumbler', a: '56 220 205', title: T('Long drinkek', 'Long drinks', 'Long drinks') },
   { id: 'summer', pages: ['nyari'], icon: 'coupe', a: '255 200 61', title: T('Nyári ajánlat és snackek', 'Summer specials & snacks', 'Spécialités d’été et en-cas') },
-  { id: 'bubbles', pages: ['pezsgok', 'prosecco'], icon: 'flute', a: '255 226 150', title: T('Pezsgők', 'Bubbles', 'Bulles') },
-  { id: 'wine', pages: ['feherbor', 'roze-voros'], icon: 'wine', a: '240 110 160', title: T('Borlap', 'Wine list', 'Carte des vins') },
-  { id: 'spirits', pages: ['rovidital'], icon: 'tumbler', a: '236 154 84', title: T('Röviditalok', 'Spirits', 'Spiritueux') },
-  { id: 'hot', pages: ['kave-tea'], icon: 'cup', a: '255 160 70', title: T('Kávé és tea', 'Coffee & tea', 'Café et thé') },
-  { id: 'zero', pages: ['alkoholmentes'], icon: 'tumbler', a: '150 230 90', title: T('Alkoholmentes', 'Alcohol-free', 'Sans alcool') },
+  // Décision du 19/11/2026 : le menu ne montre QUE cocktails, long drinks et offre d'été + snacks.
+  // Les autres familles (bulles, vins, spiritueux, café, sans alcool) restent dans content/menu.json, non affichées.
 ]
 const PAGE = Object.fromEntries(menu.pages.filter(p => p.sections).map(p => [p.slug, p]))
 const cardSections = new Set(photos.cardSections)
@@ -175,7 +172,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>pr09re55 · Itallap / Menu</title>
-<meta name="description" content="pr09re55 itallap · drink menu · carte des boissons — Pozsonyi út 43, Budapest.">
+<meta name="description" content="pr09re55 itallap · drinks menu · carte des boissons — Pozsonyi út 43, Budapest.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#073b2d">
 <link rel="preload" href="assets/fonts/prata-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -191,7 +188,7 @@ ${jungle}
     <div class="lang" role="group" aria-label="Language / Nyelv / Langue"><button type="button" data-set-l="hu">HU</button><button type="button" data-set-l="en">EN</button><button type="button" data-set-l="fr">FR</button></div></div>
   <p class="kick">${L3('Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest')}</p>
   <h1>${L3('Itallap', 'The drinks menu', 'La carte des boissons')}</h1>
-  <p class="lede">${L3('Koktélok, bubik és minden, ami kell egy jó estéhez.', 'Cocktails, bubbles and everything a good evening needs.', 'Cocktails, bulles et tout ce qu’il faut pour une bonne soirée.')}</p>
+  <p class="lede">${L3('Koktélok, long drinkek és nyári ajánlat.', 'Cocktails, long drinks and summer specials.', 'Cocktails, long drinks et spécialités d’été.')}</p>
   <a class="go" href="#cocktails">${L3('Nézzük meg', 'Let’s explore', 'Découvrir')}<span aria-hidden="true">↓</span></a>
 </header>
 <nav class="chips" aria-label="${esc('Menu')}"><div class="chips-in">${chips}</div></nav>
