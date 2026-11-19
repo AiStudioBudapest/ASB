@@ -14,7 +14,7 @@ const tx = (v, l) => (v && typeof v === 'object') ? v[l] : (v ?? '');
 const pick = (l, hu, en, fr) => ({ hu, en, fr })[l];
 const read = f => JSON.parse(readFileSync(join(ROOT, 'content', f), 'utf8'));
 const SITE = read('site.json');
-const PRODUCTS = read('products.json').products;
+const PRODUCTS = read('products.json').products.filter(p => !p.hidden);
 const MONTH = read('monthly.json');
 const COCKTAILS = read('cocktails.json');
 const MENU = read('menu.json');
@@ -151,6 +151,7 @@ ${ld}
 </head>
 <body class="${bodyClass}" data-lang="${l}">
 <div class="loader" id="loader" aria-hidden="true"><svg class="ld-mark" viewBox="0 0 194 170"><defs><linearGradient id="ldGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9cf95"/><stop offset=".45" stop-color="#b98d4e"/><stop offset=".7" stop-color="#f0d9a2"/><stop offset="1" stop-color="#a77a3f"/></linearGradient></defs><g fill="none" stroke="url(#ldGold)" stroke-width="4">${MARK}</g></svg><span class="ld-bar"><i></i></span></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="goldLogo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8f6420"/><stop offset=".28" stop-color="#e3c06f"/><stop offset=".5" stop-color="#a97a2c"/><stop offset=".74" stop-color="#f1d58c"/><stop offset="1" stop-color="#8a5f1d"/></linearGradient></defs></svg>
 <a class="skip" href="#main">${esc(t.skip)}</a>
 <header class="masthead" id="masthead">
   <div class="mh-row">

@@ -6,7 +6,8 @@
     "bestseller: true = megjelenik a Kedvencek között; bestsellerOrder: kisebb szám = előrébb.",
     "featured: true = a hónap válogatásában szerepel (lásd monthly.json).",
     "demo: true = mintaadat, a valódi adatok még hiányoznak; az oldalon 'Mintaadat' jelzést kap.",
-    "tone: a termékkép mögötti háttérszín (halvány, a termékhez illő)."
+    "tone: a termékkép mögötti háttérszín (halvány, a termékhez illő).",
+    "hidden: true = a termék létezik, de nem jelenik meg az oldalon (kategóriánként 6-7 látható termék a cél)."
   ],
   "products": [
     {
@@ -368,7 +369,8 @@
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-ii",
@@ -408,7 +410,8 @@
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-aphelie",
@@ -448,7 +451,8 @@
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-absolu",
@@ -528,7 +532,8 @@
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-mortel-noir",
@@ -608,7 +613,8 @@
           "Eau de parfum",
           "100 ml · 15 ml"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-midnight-omen",
@@ -903,7 +909,8 @@
           "Spray d’intérieur",
           "375 ml"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-josephine",
@@ -986,7 +993,8 @@
           "Objet parfumé",
           "Camée : environ 8 heures"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-cameo-gyertya",
@@ -1026,7 +1034,8 @@
           "Bougie pilier",
           "Ø 8 cm · hauteur 15 cm"
         ]
-      }
+      },
+      "hidden": true
     },
     {
       "slug": "trudon-cloche",
@@ -1036,7 +1045,7 @@
         "en": "La Cloche glass dome",
         "fr": "Cloche en verre La Cloche"
       },
-      "category": "kiegeszito",
+      "category": "otthon",
       "price": null,
       "currency": "HUF",
       "stock": "ask",
@@ -1076,7 +1085,7 @@
         "en": "Wick dipper (cylinder)",
         "fr": "Plongeur de mèche (cylindre)"
       },
-      "category": "kiegeszito",
+      "category": "otthon",
       "price": null,
       "currency": "HUF",
       "stock": "ask",
@@ -1106,17 +1115,18 @@
           "Accessoire",
           "Plongeur de mèche"
         ]
-      }
+      },
+      "hidden": true
     },
     {
-      "slug": "minta-kiegeszito",
+      "slug": "minta-ekszer",
       "brand": "—",
       "name": {
-        "hu": "Minta: kiegészítő",
-        "en": "Sample: accessory",
-        "fr": "Exemple : accessoire"
+        "hu": "Minta: ékszer",
+        "en": "Sample: jewellery",
+        "fr": "Exemple : bijou"
       },
-      "category": "kiegeszito",
+      "category": "ekszer",
       "price": null,
       "currency": "HUF",
       "stock": "ask",
@@ -1124,7 +1134,81 @@
       "bestsellerOrder": 99,
       "featured": false,
       "demo": true,
-      "tone": "#e6eaf2",
+      "tone": "#f1e7d6",
+      "images": [
+        "plage.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
+        ]
+      }
+    },
+    {
+      "slug": "minta-ekszer-2",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: ékszer 2",
+        "en": "Sample: jewellery 2",
+        "fr": "Exemple : bijou 2"
+      },
+      "category": "ekszer",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1e7d6",
+      "images": [
+        "mag-gyuruk.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
+        ]
+      }
+    },
+    {
+      "slug": "minta-ekszer-3",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: ékszer 3",
+        "en": "Sample: jewellery 3",
+        "fr": "Exemple : bijou 3"
+      },
+      "category": "ekszer",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1e7d6",
       "images": [
         "nature-morte.webp"
       ],
@@ -1146,12 +1230,12 @@
       }
     },
     {
-      "slug": "minta-ekszer",
+      "slug": "minta-ekszer-4",
       "brand": "—",
       "name": {
-        "hu": "Minta: ékszer",
-        "en": "Sample: jewellery",
-        "fr": "Exemple : bijou"
+        "hu": "Minta: ékszer 4",
+        "en": "Sample: jewellery 4",
+        "fr": "Exemple : bijou 4"
       },
       "category": "ekszer",
       "price": null,
@@ -1164,6 +1248,154 @@
       "tone": "#f1e7d6",
       "images": [
         "plage.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
+        ]
+      }
+    },
+    {
+      "slug": "minta-ekszer-5",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: ékszer 5",
+        "en": "Sample: jewellery 5",
+        "fr": "Exemple : bijou 5"
+      },
+      "category": "ekszer",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1e7d6",
+      "images": [
+        "mag-gyuruk.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
+        ]
+      }
+    },
+    {
+      "slug": "minta-ekszer-6",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: ékszer 6",
+        "en": "Sample: jewellery 6",
+        "fr": "Exemple : bijou 6"
+      },
+      "category": "ekszer",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#f1e7d6",
+      "images": [
+        "nature-morte.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
+        ]
+      }
+    },
+    {
+      "slug": "minta-kozmetikum-5",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: kozmetikum 5",
+        "en": "Sample: skincare 5",
+        "fr": "Exemple : soin 5"
+      },
+      "category": "kozmetikum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#efe4e1",
+      "images": [
+        "santa-maria-novella.webp"
+      ],
+      "description": {
+        "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
+        "en": "Placeholder product. The exact name, brand and price will come from the client.",
+        "fr": "Produit provisoire. Le nom exact, la marque et le prix viendront du client."
+      },
+      "details": {
+        "hu": [
+          "Mintaadat"
+        ],
+        "en": [
+          "Sample data"
+        ],
+        "fr": [
+          "Données d’exemple"
+        ]
+      }
+    },
+    {
+      "slug": "minta-kozmetikum-6",
+      "brand": "—",
+      "name": {
+        "hu": "Minta: kozmetikum 6",
+        "en": "Sample: skincare 6",
+        "fr": "Exemple : soin 6"
+      },
+      "category": "kozmetikum",
+      "price": null,
+      "currency": "HUF",
+      "stock": "ask",
+      "bestseller": false,
+      "bestsellerOrder": 99,
+      "featured": false,
+      "demo": true,
+      "tone": "#efe4e1",
+      "images": [
+        "santa-maria-novella.webp"
       ],
       "description": {
         "hu": "Helyőrző termék. A pontos név, márka és ár az ügyféltől érkezik.",
@@ -1211,15 +1443,6 @@
         "fr": "maison"
       },
       "image": "trudon-marbre.webp"
-    },
-    {
-      "key": "kiegeszito",
-      "slug": {
-        "hu": "kiegeszito",
-        "en": "accessories",
-        "fr": "accessoires"
-      },
-      "image": "mag-barkocsi.webp"
     },
     {
       "key": "ekszer",

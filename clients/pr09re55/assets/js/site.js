@@ -184,6 +184,7 @@
     // A page never scrolls inside itself: if the longest page needs more room, the whole book grows a little.
     var fit = function(){
       book.style.height = '';
+      if(per === 1) return;
       var base = book.clientHeight, need = 0;
       pages.forEach(function(p){ need = Math.max(need, p.scrollHeight); });
       if(need > base + 1) book.style.height = Math.ceil(need) + 'px';
@@ -195,6 +196,7 @@
       return [2 * flips - 1, 2 * flips].filter(function(p){ return p >= 0 && p < pages.length; });
     };
     var paint = function(){
+      if(per === 1 && pages[flips]) pages[flips].scrollTop = 0;
       leaves.forEach(function(leaf, i){
         var on = i < flips;
         leaf.classList.toggle('flipped', on);
