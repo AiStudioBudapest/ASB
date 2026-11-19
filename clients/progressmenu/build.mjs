@@ -53,6 +53,7 @@ const GROUPS = [
   { id: 'cocktails', pages: ['koktelok'], icon: 'coupe', a: '255 107 94', title: T('Koktélok', 'Cocktails', 'Cocktails') },
   { id: 'long', pages: ['long-drinks'], icon: 'tumbler', a: '56 220 205', title: T('Long drinkek', 'Long drinks', 'Long drinks') },
   { id: 'summer', pages: ['nyari'], icon: 'coupe', a: '255 200 61', title: T('Nyári ajánlat és snackek', 'Summer specials & snacks', 'Spécialités d’été et en-cas') },
+  { id: 'soft', pages: ['alkoholmentes'], only: ['Apple juice'], icon: 'tumbler', a: '150 220 90', title: T('Alkoholmentes', 'Non-alcoholic', 'Sans alcool') },
   // Décision du 19/11/2026 : le menu ne montre QUE cocktails, long drinks et offre d'été + snacks.
   // Les autres familles (bulles, vins, spiritueux, café, sans alcool) restent dans content/menu.json, non affichées.
 ]
@@ -105,7 +106,12 @@ function section(g, pg, sec, idx) {
 }
 
 const sections = GROUPS.map(g => {
-  const body = g.pages.map(slug => PAGE[slug].sections.map((s, i) => section(g, PAGE[slug], s, i)).join('')).join('')
+  const keep = g.only ? new Set(g.only.map(norm)) : null
+  const body = g.pages.map(slug => PAGE[slug].sections.map((s, i) => {
+    if (!keep) return section(g, PAGE[slug], s, i)
+    const items = s.items.filter(it => keep.has(norm(tx(it.name, 'en'))))
+    return items.length ? section(g, PAGE[slug], { ...s, title: null, items }, i) : ''
+  }).join('')).join('')
   return `<section class="grp" id="${g.id}" style="--a:${g.a}" data-grp>
 <header class="gh"><span class="gi"><svg viewBox="0 0 100 150" aria-hidden="true"><use href="#g-${g.icon}"/></svg></span><h2>${L(g.title)}</h2></header>
 ${body}
