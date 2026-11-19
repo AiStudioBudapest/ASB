@@ -52,8 +52,9 @@ const T = (hu, en, fr) => ({ hu, en, fr })
 const GROUPS = [
   { id: 'cocktails', pages: ['koktelok'], icon: 'coupe', a: '255 107 94', title: T('Koktélok', 'Cocktails', 'Cocktails') },
   { id: 'long', pages: ['long-drinks'], icon: 'tumbler', a: '56 220 205', title: T('Long drinkek', 'Long drinks', 'Long drinks') },
-  // Décision du 19/11/2026 : le menu ne montre QUE les cocktails et long drinks.
-  // Les autres familles (été, bulles, vins, spiritueux, café, sans alcool) restent dans content/menu.json, non affichées.
+  { id: 'summer', pages: ['nyari'], icon: 'coupe', a: '255 200 61', title: T('Nyári ajánlat és snackek', 'Summer specials & snacks', 'Spécialités d’été et en-cas') },
+  // Décision du 19/11/2026 : le menu ne montre QUE cocktails, long drinks et offre d'été + snacks.
+  // Les autres familles (bulles, vins, spiritueux, café, sans alcool) restent dans content/menu.json, non affichées.
 ]
 const PAGE = Object.fromEntries(menu.pages.filter(p => p.sections).map(p => [p.slug, p]))
 const cardSections = new Set(photos.cardSections)
@@ -170,8 +171,8 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>pr09re55 · Koktélok / Cocktails</title>
-<meta name="description" content="pr09re55 koktélok · cocktail menu · carte des cocktails — Pozsonyi út 43, Budapest.">
+<title>pr09re55 · Itallap / Menu</title>
+<meta name="description" content="pr09re55 itallap · drinks menu · carte des boissons — Pozsonyi út 43, Budapest.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#073b2d">
 <link rel="preload" href="assets/fonts/prata-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -186,8 +187,8 @@ ${jungle}
   <div class="topbar"><span class="brand" role="img" aria-label="pr09re55"></span>
     <div class="lang" role="group" aria-label="Language / Nyelv / Langue"><button type="button" data-set-l="hu">HU</button><button type="button" data-set-l="en">EN</button><button type="button" data-set-l="fr">FR</button></div></div>
   <p class="kick">${L3('Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest')}</p>
-  <h1>${L3('Koktélok', 'The cocktail menu', 'La carte des cocktails')}</h1>
-  <p class="lede">${L3('Koktélok és long drinkek.', 'Our cocktails and long drinks.', 'Nos cocktails et long drinks.')}</p>
+  <h1>${L3('Itallap', 'The drinks menu', 'La carte des boissons')}</h1>
+  <p class="lede">${L3('Koktélok, long drinkek és nyári ajánlat.', 'Cocktails, long drinks and summer specials.', 'Cocktails, long drinks et spécialités d’été.')}</p>
   <a class="go" href="#cocktails">${L3('Nézzük meg', 'Let’s explore', 'Découvrir')}<span aria-hidden="true">↓</span></a>
 </header>
 <nav class="chips" aria-label="${esc('Menu')}"><div class="chips-in">${chips}</div></nav>
