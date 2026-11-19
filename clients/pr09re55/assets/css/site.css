@@ -766,7 +766,7 @@ address,.big-link a,.brands,.mt-cats li{font-family:var(--sans);font-weight:600;
 .mpage-jacket{background:#0b0b0b;border-color:#0b0b0b}
 .mpage-jacket::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.5'/></svg>");opacity:.07;pointer-events:none}
 .mp-jacket{flex:1}
-.jk-mark{position:absolute;left:50%;bottom:50%;width:50%;height:auto;transform:translate(-50%,8%);filter:drop-shadow(0 0 7px rgba(240,200,110,.45)) drop-shadow(0 1px 1px rgba(0,0,0,.7))}
+.jk-mark{position:absolute;left:25%;bottom:50%;width:50%;height:auto;margin-bottom:-6%;overflow:visible;filter:none}
 .face.front .mpage-jacket{box-shadow:inset 26px 0 28px -26px rgba(0,0,0,.6)}
 
 /* ---------------- What's new ---------------- */
