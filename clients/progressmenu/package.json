@@ -1,0 +1,7 @@
+{
+  "name": "progressmenu-site",
+  "private": true,
+  "description": "progressmenu.com : menu des boissons de pr09re55 consulté par QR code (statique, sans dépendance)",
+  "scripts": { "build": "node build.mjs" },
+  "engines": { "node": ">=18" }
+}
