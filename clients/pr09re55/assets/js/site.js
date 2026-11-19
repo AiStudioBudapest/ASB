@@ -254,14 +254,13 @@
     // Click the right-hand page to go forward, the left-hand page to go back; swipe on touch screens.
     var x0 = null, y0 = 0;
     book.addEventListener('pointerdown', function(e){ x0 = e.clientX; y0 = e.clientY; });
-    book.addEventListener('click', function(e){ if(e.target.closest('[data-close-book]')){ goTo(0); setHash(); } });
     book.addEventListener('pointerup', function(e){
       if(x0 === null) return;
-      if(e.target.closest('[data-close-book]')){ x0 = null; return; }
       var dx = e.clientX - x0, dy = e.clientY - y0, r = book.getBoundingClientRect(); x0 = null;
       if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { goTo(flips + (dx < 0 ? 1 : -1)); setHash(); return; }
       if(Math.abs(dx) > 6 || Math.abs(dy) > 6 || getSelection().toString()) return;
       var mid = r.left + r.width / 2;
+      if(e.target.closest('.mp-back')) { goTo(flips - 1); setHash(); return; } // the back cover: a click turns back one page
       if(per === 1) { if(e.clientX > r.left + r.width * .72) goTo(flips + 1); else if(e.clientX < r.left + r.width * .18) goTo(flips - 1); else return; }
       else goTo(flips + (e.clientX >= mid ? 1 : -1));
       setHash();

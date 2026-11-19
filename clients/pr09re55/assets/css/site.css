@@ -788,9 +788,8 @@ address,.big-link a,.brands,.mt-cats li{font-family:var(--sans);font-weight:600;
 .mpage-backjacket{background:#0b0b0b;border-color:#0b0b0b}
 .mpage-backjacket::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.5'/></svg>");opacity:.07;pointer-events:none}
 .face.back .mpage-backjacket{box-shadow:inset -26px 0 28px -26px rgba(0,0,0,.6)}
-.jk-close{position:absolute;inset:0;width:100%;border:0;background:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12%}
+.jk-close{position:absolute;inset:0;width:100%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12%}
 .jk-mini{width:34px;height:auto;opacity:.85}
-.jk-close:focus-visible{outline:2px solid #b98d4e;outline-offset:-8px}
 
 /* Boutique: one picture per category; darker on hover, the name in the middle */
 .cat-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1.4vw,20px);padding-bottom:clamp(70px,8vw,120px)}
