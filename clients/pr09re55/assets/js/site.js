@@ -260,7 +260,7 @@
       if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { goTo(flips + (dx < 0 ? 1 : -1)); setHash(); return; }
       if(Math.abs(dx) > 6 || Math.abs(dy) > 6 || getSelection().toString()) return;
       var mid = r.left + r.width / 2;
-      if(e.target.closest('.mp-back')) { goTo(flips - 1); setHash(); return; } // the back cover: a click turns back one page
+      if(flips >= maxFlips() || e.target.closest('.mp-back')) { goTo(flips - 1); setHash(); return; } // at the very end (black back cover), a click anywhere turns back exactly one page
       if(per === 1) { if(e.clientX > r.left + r.width * .72) goTo(flips + 1); else if(e.clientX < r.left + r.width * .18) goTo(flips - 1); else return; }
       else goTo(flips + (e.clientX >= mid ? 1 : -1));
       setHash();
