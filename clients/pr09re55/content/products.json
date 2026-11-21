@@ -1433,7 +1433,7 @@
         "en": "skincare",
         "fr": "soin"
       },
-      "image": "santa-maria-novella.webp"
+      "image": "butik-kozmetikum.webp"
     },
     {
       "key": "otthon",
@@ -1442,7 +1442,7 @@
         "en": "home",
         "fr": "maison"
       },
-      "image": "trudon-marbre.webp"
+      "image": "butik-otthon.webp"
     },
     {
       "key": "ekszer",
@@ -1452,6 +1452,24 @@
         "fr": "bijoux"
       },
       "image": "mag-gyuruk.webp"
+    },
+    {
+      "key": "napszemuveg",
+      "slug": {
+        "hu": "napszemuveg",
+        "en": "sunglasses",
+        "fr": "lunettes-de-soleil"
+      },
+      "image": "butik-napszemuveg.webp"
+    },
+    {
+      "key": "taska",
+      "slug": {
+        "hu": "taska",
+        "en": "bags",
+        "fr": "sacs"
+      },
+      "image": "butik-taska.webp"
     }
   ]
 }
