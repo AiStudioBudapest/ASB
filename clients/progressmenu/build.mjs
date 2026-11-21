@@ -28,6 +28,8 @@ function L(v) {
   return [...groups].map(([t, ls]) => `<span data-l="${ls.join(' ')}">${esc(t)}</span>`).join('')
 }
 
+const L3 = (hu, en, fr) => L({ hu, en, fr })
+
 // ---------- images des boissons ----------
 const drinksDir = path.join(here, 'assets/img/drinks')
 let manifest = {}
@@ -59,7 +61,34 @@ const GROUPS = [
 const PAGE = Object.fromEntries(menu.pages.filter(p => p.sections).map(p => [p.slug, p]))
 const cardSections = new Set(photos.cardSections)
 const cardNames = new Set(photos.cardNames.map(norm))
+const explodeNames = new Set((photos.explode || []).map(norm))
 const missing = []
+
+// Vue éclatée : ingrédients lus dans la description (jamais inventés), pictogramme et couleur choisis d'après le nom.
+const kindOf = n => {
+  const s = norm(n)
+  if (/tonic|soda|ginger beer/.test(s)) return 'fizz'
+  if (/bitters?\b/.test(s)) return 'dropper'
+  if (/juice|puree|syrup/.test(s)) return 'drop'
+  if (/lemon|lime|orange|peel|wheel|slice|cube/.test(s)) return 'citrus'
+  if (/\bgin\b|vodka|bourbon|tequila|campari|aperol|amaro|kahlua|cointreau|vermouth|martini|anis/.test(s)) return 'bottle'
+  if (/mint|celery|rose bud|hibiscus|flower/.test(s)) return 'leaf'
+  if (/rose|brut|beer/.test(s)) return 'flute'
+  if (/cherry/.test(s)) return 'cherry'
+  if (/coffee|espresso|tonka/.test(s)) return 'bean'
+  if (/sugar/.test(s)) return 'cube'
+  return 'drop'
+}
+const colorOf = n => {
+  const s = norm(n)
+  if (/campari|aperol|angostura|bitter|hibiscus|cherry|raspberry|tomato/.test(s)) return '255 107 94'
+  if (/orange/.test(s)) return '255 150 60'
+  if (/vermouth|bourbon|amaro|kahlua|tonka|coffee|espresso|sugar/.test(s)) return '255 200 61'
+  if (/\bgin\b|vodka|tequila|soda|tonic|lemon|lime/.test(s)) return '56 220 205'
+  if (/mint|celery|leaf/.test(s)) return '120 230 150'
+  return '255 232 160'
+}
+const parts = desc => String(desc || '').split('…')[0].split(/,\s*/).map(x => x.trim()).filter(Boolean)
 
 const priceCells = (it, sec) => it.prices.map((n, k) => {
   const lab = sec.cols && sec.cols[k] ? `<small>${L(sec.cols[k])}</small>` : ''
@@ -73,10 +102,14 @@ function card(it, g, sec) {
   const ph = img
     ? `<img src="${img}" alt="" loading="lazy" decoding="async">`
     : `<svg class="glass" viewBox="0 0 100 150" aria-hidden="true"><use href="#g-${g.icon}"/></svg>`
-  const lab = sec.cols && sec.cols.length > 1 ? '' : ''
-  return `<li class="card${img ? '' : ' noimg'}" style="--a:${g.a}">
+  const ing = img && explodeNames.has(norm(en)) ? parts(tx(it.desc, 'en')) : []
+  const xv = ing.length > 1
+  const xvData = xv ? ` data-xv="${esc(JSON.stringify(ing.map(n => ({ n, k: kindOf(n), c: colorOf(n) }))))}"` : ''
+  const xvBtn = xv ? `<button type="button" class="xv-open" aria-haspopup="dialog"><span class="sr">${L3('Összetevők megnézése', 'See the ingredients', 'Voir les ingrédients')} : ${L(it.name)}</span></button>` : ''
+  const xvHint = xv ? `<p class="xvh" aria-hidden="true"><i></i>${L3('Összetevők', 'Ingredients', 'Ingrédients')}</p>` : ''
+  return `<li class="card${img ? '' : ' noimg'}${xv ? ' has-xv' : ''}" style="--a:${g.a}"${xvData}>
   <div class="ph">${ph}</div>
-  <div class="tx"><h4>${L(it.name)}</h4>${it.desc ? `<p class="d">${L(it.desc)}</p>` : ''}<p class="pr">${priceCells(it, sec)}${lab}</p></div>
+  <div class="tx"><h4>${L(it.name)}</h4>${it.desc ? `<p class="d">${L(it.desc)}</p>` : ''}<p class="pr">${priceCells(it, sec)}</p>${xvHint}</div>${xvBtn}
 </li>`
 }
 const row = (it, sec) => `<li class="row"><div class="rn"><h4>${L(it.name)}</h4>${it.desc ? `<p class="d">${L(it.desc)}</p>` : ''}</div><p class="pr">${priceCells(it, sec)}</p></li>`
@@ -152,6 +185,31 @@ const glyphs = `
 <symbol id="g-wine" viewBox="0 0 100 150"><path d="M28 14h44c4 40-6 70-22 70S24 54 28 14Z" fill="currentColor" fill-opacity=".7" stroke="#fff" stroke-opacity=".75" stroke-width="2.5"/><path d="M50 84v48M30 136h40" stroke="#fff" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/></symbol>
 <symbol id="g-cup" viewBox="0 0 100 150"><path d="M16 50h58v34c0 16-12 28-29 28S16 100 16 84Z" fill="currentColor" fill-opacity=".8" stroke="#fff" stroke-opacity=".75" stroke-width="2.5"/><path d="M74 60h8a10 10 0 0 1 0 22h-9" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"/><path d="M34 40c-5-7 5-11 0-18M52 40c-5-7 5-11 0-18" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="45" cy="124" rx="38" ry="6" fill="#fff" fill-opacity=".25"/></symbol>`
 
+const xvSymbols = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="x-bottle" viewBox="0 0 40 40"><path d="M16 5h8v7l4 5v18a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V17l4-5Z M12 24h16"/></symbol>
+<symbol id="x-citrus" viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="10"/><path d="M20 10v20M10 20h20M13 13l14 14M27 13 13 27"/></symbol>
+<symbol id="x-drop" viewBox="0 0 40 40"><path d="M20 5c-6 9-10 14-10 20a10 10 0 0 0 20 0c0-6-4-11-10-20Z M15 26a5 5 0 0 0 4 4"/></symbol>
+<symbol id="x-fizz" viewBox="0 0 40 40"><circle cx="14" cy="26" r="5"/><circle cx="27" cy="20" r="4"/><circle cx="18" cy="11" r="3"/><circle cx="29" cy="32" r="2.500"/></symbol>
+<symbol id="x-dropper" viewBox="0 0 40 40"><path d="M16 4h8v6h-8Z M18 10v4h4v-4 M12 14h16v18a3 3 0 0 1-3 3H15a3 3 0 0 1-3-3Z M20 21c-3 4-4 5-4 7a4 4 0 0 0 8 0c0-2-1-3-4-7Z"/></symbol>
+<symbol id="x-cherry" viewBox="0 0 40 40"><circle cx="13" cy="28" r="6"/><circle cx="27" cy="26" r="6"/><path d="M13 22c2-8 6-14 13-15M27 20c-1-6-1-10-1-13"/></symbol>
+<symbol id="x-leaf" viewBox="0 0 40 40"><path d="M8 32C8 16 18 7 33 7c0 16-9 26-25 25ZM8 32 24 16"/></symbol>
+<symbol id="x-bean" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="9" ry="14" transform="rotate(35 20 20)"/><path d="M13 11c6 6 8 12 14 18"/></symbol>
+<symbol id="x-cube" viewBox="0 0 40 40"><path d="M8 14 20 8l12 6v14l-12 6-12-6ZM8 14l12 6 12-6M20 20v14"/></symbol>
+<symbol id="x-flute" viewBox="0 0 40 40"><path d="M15 5h10l-1 14c-.3 4-2 6-4 6s-3.700-2-4-6ZM20 25v9M14 35h12"/><circle cx="19" cy="14" r="1.500"/><circle cx="22" cy="10" r="1"/></symbol>
+</defs></svg>`
+const xvOverlay = `<div id="xv" class="xv" hidden role="dialog" aria-modal="true" aria-labelledby="xvt">
+<div class="xv-bg"></div>
+<button type="button" class="xv-x" aria-label="${esc('Bezár / Close / Fermer')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+<div class="xv-head"><h3 id="xvt"></h3><p class="xv-sub">${L3('Összetevők', 'Ingredients', 'Ingrédients')} · <b id="xvn"></b></p></div>
+<div class="xv-stage" id="xvs">
+  <div class="xv-ring" aria-hidden="true"><svg viewBox="0 0 200 200"><circle class="r1" cx="100" cy="100" r="97"/><circle class="r2" cx="100" cy="100" r="86"/><circle class="r3" cx="100" cy="100" r="74"/></svg></div>
+  <svg class="xv-lines" aria-hidden="true"></svg>
+  <div class="xv-scan" aria-hidden="true"></div>
+  <img class="xv-glass" alt="">
+  <div class="xv-parts"></div>
+</div>
+</div>`
+
 const use = (c, cls, style) => (style = style.replace(/width:(\d+)%/, (m, p) => `width:min(${p}%,${Math.round(p * 7.5)}px)`), `<svg class="leaf ${cls}" viewBox="-40 -230 780 520" style="color:${c};${style}" aria-hidden="true"><use href="#frond"/></svg>`)
 const jungle = `
 <div class="bg" aria-hidden="true">
@@ -166,7 +224,6 @@ const jungle = `
 // ---------- page ----------
 const css = read('src/style.css')
 const js = read('src/app.js')
-const L3 = (hu, en, fr) => L({ hu, en, fr })
 const contact = menu.pages.find(p => p.kind === 'cover').contact
 const addr = contact[0]
 const insta = contact.find(c => c.startsWith('Instagram'))?.replace('Instagram: ', '')
@@ -187,6 +244,7 @@ const html = `<!doctype html>
 </head>
 <body>
 ${jungle}
+${xvSymbols}
 <main>
 <header class="hero">
   <div class="topbar"><span class="brand" role="img" aria-label="pr09re55"></span>
@@ -202,6 +260,7 @@ ${sections}
 </div>
 <footer class="foot"><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
 </main>
+${xvOverlay}
 <script>${js}</script>
 </body>
 </html>`
