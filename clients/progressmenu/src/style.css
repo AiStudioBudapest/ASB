@@ -146,6 +146,10 @@ h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.5rem,12.5vw,5.2rem
   .card{opacity:1;transform:none;transition:none}
   .card:not(.in) .ph img,.card:not(.in) .ph .glass{transform:translateZ(30px)}
 }
+/* tactile : barre du haut stable pendant le défilement (pas de flou recalculé à chaque image, calque à part) */
+@media (hover:none),(pointer:coarse),(max-width:1024px){
+  .chips{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(5,52,39,.96);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform;backface-visibility:hidden}
+}
 html.soft-gl .chips{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(5,52,39,.95)}
 @media print{.bg{display:none}body{background:#fff;color:#000}}
 
