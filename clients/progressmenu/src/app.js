@@ -90,11 +90,11 @@
         '<ellipse cx="100" cy="19" rx="68" ry="10" fill="#fff" fill-opacity=".2"/>' + (sp || '') +
         '<path d="M24 36c20 10 132 10 152 0" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2" stroke-linecap="round"/></svg>'
     }
-    function orange() {
+    function orange(dr) {
       var seg = '', k, a, x, y
       for (k = 0; k < 10; k++) { a = k / 10 * Math.PI * 2; x = 100 + 70 * Math.cos(a); y = 30 + 19.500 * Math.sin(a); seg += 'M100 30L' + x.toFixed(1) + ' ' + y.toFixed(1) }
-      return '<svg viewBox="0 0 200 64" aria-hidden="true"><ellipse cx="100" cy="31" rx="90" ry="26" fill="#e87a12"/><ellipse cx="100" cy="30" rx="90" ry="26" fill="#ff9d2e"/>' +
-        '<ellipse cx="100" cy="30" rx="82" ry="22.500" fill="#ffe4b0"/><ellipse cx="100" cy="30" rx="75" ry="19.500" fill="url(#xg-orange-f)"/>' +
+      return '<svg viewBox="0 0 200 64" aria-hidden="true"><ellipse cx="100" cy="31" rx="90" ry="26" fill="' + (dr ? '#a8671a' : '#e87a12') + '"/><ellipse cx="100" cy="30" rx="90" ry="26" fill="' + (dr ? '#d9982f' : '#ff9d2e') + '"/>' +
+        '<ellipse cx="100" cy="30" rx="82" ry="22.500" fill="#ffe4b0"/><ellipse cx="100" cy="30" rx="75" ry="19.500" fill="url(#' + (dr ? 'xg-dorange-f' : 'xg-orange-f') + ')"/>' +
         '<path d="' + seg + '" stroke="#ffe4b0" stroke-width="2.600" stroke-linecap="round" fill="none"/><ellipse cx="100" cy="30" rx="6" ry="2.500" fill="#ffe4b0"/>' +
         '<ellipse cx="74" cy="22" rx="14" ry="3.500" fill="#fff" fill-opacity=".35"/></svg>'
     }
@@ -109,10 +109,22 @@
         '<ellipse cx="100" cy="14" rx="92" ry="14" fill="#fff" fill-opacity=".08" stroke="#fff" stroke-opacity=".7" stroke-width="1.600"/>' +
         '<ellipse cx="100" cy="46" rx="70" ry="9" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.200"/><path d="M20 24v16" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/></svg>'
     }
+    function balloonArt() {
+      return '<svg viewBox="0 0 200 64" aria-hidden="true"><path d="M14 12C14 44 52 60 100 60S186 44 186 12Z" fill="#fff" fill-opacity=".1" stroke="#fff" stroke-opacity=".6" stroke-width="1.6"/>' +
+        '<ellipse cx="100" cy="12" rx="86" ry="10" fill="#fff" fill-opacity=".08" stroke="#fff" stroke-opacity=".7" stroke-width="1.6"/><path d="M30 24c6 14 20 22 34 25" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round" fill="none"/></svg>'
+    }
+    function strawArt() {
+      return '<svg viewBox="0 0 200 64" aria-hidden="true"><path d="M22 52 150 22q16-4 24 4" fill="none" stroke="url(#xg-gold)" stroke-width="9" stroke-linecap="round"/><path d="M26 49 148 20" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round" fill="none"/></svg>'
+    }
+    function flowersArt() {
+      var c = ['#d9708f', '#f0b2c6', '#8e3b63', '#7a4a2a'], pts = [[40, 34, -20], [72, 22, 15], [100, 38, 0], [128, 24, -12], [158, 36, 25], [86, 30, 40], [118, 34, -35], [58, 40, 10]], o = ''
+      pts.forEach(function (p, i) { o += '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="15" ry="6" fill="' + c[i % 4] + '" transform="rotate(' + p[2] + ' ' + p[0] + ' ' + p[1] + ')"/>' })
+      return '<svg viewBox="0 0 200 64" aria-hidden="true">' + o + '</svg>'
+    }
     var SPARK = '<circle cx="56" cy="19" r="2" fill="#fff"/><circle cx="118" cy="16" r="1.500" fill="#fff"/><circle cx="150" cy="22" r="2.200" fill="#fff"/><circle cx="90" cy="25" r="1.300" fill="#fff"/>'
     var ART = {
-      orange: orange, ice: ice, glass: glassArt,
-      gin: function () { return slab('gin', SPARK) }, campari: function () { return slab('campari') }, vermouth: function () { return slab('vermouth') }
+      orange: function () { return orange(false) }, dorange: function () { return orange(true) }, ice: ice, glass: glassArt, balloon: balloonArt, straw: strawArt, flowers: flowersArt,
+      gin: function () { return slab('gin', SPARK) }, tonic: function () { return slab('tonic', SPARK) }, campari: function () { return slab('campari') }, vermouth: function () { return slab('vermouth') }
     }
 
     function layout() {
@@ -176,7 +188,6 @@
         return { el: el, line: el.firstChild, key: x.t, on: false, x: -1, y: -1, w: -1 }
       })
     }
-    var KEYS = ['orange', 'ice', 'gin', 'campari', 'vermouth', 'glass']
     function onFrame(info) {
       var ls = st.labels3; if (!ls) return
       var colX = info.colX + 34
@@ -196,12 +207,14 @@
       if (!on && st.labels3) st.labels3.forEach(function (l) { l.on = false; l.el.classList.remove('on') })
       scene.setTarget(on ? 1 : 0, instant || reduce ? 0 : (on ? 2900 : 2300))
     }
-    function mount3d(m, data) {
+    function mount3d(m, data, kind) {
+      if (scene && scene.kind !== kind) { scene.dispose(); scene = null }
       if (!scene) {
-        scene = m.create(host3)
+        scene = m.create(host3, kind)
         scene.onFrame = onFrame
         scene.onTap = function () { if (st.open && !st.closing && st.mode === '3d') setExploded(!st.exploded) }
         scene.onLost = function () { if (st.open && st.mode === '3d') toSvg() }
+        scene.kind = kind
       }
       sizeScene()
       st.labels3 = buildLabels(data)
@@ -234,7 +247,7 @@
     function open(card, btn) {
       if (st.open) return
       var img = card.querySelector('.ph img'); if (!img) return
-      var data; try { data = JSON.parse(card.getAttribute('data-xv')) } catch (e) { return }
+      var data, kind; try { var raw = JSON.parse(card.getAttribute('data-xv')); data = raw.l; kind = raw.s } catch (e) { return }
       st.open = true; st.closing = false; st.img = img; st.btn = btn; st.exploded = false; st.data = data
       var try3d = glOk()
       st.mode = try3d ? '3d' : 'svg'
@@ -272,7 +285,7 @@
       Promise.all([intro, Promise.race([mp, timeout])]).then(function (r) {
         clearTimeout(loading); glass.classList.remove('xv-wait')
         if (!st.open || st.closing || st.token !== token) return
-        mount3d(r[1], data)
+        mount3d(r[1], data, kind)
         host3.classList.add('on')
         return wait(reduce ? 0 : 480).then(function () {
           if (!st.open || st.closing || st.token !== token) return

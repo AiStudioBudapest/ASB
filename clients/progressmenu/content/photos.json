@@ -10,44 +10,96 @@
   ],
   "_explode": "Boissons dont la carte ouvre la vue éclatée (nom anglais -> couches de haut en bas). t = dessin de la couche (orange, ice, gin, campari, vermouth, glass). Les noms Bobby’s Dry Gin / Campari / Vermouth viennent de la description du menu (vérifiés au build) ; Orange, Glaçons et Verre ont été ajoutés à la demande du client (ils figurent sur l'illustration).",
   "explode": {
-    "Negroni": [
-      {
-        "t": "orange",
-        "n": {
-          "hu": "Narancskarika",
-          "en": "Orange slice",
-          "fr": "Rondelle d’orange"
+    "Negroni": {
+      "scene": "negroni",
+      "layers": [
+        {
+          "t": "orange",
+          "n": {
+            "hu": "Narancskarika",
+            "en": "Orange slice",
+            "fr": "Rondelle d’orange"
+          }
+        },
+        {
+          "t": "ice",
+          "n": {
+            "hu": "Jég",
+            "en": "Ice",
+            "fr": "Glaçons"
+          }
+        },
+        {
+          "t": "gin",
+          "n": "Bobby’s Dry Gin"
+        },
+        {
+          "t": "campari",
+          "n": "Campari"
+        },
+        {
+          "t": "vermouth",
+          "n": "Vermouth"
+        },
+        {
+          "t": "glass",
+          "n": {
+            "hu": "Pohár",
+            "en": "Glass",
+            "fr": "Verre"
+          }
         }
-      },
-      {
-        "t": "ice",
-        "n": {
-          "hu": "Jég",
-          "en": "Ice",
-          "fr": "Glaçons"
+      ]
+    },
+    "Paradise GT": {
+      "scene": "paradise",
+      "layers": [
+        {
+          "t": "straw",
+          "n": {
+            "hu": "Arany szívószál",
+            "en": "Gold straw",
+            "fr": "Paille dorée"
+          }
+        },
+        {
+          "t": "dorange",
+          "n": {
+            "hu": "Szárított narancskarika",
+            "en": "Dried orange slice",
+            "fr": "Rondelle d’orange séchée"
+          }
+        },
+        {
+          "t": "flowers",
+          "n": "Flowers & Spices"
+        },
+        {
+          "t": "ice",
+          "n": {
+            "hu": "Jég",
+            "en": "Ice",
+            "fr": "Glaçons"
+          }
+        },
+        {
+          "t": "tonic",
+          "n": "Honeybush Orange Tonic"
+        },
+        {
+          "t": "gin",
+          "n": "Mrs. Millicent Speakeasy Gin"
+        },
+        {
+          "t": "balloon",
+          "n": {
+            "hu": "Gin tonic pohár",
+            "en": "Gin tonic glass",
+            "fr": "Verre à gin tonic"
+          }
         }
-      },
-      {
-        "t": "gin",
-        "n": "Bobby’s Dry Gin"
-      },
-      {
-        "t": "campari",
-        "n": "Campari"
-      },
-      {
-        "t": "vermouth",
-        "n": "Vermouth"
-      },
-      {
-        "t": "glass",
-        "n": {
-          "hu": "Pohár",
-          "en": "Glass",
-          "fr": "Verre"
-        }
-      }
-    ]
+      ]
+    }
   },
   "cardNames": [
     "Lemonade « maison »",

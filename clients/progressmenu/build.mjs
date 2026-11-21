@@ -80,10 +80,11 @@ function card(it, g, sec) {
     ? `<img src="${img}" alt="" loading="lazy" decoding="async">`
     : `<svg class="glass" viewBox="0 0 100 150" aria-hidden="true"><use href="#g-${g.icon}"/></svg>`
   const key = Object.keys(explode).find(k => norm(k) === norm(en))
-  const layers = img && key ? explode[key] : []
+  const ent = img && key ? explode[key] : null
+  const layers = ent ? ent.layers : []
   const xv = layers.length > 1
   if (xv) for (const l of layers) if (typeof l.n === 'string' && !norm(tx(it.desc || '', 'en')).includes(norm(l.n))) console.warn(`⚠ vue éclatée : « ${l.n} » absent de la description de ${en}`)
-  const xvData = xv ? ` data-xv="${esc(JSON.stringify(layers))}"` : ''
+  const xvData = xv ? ` data-xv="${esc(JSON.stringify({ s: ent.scene, l: layers }))}"` : ''
   const xvBtn = xv ? `<button type="button" class="xv-open" aria-haspopup="dialog"><span class="sr">${L3('Összetevők megnézése', 'See the ingredients', 'Voir les ingrédients')} : ${L(it.name)}</span></button>` : ''
   const xvHint = xv ? `<p class="xvh" aria-hidden="true"><i></i>${L3('Összetevők', 'Ingredients', 'Ingrédients')}</p>` : ''
   return `<li class="card${img ? '' : ' noimg'}${xv ? ' has-xv' : ''}" style="--a:${g.a}"${xvData}>
@@ -171,6 +172,10 @@ const xvSymbols = `<svg width="0" height="0" style="position:absolute" aria-hidd
 <linearGradient id="xg-campari-s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b3201f"/><stop offset=".45" stop-color="#e6392f"/><stop offset="1" stop-color="#9a1a1b"/></linearGradient>
 <linearGradient id="xg-vermouth-t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#f0ac32"/></linearGradient>
 <linearGradient id="xg-vermouth-s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c98a1f"/><stop offset=".45" stop-color="#f2b840"/><stop offset="1" stop-color="#b87a17"/></linearGradient>
+<linearGradient id="xg-tonic-t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff8dc"/><stop offset="1" stop-color="#f1dfa6"/></linearGradient>
+<linearGradient id="xg-tonic-s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9c27d"/><stop offset=".45" stop-color="#f6e7b3"/><stop offset="1" stop-color="#cdb36a"/></linearGradient>
+<linearGradient id="xg-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#e2ab45"/><stop offset="1" stop-color="#9a6a1a"/></linearGradient>
+<radialGradient id="xg-dorange-f" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#f0bf5e"/><stop offset="1" stop-color="#c9831f"/></radialGradient>
 <radialGradient id="xg-orange-f" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#ffc065"/><stop offset="1" stop-color="#ff8a1f"/></radialGradient>
 <linearGradient id="xg-ice" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".85"/><stop offset="1" stop-color="#bfe6f2" stop-opacity=".4"/></linearGradient>
 </defs></svg>`
