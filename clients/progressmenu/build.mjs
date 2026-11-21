@@ -179,9 +179,13 @@ const xvOverlay = `<div id="xv" class="xv" hidden role="dialog" aria-modal="true
 <button type="button" class="xv-x" aria-label="${esc('Bezár / Close / Fermer')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
 <div class="xv-head"><h3 id="xvt"></h3></div>
 <div class="xv-stage" id="xvs">
+  <div class="xv-3dhost" id="xv3"></div>
   <div class="xv-layers"></div>
   <img class="xv-glass" alt="">
+  <div class="xv-labels" id="xvl"></div>
 </div>
+<p class="xv-tip" hidden>${L3('Húzd az ujjad a forgatáshoz', 'Drag to rotate', 'Glissez pour faire tourner')}</p>
+<button type="button" class="xv-tg" hidden aria-pressed="false"><span class="t-ex">${L3('Szétszed', 'Explode', 'Décomposer')}</span><span class="t-re">${L3('Összerak', 'Reassemble', 'Reconstituer')}</span></button>
 </div>`
 
 const use = (c, cls, style) => (style = style.replace(/width:(\d+)%/, (m, p) => `width:min(${p}%,${Math.round(p * 7.5)}px)`), `<svg class="leaf ${cls}" viewBox="-40 -230 780 520" style="color:${c};${style}" aria-hidden="true"><use href="#frond"/></svg>`)

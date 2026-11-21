@@ -153,86 +153,206 @@
       })
     }
 
+    // ----- 3D (Three.js, chargé seulement au premier besoin) -----
+    var host3 = d.getElementById('xv3'), lab3 = d.getElementById('xvl'), tg = xv.querySelector('.xv-tg'), tip = xv.querySelector('.xv-tip')
+    var modP = null, scene = null, hasGL = null
+    function glOk() {
+      if (hasGL !== null) return hasGL
+      try { var c = d.createElement('canvas'); hasGL = !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))) } catch (e) { hasGL = false }
+      return hasGL
+    }
+    function warm() { if (!modP && glOk()) { modP = import('./assets/js/negroni3d.js'); modP.catch(function () { modP = null; hasGL = false }) } return modP }
+    function wait(ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
+    function done(a) { return new Promise(function (r) { a.onfinish = r; a.oncancel = r }) }
+
+    function buildLabels(layers) {
+      var L = lang()
+      lab3.innerHTML = ''
+      return layers.map(function (x) {
+        var el = d.createElement('div'); el.className = 'x3l'
+        el.innerHTML = '<i></i><span></span>'
+        el.lastChild.textContent = typeof x.n === 'string' ? x.n : (x.n[L] || x.n.en || x.n.hu)
+        lab3.appendChild(el)
+        return { el: el, line: el.firstChild, key: x.t, on: false, x: -1, y: -1, w: -1 }
+      })
+    }
+    var KEYS = ['orange', 'ice', 'gin', 'campari', 'vermouth', 'glass']
+    function onFrame(info) {
+      var ls = st.labels3; if (!ls) return
+      var colX = info.colX + 34
+      info.parts.forEach(function (p, i) {
+        var l = ls[i]; if (!l) return
+        var x = Math.round(p.edge + 10), y = Math.round(p.sy - 13), w = Math.max(18, Math.round(colX - x))
+        if (x !== l.x || y !== l.y) { l.el.style.transform = 'translate(' + x + 'px,' + y + 'px)'; l.x = x; l.y = y }
+        if (w !== l.w) { l.line.style.width = w + 'px'; var sp = l.el.lastChild; sp.style.left = (w + 10) + 'px'; sp.style.maxWidth = Math.max(60, info.W - x - w - 14) + 'px'; l.w = w }
+        var on = st.exploded && p.p > .93
+        if (on !== l.on) { l.on = on; l.el.classList.toggle('on', on) }
+      })
+    }
+    function setExploded(on, instant) {
+      st.exploded = on
+      tg.classList.toggle('ex', on)
+      tg.setAttribute('aria-pressed', String(on))
+      if (!on && st.labels3) st.labels3.forEach(function (l) { l.on = false; l.el.classList.remove('on') })
+      scene.setTarget(on ? 1 : 0, instant || reduce ? 0 : (on ? 2900 : 2300))
+    }
+    function mount3d(m, data) {
+      if (!scene) {
+        scene = m.create(host3)
+        scene.onFrame = onFrame
+        scene.onTap = function () { if (st.open && !st.closing && st.mode === '3d') setExploded(!st.exploded) }
+        scene.onLost = function () { if (st.open && st.mode === '3d') toSvg() }
+      }
+      sizeScene()
+      st.labels3 = buildLabels(data)
+      scene.setTarget(0, 0); scene.start()
+    }
+    function sizeScene() {
+      if (!scene) return
+      var W = stage.clientWidth, H = stage.clientHeight
+      scene.resize(W, H, W < 520 ? W * .31 : W * .36)
+    }
+    function toSvg() {
+      // repli : pas de WebGL (ou échec) -> version SVG en couches
+      st.mode = 'svg'
+      if (scene) scene.stop()
+      host3.classList.remove('on'); tg.hidden = true; tip.hidden = true; lab3.hidden = true
+      box.hidden = false
+      glass.getAnimations && glass.getAnimations().forEach(function (a) { a.cancel() })
+      playSvg(0)
+    }
+    function playSvg(base) {
+      play(glass, [{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: base + 520, fill: 'forwards', easing: 'ease-in-out' })
+      st.items.forEach(function (it, i) {
+        var off = st.mid - (it.y + it.h / 2), dl = base + 560 + i * 70
+        play(it.art, [{ opacity: 0, transform: 'translateY(' + off + 'px) scale(.78)' }, { opacity: 1, transform: 'none', offset: .25 }, { opacity: 1, transform: 'none' }], { duration: 900, delay: dl, fill: 'both', easing: EASE })
+        play(it.t, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 480, delay: dl + 520, fill: 'both', easing: EASE })
+        play(it.line, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 420, delay: dl + 520, fill: 'both', easing: EASE })
+      })
+    }
+
     function open(card, btn) {
       if (st.open) return
       var img = card.querySelector('.ph img'); if (!img) return
       var data; try { data = JSON.parse(card.getAttribute('data-xv')) } catch (e) { return }
-      st.open = true; st.closing = false; st.img = img; st.btn = btn
+      st.open = true; st.closing = false; st.img = img; st.btn = btn; st.exploded = false; st.data = data
+      var try3d = glOk()
+      st.mode = try3d ? '3d' : 'svg'
+      var mp = try3d ? warm() : null
       var first = img.getBoundingClientRect()
       glass.src = img.currentSrc || img.src
       build(data, card.querySelector('h4').innerHTML)
       xv.hidden = false
       de.style.overflow = 'hidden'; main.inert = true
       try { history.pushState({ xv: 1 }, '') } catch (e) {}
+      box.hidden = try3d; lab3.hidden = !try3d; tg.hidden = true; tip.hidden = true
       layout()
       var last = glass.getBoundingClientRect()
       img.style.visibility = 'hidden'
       st.anims = []
       var fade = [{ opacity: 0 }, { opacity: 1 }]
+      var intro
       if (reduce) {
         ;[bg, xbtn, head].forEach(function (e) { play(e, fade, { duration: 160, fill: 'forwards' }) })
-        glass.style.opacity = 0
-        st.items.forEach(function (it) { play(it.art, fade, { duration: 160, fill: 'forwards' }); play(it.t, fade, { duration: 160, fill: 'forwards' }) })
-        xbtn.focus({ preventScroll: true }); return
+        intro = wait(60)
+      } else {
+        play(bg, fade, { duration: 420, fill: 'forwards' })
+        play(head, [{ opacity: 0, transform: 'translateY(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 480, delay: 200, fill: 'both', easing: EASE })
+        play(xbtn, fade, { duration: 300, delay: 260, fill: 'both' })
+        // 1) l'illustration quitte la carte et vient se poser au centre
+        var dx = first.left - last.left, dy = first.top - last.top, s = first.width / last.width
+        intro = done(play(glass, [{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }, { transform: 'none' }], { duration: 640, easing: EASE }))
       }
-      play(bg, fade, { duration: 420, fill: 'forwards' })
-      play(head, [{ opacity: 0, transform: 'translateY(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 480, delay: 200, fill: 'both', easing: EASE })
-      play(xbtn, fade, { duration: 300, delay: 260, fill: 'both' })
-      // 1) l'illustration quitte la carte et vient se poser au centre
-      var dx = first.left - last.left, dy = first.top - last.top, s = first.width / last.width
-      play(glass, [{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }, { transform: 'none' }], { duration: 640, easing: EASE })
-      // 2) elle s'efface pendant que les couches, d'abord regroupées, s'écartent les unes des autres
-      play(glass, [{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: 520, fill: 'forwards', easing: 'ease-in-out' })
-      st.items.forEach(function (it, i) {
-        var off = st.mid - (it.y + it.h / 2), dl = 560 + i * 70
-        play(it.art, [{ opacity: 0, transform: 'translateY(' + off + 'px) scale(.78)' }, { opacity: 1, transform: 'none', offset: .25 }, { opacity: 1, transform: 'none' }], { duration: 900, delay: dl, fill: 'both', easing: EASE })
-        play(it.t, [{ opacity: 0, transform: 'translateX(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 480, delay: dl + 520, fill: 'both', easing: EASE })
-        play(it.line, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 420, delay: dl + 520, fill: 'both', easing: EASE })
-      })
       xbtn.focus({ preventScroll: true })
+      if (!try3d) { if (reduce) { glass.style.opacity = 0; st.items.forEach(function (it) { play(it.art, fade, { duration: 160, fill: 'forwards' }); play(it.t, fade, { duration: 160, fill: 'forwards' }) }) } else playSvg(0); return }
+      // 2) la 3D remplace l'illustration puis la boisson se désassemble
+      var token = st.token = (st.token || 0) + 1
+      var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')) }, 9000) })
+      var loading = setTimeout(function () { if (st.open && st.token === token) glass.classList.add('xv-wait') }, 900)
+      Promise.all([intro, Promise.race([mp, timeout])]).then(function (r) {
+        clearTimeout(loading); glass.classList.remove('xv-wait')
+        if (!st.open || st.closing || st.token !== token) return
+        mount3d(r[1], data)
+        host3.classList.add('on')
+        return wait(reduce ? 0 : 480).then(function () {
+          if (!st.open || st.closing || st.token !== token) return
+          play(glass, [{ opacity: 1 }, { opacity: 0 }], { duration: reduce ? 1 : 300, fill: 'forwards' })
+          tg.hidden = false; tip.hidden = false
+          return wait(reduce ? 0 : 320).then(function () { if (st.open && !st.closing && st.token === token) setExploded(true) })
+        })
+      }).catch(function () {
+        clearTimeout(loading); glass.classList.remove('xv-wait')
+        if (st.open && !st.closing && st.token === token) toSvg()
+      })
     }
 
     function finish() {
       stopAll(); xv.hidden = true
       de.style.overflow = ''; main.inert = false
-      glass.style.opacity = ''
+      glass.style.opacity = ''; glass.classList.remove('xv-wait')
+      host3.classList.remove('on'); tg.hidden = true; tip.hidden = true
+      if (scene) scene.stop()
       if (st.img) st.img.style.visibility = ''
       st.open = false; st.closing = false
       if (st.btn) try { st.btn.focus({ preventScroll: true }) } catch (e) {}
     }
     function close() {
       if (!st.open || st.closing) return
-      st.closing = true
+      st.closing = true; st.token = (st.token || 0) + 1
       if (!st.fromPop && history.state && history.state.xv) { try { history.back() } catch (e) {} }
       st.fromPop = false
-      var cur = glass.getBoundingClientRect(), back = st.img.getBoundingClientRect()
+      if (st.mode === '3d' && scene && host3.classList.contains('on')) {
+        // reconstitution fluide de la boisson, puis retour de l'illustration vers sa carte
+        tg.hidden = true; tip.hidden = true
+        if (st.labels3) st.labels3.forEach(function (l) { l.on = false; l.el.classList.remove('on') })
+        st.exploded = false
+        var dur = reduce ? 0 : 1500 * Math.max(.35, scene.u)
+        scene.setTarget(0, dur)
+        wait(dur + 80).then(function () { back3d() })
+        return
+      }
+      back(false)
+    }
+    function back3d() { back(true) }
+    function back(threeD) {
+      var cur = glass.getBoundingClientRect(), bk = st.img.getBoundingClientRect()
       stopAll()
       if (reduce) { finish(); return }
       var out = { duration: 260, fill: 'forwards', easing: 'ease-in' }
       play(head, [{ opacity: 1 }, { opacity: 0 }], out); play(xbtn, [{ opacity: 1 }, { opacity: 0 }], out)
       var n = st.items.length
-      st.items.forEach(function (it, i) {
-        var off = st.mid - (it.y + it.h / 2)
-        play(it.t, [{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' })
-        play(it.art, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(' + off + 'px) scale(.78)' }], { duration: 520, delay: (n - 1 - i) * 40, fill: 'forwards', easing: 'cubic-bezier(.5,0,.75,0)' })
-      })
-      // l'illustration réapparaît puis retourne dans sa carte
-      play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 240, fill: 'forwards' })
-      var dx = back.left - cur.left, dy = back.top - cur.top, s = back.width / cur.width
-      var a = play(glass, [{ transform: 'none' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }], { duration: 560, delay: 380, fill: 'forwards', easing: EASE })
-      play(bg, [{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: 440, fill: 'forwards' })
+      if (threeD) {
+        host3.classList.remove('on')
+        play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 320, fill: 'forwards' })
+      } else {
+        st.items.forEach(function (it, i) {
+          var off = st.mid - (it.y + it.h / 2)
+          play(it.t, [{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' })
+          play(it.art, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(' + off + 'px) scale(.78)' }], { duration: 520, delay: (n - 1 - i) * 40, fill: 'forwards', easing: 'cubic-bezier(.5,0,.75,0)' })
+        })
+        play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 240, fill: 'forwards' })
+      }
+      // l'illustration retourne dans sa carte
+      var base = threeD ? 300 : 380
+      var dx = bk.left - cur.left, dy = bk.top - cur.top, s = bk.width / cur.width
+      var a = play(glass, [{ transform: 'none' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }], { duration: 560, delay: base, fill: 'forwards', easing: EASE })
+      play(bg, [{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: base + 60, fill: 'forwards' })
       a.onfinish = finish
     }
 
     d.querySelectorAll('.has-xv').forEach(function (c) {
       var b = c.querySelector('.xv-open')
-      if (b) b.addEventListener('click', function () { open(c, b) })
+      if (b) {
+        b.addEventListener('click', function () { open(c, b) })
+        ;['pointerenter', 'touchstart', 'focus'].forEach(function (ev) { b.addEventListener(ev, warm, { passive: true, once: true }) })
+      }
     })
+    tg.addEventListener('click', function () { if (st.open && !st.closing && st.mode === '3d' && scene) setExploded(!st.exploded) })
     xbtn.addEventListener('click', close)
     xv.addEventListener('click', function (e) { if (e.target === xv || e.target === bg || e.target === stage || e.target === box) close() })
     addEventListener('keydown', function (e) { if (st.open && (e.key === 'Escape' || e.key === 'Esc')) close() })
     addEventListener('popstate', function () { if (st.open && !st.closing) { st.fromPop = true; close() } })
     var rt
-    addEventListener('resize', function () { if (!st.open || st.closing) return; clearTimeout(rt); rt = setTimeout(layout, 120) })
+    addEventListener('resize', function () { if (!st.open || st.closing) return; clearTimeout(rt); rt = setTimeout(function () { layout(); sizeScene() }, 120) })
   })()
 })()

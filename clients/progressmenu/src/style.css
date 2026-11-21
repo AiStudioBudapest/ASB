@@ -166,7 +166,7 @@ html{scrollbar-gutter:stable}
 .xv-x:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}
 .xv-head{position:relative;z-index:2;flex:none;width:100%;padding:calc(16px + env(safe-area-inset-top)) 72px 0 22px;opacity:0}
 .xv-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,8vw,2.7rem);line-height:1.05;overflow-wrap:anywhere}
-.xv-stage{position:relative;z-index:1;flex:none;width:min(94vw,600px);margin-top:4px;height:min(calc(100vh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),720px);height:min(calc(100svh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),720px)}
+.xv-stage{position:relative;z-index:1;flex:none;width:min(94vw,600px);margin-top:4px;height:min(calc(100vh - 170px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),940px);height:min(calc(100svh - 170px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),940px)}
 .xv-glass{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;filter:drop-shadow(0 16px 20px rgba(0,0,0,.35))}
 .xv-layers{position:absolute;inset:0}
 .xl{position:absolute;left:0;top:0}
@@ -182,3 +182,29 @@ html{scrollbar-gutter:stable}
   .xv-stage{margin-top:0;height:calc(100vh - 12px);height:calc(100svh - 12px)}
 }
 @media (prefers-reduced-motion:reduce){.xl-art{animation:none}}
+
+/* ---------- vue éclatée 3D ---------- */
+.xv-3dhost{position:absolute;inset:0;z-index:2;pointer-events:none}
+.xv-3d{position:absolute;left:0;top:0;opacity:0;transition:opacity .45s ease;cursor:grab;pointer-events:auto;touch-action:none;outline:none}
+.xv-3d:active{cursor:grabbing}
+.xv-3dhost.on .xv-3d{opacity:1}
+.xv-glass{z-index:1}
+.xv-layers{z-index:1}
+.xv-layers[hidden],.xv-labels[hidden]{display:none}
+.xv-wait{animation:xvpulse 1.2s ease-in-out infinite alternate}
+@keyframes xvpulse{from{filter:drop-shadow(0 16px 20px rgba(0,0,0,.35)) brightness(1)}to{filter:drop-shadow(0 16px 20px rgba(0,0,0,.35)) brightness(1.18)}}
+.xv-labels{position:absolute;inset:0;z-index:3;pointer-events:none}
+.x3l{position:absolute;left:0;top:0;height:26px;display:block;will-change:transform}
+.x3l i{position:absolute;left:0;top:13px;height:1px;width:20px;background:rgba(255,255,255,.5);transform-origin:0 50%;transform:scaleX(0);transition:transform .55s cubic-bezier(.22,1,.36,1)}
+.x3l span{position:absolute;top:0;left:30px;white-space:normal;width:max-content;max-width:42vw;font-family:var(--serif);font-size:clamp(1rem,4.4vw,1.35rem);line-height:26px;color:#fff;opacity:0;transform:translateX(-8px);transition:opacity .5s ease .2s,transform .6s cubic-bezier(.22,1,.36,1) .2s;text-shadow:0 1px 8px rgba(0,25,18,.55)}
+.x3l.on i{transform:none}
+.x3l.on span{opacity:1;transform:none}
+.xv-tg{position:absolute;z-index:6;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);min-height:48px;padding:0 26px;border-radius:99px;cursor:pointer;
+  font-size:.82rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.4);white-space:nowrap}
+.xv-tg:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}
+.xv-tg.ex .t-ex,.xv-tg:not(.ex) .t-re{display:none}
+.xv-tip{position:absolute;z-index:6;left:0;right:0;bottom:calc(76px + env(safe-area-inset-bottom));text-align:center;font-size:.78rem;letter-spacing:.06em;color:rgba(255,255,255,.7);pointer-events:none;animation:xvtip 6s ease forwards}
+.xv-tip[hidden]{display:none}
+@keyframes xvtip{0%,70%{opacity:1}100%{opacity:0}}
+@media (max-height:520px) and (orientation:landscape){.xv-tg{left:auto;right:16px;bottom:12px;transform:none}.xv-tip{display:none}}
+@media (prefers-reduced-motion:reduce){.xv-3d{transition:none}.x3l i,.x3l span{transition:none}.xv-wait{animation:none}}
