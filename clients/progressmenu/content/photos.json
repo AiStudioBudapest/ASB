@@ -1,7 +1,57 @@
 {
   "_info": "Quelles boissons ont une grande carte avec image (les autres sont de simples lignes). Les images détourées vont dans assets/img/drinks/<slug>.webp (ou .png), le slug étant le nom anglais en minuscules sans accents, tirets entre les mots (Volcán Margarita -> volcan-margarita). Si assets/img/drinks/manifest.json existe (slug -> nom de la boisson), il remplace le slug automatique. Une carte sans image affiche un verre dessiné à la place.",
-  "cardSections": ["koktelok", "long-drinks", "nyari:0", "kave-tea:0", "kave-tea:1", "alkoholmentes:2"],
-  "_explode": "Boissons dont la carte ouvre la vue éclatée (nom anglais). Les ingrédients viennent de la description du menu, rien n'est inventé.",
-  "explode": ["Negroni"],
-  "cardNames": ["Lemonade « maison »", "Elderberry lemonade", "Raspberry lemonade"]
+  "cardSections": [
+    "koktelok",
+    "long-drinks",
+    "nyari:0",
+    "kave-tea:0",
+    "kave-tea:1",
+    "alkoholmentes:2"
+  ],
+  "_explode": "Boissons dont la carte ouvre la vue éclatée (nom anglais -> couches de haut en bas). t = dessin de la couche (orange, ice, gin, campari, vermouth, glass). Les noms Bobby’s Dry Gin / Campari / Vermouth viennent de la description du menu (vérifiés au build) ; Orange, Glaçons et Verre ont été ajoutés à la demande du client (ils figurent sur l'illustration).",
+  "explode": {
+    "Negroni": [
+      {
+        "t": "orange",
+        "n": {
+          "hu": "Narancskarika",
+          "en": "Orange slice",
+          "fr": "Rondelle d’orange"
+        }
+      },
+      {
+        "t": "ice",
+        "n": {
+          "hu": "Jég",
+          "en": "Ice",
+          "fr": "Glaçons"
+        }
+      },
+      {
+        "t": "gin",
+        "n": "Bobby’s Dry Gin"
+      },
+      {
+        "t": "campari",
+        "n": "Campari"
+      },
+      {
+        "t": "vermouth",
+        "n": "Vermouth"
+      },
+      {
+        "t": "glass",
+        "n": {
+          "hu": "Pohár",
+          "en": "Glass",
+          "fr": "Verre"
+        }
+      }
+    ]
+  },
+  "cardNames": [
+    "Lemonade « maison »",
+    "Elderberry lemonade",
+    "Raspberry lemonade"
+  ]
 }
