@@ -20,3 +20,7 @@ Prix, noms et descriptions viennent uniquement de la carte imprimée. Note : la 
 ## Taille uniforme des illustrations
 
 Toutes les images de `assets/img/drinks/` sont sur le même cadre 600×800 (fond transparent), boisson posée en bas, à **hauteur égale** (les plus larges, mugs et tumblers, sont limités en largeur). Pour ajouter une image : la détourer, puis lancer `python3 clients/progressmenu/tools/normalize-drink.py assets/img/drinks/<slug>.webp` (réécrit le fichier en place, garder l'original ailleurs).
+
+## Vue éclatée (test, Negroni)
+
+Un clic sur la carte d'une boisson listée dans `content/photos.json` > `explode` ouvre une animation « vue éclatée » (style HUD) : l'illustration passe au centre, les ingrédients s'en détachent en pièces flottantes reliées par des traits. Fermeture : croix, Échap, clic sur le fond ou bouton retour. Les ingrédients sont lus dans la description du menu (jamais inventés) ; pour ajouter une boisson, ajouter son nom anglais dans `explode` (il faut une image et une description à virgules). Pictogramme et couleur : fonctions `kindOf` / `colorOf` de `build.mjs`.
