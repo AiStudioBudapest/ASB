@@ -860,16 +860,21 @@ address,.big-link a,.brands,.mt-cats li{font-family:var(--sans);font-weight:600;
 
 /* Loading screen: the gold triangle in the middle and a thin bar (first page of a visit) */
 .loader{display:none}
-.is-loading .loader{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;background:radial-gradient(90% 70% at 50% 40%,#1d1d1d,#0d0d0d);transition:opacity .6s var(--ease),visibility .6s;animation:ldSafety .6s 6s forwards}
+.is-loading .loader{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:22px;padding:0 0 max(9vh,env(safe-area-inset-bottom,0px) + 40px);background:#0d0d0d;overflow:hidden;transition:opacity .6s var(--ease),visibility .6s;animation:ldSafety .6s 6s forwards}
+.ld-photo,.ld-photo img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ld-photo img{object-fit:cover;object-position:50% 40%;animation:ldPhoto 1.6s var(--ease) both}
+.ld-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.25) 0%,rgba(10,10,10,0) 30%,rgba(10,10,10,.15) 55%,rgba(10,10,10,.78) 100%)}
+.is-loading .ld-mark,.is-loading .ld-bar{position:relative;z-index:1}
+@keyframes ldPhoto{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
 .is-loading body{overflow:hidden}
-.ld-mark{width:clamp(110px,16vw,180px);height:auto;animation:ldIn 1s var(--ease) both}
-.ld-bar{width:clamp(110px,14vw,160px);height:2px;background:rgba(233,207,149,.18);border-radius:2px;overflow:hidden}
+.ld-mark{width:clamp(64px,9vw,96px);filter:drop-shadow(0 2px 10px rgba(0,0,0,.5));height:auto;animation:ldIn 1s var(--ease) both}
+.ld-bar{width:clamp(110px,14vw,160px);height:2px;background:rgba(255,255,255,.28);border-radius:2px;overflow:hidden}
 .ld-bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#b98d4e,#f0d9a2);transform-origin:left;animation:ldBar 1.3s var(--ease) both}
 .loaded .loader{opacity:0;visibility:hidden}
 @keyframes ldIn{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes ldBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes ldSafety{to{opacity:0;visibility:hidden}}
-@media (prefers-reduced-motion:reduce){.ld-mark,.ld-bar i{animation:none}}
+@media (prefers-reduced-motion:reduce){.ld-mark,.ld-bar i,.ld-photo img{animation:none}}
 
 /* Mix noir et blanc / couleur (demande du 16/11) : produits, catégories, cocktails et sélection en couleur ; portraits du magazine restent en N&B (couleur au survol) */
 .pcard-ph img,.shop-strip img,.mt-grid img,.ck img,.spread img,.cat-tile img,.hl-card img,.place-ph img,.gal-main img,.cart-list img{filter:none}

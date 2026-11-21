@@ -142,7 +142,7 @@ ${ld}
 <script>document.documentElement.classList.add('js');try{if(!sessionStorage.getItem('pr09re55_seen'))document.documentElement.classList.add('is-loading')}catch(e){}</script>
 </head>
 <body class="${bodyClass}" data-lang="${l}">
-<div class="loader" id="loader" aria-hidden="true"><svg class="ld-mark" viewBox="0 0 194 170"><defs><linearGradient id="ldGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9cf95"/><stop offset=".45" stop-color="#b98d4e"/><stop offset=".7" stop-color="#f0d9a2"/><stop offset="1" stop-color="#a77a3f"/></linearGradient></defs><g fill="none" stroke="url(#ldGold)" stroke-width="4">${MARK}</g></svg><span class="ld-bar"><i></i></span></div>
+<div class="loader" id="loader" aria-hidden="true"><picture class="ld-photo"><source media="(min-width:821px) and (orientation:landscape)" srcset="${asset(path, 'img/loader-wide.webp')}"><img src="${asset(path, 'img/loader-portrait.webp')}" alt="" width="1000" height="1500" decoding="async" fetchpriority="high"></picture><svg class="ld-mark" viewBox="0 0 194 170"><defs><linearGradient id="ldGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9cf95"/><stop offset=".45" stop-color="#b98d4e"/><stop offset=".7" stop-color="#f0d9a2"/><stop offset="1" stop-color="#a77a3f"/></linearGradient></defs><g fill="none" stroke="url(#ldGold)" stroke-width="4">${MARK}</g></svg><span class="ld-bar"><i></i></span></div>
 
 <a class="skip" href="#main">${esc(t.skip)}</a>
 <header class="masthead" id="masthead">
