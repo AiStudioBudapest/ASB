@@ -198,6 +198,7 @@ html{scrollbar-gutter:stable}
 .x3l i{position:absolute;left:0;top:13px;height:1px;width:20px;background:rgba(255,255,255,.5);transform-origin:0 50%;transform:scaleX(0);transition:transform .55s cubic-bezier(.22,1,.36,1)}
 .x3l span{position:absolute;top:13px;left:30px;white-space:normal;width:max-content;max-width:42vw;font-family:var(--serif);font-size:clamp(1rem,4.4vw,1.35rem);line-height:1.15;color:#fff;opacity:0;transform:translate(-8px,-50%);transition:opacity .5s ease .2s,transform .6s cubic-bezier(.22,1,.36,1) .2s;text-shadow:0 1px 8px rgba(0,25,18,.55)}
 .x3l.on i{transform:none}
+.x3l{transition:opacity .3s ease}.x3l.dim{opacity:.38}.x3l.sel span{color:#ffe27a}
 .x3l.on span{opacity:1;transform:translate(0,-50%)}
 .xv-tg{position:absolute;z-index:6;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);min-height:48px;padding:0 26px;border-radius:99px;cursor:pointer;
   font-size:.82rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.4);white-space:nowrap}

@@ -310,7 +310,8 @@ function paradise(c) {
 const BUILD = { negroni, paradise }
 
 // ---------- la scène ----------
-export function create(host, kind) {
+// kind : 'negroni' | 'paradise' (scènes intégrées) ou 'glb' (modèle externe : extra.build(ctx) fournit le constructeur, voir glbview.js)
+export function create(host, kind, extra) {
   const renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' })
   renderer.setClearColor(0x000000, 0)
   renderer.outputColorSpace = SRGBColorSpace
@@ -321,13 +322,13 @@ export function create(host, kind) {
 
   const scene = new Scene()
   const cam = new PerspectiveCamera(26, 1, .1, 300)
-  scene.add(new HemisphereLight(0xffffff, 0x1d4a3d, 1.05))
+  const hemi = new HemisphereLight(0xffffff, 0x1d4a3d, 1.05); scene.add(hemi)
   const key = new DirectionalLight(0xfff1dd, 2.1); key.position.set(-3, 5, 6); scene.add(key)
 
   const root = new Group(); scene.add(root)
   const parts = {}
   const add = (k, g, y0, y1, w, c0) => { const o = { k, g, y0, y1, p: 0, w, rw: w.rw, c: c0 || 0 }; parts[k] = o; root.add(g); return o }
-  const B = (BUILD[kind] || negroni)({ add, root })
+  const B = (kind === 'glb' ? extra.build : (BUILD[kind] || negroni))({ add, root, renderer, scene, cam, lights: { hemi, key } })
   const order = B.order, CAM = B.cam
 
   // ombre de contact sous le verre
@@ -339,7 +340,7 @@ export function create(host, kind) {
   const axis = new Line(axG, new LineDashedMaterial({ color: 0xffffff, dashSize: .1, gapSize: .1, transparent: true, opacity: 0, depthWrite: false })); axis.computeLineDistances(); axis.renderOrder = 7
   root.add(axis)
 
-  const st = { W: 0, H: 0, cx: 0, u: 0, from: 0, to: 0, t0: 0, dur: 0, yaw: 0, pitch: 0, vyaw: 0, drag: false, idle: 0, run: false, raf: 0, frames: 0, acc: 0, lowered: false, onFrame: null, onTap: null, onLost: null }
+  const st = { W: 0, H: 0, cx: 0, u: 0, from: 0, to: 0, t0: 0, dur: 0, yaw: 0, pitch: 0, vyaw: 0, drag: false, idle: 0, run: false, raf: 0, frames: 0, acc: 0, lowered: false, onFrame: null, onTap: null, onLost: null, onFocus: null }
   const lastP = {}
 
   function resize(W, H, cx) {
@@ -374,12 +375,13 @@ export function create(host, kind) {
       lastP[k] = y + o.c
     })
     B.update(t, parts)
-    shadow.position.set(0, B.shadowY + (B.shadowFollow ? parts[B.shadowFollow].g.position.y : 0), 0)
+    shadow.position.set(0, B.shadowAt ? B.shadowAt() : B.shadowY + (B.shadowFollow ? parts[B.shadowFollow].g.position.y : 0), 0)
+    if (B.shadowScale) shadow.scale.setScalar(B.shadowScale)
     shadow.material.opacity = .55 - ss(u) * .15
     axis.material.opacity = .32 * ss((u - .35) / .5)
     // caméra : cadrage serré sur le verre, puis recul pour embrasser la vue éclatée
     const aspect = st.W / st.H, cu = ss(u)
-    const wmin = 2.5 * (CAM.visE / 10.9)
+    const wmin = CAM.wmin || 2.5 * (CAM.visE / 10.9)
     const visA = Math.max(CAM.visA, wmin / (aspect * .52)), visE = Math.max(CAM.visE, wmin / (aspect * .5))
     const d = camDist(visA + (visE - visA) * cu), ty = CAM.tyA + (CAM.tyE - CAM.tyA) * cu, el = CAM.el
     cam.position.set(0, ty + Math.sin(el) * d, Math.cos(el) * d)
@@ -397,9 +399,10 @@ export function create(host, kind) {
       let maxEdge = 0
       order.forEach(k => {
         const o = parts[k]
-        v3.set(0, lastP[k], 0).project(cam)
+        const an = B.anchor ? B.anchor(k) : null
+        v3.set(an ? an.x : 0, an ? an.y : lastP[k], an ? an.z : 0).project(cam)
         const sx = (v3.x * .5 + .5) * st.W, sy = (-v3.y * .5 + .5) * st.H
-        v3.set(o.rw, lastP[k], 0).project(cam)
+        v3.set(an ? an.x + an.rw : o.rw, an ? an.y : lastP[k], an ? an.z : 0).project(cam)
         const ex = (v3.x * .5 + .5) * st.W
         maxEdge = Math.max(maxEdge, ex)
         info.parts.push({ k, sx, sy, edge: ex, p: o.p })
@@ -423,14 +426,26 @@ export function create(host, kind) {
     st.yaw = Math.max(-1.6, Math.min(1.6, st.yaw + dx * .009)); st.vyaw = dx * .0016
     st.pitch = Math.max(-.22, Math.min(.3, st.pitch + dy * .004)); st.idle = performance.now()
   })
-  const up = () => { if (!st.drag) return; st.drag = false; st.idle = performance.now(); if (moved < 7 && performance.now() - t0 < 350 && st.onTap) st.onTap() }
+  const up = e => {
+    if (!st.drag) return
+    st.drag = false; st.idle = performance.now()
+    if (!(moved < 7 && performance.now() - t0 < 350)) return
+    // modèle externe : toucher une pièce la met en avant (interaction par composant) ; toucher le fond la relâche, puis démonte/remonte
+    if (B.pick && st.u > .85 && e && e.clientX != null) {
+      const r = canvas.getBoundingClientRect(), k = B.pick(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1)
+      if (k) { B.focus(B.focusKey() === k ? null : k); if (st.onFocus) st.onFocus(B.focusKey()); return }
+      if (B.focusKey()) { B.focus(null); if (st.onFocus) st.onFocus(null); return }
+    }
+    if (st.onTap) st.onTap()
+  }
   canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', () => { st.drag = false })
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); if (st.onLost) st.onLost() })
 
   return {
     canvas, resize, start, stop, setTarget,
     get u() { return st.u }, get target() { return st.to },
-    set onFrame(f) { st.onFrame = f }, set onTap(f) { st.onTap = f }, set onLost(f) { st.onLost = f },
+    set onFrame(f) { st.onFrame = f }, set onTap(f) { st.onTap = f }, set onLost(f) { st.onLost = f }, set onFocus(f) { st.onFocus = f },
+    clearFocus() { if (B.focus) { B.focus(null); if (st.onFocus) st.onFocus(null) } }, debug: B.debug || null,
     dispose() { st.onLost = null; stop(); renderer.dispose(); try { renderer.forceContextLoss() } catch (e) {} canvas.remove() }
   }
 }

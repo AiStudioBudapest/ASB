@@ -174,6 +174,13 @@
       return hasGL
     }
     function warm() { if (!modP && glOk()) { modP = import('./assets/js/negroni3d.js'); modP.catch(function () { modP = null; hasGL = false }) } return modP }
+    // modèle 3D professionnel (GLB) : chargé seulement si le build en a trouvé un de valide (data-xv > g) ; sinon rien de tout ça ne sert.
+    var glbMod = null, glbP = {}, glbBad = false
+    function warmGlb() { if (!glbMod) { glbMod = import('./assets/js/glbview.js'); glbMod.catch(function () { glbMod = null }) } return glbMod }
+    function loadGlb(g) {
+      if (!glbP[g.m]) glbP[g.m] = warmGlb().then(function (m) { return m.load(g.m, g.c) })
+      return glbP[g.m]
+    }
     function wait(ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
     function done(a) { return new Promise(function (r) { a.onfinish = r; a.oncancel = r }) }
 
@@ -192,7 +199,7 @@
       var ls = st.labels3; if (!ls) return
       var colX = info.colX + 34
       info.parts.forEach(function (p, i) {
-        var l = ls[i]; if (!l) return
+        var l = st.byKey ? st.byKey[p.k] : ls[i]; if (!l) return
         var x = Math.round(p.edge + 10), y = Math.round(p.sy - 13), w = Math.max(18, Math.round(colX - x))
         if (x !== l.x || y !== l.y) { l.el.style.transform = 'translate(' + x + 'px,' + y + 'px)'; l.x = x; l.y = y }
         if (w !== l.w) { l.line.style.width = w + 'px'; var sp = l.el.lastChild; sp.style.left = (w + 10) + 'px'; sp.style.maxWidth = Math.max(60, info.W - x - w - 14) + 'px'; l.w = w }
@@ -205,9 +212,12 @@
       tg.classList.toggle('ex', on)
       tg.setAttribute('aria-pressed', String(on))
       if (!on && st.labels3) st.labels3.forEach(function (l) { l.on = false; l.el.classList.remove('on') })
+      if (!on && scene.clearFocus) scene.clearFocus()
       scene.setTarget(on ? 1 : 0, instant || reduce ? 0 : (on ? 2900 : 2300))
     }
     function mount3d(m, data, kind) {
+      var layers = data
+      if (m.glb) { kind = 'glb'; layers = st.glb.l.filter(function (x) { return m.glb.present.indexOf(x.t) >= 0 }) }
       if (scene && scene.kind !== kind) { scene.dispose(); scene = null }
       if (!scene) {
         scene = m.create(host3, kind)
@@ -215,9 +225,13 @@
         scene.onTap = function () { if (st.open && !st.closing && st.mode === '3d') setExploded(!st.exploded) }
         scene.onLost = function () { if (st.open && st.mode === '3d') toSvg() }
         scene.kind = kind
+        scene.onFocus = function (k) { if (st.labels3) st.labels3.forEach(function (l) { l.el.classList.toggle('sel', !!k && l.key === k); l.el.classList.toggle('dim', !!k && l.key !== k) }) }
       }
+      if (/[?&]xvdebug/.test(location.search)) window.__xv = { scene: scene } // contrôle automatique uniquement
       sizeScene()
-      st.labels3 = buildLabels(data)
+      st.labels3 = buildLabels(layers)
+      st.byKey = null
+      if (m.glb) { st.byKey = {}; st.labels3.forEach(function (l) { st.byKey[l.key] = l }) }
       scene.setTarget(0, 0); scene.start()
     }
     function sizeScene() {
@@ -247,11 +261,14 @@
     function open(card, btn) {
       if (st.open) return
       var img = card.querySelector('.ph img'); if (!img) return
-      var data, kind; try { var raw = JSON.parse(card.getAttribute('data-xv')); data = raw.l; kind = raw.s } catch (e) { return }
-      st.open = true; st.closing = false; st.img = img; st.btn = btn; st.exploded = false; st.data = data
+      var data, kind, raw; try { raw = JSON.parse(card.getAttribute('data-xv')); data = raw.l; kind = raw.s } catch (e) { return }
+      st.open = true; st.closing = false; st.img = img; st.btn = btn; st.exploded = false; st.data = data; st.glb = raw.g || null
       var try3d = glOk()
       st.mode = try3d ? '3d' : 'svg'
-      var mp = try3d ? warm() : null
+      var useGlb = try3d && !!raw.g && !glbBad
+      var mp = !try3d ? null : useGlb
+        ? loadGlb(raw.g).catch(function (e) { glbBad = true; try { console.warn('modèle 3D indisponible, expérience actuelle conservée :', e && e.message) } catch (x) {} return warm() })
+        : warm()
       var first = img.getBoundingClientRect()
       glass.src = img.currentSrc || img.src
       build(data, card.querySelector('h4').innerHTML)
@@ -280,7 +297,7 @@
       if (!try3d) { if (reduce) { glass.style.opacity = 0; st.items.forEach(function (it) { play(it.art, fade, { duration: 160, fill: 'forwards' }); play(it.t, fade, { duration: 160, fill: 'forwards' }) }) } else playSvg(0); return }
       // 2) la 3D remplace l'illustration puis la boisson se désassemble
       var token = st.token = (st.token || 0) + 1
-      var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')) }, 9000) })
+      var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')) }, useGlb ? 25000 : 9000) })
       var loading = setTimeout(function () { if (st.open && st.token === token) glass.classList.add('xv-wait') }, 900)
       Promise.all([intro, Promise.race([mp, timeout])]).then(function (r) {
         clearTimeout(loading); glass.classList.remove('xv-wait')
@@ -293,7 +310,8 @@
           tg.hidden = false; tip.hidden = false
           return wait(reduce ? 0 : 320).then(function () { if (st.open && !st.closing && st.token === token) setExploded(true) })
         })
-      }).catch(function () {
+      }).catch(function (e) {
+        try { console.warn('vue 3D indisponible, version dessinée :', e && e.message) } catch (x) {}
         clearTimeout(loading); glass.classList.remove('xv-wait')
         if (st.open && !st.closing && st.token === token) toSvg()
       })
@@ -319,6 +337,7 @@
         tg.hidden = true; tip.hidden = true
         if (st.labels3) st.labels3.forEach(function (l) { l.on = false; l.el.classList.remove('on') })
         st.exploded = false
+        if (scene.clearFocus) scene.clearFocus()
         var dur = reduce ? 0 : 1500 * Math.max(.35, scene.u)
         scene.setTarget(0, dur)
         wait(dur + 80).then(function () { back3d() })
@@ -357,7 +376,7 @@
       var b = c.querySelector('.xv-open')
       if (b) {
         b.addEventListener('click', function () { open(c, b) })
-        ;['pointerenter', 'touchstart', 'focus'].forEach(function (ev) { b.addEventListener(ev, warm, { passive: true, once: true }) })
+        ;['pointerenter', 'touchstart', 'focus'].forEach(function (ev) { b.addEventListener(ev, function () { warm(); try { if (JSON.parse(b.closest('.card').getAttribute('data-xv')).g) warmGlb() } catch (e) {} }, { passive: true, once: true }) })
       }
     })
     tg.addEventListener('click', function () { if (st.open && !st.closing && st.mode === '3d' && scene) setExploded(!st.exploded) })
