@@ -16,3 +16,7 @@ Déposer des PNG ou WebP **à fond transparent** dans `assets/img/drinks/` : `<s
 
 ## Ne rien inventer
 Prix, noms et descriptions viennent uniquement de la carte imprimée. Note : la phrase du café maison indique 7 280 Ft en hongrois mais 8 010 Ft en anglais/français dans la source (`menu.json`) — à confirmer avec la cliente.
+
+## Taille uniforme des illustrations
+
+Toutes les images de `assets/img/drinks/` sont sur le même cadre 600×800 (fond transparent), boisson posée en bas, à **hauteur égale** (les plus larges, mugs et tumblers, sont limités en largeur). Pour ajouter une image : la détourer, puis lancer `python3 clients/progressmenu/tools/normalize-drink.py assets/img/drinks/<slug>.webp` (réécrit le fichier en place, garder l'original ailleurs).
