@@ -148,6 +148,17 @@ h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.5rem,12.5vw,5.2rem
 }
 /* tactile : barre du haut stable pendant le défilement (pas de flou recalculé à chaque image, calque à part) */
 @media (hover:none),(pointer:coarse),(max-width:1024px){
+  /* rien ne s'anime ni ne se repeint pendant le défilement : le navigateur peut tenir la barre collée sans retard */
+  .sway,.bk,.card.in .ph img,.card.in .ph .glass,.go span{animation:none!important}
+  .bg,.lyr{will-change:auto}
+  h1,.brand,.gi{filter:none}
+  .cards{perspective:none}
+  .ph{transform-style:flat}
+  .card{transition:opacity .4s ease}
+  .card:not(.in){transform:none}
+  .ph img,.ph .glass,.card:not(.in) .ph img,.card:not(.in) .ph .glass{transform:none;transition:none}
+  .bg{contain:strict}
+  html{scroll-behavior:auto;scrollbar-gutter:auto}
   .chips{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(5,52,39,.96);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform;backface-visibility:hidden}
 }
 html.soft-gl .chips{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(5,52,39,.95)}
