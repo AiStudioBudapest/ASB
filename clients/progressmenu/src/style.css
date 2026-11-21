@@ -149,56 +149,36 @@ h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.5rem,12.5vw,5.2rem
 html.soft-gl .chips{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(5,52,39,.95)}
 @media print{.bg{display:none}body{background:#fff;color:#000}}
 
-/* ---------- vue éclatée (test, Negroni) ---------- */
+/* ---------- vue éclatée (test, Negroni) : calme, couches empilées ---------- */
 html{scrollbar-gutter:stable}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .xv-open{position:absolute;inset:0;z-index:3;width:100%;border:0;padding:0;margin:0;background:none;border-radius:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .xv-open:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}
-.xvh{display:inline-flex;align-items:center;gap:8px;margin-top:10px;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7ff0e4}
-.xvh i{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;position:relative;flex:none}
-.xvh i::before,.xvh i::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px dashed currentColor;opacity:.7}
-.xvh i::after{inset:8px;border:0;background:currentColor}
+.xvh{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#ffe9a3}
+.xvh i{width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translateY(-2px)}
 
 .xv{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;overflow:hidden;overscroll-behavior:contain;touch-action:none;color:var(--txt)}
 .xv[hidden]{display:none}
-.xv-bg{position:absolute;inset:0;opacity:0;
-  background:
-   radial-gradient(60% 45% at 50% 52%,rgba(56,220,205,.2),transparent 70%),
-   repeating-linear-gradient(0deg,rgba(127,240,228,.07) 0 1px,transparent 1px 44px),
-   repeating-linear-gradient(90deg,rgba(127,240,228,.07) 0 1px,transparent 1px 44px),
-   linear-gradient(180deg,#04261c,#021611)}
+.xv-bg{position:absolute;inset:0;opacity:0;background:radial-gradient(70% 55% at 50% 45%,#0e6a4c 0%,#073b2d 62%,#052b21 100%)}
 .xv-x{position:absolute;z-index:5;top:calc(10px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));width:48px;height:48px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
-  background:rgba(4,38,28,.8);border:1.5px solid rgba(127,240,228,.7);color:#7ff0e4;opacity:0}
-.xv-x svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.35);color:#fff;opacity:0}
+.xv-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .xv-x:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}
-.xv-head{position:relative;z-index:2;flex:none;width:100%;padding:calc(14px + env(safe-area-inset-top)) 72px 0 18px;text-align:left;opacity:0}
-.xv-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,8vw,2.6rem);line-height:1.05;overflow-wrap:anywhere;text-shadow:0 3px 14px rgba(0,25,18,.6)}
-.xv-sub{margin-top:6px;font-size:.74rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#ffe27a}
-.xv-stage{position:relative;z-index:1;flex:none;width:min(94vw,640px);margin-top:6px;height:min(calc(100vh - 150px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),700px);height:min(calc(100svh - 150px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),700px)}
-.xv-glass{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;filter:drop-shadow(0 18px 22px rgba(0,0,0,.45))}
-.xv-ring{position:absolute;left:0;top:0;opacity:0;pointer-events:none}
-.xv-ring svg{width:100%;height:100%;fill:none;overflow:visible}
-.xv-ring circle{vector-effect:non-scaling-stroke;transform-origin:100px 100px}
-.xv-ring .r1{stroke:rgba(127,240,228,.55);stroke-width:1.5;stroke-dasharray:2 9;animation:xvspin 40s linear infinite}
-.xv-ring .r2{stroke:rgba(255,226,122,.7);stroke-width:2;stroke-dasharray:46 12 6 12;animation:xvspin 26s linear infinite reverse}
-.xv-ring .r3{stroke:rgba(127,240,228,.35);stroke-width:1}
-@keyframes xvspin{to{transform:rotate(360deg)}}
-.xv-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.xv-lines path{fill:none;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.9}
-.xv-lines circle{opacity:.95}
-.xv-scan{position:absolute;left:0;top:0;height:3px;opacity:0;pointer-events:none;border-radius:2px;background:linear-gradient(90deg,transparent,#7ff0e4,transparent);box-shadow:0 0 14px 2px rgba(127,240,228,.7)}
-.xv-parts{position:absolute;inset:0;pointer-events:none}
-.xp{position:absolute;left:0;top:0;text-align:center}
-.xp-in{display:flex;flex-direction:column;align-items:center;gap:7px;will-change:transform}
-.xp-o{position:relative;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:rgb(var(--c));
-  background:radial-gradient(circle at 35% 30%,rgb(var(--c)/.3),rgba(3,28,21,.92) 70%);border:1.5px solid rgb(var(--c));box-shadow:0 0 16px rgb(var(--c)/.5),inset 0 0 8px rgb(var(--c)/.25);animation:xvfloat 3.4s ease-in-out infinite alternate;animation-delay:var(--d,0s)}
-.xp-o svg{width:27px;height:27px;fill:rgb(var(--c)/.16);stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.xp-o b{position:absolute;right:-6px;top:-6px;min-width:19px;height:19px;padding:0 4px;border-radius:99px;display:grid;place-items:center;font-size:.64rem;font-weight:800;letter-spacing:.02em;background:rgb(var(--c));color:#04261c}
-.xp-l{font-size:.8rem;font-weight:600;line-height:1.2;color:#fff;overflow-wrap:anywhere;text-shadow:0 1px 8px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9)}
-@keyframes xvfloat{from{transform:translateY(-2px)}to{transform:translateY(3px)}}
+.xv-head{position:relative;z-index:2;flex:none;width:100%;padding:calc(16px + env(safe-area-inset-top)) 72px 0 22px;opacity:0}
+.xv-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,8vw,2.7rem);line-height:1.05;overflow-wrap:anywhere}
+.xv-stage{position:relative;z-index:1;flex:none;width:min(94vw,600px);margin-top:4px;height:min(calc(100vh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),720px);height:min(calc(100svh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),720px)}
+.xv-glass{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;filter:drop-shadow(0 16px 20px rgba(0,0,0,.35))}
+.xv-layers{position:absolute;inset:0}
+.xl{position:absolute;left:0;top:0}
+.xl-art{display:block;will-change:transform,opacity;filter:drop-shadow(0 10px 10px rgba(0,0,0,.28));animation:xlfloat 4.2s ease-in-out infinite alternate;animation-delay:var(--d,0s)}
+.xl-art svg{display:block;width:100%;height:100%;overflow:visible}
+.xl-t{position:absolute;display:flex;align-items:center;gap:10px;opacity:0}
+.xl-t i{flex:none;height:1px;background:rgba(255,255,255,.45);transform-origin:0 50%}
+.xl-t span{font-family:var(--serif);font-size:clamp(1rem,4.4vw,1.35rem);line-height:1.15;color:#fff;overflow-wrap:anywhere;text-shadow:0 1px 8px rgba(0,25,18,.55)}
+@keyframes xlfloat{from{transform:translateY(-2px)}to{transform:translateY(3px)}}
 @media (max-height:520px) and (orientation:landscape){
   .xv-head{position:absolute;left:0;top:0;padding-top:calc(10px + env(safe-area-inset-top))}
   .xv-head h3{font-size:1.5rem}
   .xv-stage{margin-top:0;height:calc(100vh - 12px);height:calc(100svh - 12px)}
 }
-@media (prefers-reduced-motion:reduce){.xv-ring circle,.xp-o{animation:none}}
+@media (prefers-reduced-motion:reduce){.xl-art{animation:none}}

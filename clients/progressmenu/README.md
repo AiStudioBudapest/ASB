@@ -23,4 +23,7 @@ Toutes les images de `assets/img/drinks/` sont sur le même cadre 600×800 (fond
 
 ## Vue éclatée (test, Negroni)
 
-Un clic sur la carte d'une boisson listée dans `content/photos.json` > `explode` ouvre une animation « vue éclatée » (style HUD) : l'illustration passe au centre, les ingrédients s'en détachent en pièces flottantes reliées par des traits. Fermeture : croix, Échap, clic sur le fond ou bouton retour. Les ingrédients sont lus dans la description du menu (jamais inventés) ; pour ajouter une boisson, ajouter son nom anglais dans `explode` (il faut une image et une description à virgules). Pictogramme et couleur : fonctions `kindOf` / `colorOf` de `build.mjs`.
+Un clic sur la carte d'une boisson listée dans `content/photos.json` > `explode` ouvre une vue calme : l'illustration passe au centre puis la boisson se « décompose » en couches empilées (comme un burger éclaté), chacune avec son nom. Fermeture : croix, Échap, clic sur le fond ou bouton retour.
+
+- Les couches sont définies à la main dans `explode` (de haut en bas) : `t` = dessin (`orange`, `ice`, `gin`, `campari`, `vermouth`, `glass`), `n` = nom (texte ou `{hu,en,fr}`). Les noms d'ingrédients doivent figurer dans la description du menu (le build avertit sinon). Orange, glaçons et verre ne sont pas dans le texte du menu : ils ont été ajoutés à la demande du client (ils sont sur l'illustration).
+- Dessins : SVG dans `src/app.js` (aucune photo, aucune image à télécharger, rien d'alourdi). Épaisseurs égales : ce ne sont pas des proportions de recette.
