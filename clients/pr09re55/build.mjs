@@ -301,7 +301,7 @@ function home(l) {
       <p class="hero-ctas"><a class="btn btn-solid" href="${link(path, ROUTES.shop[l])}">${esc(t.coverCta)} ${ICON.arrow}</a><a class="btn" href="${link(path, ROUTES.menu[l])}">${esc(t.nav.menu)}</a></p>
     </div>
     <div class="hero-cards">
-      <a class="hcard hc-drink" href="${link(path, ROUTES.hlDrinks[l])}"><img src="${asset(path, 'img/asztal-poharak.webp')}" alt="" loading="eager" decoding="async"><span>${esc(t.heroDrinks)} ${ICON.arrow}</span></a>
+      <a class="hcard hc-drink" href="${link(path, ROUTES.hlDrinks[l])}"><img src="${asset(path, 'img/bar-highlight.webp')}" alt="" loading="eager" decoding="async"><span>${esc(t.heroDrinks)} ${ICON.arrow}</span></a>
       <a class="hcard hc-shop" href="${link(path, ROUTES.hlShop[l])}"><img src="${asset(path, 'img/trudon-bougies.webp')}" alt="" loading="eager" decoding="async"><span>${esc(t.heroShop)} ${ICON.arrow}</span></a>
     </div>
   </div>
