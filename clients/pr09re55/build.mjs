@@ -391,12 +391,12 @@ ${visitBlock(l, path)}`;
 function shop(l) {
   const t = UI[l], path = ROUTES.shop[l];
   const body = `
-<section class="page-head wrap">
+<section class="page-head wrap shop-head">
   <p class="kicker">${tri()} pr09re55</p>
   <h1 class="display">${esc(t.shopTitle)}</h1>
   <p class="lede">${esc(t.shopIntro)}</p>
 </section>
-<nav class="cat-tiles wrap" aria-label="${esc(t.catsLabel)}">
+<nav class="cat-tiles wrap-wide" aria-label="${esc(t.catsLabel)}">
   ${CATS.map(c => { const n = PRODUCTS.filter(p => p.category === c.key).length; return `<a class="cat-tile" href="${link(path, catRoute(c)[l])}"><img src="${asset(path, 'img/' + c.image)}" alt="" loading="lazy" decoding="async"><span class="cat-name">${esc(t.cats[c.key])}<small>${esc(t.catCount(n))}</small></span></a>`; }).join('')}
 </nav>`;
   return page({ l, key: 'shop', path, alt: ROUTES.shop, title: t.meta.shop[0], desc: t.meta.shop[1], body });
