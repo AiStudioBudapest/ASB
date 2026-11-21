@@ -934,3 +934,12 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
 .logo .wordmark{height:clamp(14px,1.2vw,17px)}
 .logo .logo-mark{width:8px;height:7px}
 @media (max-width:480px){.logo .wordmark{height:12.5px}}
+
+/* Mobile menu: the same full-screen panel wherever the page was scrolled.
+   The header (logo, Instagram, bag, X) stays fixed above the panel and the page behind is locked. */
+@media (max-width:1100px){
+  html.menu-open{overflow:hidden;overscroll-behavior:none}
+  html.menu-open body{position:fixed;left:0;right:0;width:100%;overflow:hidden}
+  html.menu-open .masthead{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--paper);-webkit-backdrop-filter:none;backdrop-filter:none;padding-top:env(safe-area-inset-top,0px)}
+  html.menu-open .drawer{position:fixed;top:0;left:0;right:0;bottom:auto;inset:0;height:100vh;height:100dvh;z-index:50;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+}

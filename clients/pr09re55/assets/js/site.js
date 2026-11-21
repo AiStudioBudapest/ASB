@@ -30,10 +30,24 @@
   /* Mobile drawer */
   var burger = $('.burger'), drawer = $('#drawer');
   if(burger && drawer){
+    var lockY = 0, de = document.documentElement;
     var setOpen = function(open){
+      var isOpen = !drawer.hidden;
+      if(open === isOpen) return;
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      drawer.hidden = !open;
-      document.body.style.overflow = open ? 'hidden' : '';
+      if(open){
+        lockY = window.pageYOffset || de.scrollTop || 0;
+        drawer.hidden = false;
+        de.classList.add('menu-open');
+        document.body.style.top = -lockY + 'px';
+        drawer.style.paddingTop = (mh.offsetHeight + 30) + 'px';
+      } else {
+        drawer.hidden = true;
+        de.classList.remove('menu-open');
+        document.body.style.top = '';
+        drawer.style.paddingTop = '';
+        window.scrollTo({top: lockY, left: 0, behavior: 'instant'});
+      }
       $('main').inert = open; $('.foot').inert = open;
     };
     burger.addEventListener('click', function(){ setOpen(burger.getAttribute('aria-expanded') !== 'true'); });
