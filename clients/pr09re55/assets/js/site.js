@@ -17,7 +17,8 @@
         setTimeout(function(){ root.classList.remove('is-loading', 'loaded'); }, 700);
       }, Math.max(0, (reduce ? 300 : 1400) - (Date.now() - t0)));
     };
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(hide, hide);
+    var ph = $('.ld-photo img'), photoReady = !ph || (ph.complete && ph.naturalWidth) ? Promise.resolve() : new Promise(function(r){ ph.addEventListener('load', r); ph.addEventListener('error', r); });
+    Promise.all([document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(), photoReady]).then(hide, hide);
     setTimeout(hide, 4000);
   }
 
