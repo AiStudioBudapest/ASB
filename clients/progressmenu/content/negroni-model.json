@@ -1,0 +1,271 @@
+{
+  "_doc": "Configuration du modèle 3D professionnel du Negroni (GLB). Voir docs/cahier-des-charges-negroni-3d.fr.md. Rien n'est utilisé tant que assets/models/negroni.glb n'existe pas ou n'est pas valide : le Negroni actuel reste affiché. Noms d'objets provisoires : changer ici uniquement. Unités de déplacement : hauteurs de verre (1 = hauteur du verre), relatives à la position d'origine du modèle ; rotations en radians ; window = [début, fin] dans l'animation (0..1).",
+  "drink": "Negroni",
+  "model": "assets/models/negroni.glb",
+  "glassHeightUnits": 2.6,
+  "limits": {
+    "maxBytes": 3145728,
+    "warnBytes": 1572864,
+    "maxTriangles": 60000,
+    "maxTextureSize": 2048,
+    "glassHeightMeters": [
+      0.07,
+      0.11
+    ]
+  },
+  "render": {
+    "exposure": 1.0,
+    "envIntensity": 1.0,
+    "mobileTransmissionScale": 0.5,
+    "shadowOpacity": 0.55
+  },
+  "parts": [
+    {
+      "key": "orange_peel",
+      "optional": true,
+      "objects": [
+        "Orange_Peel"
+      ],
+      "label": {
+        "hu": "Narancshéj",
+        "en": "Orange peel",
+        "fr": "Zeste d’orange"
+      },
+      "move": {
+        "lift": 1.75,
+        "drift": [
+          0.135,
+          0.038
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          0.5,
+          1.4,
+          0.3
+        ],
+        "window": [
+          0.0,
+          0.62
+        ]
+      }
+    },
+    {
+      "key": "orange",
+      "objects": [
+        "Orange_Slice"
+      ],
+      "label": {
+        "hu": "Narancskarika",
+        "en": "Orange slice",
+        "fr": "Rondelle d’orange"
+      },
+      "move": {
+        "lift": 1.35,
+        "drift": [
+          -0.115,
+          0.0
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          0.9,
+          0.6,
+          0.0
+        ],
+        "window": [
+          0.02,
+          0.66
+        ]
+      }
+    },
+    {
+      "key": "ice",
+      "objects": [
+        "Ice_01",
+        "Ice_02",
+        "Ice_03"
+      ],
+      "optionalObjects": [
+        "Ice_02",
+        "Ice_03"
+      ],
+      "label": {
+        "hu": "Jég",
+        "en": "Ice",
+        "fr": "Glaçons"
+      },
+      "move": {
+        "lift": 1.0,
+        "drift": [
+          0.0,
+          0.0
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          1.1,
+          0.8,
+          0.2
+        ],
+        "window": [
+          0.06,
+          0.7
+        ]
+      },
+      "perObject": [
+        {
+          "drift": [
+            0.192,
+            0.058
+          ],
+          "spin": [
+            1.2,
+            0.8,
+            -0.2
+          ]
+        },
+        {
+          "drift": [
+            -0.173,
+            0.077
+          ],
+          "spin": [
+            -0.9,
+            0.6,
+            0.4
+          ]
+        },
+        {
+          "drift": [
+            0.019,
+            -0.192
+          ],
+          "spin": [
+            0.4,
+            -1.0,
+            0.5
+          ]
+        }
+      ]
+    },
+    {
+      "key": "gin",
+      "objects": [
+        "Liquid_Gin"
+      ],
+      "label": "Bobby’s Dry Gin",
+      "move": {
+        "lift": 0.66,
+        "drift": [
+          0.0,
+          0.0
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "window": [
+          0.1,
+          0.78
+        ]
+      }
+    },
+    {
+      "key": "campari",
+      "objects": [
+        "Liquid_Campari"
+      ],
+      "label": "Campari",
+      "move": {
+        "lift": 0.38,
+        "drift": [
+          0.0,
+          0.0
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          0.0,
+          -0.4,
+          0.0
+        ],
+        "window": [
+          0.16,
+          0.86
+        ]
+      }
+    },
+    {
+      "key": "vermouth",
+      "objects": [
+        "Liquid_Vermouth"
+      ],
+      "label": "Vermouth",
+      "move": {
+        "lift": 0.12,
+        "drift": [
+          0.0,
+          0.0
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          0.0,
+          0.3,
+          0.0
+        ],
+        "window": [
+          0.22,
+          0.93
+        ]
+      }
+    },
+    {
+      "key": "glass",
+      "objects": [
+        "Glass"
+      ],
+      "label": {
+        "hu": "Pohár",
+        "en": "Glass",
+        "fr": "Verre"
+      },
+      "move": {
+        "lift": -0.55,
+        "drift": [
+          0.0,
+          0.0
+        ],
+        "end": [
+          0.0,
+          0.0
+        ],
+        "spin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "window": [
+          0.28,
+          1.0
+        ]
+      }
+    }
+  ]
+}

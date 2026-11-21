@@ -2,6 +2,7 @@
 // Générateur statique sans dépendance :  node build.mjs  ->  dist/
 import fs from 'node:fs'
 import path from 'node:path'
+import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -65,6 +66,24 @@ const explode = photos.explode || {}
 const explodeNames = new Set(Object.keys(explode).map(norm))
 const missing = []
 
+// Modèle 3D professionnel (GLB) : utilisé seulement si assets/models/negroni.glb (ou NEGRONI_GLB=chemin) existe ET passe le contrôle.
+// Sinon rien ne change : le Negroni actuel reste affiché. Voir docs/cahier-des-charges-negroni-3d.fr.md.
+let glb = null
+{
+  const cfg = JSON.parse(read('content/negroni-model.json'))
+  const src = process.env.NEGRONI_GLB ? path.resolve(process.env.NEGRONI_GLB) : path.join(here, cfg.model)
+  if (fs.existsSync(src)) {
+    const { inspect, formatReport } = await import('./tools/glb-lib.mjs')
+    const buf = fs.readFileSync(src), rep = inspect(buf, cfg)
+    console.log(`Modèle 3D ${path.relative(here, src)} :\n${formatReport(rep)}`)
+    if (rep.ok) {
+      const v = crypto.createHash('sha1').update(buf).update(JSON.stringify(cfg)).digest('hex').slice(0, 10)
+      const present = cfg.parts.filter(p => (rep.info.parts[p.key] || []).length)
+      glb = { cfg, buf, norm: norm(cfg.drink), data: { m: `assets/models/negroni.glb?v=${v}`, c: `assets/models/negroni-model.json?v=${v}`, l: present.map(p => ({ t: p.key, n: p.label })) } }
+    } else console.warn('⚠ modèle 3D ignoré (voir ci-dessus) : le Negroni actuel reste affiché.')
+  }
+}
+
 // Vue éclatée : couches définies dans content/photos.json ; les noms d'ingrédients doivent figurer dans la description du menu.
 
 const priceCells = (it, sec) => it.prices.map((n, k) => {
@@ -84,7 +103,7 @@ function card(it, g, sec) {
   const layers = ent ? ent.layers : []
   const xv = layers.length > 1
   if (xv) for (const l of layers) if (typeof l.n === 'string' && !norm(tx(it.desc || '', 'en')).includes(norm(l.n))) console.warn(`⚠ vue éclatée : « ${l.n} » absent de la description de ${en}`)
-  const xvData = xv ? ` data-xv="${esc(JSON.stringify({ s: ent.scene, l: layers }))}"` : ''
+  const xvData = xv ? ` data-xv="${esc(JSON.stringify({ s: ent.scene, l: layers, ...(glb && norm(en) === glb.norm ? { g: glb.data } : {}) }))}"` : ''
   const xvBtn = xv ? `<button type="button" class="xv-open" aria-haspopup="dialog"><span class="sr">${L3('Összetevők megnézése', 'See the ingredients', 'Voir les ingrédients')} : ${L(it.name)}</span></button>` : ''
   const xvHint = xv ? `<p class="xvh" aria-hidden="true"><i></i>${L3('Összetevők', 'Ingredients', 'Ingrédients')}</p>` : ''
   return `<li class="card${img ? '' : ' noimg'}${xv ? ' has-xv' : ''}" style="--a:${g.a}"${xvData}>
@@ -253,5 +272,11 @@ fs.rmSync(dist, { recursive: true, force: true })
 fs.mkdirSync(dist, { recursive: true })
 fs.writeFileSync(path.join(dist, 'index.html'), html)
 fs.cpSync(path.join(here, 'assets'), path.join(dist, 'assets'), { recursive: true, filter: s => !s.endsWith('.gitkeep') })
+if (glb) {
+  fs.mkdirSync(path.join(dist, 'assets/models'), { recursive: true })
+  fs.writeFileSync(path.join(dist, 'assets/models/negroni.glb'), glb.buf)
+  const { _doc, ...pub } = glb.cfg
+  fs.writeFileSync(path.join(dist, 'assets/models/negroni-model.json'), JSON.stringify(pub))
+}
 fs.writeFileSync(path.join(dist, 'robots.txt'), 'User-agent: *\nDisallow: /\n')
 console.log(`✓ dist/index.html (${(html.length / 1024).toFixed(0)} Ko) — ${missing.length} carte(s) sans image : ${missing.join(', ') || '—'}`)
