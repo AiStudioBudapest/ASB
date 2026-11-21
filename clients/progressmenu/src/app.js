@@ -52,7 +52,8 @@
     tick = false
     lyrs.forEach(function (l) { l.el.style.transform = 'translate3d(' + (px * l.p * 30).toFixed(1) + 'px,' + (-y * l.p + py * l.p * 20).toFixed(1) + 'px,0)' })
   }
-  if (!reduce) {
+  var touch = matchMedia('(hover:none),(pointer:coarse)').matches
+  if (!reduce && !touch) {
     addEventListener('scroll', function () { y = Math.min(scrollY, 4000); if (!tick) { tick = true; requestAnimationFrame(paint) } }, { passive: true })
     if (fine) addEventListener('pointermove', function (e) { px = e.clientX / innerWidth - .5; py = e.clientY / innerHeight - .5; if (!tick) { tick = true; requestAnimationFrame(paint) } }, { passive: true })
   }
