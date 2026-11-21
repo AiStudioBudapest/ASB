@@ -302,7 +302,7 @@ function home(l) {
     </div>
     <div class="hero-cards">
       <a class="hcard hc-drink" href="${link(path, ROUTES.hlDrinks[l])}"><img src="${asset(path, 'img/bar-highlight.webp')}" alt="" loading="eager" decoding="async"><span>${esc(t.heroDrinks)} ${ICON.arrow}</span></a>
-      <a class="hcard hc-shop" href="${link(path, ROUTES.hlShop[l])}"><img src="${asset(path, 'img/trudon-bougies.webp')}" alt="" loading="eager" decoding="async"><span>${esc(t.heroShop)} ${ICON.arrow}</span></a>
+      <a class="hcard hc-shop" href="${link(path, ROUTES.hlShop[l])}"><img src="${asset(path, 'img/butik-presentation.webp')}" alt="${pick(l, 'A pr09re55 butik polcai: parfümök, ékszerek és gyertyák', 'The pr09re55 boutique shelves: perfumes, jewellery and candles', 'Les étagères de la boutique pr09re55 : parfums, bijoux et bougies')}" loading="eager" decoding="async"><span>${esc(t.heroShop)} ${ICON.arrow}</span></a>
     </div>
   </div>
 </section>

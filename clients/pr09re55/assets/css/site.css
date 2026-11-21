@@ -811,12 +811,12 @@ address,.big-link a,.brands,.mt-cats li{font-family:var(--sans);font-weight:600;
 .shop-all > .h-small{border-top:2px solid var(--ink);padding-top:22px;margin-bottom:clamp(30px,4vw,56px)}
 .cat-head .crumbs{margin-bottom:18px}
 .cat-more{padding-bottom:clamp(90px,11vw,160px);margin-top:-40px}
-/* Desktop: bigger tiles (3 per row), text never wraps */
+/* Desktop: all 6 tiles on ONE row, a bit bigger than the first version; text never wraps */
 @media (min-width:1101px){
-  .cat-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,1.8vw,30px)}
-  .cat-tile{aspect-ratio:4/5}
-  .cat-name{padding:16px;font-size:clamp(40px,4.2vw,72px);white-space:nowrap}
-  .cat-name small{font-size:13px;white-space:nowrap}
+  .cat-tiles{width:min(1760px,100% - 2*clamp(14px,2vw,40px));grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(10px,1.2vw,18px)}
+  .cat-tile{container-type:inline-size;aspect-ratio:4/5}
+  .cat-name{padding:10px;font-size:clamp(20px,13cqi,52px);white-space:nowrap}
+  .cat-name small{font-size:clamp(9px,4.4cqi,11.5px);white-space:nowrap}
   .shop-head .lede{white-space:nowrap;max-width:none}
 }
 @media (max-width:1100px){
@@ -951,3 +951,4 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
   html.menu-open .masthead{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--paper);-webkit-backdrop-filter:none;backdrop-filter:none;padding-top:env(safe-area-inset-top,0px)}
   html.menu-open .drawer{position:fixed;top:0;left:0;right:0;bottom:auto;inset:0;height:100vh;height:100dvh;z-index:50;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
 }
+.hc-shop img{object-position:50% 38%}
