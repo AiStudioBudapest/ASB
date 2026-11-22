@@ -3,17 +3,7 @@
   "tex_res": 4096,
   "common": {
     "res": "1350",
-    "samples": "96",
-    "glow_s": "0.22",
-    "glow": "0.45",
-    "expo": "0.75",
-    "sigma": "7,55,160",
-    "card": "10",
-    "key": "1.5",
-    "kick": "1.2",
-    "glint": "1.0",
-    "mist": "0.25",
-    "fill": "1.5"
+    "samples": "96"
   },
   "turntable": {
     "nframes": 120,

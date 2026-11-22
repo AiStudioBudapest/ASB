@@ -3,7 +3,8 @@
 Rendu photoréaliste (Blender Cycles) du Negroni : une image fixe et une rotation à 360°.
 Ce dossier ne fait pas partie du site : c'est l'outil de calcul des images.
 
-- `lux-geometry.blend` : la scène (verre ciselé, liquide en couches, glaçons, rondelle, zeste, gouttelettes).
+- `lux-geometry.blend` : la scène (verre ciselé, liquide en 3 couches, glaçons, rondelle d'orange dont l'écorce est séparable, buée et coulures).
+- `lux_geo.py` : construit cette scène (`python3 lux_geo.py -- ./`, après les textures) ; inutile de le relancer pour un rendu.
 - `lux_tex.py` : génère les textures de la rondelle d'orange (procédurales, identiques à chaque fois).
 - `lux_render.py` : matériaux, studio, lumières, caméra, rendu et étalonnage.
 - `job.json` : ce qu'il faut calculer (nombre d'images de la rotation, images fixes, réglages).

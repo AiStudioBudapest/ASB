@@ -60,7 +60,7 @@ def noise_bump(scale, strength, distance, detail=3.0, rough=0.55):
     return f
 
 # liquid absorption: sigma per metre (R, G, B) -> Volume Absorption colour/density
-SIG = [float(x) for x in A.get('sigma', '13,58,135').split(',')]
+SIG = [float(x) for x in A.get('sigma', '8,42,75').split(',')]
 def liquid_volume(nt):
     d = max(SIG); a = nt.nodes.new('ShaderNodeVolumeAbsorption')
     a.inputs['Color'].default_value = (1 - SIG[0] / d, 1 - SIG[1] / d, 1 - SIG[2] / d, 1); a.inputs['Density'].default_value = d
@@ -69,9 +69,32 @@ def liquid_volume(nt):
 N_GLASS, N_LIQ, N_ICE, N_WATER = 1.52, 1.34, 1.31, 1.333
 M = {}
 M['M_Glass'] = dielectric('M_Glass', N_GLASS, 0.0, (0.995, 1.0, 0.997, 1))
+FOG = float(A.get('fog', 0.16))
+if FOG > 0:
+    # outer face (normal pointing away from the axis) x below the liquid line x patchy noise -> roughness
+    nt = M['M_Glass'].node_tree; gb_ = [n_ for n_ in nt.nodes if n_.type == 'BSDF_GLASS'][0]
+    tc = tex_coord(nt)
+    sxyz = nt.nodes.new('ShaderNodeSeparateXYZ'); link(nt, tc.outputs['Object'], sxyz.inputs[0])
+    rad = nt.nodes.new('ShaderNodeVectorMath'); rad.operation = 'MULTIPLY'; rad.inputs[1].default_value = (1, 1, 0)
+    link(nt, tc.outputs['Object'], rad.inputs[0])
+    rn = nt.nodes.new('ShaderNodeVectorMath'); rn.operation = 'NORMALIZE'; link(nt, rad.outputs[0], rn.inputs[0])
+    dt = nt.nodes.new('ShaderNodeVectorMath'); dt.operation = 'DOT_PRODUCT'; link(nt, rn.outputs[0], dt.inputs[0]); link(nt, tc.outputs['Normal'], dt.inputs[1])
+    outer = nt.nodes.new('ShaderNodeMapRange'); outer.inputs['From Min'].default_value = 0.35; outer.inputs['From Max'].default_value = 0.6
+    link(nt, dt.outputs['Value'], outer.inputs['Value'])
+    # glass object origin = bounds centre (z 0.044): liquid line 0.064 -> 0.020 local; fades out 2 mm below the line
+    below = nt.nodes.new('ShaderNodeMapRange'); below.inputs['From Min'].default_value = 0.0195; below.inputs['From Max'].default_value = 0.0165
+    link(nt, sxyz.outputs['Z'], below.inputs['Value'])
+    nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 90.0; nz.inputs['Detail'].default_value = 4.0
+    link(nt, tc.outputs['Object'], nz.inputs['Vector'])
+    patch = nt.nodes.new('ShaderNodeMapRange'); patch.inputs['From Min'].default_value = 0.35; patch.inputs['From Max'].default_value = 0.65
+    patch.inputs['To Min'].default_value = 0.45; patch.inputs['To Max'].default_value = 1.0; link(nt, nz.outputs['Fac'], patch.inputs['Value'])
+    m1 = nt.nodes.new('ShaderNodeMath'); m1.operation = 'MULTIPLY'; link(nt, outer.outputs['Result'], m1.inputs[0]); link(nt, below.outputs['Result'], m1.inputs[1])
+    m2 = nt.nodes.new('ShaderNodeMath'); m2.operation = 'MULTIPLY'; link(nt, m1.outputs[0], m2.inputs[0]); link(nt, patch.outputs['Result'], m2.inputs[1])
+    m3 = nt.nodes.new('ShaderNodeMath'); m3.operation = 'MULTIPLY'; m3.inputs[1].default_value = FOG; link(nt, m2.outputs[0], m3.inputs[0])
+    link(nt, m3.outputs[0], gb_.inputs['Roughness'])
 M['M_LiqGlass'] = dielectric('M_LiqGlass', N_LIQ / N_GLASS, 0.0, volume=liquid_volume)
 M['M_LiqAir'] = dielectric('M_LiqAir', N_LIQ, 0.0, volume=liquid_volume)
-M['M_LiqIce'] = dielectric('M_LiqIce', N_LIQ / N_ICE, 0.0, volume=liquid_volume)
+M['M_LiqIce'] = dielectric('M_LiqIce', N_LIQ / N_ICE, float(A.get('liqice_r', 0.07)), volume=liquid_volume)
 M['M_LiqSlabCut'] = dielectric('M_LiqSlabCut', N_LIQ, 0.0, volume=liquid_volume)
 def ice_mat(name):
     # wet, slightly melted ice: clear glass with patchy micro-roughness and a touch of frosty translucency
@@ -80,11 +103,11 @@ def ice_mat(name):
     tc = tex_coord(nt); nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 140.0; nz.inputs['Detail'].default_value = 5.0
     link(nt, tc.outputs['Object'], nz.inputs['Vector'])
     rr = nt.nodes.new('ShaderNodeMapRange'); rr.inputs['From Min'].default_value = 0.35; rr.inputs['From Max'].default_value = 0.72
-    rr.inputs['To Min'].default_value = float(A.get('ice_r0', 0.02)); rr.inputs['To Max'].default_value = float(A.get('ice_r1', 0.13))
+    rr.inputs['To Min'].default_value = float(A.get('ice_r0', 0.04)); rr.inputs['To Max'].default_value = float(A.get('ice_r1', 0.30))
     link(nt, nz.outputs['Fac'], rr.inputs['Value']); link(nt, rr.outputs['Result'], g.inputs['Roughness'])
     bp = noise_bump(260.0, 0.06, 0.00025, 4.0)(nt); link(nt, bp.outputs[0], g.inputs['Normal'])
     tl = nt.nodes.new('ShaderNodeBsdfTranslucent'); tl.inputs['Color'].default_value = (0.95, 0.97, 1.0, 1)
-    mx = nt.nodes.new('ShaderNodeMixShader'); mx.inputs['Fac'].default_value = float(A.get('ice_frost', 0.07))
+    mx = nt.nodes.new('ShaderNodeMixShader'); mx.inputs['Fac'].default_value = float(A.get('ice_frost', 0.05))
     link(nt, g.outputs[0], mx.inputs[1]); link(nt, tl.outputs[0], mx.inputs[2]); link(nt, mx.outputs[0], out.inputs['Surface'])
     return m
 M['M_Ice'] = ice_mat('M_Ice')
@@ -106,7 +129,7 @@ mix = nt.nodes.new('ShaderNodeMixShader'); tc = tex_coord(nt); nz = nt.nodes.new
 nz.inputs['Scale'].default_value = 420.0; nz.inputs['Detail'].default_value = 6.0; nz.inputs['Roughness'].default_value = 0.6
 link(nt, tc.outputs['Object'], nz.inputs['Vector'])
 cr = nt.nodes.new('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = 0.42; cr.inputs['From Max'].default_value = 0.75
-cr.inputs['To Min'].default_value = 0.0; cr.inputs['To Max'].default_value = float(A.get('mist', 0.16))
+cr.inputs['To Min'].default_value = 0.0; cr.inputs['To Max'].default_value = float(A.get('mist', 0.25))
 link(nt, nz.outputs['Fac'], cr.inputs['Value']); link(nt, cr.outputs['Result'], mix.inputs['Fac'])
 link(nt, tr.outputs[0], mix.inputs[1]); link(nt, tl.outputs[0], mix.inputs[2]); link(nt, mix.outputs[0], out.inputs['Surface'])
 M['M_IceMist'] = m
@@ -119,7 +142,7 @@ def img(path, cs):
     t.image.colorspace_settings.name = cs; t.interpolation = 'Cubic'; link(nt, uv.outputs['UV'], t.inputs['Vector']); return t
 alb = img(TEXDIR + 'slice_albedo.png', 'sRGB'); hgt = img(TEXDIR + 'slice_height.png', 'Non-Color'); msk = img(TEXDIR + 'slice_masks.png', 'Non-Color')
 sep = nt.nodes.new('ShaderNodeSeparateColor'); link(nt, msk.outputs['Color'], sep.inputs['Color'])
-b = principled(nt, **{'Subsurface Radius': (1.0, 0.36, 0.12), 'Subsurface Scale': float(A.get('sss', 0.0016)), 'sss_method': 'RANDOM_WALK',
+b = principled(nt, **{'Subsurface Radius': (1.0, 0.36, 0.12), 'Subsurface Scale': float(A.get('sss', 0.0026)), 'sss_method': 'RANDOM_WALK',
                       'Coat Roughness': 0.05, 'Specular IOR Level': 0.55, 'IOR': 1.36})
 link(nt, alb.outputs['Color'], b.inputs['Base Color'])
 def mr(src, a0, a1, b0, b1):
@@ -190,19 +213,19 @@ me = bpy.data.meshes.new('Sweep'); bm.to_mesh(me); bm.free()
 sweep = put(bpy.data.objects.new('Sweep', me)); sweep.location.z = -0.00004
 for p_ in me.polygons: p_.use_smooth = True
 m, nt, out = new_mat('M_Sweep')
-b = principled(nt, **{'Base Color': (0.010, 0.010, 0.011, 1), 'Roughness': 0.32, 'Coat Weight': 1.0, 'Coat Roughness': float(A.get('floor_rough', 0.035)), 'Coat IOR': 1.5,
-                      'Specular IOR Level': 0.3})
+b = principled(nt, **{'Base Color': (0.006, 0.006, 0.007, 1), 'Roughness': 0.5, 'Coat Weight': float(A.get('floor_coat', 0.6)), 'Coat Roughness': float(A.get('floor_rough', 0.05)), 'Coat IOR': 1.5,
+                      'Specular IOR Level': 0.05})
 tc = tex_coord(nt)
 # glow = exp(-|p - c|^2 / s^2) on world position
-sub = nt.nodes.new('ShaderNodeVectorMath'); sub.operation = 'SUBTRACT'; sub.inputs[1].default_value = (0.0, float(A.get('glow_y', 1.30)), float(A.get('glow_z', 0.42)))
+sub = nt.nodes.new('ShaderNodeVectorMath'); sub.operation = 'SUBTRACT'; sub.inputs[1].default_value = (0.0, float(A.get('glow_y', 1.30)), float(A.get('glow_z', 0.30)))
 link(nt, tc.outputs['Object'], sub.inputs[0])
 sc_ = nt.nodes.new('ShaderNodeVectorMath'); sc_.operation = 'MULTIPLY'; sc_.inputs[1].default_value = (0.55, 1.0, 1.0)
 link(nt, sub.outputs[0], sc_.inputs[0])
 ln = nt.nodes.new('ShaderNodeVectorMath'); ln.operation = 'DOT_PRODUCT'; link(nt, sc_.outputs[0], ln.inputs[0]); link(nt, sc_.outputs[0], ln.inputs[1])
-dv = nt.nodes.new('ShaderNodeMath'); dv.operation = 'MULTIPLY'; dv.inputs[1].default_value = -1.0 / float(A.get('glow_s', 0.45)) ** 2
+dv = nt.nodes.new('ShaderNodeMath'); dv.operation = 'MULTIPLY'; dv.inputs[1].default_value = -1.0 / float(A.get('glow_s', 0.18)) ** 2
 link(nt, ln.outputs['Value'], dv.inputs[0])
 ex = nt.nodes.new('ShaderNodeMath'); ex.operation = 'EXPONENT'; link(nt, dv.outputs[0], ex.inputs[0])
-st = nt.nodes.new('ShaderNodeMath'); st.operation = 'MULTIPLY'; st.inputs[1].default_value = float(A.get('glow', 0.9))
+st = nt.nodes.new('ShaderNodeMath'); st.operation = 'MULTIPLY'; st.inputs[1].default_value = float(A.get('glow', 0.55))
 link(nt, ex.outputs[0], st.inputs[0])
 b.inputs['Emission Color'].default_value = tuple(float(x) for x in A.get('glow_col', '1.0,0.48,0.20').split(',')) + (1,)
 link(nt, st.outputs[0], b.inputs['Emission Strength'])
@@ -229,29 +252,41 @@ STRIPS = glass_only if A.get('strip_fruit', '0') == '0' else coll
 area('StripL', (-0.30, 0.22, 0.11), (0, 0, 0.05), 0.035, 0.50, 26 * K, (0.92, 0.95, 1.0), receivers=STRIPS)
 area('StripR', (0.31, 0.20, 0.11), (0, 0, 0.05), 0.035, 0.50, 26 * K, (1.0, 0.95, 0.90), receivers=STRIPS)
 area('Top', (0.02, 0.06, 0.46), (0, 0.01, 0.07), 0.36, 0.30, float(A.get('top', 5.0)) * K, (1.0, 0.98, 0.95))
-area('Key', (-0.40, -0.42, 0.26), (0, 0, 0.07), 0.45, 0.45, float(A.get('key', 2.2)) * K, (1.0, 0.96, 0.92))
-area('Kicker', (-0.22, 0.26, 0.24), (-0.035, 0, 0.10), 0.16, 0.16, float(A.get('kick', 2.2)) * K, (1.0, 0.86, 0.70), receivers=coll)
+area('Key', (-0.40, -0.42, 0.26), (0, 0, 0.07), 0.45, 0.45, float(A.get('key', 1.5)) * K, (1.0, 0.96, 0.92))
+area('Kicker', (-0.22, 0.26, 0.24), (-0.035, 0, 0.10), 0.16, 0.16, float(A.get('kick', 2.0)) * K, (1.0, 0.86, 0.70), receivers=coll)
 # large overhead scrim: something bright for the ice, the liquid surface and the rim to see (not the camera)
-area('Scrim', (0.0, 0.05, 0.55), (0, 0.02, 0.07), 0.75, 0.75, float(A.get('scrim', 12.0)) * K, (1.0, 0.98, 0.96), receivers=coll)
+area('Scrim', (0.0, 0.05, 0.55), (0, 0.02, 0.07), 0.75, 0.75, float(A.get('scrim', 4.0)) * K, (1.0, 0.98, 0.96), receivers=coll)
 # soft box behind and above: sheen on the ice tops and on the far side of the liquid surface
-area('BackTop', (0.0, 0.40, 0.25), (0, 0, 0.075), 0.50, 0.18, float(A.get('backtop', 6.0)) * K, (1.0, 0.97, 0.93), receivers=coll)
+area('BackTop', (0.0, 0.40, 0.25), (0, 0, 0.075), 0.50, 0.18, float(A.get('backtop', 1.8)) * K, (1.0, 0.97, 0.93), receivers=coll)
 # low wide strip far behind: mirrored by the liquid surface (bright glint line) and backlights the ice above the liquid
-if float(A.get('glint', 0)) > 0:
+if float(A.get('glint', 0.15)) > 0:
     area('Glint', (0.0, float(A.get('glint_y', 0.45)), float(A.get('glint_z', 0.14))), (0, 0, 0.066), float(A.get('glint_w', 0.40)), float(A.get('glint_h', 0.07)),
-         float(A.get('glint', 0)) * K, (1.0, 0.95, 0.88), receivers=glass_only)
-# glow card behind the glass: seen only through refractive surfaces (makes the liquid luminous)
+         float(A.get('glint', 0.15)) * K, (1.0, 0.95, 0.88), receivers=glass_only)
+# glow card behind the glass: seen only through refractive surfaces (makes the liquid luminous). Like a photographer's
+# card cut to the liquid's shape: its top edge stops where the empty part of the glass would see it (else blown out)
 gc = bpy.data.meshes.new('GlowCard'); bm = bmesh.new()
 bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5); bm.to_mesh(gc); bm.free()
-card = put(bpy.data.objects.new('GlowCard', gc)); card.scale = (float(A.get('card_w', 0.072)), float(A.get('card_h', 0.105)), 1)
-card.location = (0, float(A.get('card_y', 0.11)), float(A.get('card_z', 0.044))); card.rotation_euler = (math.radians(90), 0, 0)
+card = put(bpy.data.objects.new('GlowCard', gc)); card.scale = (float(A.get('card_w', 0.070)), float(A.get('card_h', 0.062)), 1)
+card.location = (0, float(A.get('card_y', 0.085)), float(A.get('card_z', 0.015))); card.rotation_euler = (math.radians(90), 0, 0)
 m, nt, out = new_mat('M_GlowCard')
 em = nt.nodes.new('ShaderNodeEmission'); tc = tex_coord(nt)
-gr = nt.nodes.new('ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
-mp = nt.nodes.new('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (2.0, 2.0, 0.0)
-link(nt, tc.outputs['Generated'], mp.inputs['Vector']); mp.inputs['Location'].default_value = (-1.0, -1.0, 0)
-link(nt, mp.outputs[0], gr.inputs['Vector'])
-pw = nt.nodes.new('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = float(A.get('card_pow', 0.8)); link(nt, gr.outputs['Fac'], pw.inputs[0])
-ms = nt.nodes.new('ShaderNodeMath'); ms.operation = 'MULTIPLY'; ms.inputs[1].default_value = float(A.get('card', 6.0)); link(nt, pw.outputs[0], ms.inputs[0])
+# profile: horizontal falloff (1 - u^2)^p keeps the glass edges dark; soft-edged but even vertically
+sp_ = nt.nodes.new('ShaderNodeSeparateXYZ'); link(nt, tc.outputs['Generated'], sp_.inputs[0])
+def _mr(src, a0, a1, b0=0.0, b1=1.0, interp='LINEAR'):
+    n_ = nt.nodes.new('ShaderNodeMapRange'); n_.interpolation_type = interp
+    n_.inputs['From Min'].default_value = a0; n_.inputs['From Max'].default_value = a1; n_.inputs['To Min'].default_value = b0; n_.inputs['To Max'].default_value = b1
+    link(nt, src, n_.inputs['Value']); return n_.outputs['Result']
+def _math(op, a_, b_=None, bv=None):
+    n_ = nt.nodes.new('ShaderNodeMath'); n_.operation = op; link(nt, a_, n_.inputs[0])
+    if b_ is not None: link(nt, b_, n_.inputs[1])
+    elif bv is not None: n_.inputs[1].default_value = bv
+    return n_.outputs[0]
+uu_ = _mr(sp_.outputs['X'], 0.0, 1.0, -1.0, 1.0)
+hz_ = _math('POWER', _mr(_math('MULTIPLY', uu_, uu_), 0.0, 1.0, 1.0, 0.0), bv=float(A.get('card_pow', 0.8)))
+vt_ = _math('MULTIPLY', _mr(sp_.outputs['Y'], 0.0, 0.22, interp='SMOOTHSTEP'), _mr(sp_.outputs['Y'], 1.0, float(A.get('card_top', 0.86)), interp='SMOOTHSTEP'))
+prof_ = _math('MULTIPLY', hz_, vt_)
+pw = nt.nodes.new('ShaderNodeMath'); pw.operation = 'MULTIPLY'; pw.inputs[1].default_value = 1.0; link(nt, prof_, pw.inputs[0])
+ms = nt.nodes.new('ShaderNodeMath'); ms.operation = 'MULTIPLY'; ms.inputs[1].default_value = float(A.get('card', 7.0)); link(nt, pw.outputs[0], ms.inputs[0])
 em.inputs['Color'].default_value = (1.0, 0.86, 0.70, 1); link(nt, ms.outputs[0], em.inputs['Strength'])
 # rays that were mirrored by the liquid surface (or any glossy bounce) pass through the card, so the liquid
 # surface can reflect the glint strip behind it instead of the dim top edge of the card
@@ -265,7 +300,7 @@ card.visible_volume_scatter = False; card.visible_transmission = True
 
 # side fill cards (like white reflector boards just out of frame), seen only through glass / ice / liquid:
 # rays that total-internal-reflect sideways out of the ice find something soft instead of the black studio
-FILL = float(A.get('fill', 0))
+FILL = float(A.get('fill', 0.5))
 if FILL > 0:
     for sx in (-1, 1):
         fm = bpy.data.meshes.new('Fill'); bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5); bm.to_mesh(fm); bm.free()
@@ -276,6 +311,18 @@ if FILL > 0:
         em2.inputs['Color'].default_value = (1.0, 0.93, 0.85, 1); link(nt, em2.outputs[0], out.inputs['Surface']); fm.materials.append(m)
         fo.visible_camera = False; fo.visible_glossy = A.get('fill_glossy', '0') == '1'; fo.visible_diffuse = False; fo.visible_shadow = False
         fo.visible_volume_scatter = False; fo.visible_transmission = True
+
+# light pad under the glass (like a bar's lit acrylic), seen only through the glass and liquid: lights the bottom of
+# the drink, which otherwise looks down into the black floor through the thick base
+UNDER = float(A.get('under', 0))
+if UNDER > 0:
+    bm = bmesh.new(); bmesh.ops.create_circle(bm, cap_ends=True, segments=64, radius=float(A.get('under_r', 0.036)))
+    um = bpy.data.meshes.new('UnderPad'); bm.to_mesh(um); bm.free()
+    uo = put(bpy.data.objects.new('UnderPad', um)); uo.location = (0, 0, -0.00002)
+    m, nt, out = new_mat('M_UnderPad'); e3 = nt.nodes.new('ShaderNodeEmission'); e3.inputs['Strength'].default_value = UNDER
+    e3.inputs['Color'].default_value = (1.0, 0.84, 0.66, 1); link(nt, e3.outputs[0], out.inputs['Surface']); um.materials.append(m)
+    uo.visible_camera = False; uo.visible_glossy = False; uo.visible_diffuse = False; uo.visible_shadow = False
+    uo.visible_volume_scatter = False; uo.visible_transmission = True
 
 # ------------------------------------------------------------------------------------------------ camera
 cam = put(bpy.data.objects.new('Camera', bpy.data.cameras.new('Camera'))); scene.camera = cam
@@ -325,15 +372,18 @@ def grade(exr, png, expo=EXPO):
     a = arr.reshape(h_, w_, 4)[::-1, :, :3] * expo
     s = h_ / 1350.0
     lum = a.max(axis=2, keepdims=True)
-    hi = a * np.clip((lum - 1.0) / 2.0, 0, 1)
+    hi = a * np.clip((lum - float(A.get('bthr', 1.5))) / 2.0, 0, 1)
     bloom = 0.55 * blur(hi, 2.5 * s) + 0.30 * blur(hi, 9 * s) + 0.15 * blur(hi, 28 * s)
-    a = a + float(A.get('bloom', 0.10)) * bloom
+    a = a + float(A.get('bloom', 0.04)) * bloom
     x = np.maximum(a, 0)
     t = (x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14)
     sr = np.where(t <= 0.0031308, 12.92 * t, 1.055 * np.power(np.clip(t, 0, 1), 1 / 2.4) - 0.055)
     yy, xx = np.mgrid[0:h_, 0:w_].astype(np.float32)
-    v = ((xx - w_ / 2) / (w_ / 2)) ** 2 * 0.8 + ((yy - h_ * 0.48) / (h_ / 2)) ** 2
-    sr = sr * (1 - 0.22 * np.clip(v - 0.25, 0, 1.5) ** 1.2)[..., None]
+    v = ((xx - w_ / 2) / (w_ / 2)) ** 2 * 0.8 + ((yy - h_ * 0.52) / (h_ / 2)) ** 2
+    top = float(A.get('top', 0.35)) * np.clip(1 - yy / (h_ * 0.35), 0, 1) ** 1.5
+    sr = sr * ((1 - float(A.get('vig', 0.30)) * np.clip(v - 0.25, 0, 1.5) ** 1.2) * (1 - top))[..., None]
+    l_ = (sr * np.array([0.2126, 0.7152, 0.0722], np.float32)).sum(axis=2, keepdims=True)
+    sr = l_ + float(A.get('sat', 0.94)) * (sr - l_)
     sr = sr + np.random.default_rng(1).normal(0, 0.0022, sr.shape).astype(np.float32)
     from PIL import Image
     Image.fromarray((np.clip(sr, 0, 1) * 255 + 0.5).astype(np.uint8)).save(png)
@@ -343,6 +393,9 @@ def render_to(base):
     bpy.ops.render.render(write_still=True)
     if A.get('grade', '1') == '1': grade(base + '.exr', base + '.png')
 
+for nm in [x for x in A.get('off', '').split(',') if x]:                 # diagnostics: switch studio pieces off
+    for ob_ in list(studio.objects):
+        if ob_.name.startswith(nm): ob_.hide_render = True
 bpy.context.view_layer.update()
 log('card dims', tuple(round(x, 4) for x in card.dimensions), 'loc', tuple(card.location))
 if 'save' in A: bpy.ops.wm.save_as_mainfile(filepath=A['save'])
