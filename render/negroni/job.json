@@ -1,0 +1,50 @@
+{
+  "chunks": 20,
+  "tex_res": 4096,
+  "common": {
+    "res": "1350",
+    "samples": "96",
+    "glow_s": "0.22",
+    "glow": "0.45",
+    "expo": "0.75",
+    "sigma": "7,55,160",
+    "card": "10",
+    "key": "1.5",
+    "kick": "1.2",
+    "glint": "1.0",
+    "mist": "0.25",
+    "fill": "1.5"
+  },
+  "turntable": {
+    "nframes": 120,
+    "opts": {}
+  },
+  "stills": [
+    {
+      "name": "hero_2400",
+      "res": "2400",
+      "samples": "160"
+    },
+    {
+      "name": "close_orange_2400",
+      "cam": "close_orange",
+      "aspect": "1.0",
+      "res": "2400",
+      "samples": "128"
+    },
+    {
+      "name": "close_ice_2400",
+      "cam": "close_ice",
+      "aspect": "1.0",
+      "res": "2400",
+      "samples": "128"
+    },
+    {
+      "name": "close_glass_2400",
+      "cam": "close_glass",
+      "aspect": "1.0",
+      "res": "2400",
+      "samples": "128"
+    }
+  ]
+}

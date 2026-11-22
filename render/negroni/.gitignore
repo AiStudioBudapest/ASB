@@ -1,0 +1,3 @@
+# textures rebuilt by lux_tex.py on each render machine
+slice_*.png
+__pycache__/
