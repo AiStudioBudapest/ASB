@@ -93,13 +93,14 @@ function seqData(ent, en) {
   const dir = ent.seq.dir.replace(/\/+$/, ''), f = path.join(here, dir, 'seq.json')
   if (!fs.existsSync(f)) return null
   const s = JSON.parse(fs.readFileSync(f, 'utf8'))
-  const names = ['a', ...Array.from({ length: s.n }, (_, i) => String(i).padStart(2, '0'))]
+  if (s.fmt !== 2) { console.warn(`⚠ séquence ${dir} : ancien format (relancer tools/import-seq.py) : vue 3D actuelle conservée pour ${en}`); return null }
+  const names = Array.from({ length: s.n }, (_, i) => String(i).padStart(2, '0'))
   const miss = s.w.flatMap(w => names.map(n => `${w}/${n}.webp`)).filter(x => !fs.existsSync(path.join(here, dir, x)))
   if (miss.length) { console.warn(`⚠ séquence ${dir} incomplète (${miss.slice(0, 3).join(', ')}…) : vue 3D actuelle conservée pour ${en}`); return null }
   for (const l of s.l) if (!ent.layers.some(x => x.t === l.k)) console.warn(`⚠ séquence ${dir} : « ${l.k} » n'a pas de nom dans content/photos.json (${en})`)
   const kb = s.w.map(w => names.reduce((t, n) => t + fs.statSync(path.join(here, dir, `${w}/${n}.webp`)).size, 0) / 1024)
   console.log(`Vue éclatée photo de ${en} : ${s.n} images, ${s.w.map((w, i) => `${w} px ${kb[i].toFixed(0)} Ko`).join(', ')}`)
-  return { p: dir + '/', n: s.n, w: s.w, r: s.r, v: s.v, l: s.l, g: s.g, c: ent.seq.cartoon }
+  return { p: dir + '/', fmt: 2, n: s.n, w: s.w, r: s.r, v: s.v, b: s.b, l: s.l, g: s.g, bg: s.bg, st: s.st, c: ent.seq.cartoon }
 }
 
 const priceCells = (it, sec) => it.prices.map((n, k) => {
@@ -217,7 +218,6 @@ const xvSymbols = `<svg width="0" height="0" style="position:absolute" aria-hidd
 </defs></svg>`
 const xvOverlay = `<div id="xv" class="xv" hidden role="dialog" aria-modal="true" aria-labelledby="xvt">
 <div class="xv-bg"></div>
-<div class="xv-bg2"></div>
 <button type="button" class="xv-x" aria-label="${esc('Bezár / Close / Fermer')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
 <div class="xv-head"><h3 id="xvt"></h3></div>
 <div class="xv-stage" id="xvs">

@@ -226,14 +226,12 @@ html{scrollbar-gutter:stable}
 @media (prefers-reduced-motion:reduce){.xv-3d{transition:none}.x3l i,.x3l span{transition:none}.xv-wait{animation:none}}
 
 /* ---------- vue éclatée « photo » (Negroni : images pré-calculées dans Blender) ---------- */
-.xv-bg2{position:absolute;inset:0;opacity:0;background:#020202}
 .xv-glass{pointer-events:none}
-.xv-sq{position:absolute;left:0;top:0;z-index:1;opacity:0;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(transparent,#000 6%,#000 94%,transparent);-webkit-mask-composite:source-in;
-  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(transparent,#000 6%,#000 94%,transparent);mask-composite:intersect}
+.xv-sq{position:absolute;left:0;top:0;z-index:1;opacity:0;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
 .xv-sq[hidden]{display:none}
 .xv-sq:active{cursor:grabbing}
-.xv-sq canvas,.xv-sq img{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.xv-sq canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.xv-sq img{position:absolute;display:block}
 .xv-sq img{transition:opacity .45s ease-in-out}
 .xv-sqbar{position:absolute;left:32%;right:32%;bottom:5%;height:1px;background:rgba(233,221,196,.6);transform:scaleX(0);transform-origin:0 50%;opacity:0;transition:opacity .4s ease,transform .3s linear}
 .xv-sqbar.on{opacity:1}

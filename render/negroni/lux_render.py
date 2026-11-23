@@ -19,7 +19,8 @@ def log(*a): print('[%6.1fs]' % (time.time() - t0), *a, flush=True)
 if MODE == 'eclate':
     import lux_eclate
     for k_, v_ in lux_eclate.DEFAULTS.items(): A.setdefault(k_, v_)
-    if 'seq' in A: A.setdefault('out', os.path.join(A['outdir'], 'eclate_seq'))   # where the label anchors go
+    if 'seq' in A:
+        A.setdefault('out', os.path.join(A['outdir'], 'eclate_seq')); os.makedirs(A['outdir'], exist_ok=True)   # where the label anchors go
 
 bpy.ops.wm.open_mainfile(filepath=BLEND)
 scene = bpy.context.scene; coll = bpy.data.collections['Negroni']
@@ -364,7 +365,12 @@ sc.render.film_transparent = False
 sc.view_settings.view_transform = 'Standard'; sc.view_settings.look = 'None'; sc.view_settings.exposure = 0.0
 sc.render.image_settings.file_format = 'OPEN_EXR'; sc.render.image_settings.color_depth = '16'; sc.render.image_settings.exr_codec = 'ZIP'
 sc.render.use_persistent_data = True
+SEQ_WEB = MODE == 'eclate' and 'seq' in A       # web sequence (lux_seq.py): from the hero image to the exploded view
+if SEQ_WEB:
+    import lux_seq
+    lux_seq.record_hero()
 if MODE == 'eclate': lux_eclate.stage()   # lights, backlight cards, camera and label anchors for the tall composition
+if SEQ_WEB: lux_seq.record_exploded()
 
 # ------------------------------------------------------------------------------------------------ grading (numpy)
 def box1d(a, r, axis):
@@ -412,12 +418,19 @@ if MODE == 'eclate': lux_eclate.save_step(A.get('step_tag', 'controle') + '-2-lu
 if 'save' in A: bpy.ops.wm.save_as_mainfile(filepath=A['save'])
 if MODE == 'eclate' and A.get('view') == 'assembled':
     lux_eclate.assembled_view()
-if MODE == 'eclate' and 'seq' in A:
-    # explode sequence for the site: frame 0 = tight stack above the glass, last frame = exploded view
-    f0, f1 = (int(x) for x in A['seq'].split('-')); NS = int(A.get('nseq', 48)); OD = A['outdir']; os.makedirs(OD, exist_ok=True)
-    lux_eclate.seq_start()
-    for f in range(f0, f1 + 1):
-        lux_eclate.pose(f / (NS - 1)); render_to(os.path.join(OD, 'eclate_%03d' % f)); log('sequence frame', f)
+if SEQ_WEB:
+    # sequence for the site: image 0 = the hero image, last image = the exploded view (see lux_seq.py)
+    # seq=0-71 (a range) or seq=0,24,48,71 (a list, for test renders)
+    SQ = (lambda a, b: list(range(int(a), int(b) + 1)))(*A['seq'].split('-')) if '-' in A['seq'] else [int(x) for x in A['seq'].split(',')]
+    NS = int(A.get('nseq', 72)); OD = A['outdir']; os.makedirs(OD, exist_ok=True)
+    lux_seq.prepare(NS)
+    for f in SQ:
+        if f >= NS: break
+        wl = lux_seq.pose(f); base = os.path.join(OD, 'eclate_%03d' % f)
+        if A.get('render', '1') == '1':
+            sc.render.filepath = base + '.exr'; bpy.ops.render.render(write_still=True)
+            if A.get('grade', '1') == '1': lux_seq.grade(base + '.exr', base + '.png', wl)
+        log('sequence frame', f)
 elif 'frames' in A:
     f0, f1 = (int(x) for x in A['frames'].split('-')); NFR = int(A.get('nframes', 72)); OD = A['outdir']; os.makedirs(OD, exist_ok=True)
     for f in range(f0, f1 + 1):

@@ -115,6 +115,11 @@ def build_glass_bm():
         + arc(Ro - RIM, H - RIM, RIM, RIM, 0, 180, 18) + [(Ri, ZM)]
     P_sub = [(Ri, ZM), (Ri, F + 0.004)] + arc(Ri - 0.004, F + 0.004, 0.004, 0.004, 0, -90, 10) + [(0, F)]
     bm = revolve(dedupe(dedupe(P_main) + dedupe(P_sub)[1:]), SEG)
+    flutes(bm); bm.normal_update(); sharpen(bm, 20)
+    return bm
+
+def flutes(bm):
+    # the 24 vertical flutes of the outer wall (same as lux_geo.py)
     def flute_depth(z):
         lower = ss(0.0028, 0.0048, z); upper = 1 - ss(0.0790, 0.0838, z)
         band = 1 - ss(0.0163, 0.0187, z)
@@ -127,8 +132,6 @@ def build_glass_bm():
             s = 2 * uu - 1; prof = 1 - s * s
             k = (r - flute_depth(v.co.z) * prof) / r
             v.co.x *= k; v.co.y *= k
-    bm.normal_update(); sharpen(bm, 20)
-    return bm
 
 def liquid_profile(z0, z1):
     # slice of the liquid between two heights (cuts are in the straight part of the wall)
@@ -141,9 +144,20 @@ def liquid_profile(z0, z1):
 def liquid_bm(z0, z1):
     bm = revolve(liquid_profile(z0, z1), SEG); bm.normal_update(); sharpen(bm, 30); return bm
 
-def puck_bm(z0, z1, seed):
+def ray_hit(poly, zc, pt):
+    # where the ray from (0, zc) through the profile point pt meets the polyline poly (profiles are star-shaped from there)
+    dx, dz = pt[0], pt[1] - zc; best = None
+    for (r0, z0_), (r1, z1_) in zip(poly, poly[1:]):
+        ex, ez = r1 - r0, z1_ - z0_; den = dx * ez - dz * ex
+        if abs(den) < 1e-15: continue
+        t = (r0 * ez - (z0_ - zc) * ex) / den; u = (r0 * dz - (z0_ - zc) * dx) / den
+        if t > 1e-12 and -1e-9 <= u <= 1 + 1e-9 and (best is None or t < best): best = t
+    return pt if best is None else (best * dx, zc + best * dz)
+
+def puck_bm(z0, z1, seed, s=1.0, base=None):
     # the exploded layer: same radius and height as its slice of the drink, but with the soft rounded edge and
-    # slightly domed faces of liquid held by surface tension, plus a faint frozen ripple on the top surface
+    # slightly domed faces of liquid held by surface tension, plus a faint frozen ripple on the top surface.
+    # s < 1 with base (the slice's own profile): the slice of the drink on its way to that shape (web sequence)
     rf = min(float(A.get('puck_fillet', 0.0045)), (z1 - z0) * 0.42); dome = float(A.get('puck_dome', 0.0007))
     rr = Ri - rf; n_face, n_arc = 22, 14
     p = [(rr * i / n_face, z0 - dome * (1 - (i / n_face) ** 2)) for i in range(n_face + 1)]
@@ -151,10 +165,14 @@ def puck_bm(z0, z1, seed):
     p += [(Ri, z0 + rf + (z1 - z0 - 2 * rf) * t / 4) for t in range(1, 4)]
     p += arc(rr, z1 - rf, rf, rf, 0, 90, n_arc)
     p += [(rr * (1 - i / n_face), z1 + dome * (1 - (1 - i / n_face) ** 2)) for i in range(1, n_face + 1)]
+    if s < 1.0 and base is not None:
+        zc_ = (z0 + z1) / 2
+        p = [(q[0] + (pt[0] - q[0]) * s, q[1] + (pt[1] - q[1]) * s) for pt in p for q in [ray_hit(base, zc_, pt)]]
     bm = revolve(dedupe(p), SEG)
     # liquid, not acrylic: gentle frozen waves on both faces, carried into the rounded edge, and a slow wobble of the rim
     rnd = __import__('random').Random(seed)
     amp_t, amp_b, amp_r = float(A.get('ripple', 0.00045)), float(A.get('ripple_b', 0.00030)), float(A.get('wobble', 0.00050))
+    if s < 1.0: amp_t, amp_b, amp_r = amp_t * s, amp_b * s, amp_r * s
     def waves(n):
         return [(2 * math.pi / lam, rnd.uniform(0, 2 * math.pi), rnd.uniform(0, 2 * math.pi)) for lam in n]
     wt, wb = waves((0.0150, 0.0205, 0.0265)), waves((0.0170, 0.0240))
@@ -202,10 +220,12 @@ def build():
     log('liquid layers: cuts at %.5f / %.5f m, %.1f ml each' % (z1, z2, vt * 1e6 / 3))
     bpy.data.objects['Liquid'].hide_render = True
     ranges = {'Liquid_Vermouth': (F, z1), 'Liquid_Campari': (z1, z2), 'Liquid_Gin': (z2, ZM)}
+    LAYOUT.clear(); LAYOUT.update({'ranges': ranges, 'seed': {}, 'cp': {}, 'cuts': (z1, z2)})
     for i, (nm, (a, b)) in enumerate(ranges.items()):
         ob = bpy.data.objects[nm]; ob.matrix_world = Matrix.Identity(4); ob.hide_render = False
         bm = puck_bm(a, b, 11 + i) if A.get('puck', '1') == '1' else liquid_bm(a, b)
         put_mesh(ob, bm, nm + '_Layer', [LIQ_MAT[nm]]); recentre(ob)
+        LAYOUT['seed'][nm] = 11 + i; LAYOUT['cp'][nm] = ob.matrix_world.translation.copy()
 
     # whole ice cubes, with their inner cracks / bubbles attached
     for nm in ('Ice_01', 'Ice_02', 'Ice_03'):
@@ -279,6 +299,8 @@ def build():
         ob.keyframe_insert('location', frame=100); ob.keyframe_insert('rotation_euler', frame=100)
     sc.frame_start, sc.frame_end = 1, 100; sc.frame_set(100)
     bpy.context.view_layer.update()
+    LAYOUT['assembled'] = assembled; LAYOUT['place'] = place; LAYOUT['rot0'] = ROT0
+    LAYOUT['glass_c'] = Vector((0, 0, bpy.data.objects['Glass'].location.z))
 
     # no piece may touch another
     objs = pieces + ['Orange_Peel']; trees = {n: bvh(bpy.data.objects[n]) for n in objs}; bad = []
@@ -299,6 +321,8 @@ def build():
 # vertical axis (z extents unchanged). The camera and the lights stay those of the exploded view.
 SEQ = {}
 ORIG = {}          # assembled scene, kept for the first image of the sequence
+LAYOUT = {}        # assembled and exploded poses, liquid layers (used by lux_seq.py)
+CAM_X = {}         # exploded-view camera
 GROUPS_SEQ = [  # bottom to top: objects moving together, extra gap in the tight stack, turn (deg), time window
     (['Liquid_Vermouth'], 0.0030, -18, (0.22, 1.00)),
     (['Liquid_Campari'], 0.0030, -24, (0.16, 0.95)),
@@ -506,6 +530,7 @@ def stage():
     cam.data.dof.use_dof = A.get('dof', '1') == '1'
     cam.data.dof.focus_distance = (Vector((0, 0, tgt.z)) - cam.location).length
     cam.data.dof.aperture_fstop = float(A.get('fstop', 8.0))
+    CAM_X.update({'tgt': tgt.copy(), 'dist': dist, 'el': el, 'lens': lens, 'fstop': cam.data.dof.aperture_fstop})
     bpy.context.view_layer.update()
     backdrop(cam)
     log('camera: lens %.0f mm, distance %.3f m, target z %.3f, column 0 .. %.3f m' % (lens, dist, tgt.z, z_top))
