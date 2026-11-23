@@ -171,14 +171,16 @@
     var host3 = d.getElementById('xv3'), lab3 = d.getElementById('xvl'), tg = xv.querySelector('.xv-tg'), tip = xv.querySelector('.xv-tip')
 
     // ----- vue éclatée « photo » : séquence d'images pré-calculées dans Blender (data-xv > q), lue dans un canvas -----
-    // Le dessin de la carte se pose sur le verre de la photo, se fond dans la photo du cocktail assemblé, puis la
-    // séquence joue l'éclatement. Glisser vers le haut ou le bas fait avancer ou reculer l'animation.
+    // Le dessin de la carte se pose sur le verre de la photo et se fond dans la première image (le cocktail tel que
+    // sur la photo d'accueil), puis les ingrédients sortent du verre jusqu'à la vue éclatée. Glisser vers le haut ou
+    // le bas fait avancer ou reculer l'animation. Chaque image est recadrée sur les pièces (bords fondus) et posée à
+    // sa place dans le cadre (q.b) ; le fond de la page reprend le dégradé des images, placé par rapport au cadre (q.bg).
     // En cas d'échec (réseau), retour à la vue 3D, puis à la version dessinée.
-    var sqHost = d.getElementById('xvq'), bg2 = xv.querySelector('.xv-bg2'), tipQ = xv.querySelector('.xv-tipq')
+    var sqHost = d.getElementById('xvq'), tipQ = xv.querySelector('.xv-tipq')
     var sqCv = sqHost && sqHost.querySelector('canvas'), sqA = sqHost && sqHost.querySelector('img'), sqBar = sqHost && sqHost.querySelector('.xv-sqbar')
     var SQC = {}, sqFree = 0, sq = null
     function seqOk(q) {
-      if (!q || !sqHost || !sqCv.getContext || !window.fetch || !window.Promise || !q.n || !q.w || !q.w.length) return false
+      if (!q || q.fmt !== 2 || !sqHost || !sqCv.getContext || !window.fetch || !window.Promise || !q.n || !q.w || !q.w.length) return false
       var c = navigator.connection
       return !(c && c.saveData)
     }
@@ -195,19 +197,19 @@
       var key = sqUrl(q, w, '')
       if (SQC[key]) return SQC[key]
       var c = SQC[key] = { frames: new Array(q.n), done: 0, onprog: null }
-      // image 0 : le cocktail assemblé, affiché pendant que le reste arrive
+      // image 0 : le cocktail dans son verre, affiché pendant que le reste arrive
       c.a = new Promise(function (res, rej) {
         var im = new Image()
         im.onload = function () { (im.decode ? im.decode() : Promise.resolve()).then(function () { res(im) }, function () { res(im) }) }
         im.onerror = function () { rej(new Error('image 0')) }
-        im.src = sqUrl(q, w, 'a')
+        im.src = sqUrl(q, w, '00')
       })
       function bitmap(b) {
         if (window.createImageBitmap) return createImageBitmap(b)
         return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im) }; im.onerror = rej; im.src = URL.createObjectURL(b) })
       }
-      var ps = []
-      for (var i = 0; i < q.n; i++) (function (i) {
+      var ps = [c.a.then(function (im) { c.frames[0] = im; c.done++; if (c.onprog) c.onprog(c.done / q.n) })]
+      for (var i = 1; i < q.n; i++) (function (i) {
         ps.push(fetch(sqUrl(q, w, (i < 10 ? '0' : '') + i)).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob() }).then(bitmap).then(function (b) {
           c.frames[i] = b; c.done++
           if (c.onprog) c.onprog(c.done / q.n)
@@ -234,10 +236,13 @@
     }
     function sqBegin(q, data) {
       clearTimeout(sqFree)
-      sq = { q: q, p: 0, dir: 1, fi: -1, labels: [], shown: false, ready: false, aOn: true, tok: 0, raf: 0 }
-      var w = sqPickW(q)
+      sq = { q: q, p: 0, dir: 1, fi: -1, li: -1, labels: [], shown: false, ready: false, aOn: true, tok: 0, raf: 0 }
+      var w = sqPickW(q), b0 = q.b[0]
       sqCv.width = w; sqCv.height = Math.round(w * q.r)
-      sq.ctx = sqCv.getContext('2d', { alpha: false }) || sqCv.getContext('2d')
+      sq.ctx = sqCv.getContext('2d')
+      // l'image 0 (balise img) se pose à la place de son recadrage, comme le canvas la dessinera
+      sqA.style.left = b0[0] * 100 + '%'; sqA.style.top = b0[1] * 100 + '%'
+      sqA.style.width = (b0[2] - b0[0]) * 100 + '%'; sqA.style.height = (b0[3] - b0[1]) * 100 + '%'
       sq.set = sqLoad(q, w)
       sqLabels(data)
       sqLayout()
@@ -252,6 +257,12 @@
       glass.style.width = cw + 'px'; glass.style.height = ch + 'px'
       glass.style.left = (g.ix + (b[0] + b[2]) / 2 * g.iw - (c[0] + c[2]) / 2 * cw) + 'px'
       glass.style.top = (g.iy + b[3] * g.ih - c[1] * ch) + 'px'
+      // le dégradé du fond de la page, placé par rapport au cadre des images : il prolonge exactement le leur
+      var sr = stage.getBoundingClientRect(), xr = xv.getBoundingClientRect(), B = q.bg
+      var fx = sr.left - xr.left + g.ix, fy = sr.top - xr.top + g.iy
+      bg.style.backgroundImage = 'radial-gradient(' + (B[2] * g.iw).toFixed(1) + 'px ' + (B[3] * g.ih).toFixed(1) + 'px at ' +
+        (fx + B[0] * g.iw).toFixed(1) + 'px ' + (fy + B[1] * g.ih).toFixed(1) + 'px,' +
+        q.st.map(function (x) { return x[0] + ' ' + (x[1] * 100).toFixed(1) + '%' }).join(',') + ')'
       sqLabelsLayout()
     }
     function sqLabels(layers) {
@@ -268,28 +279,46 @@
       })
     }
     function sqLabelsLayout() {
-      var g = sq.g
+      var g = sq.g, n = sq.q.n
       lab3.style.setProperty('--fs', Math.max(10, Math.min(14, g.ih * .0175)).toFixed(1) + 'px')
       var gap = Math.max(5, g.iw * .012), seg = Math.max(16, g.iw * .045), tg = 8
-      // une colonne de noms par côté, alignée juste après la pièce la plus large de ce côté (comme sur l'image imprimée)
+      // une colonne de noms par côté, alignée juste après la pièce la plus large de ce côté dans la vue éclatée
+      // (comme sur l'image imprimée) ; chaque trait part de sa pièce, qui bouge encore un peu à l'arrivée
       var xr = -1e9, xl = 1e9
-      sq.labels.forEach(function (o) { var x = g.ix + o.l.a[0] * g.iw; if (o.l.s === 'l') xl = Math.min(xl, x); else xr = Math.max(xr, x) })
+      sq.labels.forEach(function (o) { var x = g.ix + o.l.p[n - 1][0] * g.iw; if (o.l.s === 'l') xl = Math.min(xl, x); else xr = Math.max(xr, x) })
       xr += gap + seg; xl -= gap + seg
+      sq.lay = { gap: gap, xl: xl, xr: xr }
       sq.labels.forEach(function (o) {
-        var ax = g.ix + o.l.a[0] * g.iw, ay = g.iy + o.l.a[1] * g.ih, left = o.l.s === 'l'
-        var x0 = left ? ax - gap : ax + gap, x1 = left ? xl : xr
-        var line = o.el.firstChild, dot = line.nextSibling, sp = o.el.lastChild
+        var left = o.l.s === 'l', x1 = left ? xl : xr, sp = o.el.lastChild
+        if (left) { sp.style.left = 'auto'; sp.style.right = (g.W - x1 + tg).toFixed(1) + 'px'; sp.style.maxWidth = Math.max(40, x1 - tg - g.vl).toFixed(0) + 'px' }
+        else { sp.style.right = 'auto'; sp.style.left = (x1 + tg).toFixed(1) + 'px'; sp.style.maxWidth = Math.max(40, g.vr - x1 - tg).toFixed(0) + 'px' }
+      })
+      sq.li = -1; sqLabelsAt(Math.max(0, sq.fi))
+    }
+    function sqLabelsAt(i) { // place les traits sur les pièces de l'image i
+      if (i === sq.li || !sq.lay) return
+      sq.li = i
+      var g = sq.g, L = sq.lay
+      sq.labels.forEach(function (o) {
+        var a = o.l.p[i], ax = g.ix + a[0] * g.iw, ay = g.iy + a[1] * g.ih, left = o.l.s === 'l'
+        var x0 = left ? ax - L.gap : ax + L.gap, x1 = left ? L.xl : L.xr
+        var line = o.el.firstChild, dot = line.nextSibling
         o.el.style.transform = 'translateY(' + ay.toFixed(1) + 'px)'
         dot.style.left = x0.toFixed(1) + 'px'
         line.style.left = Math.min(x0, x1).toFixed(1) + 'px'; line.style.width = Math.abs(x1 - x0).toFixed(1) + 'px'
-        if (left) { sp.style.left = 'auto'; sp.style.right = (g.W - x1 + tg).toFixed(1) + 'px'; sp.style.maxWidth = Math.max(40, x1 - tg - g.vl).toFixed(0) + 'px' }
-        else { sp.style.right = 'auto'; sp.style.left = (x1 + tg).toFixed(1) + 'px'; sp.style.maxWidth = Math.max(40, g.vr - x1 - tg).toFixed(0) + 'px' }
       })
     }
     function sqDraw(p) {
       var n = sq.q.n, i = Math.max(0, Math.min(n - 1, Math.round(p * (n - 1)))), f = sq.set.frames[i]
-      if (i !== sq.fi && f) { sq.ctx.drawImage(f, 0, 0, sqCv.width, sqCv.height); sq.fi = i }
+      if (i !== sq.fi && f) {
+        // chaque image recadrée est posée à sa place dans le cadre ; autour, le canvas reste transparent (fond de la page)
+        var cw = sqCv.width, ch = sqCv.height, b = sq.q.b[i], x0 = Math.round(b[0] * cw), y0 = Math.round(b[1] * ch)
+        sq.ctx.clearRect(0, 0, cw, ch)
+        sq.ctx.drawImage(f, x0, y0, Math.round(b[2] * cw) - x0, Math.round(b[3] * ch) - y0)
+        sq.fi = i
+      }
       sq.p = p
+      sqLabelsAt(Math.max(0, sq.fi)) // les traits suivent l'image affichée
       var show = st.exploded && sq.dir >= 0
       sq.labels.forEach(function (o) { var on = show && p >= o.l.at - 1e-3; if (on !== o.on) { o.on = on; o.el.classList.toggle('on', on) } })
     }
@@ -317,12 +346,12 @@
       tg.classList.toggle('ex', on); tg.setAttribute('aria-pressed', String(on))
       var s0 = sq
       if (on) {
-        sqShowA(false) // le cocktail assemblé se fond dans la pile de pièces, qui s'écartent aussitôt
+        sqShowA(false) // la balise img laisse la place au canvas, qui affiche la même image, puis les pièces sortent du verre
         sqRun(sq.p, 0)
-        wait(reduce || sq.p > 0 ? 0 : 160).then(function () { if (sq === s0 && st.exploded) sqRun(1, 2300) })
+        wait(reduce || sq.p > 0 ? 0 : 160).then(function () { if (sq === s0 && st.exploded) sqRun(1, 3400) })
         return
       }
-      sqRun(0, 1700).then(function () { if (sq === s0 && !st.exploded && sq.p === 0 && !st.closing) sqShowA(true) })
+      sqRun(0, 2400).then(function () { if (sq === s0 && !st.exploded && sq.p === 0 && !st.closing) sqShowA(true) })
     }
     function sqHide() { // retire la photo (repli ou fermeture)
       if (!sqHost) return
@@ -343,7 +372,6 @@
         sqHost.hidden = false; sq.shown = true
         var f = reduce ? 1 : 0
         play(sqHost, [{ opacity: 0 }, { opacity: 1 }], { duration: f || 560, fill: 'forwards', easing: 'ease-in-out' })
-        play(bg2, [{ opacity: 0 }, { opacity: 1 }], { duration: f || 600, fill: 'forwards', easing: 'ease-in-out' })
         play(glass, [{ opacity: 1 }, { opacity: 0 }], { duration: f || 520, delay: f ? 0 : 80, fill: 'both', easing: 'ease-in-out' })
         var barT = setTimeout(function () { if (ok() && !sq.ready) sqBar.classList.add('on') }, 800)
         c.onprog = function (x) { sqBar.style.transform = 'scaleX(' + x.toFixed(3) + ')' }
@@ -364,7 +392,6 @@
         var shown = sq.shown
         sqHide(); sq = null
         cancelOn(glass)
-        if (shown) { cancelOn(bg2); play(bg2, [{ opacity: 1 }, { opacity: 0 }], { duration: reduce ? 1 : 420, fill: 'forwards' }) }
         var r0 = glass.getBoundingClientRect()
         layout()
         var r1 = glass.getBoundingClientRect()
@@ -541,6 +568,7 @@
       host3.classList.remove('on'); tg.hidden = true; tip.hidden = true
       if (scene) scene.stop()
       if (sq) { sqHide(); sq = null; clearTimeout(sqFree); sqFree = setTimeout(sqRelease, 30000) }
+      bg.style.backgroundImage = ''
       if (st.img) st.img.style.visibility = ''
       st.open = false; st.closing = false
       if (st.btn) try { st.btn.focus({ preventScroll: true }) } catch (e) {}
@@ -555,7 +583,7 @@
         sq.dir = -1; sqDraw(sq.p)
         if (!sq.ready) { back('seq'); return }
         var s0 = sq
-        sqRun(0, reduce ? 0 : 950).then(function () {
+        sqRun(0, reduce ? 0 : 1200).then(function () {
           if (sq !== s0) return
           sqShowA(true)
           return wait(reduce ? 0 : 420).then(function () { if (sq === s0) back('seq') })
@@ -587,7 +615,6 @@
       if (photo) {
         if (sq && sq.shown) {
           play(sqHost, [{ opacity: 1 }, { opacity: 0 }], { duration: 380, fill: 'forwards', easing: 'ease-in-out' })
-          play(bg2, [{ opacity: 1 }, { opacity: 0 }], { duration: 560, fill: 'forwards', easing: 'ease-in-out' })
           play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 380, fill: 'forwards', easing: 'ease-in-out' })
         }
       } else if (threeD) {
@@ -626,7 +653,7 @@
         if (q && 'IntersectionObserver' in window) {
           var pio = new IntersectionObserver(function (es) {
             if (!es.some(function (x) { return x.isIntersecting })) return
-            pio.disconnect(); new Image().src = sqUrl(q, sqPickW(q), 'a')
+            pio.disconnect(); new Image().src = sqUrl(q, sqPickW(q), '00')
           }, { rootMargin: '400px 0px' })
           pio.observe(c)
         }
@@ -670,7 +697,7 @@
       sqHost.addEventListener('dragstart', function (e) { e.preventDefault() })
     })()
     xbtn.addEventListener('click', close)
-    xv.addEventListener('click', function (e) { if (e.target === xv || e.target === bg || e.target === bg2 || e.target === stage || e.target === box) close() })
+    xv.addEventListener('click', function (e) { if (e.target === xv || e.target === bg || e.target === stage || e.target === box) close() })
     addEventListener('keydown', function (e) { if (st.open && (e.key === 'Escape' || e.key === 'Esc')) close() })
     addEventListener('popstate', function () { if (st.open && !st.closing) { st.fromPop = true; close() } })
     var rt
