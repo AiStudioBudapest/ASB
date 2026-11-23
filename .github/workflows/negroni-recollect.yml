@@ -1,0 +1,49 @@
+name: Rendu Negroni réassemblage
+
+# Refait seulement l'assemblage (render/negroni/collect.py) à partir des images d'un calcul précédent, sans
+# relancer Blender : utile quand seul le traitement des images change (recadrage, compression, aperçu).
+# Le numéro du calcul source est dans render/negroni/recollect.json : {"run": <numéro du run « Rendu Negroni 360 »>}.
+# Les images d'un calcul restent disponibles 7 jours.
+on:
+  push:
+    branches: [claude/project-thread-5zlo96]
+    paths: ['render/negroni/recollect.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: negroni-render
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - id: src
+        run: echo "run=$(python3 -c "import json;print(int(json.load(open('render/negroni/recollect.json'))['run']))")" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          path: render-out
+          pattern: frames-*
+          merge-multiple: true
+          run-id: ${{ steps.src.outputs.run }}
+          github-token: ${{ github.token }}
+      - name: Encodage (WebP, vidéos d'aperçu, images fixes)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q pillow numpy
+          python render/negroni/collect.py render-out
+      - name: Enregistrer le résultat sur la branche
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add render/negroni/out
+          git commit -m "Rendu Negroni : réassemblage du calcul ${{ steps.src.outputs.run }} $(date -u +%Y-%m-%dT%H:%MZ)" || echo "rien à enregistrer"
+          for i in 1 2 3 4; do git pull --rebase -q origin "${GITHUB_REF_NAME}" && git push -q origin "HEAD:${GITHUB_REF_NAME}" && break; sleep $((i*5)); done

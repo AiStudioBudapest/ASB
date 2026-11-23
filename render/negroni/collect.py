@@ -30,9 +30,9 @@ if frames:
     for i, t in enumerate(th): sheet.paste(t, ((i % 6) * 360, (i // 6) * 450))
     sheet.save(os.path.join(OUT, 'turntable_contact_sheet.jpg'), quality=90)
 # explode sequence for the site (lux_seq.py: from the hero image to the exploded view, over the menu's green gradient).
-# Each image is cropped to what differs from the gradient (pieces, glow) plus a margin whose outer part fades out:
-# RGBA WebP at 1080 and 720 px. seq.json gives each crop's place in the frame; the page draws it there, over the same
-# gradient placed relative to the frame, so the edges cannot show.
+# Each image gets a matte (opaque on everything that differs from the gradient, faded out around it) and is cropped to
+# it: RGBA WebP at 1080 and 720 px. seq.json gives each crop's place in the frame; the page draws it there, over the
+# same gradient placed relative to the frame, so no edge can show.
 seq = sorted(glob.glob(os.path.join(src, 'eclate_[0-9][0-9][0-9].png')))
 if seq:
     import numpy as np
@@ -51,7 +51,17 @@ if seq:
             m = (d >= P[i]) & (d <= P[i + 1]); f = ((d[m] - P[i]) / (P[i + 1] - P[i]))[:, None]; out[m] = C[i] + (C[i + 1] - C[i]) * f
         return out
     BG = css_bg(W0, H0)
-    M = int(round(0.03 * W0)) // 3 * 3                      # margin, faded out over its whole width
+    def blur(a, r):                                          # 3 box passes per axis (close to a Gaussian of sigma r)
+        for ax in (0, 1):
+            for _ in range(3):
+                pad = [(0, 0), (0, 0)]; pad[ax] = (r + 1, r)
+                c = np.cumsum(np.pad(a, pad, mode='edge'), axis=ax); n = a.shape[ax]
+                a = (np.take(c, np.arange(2 * r + 1, 2 * r + 1 + n), axis=ax) - np.take(c, np.arange(n), axis=ax)) / (2 * r + 1)
+        return a
+    # matte: opaque on everything that differs from the gradient (pieces, reflections, glow), widened and faded out
+    # over ~2 % of the width; the page's own gradient shows everywhere else. No straight edge, and the tiny colour
+    # shift of lossy WebP in flat dark areas stays next to the pieces, where it cannot be seen.
+    R_ = max(2, int(round(0.010 * W0)))
     crops, worst = [None] * int(sj['n']), 0.0
     for p in seq:
         f = int(os.path.basename(p)[7:10])
@@ -59,27 +69,23 @@ if seq:
         dif = np.abs(im - BG).max(axis=2)
         sm = np.pad(dif, 1, mode='edge'); sm = sum(sm[i:i + dif.shape[0], j:j + dif.shape[1]] for i in range(3) for j in range(3)) / 9
         sm[:3] = sm[-3:] = 0; sm[:, :3] = sm[:, -3:] = 0      # lone pixels at the frame border (denoiser edge) are not content
-        ys, xs = np.nonzero(sm > 2.5)                       # 8-bit rounding of the gradient stays under 1
-        bx = sj['frames'][f]['box']
-        x0 = min(xs.min(), int(bx[0] * W0)) - M; x1 = max(xs.max() + 1, int(np.ceil(bx[2] * W0))) + M
-        y0 = min(ys.min(), int(bx[1] * H0)) - M; y1 = max(ys.max() + 1, int(np.ceil(bx[3] * H0))) + M
-        x0 = max(0, x0 // 3 * 3); y0 = max(0, y0 // 3 * 3); x1 = min(W0, -(-x1 // 3) * 3); y1 = min(H0, -(-y1 // 3) * 3)
-        out = np.ones(dif.shape, bool); out[y0:y1, x0:x1] = False
-        if out.any(): worst = max(worst, float(dif[out].max()))
+        obj = (sm > 2.5).astype(np.float64)                 # 8-bit rounding of the gradient stays under 1
+        a = np.clip(blur(obj, R_) / 0.12, 0, 1); a = a * a * (3 - 2 * a); a[obj > 0] = 1
+        ys, xs = np.nonzero(a > 0.5 / 255)
+        x0 = max(0, xs.min() // 3 * 3); y0 = max(0, ys.min() // 3 * 3); x1 = min(W0, -(-(xs.max() + 1) // 3) * 3); y1 = min(H0, -(-(ys.max() + 1) // 3) * 3)
+        comp = a[..., None] * im + (1 - a[..., None]) * BG          # what the page shows (before compression)
+        worst = max(worst, float(np.abs(comp - im)[3:-3, 3:-3].max()))   # frame border: lone denoiser pixels
         cw, ch = x1 - x0, y1 - y0
-        ex = np.minimum(np.arange(cw) + .5, cw - np.arange(cw) - .5) / max(M, 1)
-        ey = np.minimum(np.arange(ch) + .5, ch - np.arange(ch) - .5) / max(M, 1)
-        a = np.clip(np.minimum(ey[:, None], ex[None, :]), 0, 1); a = a * a * (3 - 2 * a)
-        rgba = np.dstack([im[y0:y1, x0:x1], a * 255]); rgba = (rgba + .5).clip(0, 255).astype(np.uint8)
+        rgba = np.dstack([im[y0:y1, x0:x1], a[y0:y1, x0:x1] * 255]); rgba = (rgba + .5).clip(0, 255).astype(np.uint8)
         c = Image.fromarray(rgba, 'RGBA'); name = 'eclate_%03d.webp' % f
-        c.save(os.path.join(D, 'webp', name), quality=84, alpha_quality=70, method=6)
-        c.resize((cw * 2 // 3, ch * 2 // 3), Image.LANCZOS).save(os.path.join(D, 'webp-720', name), quality=82, alpha_quality=70, method=6)
+        c.save(os.path.join(D, 'webp', name), quality=84, alpha_quality=80, method=6)
+        c.resize((cw * 2 // 3, ch * 2 // 3), Image.LANCZOS).save(os.path.join(D, 'webp-720', name), quality=82, alpha_quality=80, method=6)
         crops[f] = [round(x0 / W0, 6), round(y0 / H0, 6), round(x1 / W0, 6), round(y1 / H0, 6)]
     sj['crop'] = crops; sj['size'] = [W0, H0]
     json.dump(sj, open(os.path.join(D, 'seq.json'), 'w'))
     lab = os.path.join(src, 'eclate_seq.labels.json')
     if os.path.exists(lab): shutil.copy(lab, os.path.join(D, 'labels.json'))
-    print('sequence: %d crops, largest difference to the gradient outside the crops %.1f/255, %.0f KB (1080) + %.0f KB (720)' % (
+    print('sequence: %d crops, largest difference between the image and image-over-page-gradient %.1f/255, %.0f KB (1080) + %.0f KB (720)' % (
         len(seq), worst, sum(os.path.getsize(x) for x in glob.glob(os.path.join(D, 'webp', '*'))) / 1024,
         sum(os.path.getsize(x) for x in glob.glob(os.path.join(D, 'webp-720', '*'))) / 1024))
     lst = os.path.join(src, 'list-seq.txt')

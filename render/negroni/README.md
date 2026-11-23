@@ -33,3 +33,21 @@ puis `python3 lux_labels.py -- base=/tmp/eclate` pour les noms des composants.
   La police Geist Light (`fonts/`, licence OFL) est fournie dans le dossier.
 - `lux_regrade.py` : refait l'étalonnage AgX d'un EXR sans relancer le calcul.
 - `save_steps=<dossier>` enregistre une version `.blend` de la scène à chaque étape. Les collections y sont rangées par composant, et des repères `Label_*` y sont rattachés aux pièces.
+
+## Séquence du menu : les ingrédients sortent du verre
+
+`python3 lux_render.py -- mode=eclate seq=0-71 nseq=72 outdir=/tmp/seq drops=1 fog=0.16 blend=lux-geometry.blend tex=./`
+(`seq=0,24,48,71` pour quelques images seulement, `render=0 seq_check=1` pour vérifier les trajectoires sans calcul).
+
+- `lux_seq.py` : image 0 = l'image d'accueil du cocktail (même cadrage, lumières, buée, étalonnage) ; ensuite
+  l'orange se soulève du bord, les glaçons sortent du liquide puis du verre, le liquide monte hors du verre et se
+  sépare en vermouth, Campari et gin, pendant que la caméra recule et que l'éclairage et l'étalonnage passent à
+  ceux de la vue éclatée. La dernière image est la vue éclatée.
+- Fond : le dégradé vert du menu (`.xv-bg` de `clients/progressmenu/src/style.css`). Ses couleurs sont recalculées
+  pour chaque image afin que l'image étalonnée donne exactement les couleurs CSS (écart affiché dans le journal).
+- `eclate_seq.seq.json` : cadrage de chaque image, position des repères des noms image par image, dégradé.
+- Sur GitHub, `collect.py` recadre chaque image sur les pièces (bords fondus, WebP transparent 1080 et 720 px) dans
+  `out/eclate-seq/` ; `clients/progressmenu/tools/import-seq.py` les copie ensuite dans le menu.
+- Refaire seulement le recadrage / l'encodage sans relancer Blender : mettre le numéro du calcul dans
+  `recollect.json` (`{"run": <numéro>}`) et pousser ; le workflow « Rendu Negroni réassemblage » reprend ses images
+  (gardées 7 jours) et relance `collect.py`.
