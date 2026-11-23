@@ -19,6 +19,7 @@ def log(*a): print('[%6.1fs]' % (time.time() - t0), *a, flush=True)
 if MODE == 'eclate':
     import lux_eclate
     for k_, v_ in lux_eclate.DEFAULTS.items(): A.setdefault(k_, v_)
+    if 'seq' in A: A.setdefault('out', os.path.join(A['outdir'], 'eclate_seq'))   # where the label anchors go
 
 bpy.ops.wm.open_mainfile(filepath=BLEND)
 scene = bpy.context.scene; coll = bpy.data.collections['Negroni']
@@ -409,7 +410,15 @@ bpy.context.view_layer.update()
 log('card dims', tuple(round(x, 4) for x in card.dimensions), 'loc', tuple(card.location))
 if MODE == 'eclate': lux_eclate.save_step(A.get('step_tag', 'controle') + '-2-lumiere-camera-rendu')
 if 'save' in A: bpy.ops.wm.save_as_mainfile(filepath=A['save'])
-if 'frames' in A:
+if MODE == 'eclate' and A.get('view') == 'assembled':
+    lux_eclate.assembled_view()
+if MODE == 'eclate' and 'seq' in A:
+    # explode sequence for the site: frame 0 = tight stack above the glass, last frame = exploded view
+    f0, f1 = (int(x) for x in A['seq'].split('-')); NS = int(A.get('nseq', 48)); OD = A['outdir']; os.makedirs(OD, exist_ok=True)
+    lux_eclate.seq_start()
+    for f in range(f0, f1 + 1):
+        lux_eclate.pose(f / (NS - 1)); render_to(os.path.join(OD, 'eclate_%03d' % f)); log('sequence frame', f)
+elif 'frames' in A:
     f0, f1 = (int(x) for x in A['frames'].split('-')); NFR = int(A.get('nframes', 72)); OD = A['outdir']; os.makedirs(OD, exist_ok=True)
     for f in range(f0, f1 + 1):
         tt.rotation_euler.z = math.radians(ANGLE + 360.0 * f / NFR)

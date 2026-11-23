@@ -187,6 +187,8 @@ def build():
     coll = R.coll
     ROT0 = Matrix.Rotation(GLASS_ANGLE, 4, 'Z')          # hero orientation of the assembled cocktail
     original = {o.name: o.matrix_world.copy() for o in coll.objects}
+    ORIG.clear(); ORIG['mw'] = original
+    ORIG['mesh'] = {n: bpy.data.objects[n].data for n in ('Glass', 'Ice_01', 'Ice_02', 'Ice_03')}
 
     # glass, closed again; the condensation follows it
     glass = bpy.data.objects['Glass']; glass.matrix_world = Matrix.Identity(4)
@@ -288,6 +290,77 @@ def build():
     for nm in pieces:
         mn, mx = world_bounds([bpy.data.objects[nm]] + ([pe] if nm == 'Orange_Slice' else []))
         log('  %-16s z %.4f .. %.4f' % (nm, mn.z, mx.z))
+    prepare_sequence(pe)
+
+
+# ------------------------------------------------------------------------------------------------ explode sequence (web)
+# The site plays a short image sequence: the pieces leave a tight stack just above the glass and spread to the exploded
+# layout, the top ones first (gaps only grow: no piece ever touches another). Each piece also turns a little about the
+# vertical axis (z extents unchanged). The camera and the lights stay those of the exploded view.
+SEQ = {}
+ORIG = {}          # assembled scene, kept for the first image of the sequence
+GROUPS_SEQ = [  # bottom to top: objects moving together, extra gap in the tight stack, turn (deg), time window
+    (['Liquid_Vermouth'], 0.0030, -18, (0.22, 1.00)),
+    (['Liquid_Campari'], 0.0030, -24, (0.16, 0.95)),
+    (['Liquid_Gin'], 0.0030, -30, (0.10, 0.90)),
+    (['Ice_01', 'Ice_02', 'Ice_03'], 0.0050, -25, (0.04, 0.84)),
+    (['Orange_Slice'], 0.0040, -40, (0.00, 0.78)),
+]
+CARD_OF = {'Back_VERMOUTH': 'Liquid_Vermouth', 'Back_CAMPARI': 'Liquid_Campari', 'Back_GIN': 'Liquid_Gin', 'Back_ICE': 'Ice_01'}
+
+def prepare_sequence(peel):
+    ob = bpy.data.objects; cur = H; SEQ.clear(); SEQ['pieces'] = {}
+    for names, gap, turn, win in GROUPS_SEQ:
+        obs = [ob[n] for n in names] + ([peel] if 'Orange_Slice' in names else [])
+        mn, mx = world_bounds(obs)
+        dz = (cur + gap) - mn.z; cur = mx.z + dz
+        piv = Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, 0)) if len(names) > 1 else None
+        for n in names:
+            m1 = ob[n].matrix_world.copy()
+            SEQ['pieces'][n] = {'m1': m1, 'dz': dz, 'turn': math.radians(turn), 'win': win,
+                                'pivot': piv if piv is not None else Vector((m1.translation.x, m1.translation.y, 0))}
+    log('sequence: tight stack %.3f m high, exploded %.3f m' % (cur, world_bounds([ob['Orange_Slice'], peel])[1].z))
+
+def assembled_view():
+    """Image 0 of the web sequence: the real assembled cocktail (original meshes and liquid interfaces) seen with the
+    camera, lights and AgX look of the exploded view. The empty-glass look (no condensation, no frost) is kept, so
+    the glass is the same before and after the pieces lift out."""
+    ob = bpy.data.objects; ROT0 = Matrix.Rotation(GLASS_ANGLE, 4, 'Z')
+    for n, me in ORIG['mesh'].items(): ob[n].data = me
+    for n in ('Liquid_Vermouth', 'Liquid_Campari', 'Liquid_Gin'): ob[n].hide_render = True
+    ob['Liquid'].hide_render = False
+    for n, mw in ORIG['mw'].items():
+        o = ob.get(n)
+        if o is None or n == 'Condensation': continue
+        o.animation_data_clear(); tt = o.parent if o.parent and o.parent.name == 'Turntable' else None
+        o.parent = tt; o.matrix_parent_inverse = Matrix.Identity(4); o.matrix_world = ROT0 @ mw
+    for c in list(CARD_OF) + ['Glint']:
+        if c in ob and c.startswith('Back_'): ob[c].hide_render = True
+    ob['GlowCard'].hide_render = False
+    bpy.context.view_layer.update()
+    log('assembled view: original cocktail, exploded-view camera and lights')
+
+def seq_ease(u):
+    u = min(1.0, max(0.0, u)); return u * u * u * (u * (u * 6 - 15) + 10)
+
+def seq_start():
+    """Before rendering the sequence: the keyframes (assembled / exploded, kept in the saved scenes) would override
+    the poses set here, and the backlight cards must follow their liquid."""
+    ob = bpy.data.objects
+    for n in SEQ['pieces']: ob[n].animation_data_clear()
+    SEQ['cards'] = {c: (ob[c].location.copy(), p) for c, p in CARD_OF.items() if c in ob and p in SEQ['pieces']}
+
+def pose(t):
+    ob = bpy.data.objects; shift = {}
+    for n, d in SEQ['pieces'].items():
+        a, b = d['win']; u = seq_ease((t - a) / (b - a))
+        ang = d['turn'] * (1 - u); pv = d['pivot']
+        T = Matrix.Translation((pv.x, pv.y, 0)) @ Matrix.Rotation(ang, 4, 'Z') @ Matrix.Translation((-pv.x, -pv.y, 0))
+        m = T @ d['m1']; m.translation.z += d['dz'] * (1 - u)
+        ob[n].matrix_world = m; shift[n] = d['dz'] * (1 - u)
+    for c, (loc, p) in SEQ.get('cards', {}).items():
+        ob[c].location = loc + Vector((0, 0, shift[p]))
+    bpy.context.view_layer.update()
 
 
 def liquid_materials(M):

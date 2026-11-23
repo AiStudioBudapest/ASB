@@ -53,7 +53,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: frames-${{ matrix.chunk }}
-          path: render-out/*.png
+          path: |
+            render-out/*.png
+            render-out/*.json
           retention-days: 7
       - name: Fichiers EXR (pour un réétalonnage sans recalcul, gardés 7 jours)
         uses: actions/upload-artifact@v4

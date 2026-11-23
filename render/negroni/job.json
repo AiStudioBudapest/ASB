@@ -5,36 +5,18 @@
     "res": "1350",
     "samples": "96"
   },
-  "turntable": {
-    "nframes": 120,
+  "turntable": null,
+  "eclate_seq": {
+    "nframes": 48,
+    "assembled": true,
     "opts": {}
   },
   "stills": [
     {
-      "name": "hero_2400",
-      "res": "2400",
-      "samples": "160"
-    },
-    {
-      "name": "close_orange_2400",
-      "cam": "close_orange",
-      "aspect": "1.0",
-      "res": "2400",
-      "samples": "128"
-    },
-    {
-      "name": "close_ice_2400",
-      "cam": "close_ice",
-      "aspect": "1.0",
-      "res": "2400",
-      "samples": "128"
-    },
-    {
-      "name": "close_glass_2400",
-      "cam": "close_glass",
-      "aspect": "1.0",
-      "res": "2400",
-      "samples": "128"
+      "name": "eclate-2400x3000",
+      "mode": "eclate",
+      "res": "3000",
+      "samples": "256"
     }
   ]
 }
