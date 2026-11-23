@@ -78,8 +78,8 @@ if seq:
         cw, ch = x1 - x0, y1 - y0
         rgba = np.dstack([im[y0:y1, x0:x1], a[y0:y1, x0:x1] * 255]); rgba = (rgba + .5).clip(0, 255).astype(np.uint8)
         c = Image.fromarray(rgba, 'RGBA'); name = 'eclate_%03d.webp' % f
-        c.save(os.path.join(D, 'webp', name), quality=84, alpha_quality=80, method=6)
-        c.resize((cw * 2 // 3, ch * 2 // 3), Image.LANCZOS).save(os.path.join(D, 'webp-720', name), quality=82, alpha_quality=80, method=6)
+        c.save(os.path.join(D, 'webp', name), quality=84, alpha_quality=40, method=6)
+        c.resize((cw * 2 // 3, ch * 2 // 3), Image.LANCZOS).save(os.path.join(D, 'webp-720', name), quality=82, alpha_quality=40, method=6)
         crops[f] = [round(x0 / W0, 6), round(y0 / H0, 6), round(x1 / W0, 6), round(y1 / H0, 6)]
     sj['crop'] = crops; sj['size'] = [W0, H0]
     json.dump(sj, open(os.path.join(D, 'seq.json'), 'w'))
