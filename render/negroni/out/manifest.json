@@ -1,9 +1,7 @@
 {
- "frames": 120,
+ "frames": 0,
+ "sequence": 48,
  "stills": [
-  "close_ice_2400.png",
-  "close_glass_2400.png",
-  "hero_2400.png",
-  "close_orange_2400.png"
+  "eclate-2400x3000.png"
  ]
 }
