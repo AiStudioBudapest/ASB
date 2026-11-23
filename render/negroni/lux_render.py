@@ -13,8 +13,12 @@ BLEND = A.get('blend', '/mnt/project-files/negroni-3d/lux/lux-geometry.blend')
 TEXDIR = A.get('tex', os.path.dirname(BLEND) + '/')
 RES = int(A.get('res', 1350)); SAMPLES = int(A.get('samples', 128))
 CAM = A.get('cam', 'hero'); EXPO = float(A.get('expo', 1.0))
+MODE = A.get('mode', 'assembled')      # 'eclate' = exploded view (lux_eclate.py)
 t0 = time.time()
 def log(*a): print('[%6.1fs]' % (time.time() - t0), *a, flush=True)
+if MODE == 'eclate':
+    import lux_eclate
+    for k_, v_ in lux_eclate.DEFAULTS.items(): A.setdefault(k_, v_)
 
 bpy.ops.wm.open_mainfile(filepath=BLEND)
 scene = bpy.context.scene; coll = bpy.data.collections['Negroni']
@@ -179,6 +183,10 @@ M['M_OrangeRind'] = zest('M_OrangeRind', (0.58, 0.12, 0.005, 1), sss=0.10, rough
 M['M_Zest'] = zest('M_Zest', (0.62, 0.13, 0.006, 1), sss=0.08, rough=0.36, coat=0.55)
 M['M_ZestPith'] = zest('M_ZestPith', (0.72, 0.60, 0.38, 1), pores=False, sss=0.35, rough=0.5, coat=0.0)
 
+if MODE == 'eclate':                    # closed standalone pieces on a vertical axis, ingredient colours
+    import lux_eclate
+    lux_eclate.liquid_materials(M)
+    lux_eclate.build()
 for o in coll.all_objects:
     if o.type != 'MESH': continue
     for i, slot in enumerate(o.material_slots):
@@ -189,7 +197,7 @@ log('materials ok')
 tt = bpy.data.objects.new('Turntable', None); scene.collection.objects.link(tt)
 for o in coll.objects:
     if o.parent is None: o.parent = tt
-ANGLE = float(A.get('angle', -33))
+ANGLE = float(A.get('angle', 0 if MODE == 'eclate' else -33))
 for nm in [x for x in A.get('hide', '').split(',') if x]:
     if nm in bpy.data.objects: bpy.data.objects[nm].hide_render = True
 
@@ -355,6 +363,7 @@ sc.render.film_transparent = False
 sc.view_settings.view_transform = 'Standard'; sc.view_settings.look = 'None'; sc.view_settings.exposure = 0.0
 sc.render.image_settings.file_format = 'OPEN_EXR'; sc.render.image_settings.color_depth = '16'; sc.render.image_settings.exr_codec = 'ZIP'
 sc.render.use_persistent_data = True
+if MODE == 'eclate': lux_eclate.stage()   # lights, backlight cards, camera and label anchors for the tall composition
 
 # ------------------------------------------------------------------------------------------------ grading (numpy)
 def box1d(a, r, axis):
@@ -391,13 +400,14 @@ def grade(exr, png, expo=EXPO):
 def render_to(base):
     sc.render.filepath = base + '.exr'
     bpy.ops.render.render(write_still=True)
-    if A.get('grade', '1') == '1': grade(base + '.exr', base + '.png')
+    if A.get('grade', '1') == '1': (lux_eclate.grade_agx if MODE == 'eclate' else grade)(base + '.exr', base + '.png')
 
 for nm in [x for x in A.get('off', '').split(',') if x]:                 # diagnostics: switch studio pieces off
-    for ob_ in list(studio.objects):
+    for ob_ in list(studio.all_objects):
         if ob_.name.startswith(nm): ob_.hide_render = True
 bpy.context.view_layer.update()
 log('card dims', tuple(round(x, 4) for x in card.dimensions), 'loc', tuple(card.location))
+if MODE == 'eclate': lux_eclate.save_step(A.get('step_tag', 'controle') + '-2-lumiere-camera-rendu')
 if 'save' in A: bpy.ops.wm.save_as_mainfile(filepath=A['save'])
 if 'frames' in A:
     f0, f1 = (int(x) for x in A['frames'].split('-')); NFR = int(A.get('nframes', 72)); OD = A['outdir']; os.makedirs(OD, exist_ok=True)
