@@ -1,0 +1,108 @@
+{
+  "_aide": "EXEMPLE PROVISOIRE (placeholder: true) : série de portraits. À remplacer par une vraie série.",
+  "placeholder": true,
+  "slug": "sample-portrait-series",
+  "category": "portraits",
+  "featured": true,
+  "year": "2026",
+  "order": 2,
+  "location": {
+    "en": "Budapest",
+    "fr": "Budapest",
+    "hu": "Budapest"
+  },
+  "title": {
+    "en": "Portrait Series (sample)",
+    "fr": "Série de portraits (exemple)",
+    "hu": "Portrésorozat (minta)"
+  },
+  "summary": {
+    "en": "A sample series showing how portrait and model work is presented in a gallery.",
+    "fr": "Une série d’exemple qui montre comment les portraits et le travail avec des modèles sont présentés en galerie.",
+    "hu": "Mintasorozat, amely megmutatja, hogyan jelennek meg a portrék és a modellfotók a galériában."
+  },
+  "scope": {
+    "en": [
+      "Photography",
+      "Direction",
+      "Retouching"
+    ],
+    "fr": [
+      "Photographie",
+      "Direction",
+      "Retouche"
+    ],
+    "hu": [
+      "Fotó",
+      "Irányítás",
+      "Retusálás"
+    ]
+  },
+  "cover": "/images/projects/sample-portrait-1.jpg",
+  "coverAlt": {
+    "en": "Illustration of a portrait lit from the side",
+    "fr": "Illustration d’un portrait éclairé de côté",
+    "hu": "Oldalról megvilágított portré illusztrációja"
+  },
+  "intro": {
+    "en": "Describe the series here: the idea, the person, the light, the setting.",
+    "fr": "Décrivez ici la série : l’idée, la personne, la lumière, le cadre.",
+    "hu": "Itt mutassa be a sorozatot: az ötletet, a személyt, a fényt, a környezetet."
+  },
+  "gallery": [
+    {
+      "src": "/images/projects/sample-portrait-1.jpg",
+      "alt": {
+        "en": "Illustration of a portrait lit from the side",
+        "fr": "Illustration d’un portrait éclairé de côté",
+        "hu": "Oldalról megvilágított portré illusztrációja"
+      }
+    },
+    {
+      "src": "/images/projects/sample-portrait-2.jpg",
+      "alt": {
+        "en": "Illustration of a portrait lit from the side",
+        "fr": "Illustration d’un portrait éclairé de côté",
+        "hu": "Oldalról megvilágított portré illusztrációja"
+      }
+    },
+    {
+      "src": "/images/projects/sample-portrait-3.jpg",
+      "alt": {
+        "en": "Illustration of a portrait lit from the side",
+        "fr": "Illustration d’un portrait éclairé de côté",
+        "hu": "Oldalról megvilágított portré illusztrációja"
+      }
+    },
+    {
+      "src": "/images/projects/sample-portrait-4.jpg",
+      "alt": {
+        "en": "Illustration of a portrait lit from the side",
+        "fr": "Illustration d’un portrait éclairé de côté",
+        "hu": "Oldalról megvilágított portré illusztrációja"
+      }
+    },
+    {
+      "src": "/images/projects/sample-portrait-5.jpg",
+      "alt": {
+        "en": "Illustration of a portrait lit from the side",
+        "fr": "Illustration d’un portrait éclairé de côté",
+        "hu": "Oldalról megvilágított portré illusztrációja"
+      }
+    },
+    {
+      "src": "/images/projects/sample-portrait-6.jpg",
+      "alt": {
+        "en": "Illustration of a portrait lit from the side",
+        "fr": "Illustration d’un portrait éclairé de côté",
+        "hu": "Oldalról megvilágított portré illusztrációja"
+      }
+    }
+  ],
+  "film": {
+    "video": {
+      "url": "",
+      "poster": ""
+    }
+  }
+}

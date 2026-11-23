@@ -32,7 +32,7 @@ function discover(dir) {
   } }
   walk(dir)
   const seen = {}
-  return out.sort().filter(p => { const k = p.split('/')[1]; seen[k] = (seen[k] || 0) + 1; return seen[k] <= 3 })
+  return out.sort().filter(p => { const seg = p.split('/'); const k = /^(fr|hu|en)$/.test(seg[1]) ? seg[1] + '/' + seg[2] : seg[1]; seen[k] = (seen[k] || 0) + 1; return seen[k] <= 3 })
 }
 const MAIN = [
   '/alexstudio/index.html',

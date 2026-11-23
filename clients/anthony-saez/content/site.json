@@ -1,0 +1,15 @@
+{
+  "_aide": "Réglages généraux du site. Voir le README pour le mode d'emploi.",
+  "name": "Anthony Saez",
+  "baseUrl": "https://anthonysaez.com",
+  "email": "",
+  "phone": "",
+  "instagram": "",
+  "formEndpoint": "",
+  "heroVideo": "",
+  "analytics": {
+    "googleAnalyticsId": "",
+    "googleSearchConsoleToken": ""
+  },
+  "temporaryImages": true
+}

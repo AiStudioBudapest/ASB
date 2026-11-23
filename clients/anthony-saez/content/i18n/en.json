@@ -1,0 +1,350 @@
+{
+  "meta": {
+    "siteTitle": "Anthony Saez — Photographer, Filmmaker & Property Stylist in Budapest",
+    "siteDescription": "Independent photographer, filmmaker and property stylist based in Budapest, working across Hungary and Europe. Real estate and interior photography, home staging, portraits, corporate and hospitality imagery.",
+    "pages": {
+      "portfolio": {
+        "title": "Portfolio — Property Transformations & Portraits",
+        "description": "Selected work by Anthony Saez: property transformations, interior photography, portraits and model photography, plus the commercial services in development."
+      },
+      "services": {
+        "title": "Services — Real Estate Photography, Home Staging, Portraits, Corporate & Hospitality",
+        "description": "Real estate and interior photography, property styling and home staging, portraits, corporate and hospitality photography and film in Budapest and across Europe."
+      },
+      "about": {
+        "title": "About Anthony Saez — 30 Years of Photography & Film",
+        "description": "An independent photographer and filmmaker in Budapest with around 30 years of experience, and first-hand experience renovating, styling and presenting properties."
+      },
+      "contact": {
+        "title": "Contact — Photographer in Budapest",
+        "description": "Tell Anthony Saez about your project: property, portrait, business or hospitality photography and film in Budapest and across Europe."
+      }
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "portfolio": "Portfolio",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close",
+    "skip": "Skip to content",
+    "language": "Language",
+    "primary": "Main navigation"
+  },
+  "brand": {
+    "tagline": "Photography · Film · Property Styling",
+    "location": "Budapest · Hungary · Europe"
+  },
+  "hero": {
+    "headline": "A Different Perspective.",
+    "sub": "Creating images. Transforming spaces. Telling stories.",
+    "cta": "View the work",
+    "cta2": "Start a project",
+    "scroll": "Scroll"
+  },
+  "intro": {
+    "eyebrow": "Introduction",
+    "title": "Image-making, with a feel for the spaces behind it.",
+    "p1": "I am an independent photographer and filmmaker based in Budapest, with around thirty years of experience behind the camera. I know how to light a room, frame a face and cut a film that holds together.",
+    "p2": "I also know what happens before the photograph: buying, renovating, furnishing and presenting a property. That is why I can help you prepare a space, not only record it.",
+    "years": "years of photography and video",
+    "approx": "approx."
+  },
+  "areas": {
+    "eyebrow": "Four areas of work",
+    "title": "What I do",
+    "explore": "Discover",
+    "items": [
+      {
+        "slug": "real-estate",
+        "title": "Real Estate & Interior Transformation",
+        "short": "Photography, film and styling that show a property at its best, before it goes on the market."
+      },
+      {
+        "slug": "portraits",
+        "title": "Portraits & People",
+        "short": "Editorial, personal and professional portraits, photographed and filmed with care."
+      },
+      {
+        "slug": "business",
+        "title": "Business & Corporate",
+        "short": "Portraits, teams, products and company films with a clear, polished look."
+      },
+      {
+        "slug": "hospitality",
+        "title": "Hospitality & Gastronomy",
+        "short": "Atmosphere, food and place for restaurants, bars, cafés and hotels."
+      }
+    ]
+  },
+  "selected": {
+    "eyebrow": "Portfolio",
+    "title": "Selected work",
+    "all": "See the full portfolio"
+  },
+  "approach": {
+    "eyebrow": "Approach",
+    "title": "Before the camera comes out, the space is already working.",
+    "items": [
+      {
+        "t": "Look",
+        "d": "I start by understanding the place or the person: light, proportions, character, what deserves to be seen."
+      },
+      {
+        "t": "Prepare",
+        "d": "Small decisions change a picture: furniture, objects, colour, order. I can advise on all of them, or do the work myself."
+      },
+      {
+        "t": "Capture",
+        "d": "Photography and film, carefully composed and lit, with the calm of someone who has done it for decades."
+      },
+      {
+        "t": "Deliver",
+        "d": "Edited, consistent images and films, ready for print, listings, websites and social media."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Let’s create something exceptional.",
+    "text": "Tell me about your property, your portrait or your business. I reply personally.",
+    "button": "Get in touch"
+  },
+  "footer": {
+    "blurb": "Independent photographer, filmmaker and property stylist in Budapest. Available throughout Hungary and Europe.",
+    "navTitle": "Explore",
+    "contactTitle": "Contact",
+    "rights": "All rights reserved.",
+    "up": "Back to top",
+    "temporary": "The images on this site are temporary illustrations, to be replaced by original photographs."
+  },
+  "portfolio": {
+    "eyebrow": "Portfolio",
+    "title": "Work, in progress and in full.",
+    "intro": "A portfolio built on real projects, added progressively. Below, genuine work is clearly separated from the commercial services I am developing.",
+    "existingTitle": "Existing work",
+    "existingNote": "Projects I have actually carried out.",
+    "cat": {
+      "real-estate": "Real Estate & Interior Transformation",
+      "portraits": "Portraits & Models"
+    },
+    "developTitle": "Services to develop",
+    "developNote": "Areas I am qualified to work in and want to grow. These are services, not completed projects: the images shown are illustrative.",
+    "illustrative": "Illustrative image",
+    "placeholder": "Sample layout — replace with real work",
+    "view": "View project",
+    "viewService": "View the service",
+    "noProjects": "Projects will appear here as soon as they are added.",
+    "emptyCat": "New projects coming soon."
+  },
+  "project": {
+    "back": "Back to portfolio",
+    "location": "Location",
+    "year": "Year",
+    "scope": "Scope",
+    "before": "Before",
+    "transformation": "Transformation",
+    "after": "After",
+    "film": "Photography & Film",
+    "beforeAfter": "Before and after",
+    "drag": "Drag to compare",
+    "beforeLabel": "Before",
+    "afterLabel": "After",
+    "gallery": "Gallery",
+    "video": "Film",
+    "openImage": "Open image in full screen",
+    "next": "Next project",
+    "enquire": "Planning something similar?",
+    "enquireBtn": "Discuss your project",
+    "placeholderNote": "This project is a temporary sample showing the layout. Its images are illustrations, not real work."
+  },
+  "lightbox": {
+    "close": "Close",
+    "prev": "Previous image",
+    "next": "Next image",
+    "counter": "Image {n} of {total}"
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Four areas, one eye for detail.",
+    "intro": "Every project is quoted individually, according to your needs, location and timing. No packages, no surprises.",
+    "benefits": "Benefits",
+    "deliverables": "Possible deliverables",
+    "cta": "Discuss this service",
+    "noPrice": "Tailored quotation on request",
+    "inDevelopment": "Service in development",
+    "illustrativeNote": "Illustrative imagery. Not commissioned work.",
+    "allServices": "All services",
+    "items": [
+      {
+        "slug": "real-estate",
+        "title": "Real Estate & Interior Transformation",
+        "kicker": "A key area of work",
+        "lead": "I have bought, renovated, furnished, decorated and resold properties myself. I know what makes a space sell, rent or simply feel right, and I bring that eye to the photograph.",
+        "desc": "From a light touch before a viewing to a full aesthetic transformation, I prepare the property first and photograph it afterwards. The result is images and films that do justice to the space.",
+        "benefits": [
+          "A property prepared and presented to its full potential",
+          "Photography by someone who understands interiors",
+          "One contact for styling, photography and film",
+          "Practical advice on what is worth changing, and what is not"
+        ],
+        "deliverables": [
+          "Real estate photography",
+          "Interior and architectural photography",
+          "Property presentation videos",
+          "Interior styling and home staging",
+          "Decoration and aesthetic consulting",
+          "Property preparation before sale or rental",
+          "Visual property enhancement"
+        ]
+      },
+      {
+        "slug": "portraits",
+        "title": "Portraits & People",
+        "kicker": "Photography and film",
+        "lead": "Portraits that look like the person, in a light and setting that suit them. Calm sessions, clear direction, careful editing.",
+        "desc": "For individuals, professionals, artists and models. Each session is designed around you: location, mood, wardrobe, and the use you have in mind.",
+        "benefits": [
+          "A relaxed session led by an experienced photographer",
+          "Natural direction, no stiff poses",
+          "Elegant, consistent editing",
+          "Photo and video combined in a single session if you wish"
+        ],
+        "deliverables": [
+          "Individual portraits",
+          "Professional portraits",
+          "Artistic portraits",
+          "Lifestyle photography",
+          "Model photography",
+          "Personal presentation photography",
+          "Customised photo and video sessions"
+        ]
+      },
+      {
+        "slug": "business",
+        "title": "Business & Corporate",
+        "kicker": "Service in development",
+        "lead": "Clear, well-crafted visual content for companies that want to present themselves with confidence.",
+        "desc": "I am developing this area and welcome first collaborations. I do not claim a corporate portfolio I do not yet have: you will get a direct, attentive professional and work you can judge from my existing portraits and interiors.",
+        "benefits": [
+          "A single, direct point of contact",
+          "A visual style adapted to your brand",
+          "A small team assembled when the project requires it",
+          "Content ready for web, print and social media"
+        ],
+        "deliverables": [
+          "Corporate photography",
+          "Professional portraits",
+          "Business and team photography",
+          "Company presentation videos",
+          "Commercial photography",
+          "Promotional videos",
+          "Product and service presentation",
+          "Corporate visual content"
+        ]
+      },
+      {
+        "slug": "hospitality",
+        "title": "Hospitality & Gastronomy",
+        "kicker": "Service in development",
+        "lead": "Images that carry the atmosphere of a place: the light, the materials, the table and the people.",
+        "desc": "Another area I am building. My experience with interiors and light translates naturally to restaurants, bars, cafés and hotels. Projects are discussed individually.",
+        "benefits": [
+          "An eye for atmosphere and interiors",
+          "Photography and film from one person",
+          "Content for menus, websites, press and social media",
+          "Flexible, on-site shoots that respect your service"
+        ],
+        "deliverables": [
+          "Restaurant photography",
+          "Bar and café photography",
+          "Hotel photography",
+          "Interior and atmosphere photography",
+          "Food and beverage photography",
+          "Promotional videos",
+          "Hospitality and tourism visual content"
+        ]
+      }
+    ]
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "Direct, experienced, understated.",
+    "lead": "I have been making photographs and films for around thirty years. Today I work independently from Budapest, for property owners, individuals and businesses.",
+    "p1": "Over three decades I have learned the craft from the ground up: operating a camera, lighting a scene, composing an image, telling a story with pictures, and finishing it in editing and post-production.",
+    "p2": "Alongside photography and film, I have worked hands-on with real estate: buying, renovating, furnishing, decorating and reselling properties. That experience changed how I photograph interiors. I see a room as both a place to live and a space to present.",
+    "p3": "You deal with me directly, from the first conversation to delivery. When a project needs more hands, I bring in trusted assistants and collaborators.",
+    "factsTitle": "In brief",
+    "facts": [
+      {
+        "k": "Experience",
+        "v": "Around 30 years in photography and video"
+      },
+      {
+        "k": "Based in",
+        "v": "Budapest, Hungary"
+      },
+      {
+        "k": "Available",
+        "v": "Hungary and Europe, depending on the project"
+      },
+      {
+        "k": "Expertise",
+        "v": "Photography, film, lighting, editing, interior styling"
+      },
+      {
+        "k": "Way of working",
+        "v": "Independent, with a team when required"
+      }
+    ],
+    "skillsTitle": "Craft",
+    "skills": [
+      "Professional photography",
+      "Video production and filmmaking",
+      "Camera operation and lighting",
+      "Composition and visual storytelling",
+      "Editing and post-production",
+      "Interior and property photography",
+      "Interior styling and home staging",
+      "Renovation and aesthetic transformation"
+    ],
+    "portraitAlt": "Placeholder for a portrait of Anthony Saez",
+    "portraitNote": "Placeholder — personal portrait to come",
+    "cta": "Let’s talk about your project"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Let’s create something exceptional.",
+    "intro": "Describe your project in a few lines. I will get back to you personally, usually within one or two working days.",
+    "name": "Name",
+    "email": "Email",
+    "category": "Project category",
+    "choose": "Choose a category",
+    "categories": [
+      "Real Estate & Interior Transformation",
+      "Portraits & People",
+      "Business & Corporate",
+      "Hospitality & Gastronomy",
+      "Other / not sure yet"
+    ],
+    "location": "Location of the project",
+    "locationHint": "City or address",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending…",
+    "success": "Thank you. Your message has been sent and I will reply soon.",
+    "error": "Something went wrong. Please try again or write to me directly.",
+    "unconfigured": "Preview mode: the form is working but not yet connected to an email address, so nothing was sent.",
+    "required": "Please fill in this field.",
+    "invalidEmail": "Please enter a valid email address.",
+    "direct": "Prefer to write directly?",
+    "based": "Based in Budapest, working throughout Hungary and Europe.",
+    "privacy": "Your details are used only to reply to your enquiry."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "This page does not exist.",
+    "link": "Back to the homepage"
+  }
+}
