@@ -44,6 +44,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
-          git add render/negroni/out
-          git commit -m "Rendu Negroni : réassemblage du calcul ${{ steps.src.outputs.run }} $(date -u +%Y-%m-%dT%H:%MZ)" || echo "rien à enregistrer"
-          for i in 1 2 3 4; do git pull --rebase -q origin "${GITHUB_REF_NAME}" && git push -q origin "HEAD:${GITHUB_REF_NAME}" && break; sleep $((i*5)); done
+          # on repart de la dernière version de la branche (un autre calcul a pu y enregistrer out/ entre-temps) :
+          # seul render/negroni/out est remplacé par ce réassemblage, le reste de la branche n'est pas touché
+          msg="Rendu Negroni : réassemblage du calcul ${{ steps.src.outputs.run }} $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3 4; do
+            git fetch -q origin "${GITHUB_REF_NAME}" && git reset -q "origin/${GITHUB_REF_NAME}"
+            git add -A render/negroni/out
+            git diff --cached --quiet && { echo "rien à enregistrer"; exit 0; }
+            git commit -q -m "$msg" && git push -q origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((i*5))
+          done
+          echo "échec de l'enregistrement sur la branche"; exit 1
