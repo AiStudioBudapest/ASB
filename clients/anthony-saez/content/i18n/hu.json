@@ -1,0 +1,350 @@
+{
+  "meta": {
+    "siteTitle": "Anthony Saez — fotós, filmes és property stylist Budapesten",
+    "siteDescription": "Független fotós, filmes és property stylist Budapesten, Magyarországon és Európában. Ingatlan- és belsőépítészeti fotózás, home staging, portrék, vállalati és vendéglátóipari képek.",
+    "pages": {
+      "portfolio": {
+        "title": "Portfólió — ingatlanátalakítások és portrék",
+        "description": "Válogatás Anthony Saez munkáiból: ingatlanátalakítások, enteriőrfotók, portrék és modellfotók, valamint a fejlesztés alatt álló üzleti szolgáltatások."
+      },
+      "services": {
+        "title": "Szolgáltatások — ingatlanfotó, home staging, portré, vállalati és vendéglátós fotózás",
+        "description": "Ingatlan- és enteriőrfotózás, property styling és home staging, portrék, vállalati és vendéglátóipari fotó és film Budapesten és Európában."
+      },
+      "about": {
+        "title": "Anthony Saez — 30 év fotó és film",
+        "description": "Független fotós és filmes Budapesten, mintegy 30 év tapasztalattal, valamint saját ingatlanfelújítási, stylingolási és értékesítési gyakorlattal."
+      },
+      "contact": {
+        "title": "Kapcsolat — fotós Budapesten",
+        "description": "Meséljen Anthony Saeznek a projektjéről: ingatlan-, portré-, vállalati vagy vendéglátós fotó és film Budapesten és Európában."
+      }
+    }
+  },
+  "nav": {
+    "home": "Főoldal",
+    "portfolio": "Portfólió",
+    "services": "Szolgáltatások",
+    "about": "Rólam",
+    "contact": "Kapcsolat",
+    "menu": "Menü",
+    "close": "Bezárás",
+    "skip": "Ugrás a tartalomra",
+    "language": "Nyelv",
+    "primary": "Főmenü"
+  },
+  "brand": {
+    "tagline": "Fotó · Film · Property Styling",
+    "location": "Budapest · Magyarország · Európa"
+  },
+  "hero": {
+    "headline": "Más szemszög.",
+    "sub": "Képeket alkotok. Tereket alakítok át. Történeteket mesélek.",
+    "cta": "Munkáim megtekintése",
+    "cta2": "Projekt indítása",
+    "scroll": "Görgessen"
+  },
+  "intro": {
+    "eyebrow": "Bemutatkozás",
+    "title": "Képalkotás, a bemutatott terek ismeretével.",
+    "p1": "Független fotós és filmes vagyok Budapesten, mintegy harminc év kameramögötti tapasztalattal. Tudom, hogyan kell egy szobát megvilágítani, egy arcot kadrírozni, és egy filmet úgy megvágni, hogy egységes legyen.",
+    "p2": "Azt is ismerem, ami a fényképezés előtt történik: ingatlanok vásárlását, felújítását, berendezését és bemutatását. Ezért nemcsak lefényképezni tudok egy teret, hanem elő is tudom készíteni.",
+    "years": "év fotó- és videós tapasztalat",
+    "approx": "kb."
+  },
+  "areas": {
+    "eyebrow": "Négy szakterület",
+    "title": "Amit csinálok",
+    "explore": "Megismerem",
+    "items": [
+      {
+        "slug": "real-estate",
+        "title": "Ingatlan és belső terek átalakítása",
+        "short": "Fotó, film és styling, amellyel az ingatlan a piacra lépés előtt a legjobb arcát mutatja."
+      },
+      {
+        "slug": "portraits",
+        "title": "Portrék és emberek",
+        "short": "Szerkesztői, személyes és üzleti portrék, gondosan fényképezve és filmezve."
+      },
+      {
+        "slug": "business",
+        "title": "Vállalkozások és cégek",
+        "short": "Portrék, csapatképek, termékfotók és cégfilmek letisztult, igényes megjelenéssel."
+      },
+      {
+        "slug": "hospitality",
+        "title": "Vendéglátás és gasztronómia",
+        "short": "Hangulat, ételek és helyszín éttermeknek, bároknak, kávézóknak és szállodáknak."
+      }
+    ]
+  },
+  "selected": {
+    "eyebrow": "Portfólió",
+    "title": "Válogatott munkák",
+    "all": "A teljes portfólió"
+  },
+  "approach": {
+    "eyebrow": "Szemlélet",
+    "title": "Mielőtt előveszem a gépet, a tér már dolgozik.",
+    "items": [
+      {
+        "t": "Megfigyelés",
+        "d": "Először megértem a helyet vagy az embert: a fényt, az arányokat, a karaktert és azt, ami megérdemli, hogy látsszon."
+      },
+      {
+        "t": "Előkészítés",
+        "d": "Apró döntések is megváltoztatják a képet: bútorok, tárgyak, színek, rend. Tanácsot adok mindebben, vagy el is végzem."
+      },
+      {
+        "t": "Rögzítés",
+        "d": "Gondosan komponált és megvilágított fotó és film, évtizedes rutin nyugalmával."
+      },
+      {
+        "t": "Átadás",
+        "d": "Egységesen szerkesztett képek és filmek, készen nyomtatásra, hirdetésekhez, weboldalakra és közösségi médiára."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Alkossunk valami kivételeset.",
+    "text": "Meséljen az ingatlanáról, a portréjáról vagy a vállalkozásáról. Személyesen válaszolok.",
+    "button": "Kapcsolatfelvétel"
+  },
+  "footer": {
+    "blurb": "Független fotós, filmes és property stylist Budapesten. Egész Magyarországon és Európában elérhető.",
+    "navTitle": "Felfedezés",
+    "contactTitle": "Kapcsolat",
+    "rights": "Minden jog fenntartva.",
+    "up": "Az oldal tetejére",
+    "temporary": "A webhely képei ideiglenes illusztrációk, amelyeket eredeti fényképek váltanak majd fel."
+  },
+  "portfolio": {
+    "eyebrow": "Portfólió",
+    "title": "Valódi munkák, folyamatosan bővülve.",
+    "intro": "Valódi projektekre épülő portfólió, fokozatosan bővítve. Lent a meglévő munkák élesen elkülönülnek a fejlesztés alatt álló üzleti szolgáltatásoktól.",
+    "existingTitle": "Meglévő munkák",
+    "existingNote": "Olyan projektek, amelyeket valóban elvégeztem.",
+    "cat": {
+      "real-estate": "Ingatlan és belső terek átalakítása",
+      "portraits": "Portrék és modellek"
+    },
+    "developTitle": "Fejlesztés alatt álló szolgáltatások",
+    "developNote": "Olyan területek, amelyekhez értek, és amelyeket bővíteni szeretnék. Ezek szolgáltatások, nem elkészült projektek: a látható képek illusztrációk.",
+    "illustrative": "Illusztráció",
+    "placeholder": "Minta elrendezés — cserélje valódi munkára",
+    "view": "Projekt megtekintése",
+    "viewService": "A szolgáltatás megtekintése",
+    "noProjects": "A projektek itt jelennek meg, amint hozzáadják őket.",
+    "emptyCat": "Hamarosan új projektek érkeznek."
+  },
+  "project": {
+    "back": "Vissza a portfólióhoz",
+    "location": "Helyszín",
+    "year": "Év",
+    "scope": "Feladatok",
+    "before": "Előtte",
+    "transformation": "Átalakítás",
+    "after": "Utána",
+    "film": "Fotó és film",
+    "beforeAfter": "Előtte és utána",
+    "drag": "Húzza az összehasonlításhoz",
+    "beforeLabel": "Előtte",
+    "afterLabel": "Utána",
+    "gallery": "Galéria",
+    "video": "Film",
+    "openImage": "Kép megnyitása teljes képernyőn",
+    "next": "Következő projekt",
+    "enquire": "Hasonló projektre gondol?",
+    "enquireBtn": "Beszéljük meg a projektjét",
+    "placeholderNote": "Ez a projekt ideiglenes minta, az elrendezést mutatja. A képek illusztrációk, nem valódi munkák."
+  },
+  "lightbox": {
+    "close": "Bezárás",
+    "prev": "Előző kép",
+    "next": "Következő kép",
+    "counter": "{n}. kép, összesen {total}"
+  },
+  "services": {
+    "eyebrow": "Szolgáltatások",
+    "title": "Négy terület, egyforma figyelem a részletekre.",
+    "intro": "Minden projektre egyedi árajánlatot adok, az igények, a helyszín és az időzítés alapján. Nincsenek csomagok, nincsenek meglepetések.",
+    "benefits": "Előnyök",
+    "deliverables": "Lehetséges szállítandók",
+    "cta": "Beszéljünk erről a szolgáltatásról",
+    "noPrice": "Egyedi árajánlat kérésre",
+    "inDevelopment": "Fejlesztés alatt álló szolgáltatás",
+    "illustrativeNote": "Illusztrációk. Nem megrendelésre készült munkák.",
+    "allServices": "Minden szolgáltatás",
+    "items": [
+      {
+        "slug": "real-estate",
+        "title": "Ingatlan és belső terek átalakítása",
+        "kicker": "Kiemelt terület",
+        "lead": "Magam is vásároltam, felújítottam, berendeztem, díszítettem és eladtam ingatlanokat. Tudom, mitől kel el, kerül bérbe vagy egyszerűen mitől hat jól egy tér, és ezt a szemléletet viszem a fényképezésbe is.",
+        "desc": "A megtekintés előtti apró igazítástól a teljes esztétikai átalakításig: először előkészítem az ingatlant, utána fényképezem. Az eredmény olyan kép és film, amely méltó a térhez.",
+        "benefits": [
+          "Az ingatlan a benne rejlő lehetőségekhez mérten előkészítve és bemutatva",
+          "Fotó olyasvalakitől, aki érti a belső tereket",
+          "Egy kapcsolattartó a stylinghoz, fotóhoz és filmhez",
+          "Gyakorlati tanácsok arról, mit érdemes megváltoztatni, és mit nem"
+        ],
+        "deliverables": [
+          "Ingatlanfotózás",
+          "Enteriőr- és építészeti fotózás",
+          "Ingatlanbemutató videók",
+          "Belsőépítészeti styling és home staging",
+          "Dekoráció és esztétikai tanácsadás",
+          "Ingatlan előkészítése eladás vagy bérbeadás előtt",
+          "Az ingatlan vizuális felértékelése"
+        ]
+      },
+      {
+        "slug": "portraits",
+        "title": "Portrék és emberek",
+        "kicker": "Fotó és film",
+        "lead": "Olyan portrék, amelyek hűen mutatják az embert, hozzá illő fényben és környezetben. Nyugodt fotózás, világos irányítás, gondos utómunka.",
+        "desc": "Magánszemélyeknek, szakembereknek, művészeknek és modelleknek. Minden fotózás köréd épül: helyszín, hangulat, ruházat és a tervezett felhasználás szerint.",
+        "benefits": [
+          "Oldott fotózás tapasztalt fotóssal",
+          "Természetes irányítás, merev pózok nélkül",
+          "Elegáns, egységes utómunka",
+          "Kívánság szerint fotó és videó egyetlen alkalommal"
+        ],
+        "deliverables": [
+          "Egyéni portrék",
+          "Üzleti portrék",
+          "Művészi portrék",
+          "Lifestyle fotózás",
+          "Modellfotózás",
+          "Személyes bemutatkozó fotók",
+          "Egyedi fotó- és videófelvételek"
+        ]
+      },
+      {
+        "slug": "business",
+        "title": "Vállalkozások és cégek",
+        "kicker": "Fejlesztés alatt álló szolgáltatás",
+        "lead": "Világos, igényesen elkészített vizuális tartalom azoknak a cégeknek, amelyek magabiztosan akarják bemutatni magukat.",
+        "desc": "Ezt a területet most építem, és szívesen fogadom az első együttműködéseket. Nem állítok olyan céges portfóliót, amellyel még nem rendelkezem: közvetlen, figyelmes szakembert kap, akinek a munkáját a meglévő portréim és enteriőrfotóim alapján ítélheti meg.",
+        "benefits": [
+          "Egyetlen, közvetlen kapcsolattartó",
+          "A márkához igazított vizuális stílus",
+          "Ha a projekt megkívánja, kis csapatot állítok össze",
+          "Weben, nyomtatásban és közösségi médiában azonnal használható tartalom"
+        ],
+        "deliverables": [
+          "Vállalati fotózás",
+          "Üzleti portrék",
+          "Üzleti és csapatfotók",
+          "Cégbemutató videók",
+          "Kereskedelmi fotózás",
+          "Promóciós videók",
+          "Termékek és szolgáltatások bemutatása",
+          "Vállalati vizuális tartalmak"
+        ]
+      },
+      {
+        "slug": "hospitality",
+        "title": "Vendéglátás és gasztronómia",
+        "kicker": "Fejlesztés alatt álló szolgáltatás",
+        "lead": "Képek, amelyek egy hely hangulatát közvetítik: a fényt, az anyagokat, az asztalt és az embereket.",
+        "desc": "Egy másik terület, amelyet most építek. A belső terekkel és a fénnyel szerzett tapasztalatom természetesen átültethető éttermekre, bárokra, kávézókra és szállodákra. A projekteket egyenként beszéljük meg.",
+        "benefits": [
+          "Szem a hangulatra és a belső terekre",
+          "Fotó és film egy kézből",
+          "Tartalom étlapokhoz, weboldalakhoz, sajtóhoz és közösségi médiához",
+          "Rugalmas, helyszíni forgatás, amely tiszteletben tartja a szolgálást"
+        ],
+        "deliverables": [
+          "Éttermi fotózás",
+          "Bár- és kávézófotózás",
+          "Szállodafotózás",
+          "Enteriőr- és hangulatfotózás",
+          "Étel- és italfotózás",
+          "Promóciós videók",
+          "Vendéglátós és turisztikai vizuális tartalom"
+        ]
+      }
+    ]
+  },
+  "about": {
+    "eyebrow": "Rólam",
+    "title": "Közvetlen, tapasztalt, visszafogott.",
+    "lead": "Nagyjából harminc éve készítek fényképeket és filmeket. Ma függetlenként dolgozom Budapestről, ingatlantulajdonosoknak, magánszemélyeknek és vállalkozásoknak.",
+    "p1": "Három évtized alatt a szakmát tövéről hegyére megtanultam: a kamerakezelést, a megvilágítást, a kompozíciót, a képekkel való történetmesélést, majd a vágást és az utómunkát.",
+    "p2": "A fotó és a film mellett kézzel fogható ingatlanos tapasztalatom is van: ingatlanokat vásároltam, újítottam fel, rendeztem be, díszítettem és adtam el. Ez megváltoztatta, hogyan fényképezem a belső tereket. Egy szobát egyszerre látok lakóhelyként és bemutatandó térként.",
+    "p3": "A kezdeti beszélgetéstől az átadásig velem tárgyal közvetlenül. Ha egy projekt több kezet kíván, megbízható asszisztenseket és munkatársakat vonok be.",
+    "factsTitle": "Röviden",
+    "facts": [
+      {
+        "k": "Tapasztalat",
+        "v": "Mintegy 30 év fotó és videó"
+      },
+      {
+        "k": "Székhely",
+        "v": "Budapest, Magyarország"
+      },
+      {
+        "k": "Elérhetőség",
+        "v": "Magyarország és Európa, a projekttől függően"
+      },
+      {
+        "k": "Szakértelem",
+        "v": "Fotó, film, fényelés, vágás, belsőépítészeti styling"
+      },
+      {
+        "k": "Munkamódszer",
+        "v": "Függetlenül, szükség esetén csapattal"
+      }
+    ],
+    "skillsTitle": "Szakmai tudás",
+    "skills": [
+      "Professzionális fotózás",
+      "Videóprodukció és filmkészítés",
+      "Kamerakezelés és fényelés",
+      "Kompozíció és vizuális történetmesélés",
+      "Vágás és utómunka",
+      "Enteriőr- és ingatlanfotózás",
+      "Belsőépítészeti styling és home staging",
+      "Felújítás és esztétikai átalakítás"
+    ],
+    "portraitAlt": "Anthony Saez portréjának helye",
+    "portraitNote": "Helyőrző — személyes portré hamarosan",
+    "cta": "Beszéljünk a projektjéről"
+  },
+  "contact": {
+    "eyebrow": "Kapcsolat",
+    "title": "Alkossunk valami kivételeset.",
+    "intro": "Írja le pár sorban a projektjét. Személyesen válaszolok, általában egy-két munkanapon belül.",
+    "name": "Név",
+    "email": "E-mail",
+    "category": "Projekt kategóriája",
+    "choose": "Válasszon kategóriát",
+    "categories": [
+      "Ingatlan és belső terek átalakítása",
+      "Portrék és emberek",
+      "Vállalkozások és cégek",
+      "Vendéglátás és gasztronómia",
+      "Egyéb / még nem tudom"
+    ],
+    "location": "A projekt helyszíne",
+    "locationHint": "Város vagy cím",
+    "message": "Üzenet",
+    "send": "Üzenet küldése",
+    "sending": "Küldés…",
+    "success": "Köszönöm. Az üzenetét megkaptam, hamarosan válaszolok.",
+    "error": "Hiba történt. Kérem, próbálja újra, vagy írjon közvetlenül.",
+    "unconfigured": "Előnézeti mód: az űrlap működik, de még nincs e-mail-címhez kötve, ezért semmi sem lett elküldve.",
+    "required": "Kérem, töltse ki ezt a mezőt.",
+    "invalidEmail": "Kérem, adjon meg érvényes e-mail-címet.",
+    "direct": "Inkább közvetlenül írna?",
+    "based": "Budapesten élek, egész Magyarországon és Európában dolgozom.",
+    "privacy": "Az adatait kizárólag az érdeklődésére adott válaszhoz használom."
+  },
+  "notFound": {
+    "title": "Az oldal nem található",
+    "text": "Ez az oldal nem létezik.",
+    "link": "Vissza a főoldalra"
+  }
+}

@@ -23,3 +23,7 @@ jobs:
       - run: npm run check:mobile
       - name: Site client pr09re55
         run: node clients/pr09re55/build.mjs && node scripts/check-mobile.mjs --dir clients/pr09re55/dist
+      - name: Site client Anthony Saez
+        run: |
+          cd clients/anthony-saez && npm ci && npm run build && cd ../..
+          node scripts/check-mobile.mjs --dir clients/anthony-saez/out

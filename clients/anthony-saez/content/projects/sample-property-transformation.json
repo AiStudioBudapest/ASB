@@ -1,0 +1,38 @@
+{
+  "_aide": "EXEMPLE PROVISOIRE (placeholder: true). À remplacer par un vrai projet : voir README, section « Ajouter un projet ». Mettre placeholder à false (ou supprimer la ligne) pour un vrai projet.",
+  "placeholder": true,
+  "slug": "sample-property-transformation",
+  "category": "real-estate",
+  "featured": true,
+  "year": "2026",
+  "order": 1,
+  "location": { "en": "Budapest", "fr": "Budapest", "hu": "Budapest" },
+  "title": { "en": "Apartment Transformation (sample)", "fr": "Transformation d’un appartement (exemple)", "hu": "Lakásátalakítás (minta)" },
+  "summary": { "en": "A sample project showing how a transformation is presented: before, transformation, after, photography and film.", "fr": "Un projet d’exemple qui montre comment une transformation est présentée : avant, transformation, après, photographie et film.", "hu": "Mintaprojekt, amely megmutatja, hogyan jelenik meg egy átalakítás: előtte, átalakítás, utána, fotó és film." },
+  "scope": { "en": ["Renovation", "Styling", "Photography", "Film"], "fr": ["Rénovation", "Stylisme", "Photographie", "Film"], "hu": ["Felújítás", "Styling", "Fotó", "Film"] },
+  "cover": "/images/projects/sample-after.jpg",
+  "coverAlt": { "en": "Illustration of a styled living room with a sofa, lamp and tall window", "fr": "Illustration d’un salon stylisé avec canapé, lampe et grande fenêtre", "hu": "Berendezett nappali illusztrációja kanapéval, lámpával és magas ablakkal" },
+  "before": {
+    "text": { "en": "Describe the original condition of the property here: layout, light, problems, potential.", "fr": "Décrivez ici l’état d’origine du bien : disposition, lumière, défauts, potentiel.", "hu": "Itt írja le az ingatlan eredeti állapotát: elrendezés, fény, problémák, lehetőségek." },
+    "images": [ { "src": "/images/projects/sample-before.jpg", "alt": { "en": "Illustration of an empty, unfinished room", "fr": "Illustration d’une pièce vide et inachevée", "hu": "Üres, befejezetlen helyiség illusztrációja" } }, { "src": "/images/projects/sample-before-2.jpg", "alt": { "en": "Illustration of the same room from another angle", "fr": "Illustration de la même pièce sous un autre angle", "hu": "Ugyanaz a helyiség másik szögből, illusztráció" } } ]
+  },
+  "transformation": {
+    "text": { "en": "Explain the work done: renovation, furnishing, styling, decoration. Add as many steps as you like.", "fr": "Expliquez le travail réalisé : rénovation, ameublement, stylisme, décoration. Ajoutez autant d’étapes que souhaité.", "hu": "Írja le az elvégzett munkát: felújítás, berendezés, styling, dekoráció. Annyi lépést adhat hozzá, amennyit szeretne." },
+    "steps": [
+      { "title": { "en": "Renovation", "fr": "Rénovation", "hu": "Felújítás" }, "text": { "en": "Walls, floors and lighting brought back to a clean base.", "fr": "Murs, sols et éclairage remis sur une base saine.", "hu": "Falak, padló és világítás rendbetéve." } },
+      { "title": { "en": "Furnishing", "fr": "Ameublement", "hu": "Berendezés" }, "text": { "en": "Furniture chosen for proportion and calm.", "fr": "Un mobilier choisi pour ses proportions et sa sobriété.", "hu": "Az arányok és a nyugalom szerint választott bútorok." } },
+      { "title": { "en": "Styling", "fr": "Stylisme", "hu": "Styling" }, "text": { "en": "Objects, art and plants arranged for the camera and for living.", "fr": "Objets, œuvres et plantes disposés pour l’objectif comme pour la vie.", "hu": "Tárgyak, művészeti alkotások és növények a kamerának és az életnek rendezve." } }
+    ],
+    "images": [ { "src": "/images/projects/sample-detail-2.jpg", "alt": { "en": "Illustration of a detail of the styled room", "fr": "Illustration d’un détail de la pièce stylisée", "hu": "A berendezett helyiség részletének illusztrációja" } } ]
+  },
+  "after": {
+    "text": { "en": "Present the final result here, in a few lines.", "fr": "Présentez ici le résultat final, en quelques lignes.", "hu": "Itt mutassa be a végeredményt néhány sorban." },
+    "images": [ { "src": "/images/projects/sample-after.jpg", "alt": { "en": "Illustration of the finished living room", "fr": "Illustration du salon terminé", "hu": "A kész nappali illusztrációja" } } ]
+  },
+  "beforeAfter": { "before": "/images/projects/sample-before.jpg", "after": "/images/projects/sample-after.jpg", "alt": { "en": "Before and after comparison of the room", "fr": "Comparaison avant et après de la pièce", "hu": "A helyiség előtte-utána összehasonlítása" } },
+  "film": {
+    "text": { "en": "Final photographs and film of the property.", "fr": "Photographies finales et film du bien.", "hu": "Az ingatlan végleges fotói és filmje." },
+    "video": { "url": "", "poster": "/images/projects/sample-detail-1.jpg" },
+    "images": [ { "src": "/images/projects/sample-detail-1.jpg", "alt": { "en": "Illustration of the living room, wide view", "fr": "Illustration du salon, vue large", "hu": "A nappali illusztrációja, nagy látószögű nézet" } }, { "src": "/images/projects/sample-detail-2.jpg", "alt": { "en": "Illustration of the living room, detail", "fr": "Illustration du salon, détail", "hu": "A nappali illusztrációja, részlet" } } ]
+  }
+}
