@@ -169,8 +169,8 @@ html{scrollbar-gutter:stable}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .xv-open{position:absolute;inset:0;z-index:3;width:100%;border:0;padding:0;margin:0;background:none;border-radius:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .xv-open:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}
-.xvh{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#ffe9a3}
-.xvh i{width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.xvh{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:6px 12px 6px 10px;border:1px solid rgba(255,233,163,.45);border-radius:999px;background:rgba(255,233,163,.08);font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#ffe9a3;white-space:nowrap;max-width:100%}
+.xvh svg{flex:none}
 
 .xv{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;overflow:hidden;overscroll-behavior:contain;touch-action:none;color:var(--txt)}
 .xv[hidden]{display:none}

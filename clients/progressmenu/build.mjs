@@ -122,8 +122,8 @@ function card(it, g, sec) {
   if (xv) for (const l of layers) if (typeof l.n === 'string' && !norm(tx(it.desc || '', 'en')).includes(norm(l.n))) console.warn(`⚠ vue éclatée : « ${l.n} » absent de la description de ${en}`)
   const sq = xv ? seqData(ent, en) : null
   const xvData = xv ? ` data-xv="${esc(JSON.stringify({ s: ent.scene, l: layers, ...(glb && norm(en) === glb.norm ? { g: glb.data } : {}), ...(sq ? { q: sq } : {}) }))}"` : ''
-  const xvBtn = xv ? `<button type="button" class="xv-open" aria-haspopup="dialog"><span class="sr">${L3('Összetevők megnézése', 'See the ingredients', 'Voir les ingrédients')} : ${L(it.name)}</span></button>` : ''
-  const xvHint = xv ? `<p class="xvh" aria-hidden="true"><i></i>${L3('Összetevők', 'Ingredients', 'Ingrédients')}</p>` : ''
+  const xvBtn = xv ? `<button type="button" class="xv-open" aria-haspopup="dialog"><span class="sr">${L3('3D modell megtekintése', 'View the 3D model', 'Voir le modèle 3D')} : ${L(it.name)}</span></button>` : ''
+  const xvHint = xv ? `<p class="xvh" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4z"/><path d="M4 7.4 12 12l8-4.6M12 12v9.2"/></svg><span>${L3('3D nézet', 'View in 3D', 'Voir en 3D')}</span></p>` : ''
   return `<li class="card${img ? '' : ' noimg'}${xv ? ' has-xv' : ''}" style="--a:${g.a}"${xvData}>
   <div class="ph">${ph}</div>
   <div class="tx"><h4>${L(it.name)}</h4>${it.desc ? `<p class="d">${L(it.desc)}</p>` : ''}<p class="pr">${priceCells(it, sec)}</p>${xvHint}</div>${xvBtn}
