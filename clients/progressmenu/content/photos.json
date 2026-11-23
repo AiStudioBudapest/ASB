@@ -9,14 +9,19 @@
     "alkoholmentes:2"
   ],
   "_explode": "Boissons dont la carte ouvre la vue éclatée (nom anglais -> couches de haut en bas). t = dessin de la couche (orange, ice, gin, campari, vermouth, glass). Les noms Bobby’s Dry Gin / Campari / Vermouth viennent de la description du menu (vérifiés au build) ; Orange, Glaçons et Verre ont été ajoutés à la demande du client (ils figurent sur l'illustration).",
+  "_seq": "Vue éclatée « photo » : seq.dir = dossier des images pré-calculées (Blender), écrit par tools/import-seq.py ; sans ces images, la vue 3D actuelle reste. seq.cartoon = bord gauche, bas et bord droit du verre dans l'illustration de la carte (fractions de son cadre 600 × 800) : l'illustration vient se poser exactement sur le verre de la photo avant le fondu.",
   "explode": {
     "Negroni": {
       "scene": "negroni",
+      "seq": {
+        "dir": "assets/seq/negroni",
+        "cartoon": [0.2217, 0.86, 0.7667]
+      },
       "layers": [
         {
           "t": "orange",
           "n": {
-            "hu": "Narancskarika",
+            "hu": "Narancs\u00adkarika",
             "en": "Orange slice",
             "fr": "Rondelle d’orange"
           }

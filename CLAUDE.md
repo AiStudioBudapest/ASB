@@ -114,7 +114,7 @@ Détection dans le `<head>` (`WEBGL_debug_renderer_info` : « Microsoft Basic Re
 
 ## Menu QR progressmenu (second site client)
 
-`clients/progressmenu/` : menu des boissons de pr09re55 consulté en scannant un QR code (domaine prévu progressmenu.com). Générateur statique Node sans dépendance (`node build.mjs`), **projet Vercel séparé** (Root Directory `clients/progressmenu`), `noindex`. Mode d'emploi et dépôt des images de boissons : `clients/progressmenu/README.md`. Style volontairement très différent de pr09re55 (jungle colorée, effets de profondeur) ; mobile d'abord, une seule page. Contrôle : `node clients/progressmenu/build.mjs && node scripts/check-mobile.mjs --dir clients/progressmenu/dist`. Ne rien y inventer (prix, boissons) : tout vient de `content/menu.json`.
+`clients/progressmenu/` : menu des boissons de pr09re55 consulté en scannant un QR code (domaine prévu progressmenu.com). Générateur statique Node sans dépendance (`node build.mjs`), **projet Vercel séparé** (Root Directory `clients/progressmenu`), `noindex`. Mode d'emploi et dépôt des images de boissons : `clients/progressmenu/README.md`. Style volontairement très différent de pr09re55 (jungle colorée, effets de profondeur) ; mobile d'abord, une seule page. Contrôle : `node clients/progressmenu/build.mjs && node scripts/check-mobile.mjs --dir clients/progressmenu/dist`. Ne rien y inventer (prix, boissons) : tout vient de `content/menu.json`. **Negroni** : vue éclatée en images pré-calculées dans Blender (`assets/seq/negroni/`, importées par `tools/import-seq.py` depuis `render/negroni/`), noms en vrai texte traduit ; repli automatique sur la vue 3D puis sur la version dessinée (détails dans le README du menu).
 
 ## Garde-fou mobile / tablette (automatique)
 
