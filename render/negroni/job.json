@@ -7,16 +7,12 @@
   },
   "turntable": null,
   "eclate_seq": {
-    "nframes": 48,
-    "assembled": true,
-    "opts": {}
-  },
-  "stills": [
-    {
-      "name": "eclate-2400x3000",
-      "mode": "eclate",
-      "res": "3000",
-      "samples": "256"
+    "nframes": 72,
+    "assembled": false,
+    "opts": {
+      "drops": "1",
+      "fog": "0.16"
     }
-  ]
+  },
+  "stills": []
 }
