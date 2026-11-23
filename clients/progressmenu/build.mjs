@@ -86,6 +86,22 @@ let glb = null
 
 // Vue éclatée : couches définies dans content/photos.json ; les noms d'ingrédients doivent figurer dans la description du menu.
 
+// Vue éclatée « photo » (Negroni) : images pré-calculées dans Blender, importées par tools/import-seq.py dans assets/seq/.
+// Utilisée seulement si toutes les images sont présentes ; sinon la vue 3D actuelle reste, rien d'autre ne change.
+function seqData(ent, en) {
+  if (!ent || !ent.seq) return null
+  const dir = ent.seq.dir.replace(/\/+$/, ''), f = path.join(here, dir, 'seq.json')
+  if (!fs.existsSync(f)) return null
+  const s = JSON.parse(fs.readFileSync(f, 'utf8'))
+  const names = ['a', ...Array.from({ length: s.n }, (_, i) => String(i).padStart(2, '0'))]
+  const miss = s.w.flatMap(w => names.map(n => `${w}/${n}.webp`)).filter(x => !fs.existsSync(path.join(here, dir, x)))
+  if (miss.length) { console.warn(`⚠ séquence ${dir} incomplète (${miss.slice(0, 3).join(', ')}…) : vue 3D actuelle conservée pour ${en}`); return null }
+  for (const l of s.l) if (!ent.layers.some(x => x.t === l.k)) console.warn(`⚠ séquence ${dir} : « ${l.k} » n'a pas de nom dans content/photos.json (${en})`)
+  const kb = s.w.map(w => names.reduce((t, n) => t + fs.statSync(path.join(here, dir, `${w}/${n}.webp`)).size, 0) / 1024)
+  console.log(`Vue éclatée photo de ${en} : ${s.n} images, ${s.w.map((w, i) => `${w} px ${kb[i].toFixed(0)} Ko`).join(', ')}`)
+  return { p: dir + '/', n: s.n, w: s.w, r: s.r, v: s.v, l: s.l, g: s.g, c: ent.seq.cartoon }
+}
+
 const priceCells = (it, sec) => it.prices.map((n, k) => {
   const lab = sec.cols && sec.cols[k] ? `<small>${L(sec.cols[k])}</small>` : ''
   return `<span class="pv">${lab}<b>${price(n)}</b></span>`
@@ -103,7 +119,8 @@ function card(it, g, sec) {
   const layers = ent ? ent.layers : []
   const xv = layers.length > 1
   if (xv) for (const l of layers) if (typeof l.n === 'string' && !norm(tx(it.desc || '', 'en')).includes(norm(l.n))) console.warn(`⚠ vue éclatée : « ${l.n} » absent de la description de ${en}`)
-  const xvData = xv ? ` data-xv="${esc(JSON.stringify({ s: ent.scene, l: layers, ...(glb && norm(en) === glb.norm ? { g: glb.data } : {}) }))}"` : ''
+  const sq = xv ? seqData(ent, en) : null
+  const xvData = xv ? ` data-xv="${esc(JSON.stringify({ s: ent.scene, l: layers, ...(glb && norm(en) === glb.norm ? { g: glb.data } : {}), ...(sq ? { q: sq } : {}) }))}"` : ''
   const xvBtn = xv ? `<button type="button" class="xv-open" aria-haspopup="dialog"><span class="sr">${L3('Összetevők megnézése', 'See the ingredients', 'Voir les ingrédients')} : ${L(it.name)}</span></button>` : ''
   const xvHint = xv ? `<p class="xvh" aria-hidden="true"><i></i>${L3('Összetevők', 'Ingredients', 'Ingrédients')}</p>` : ''
   return `<li class="card${img ? '' : ' noimg'}${xv ? ' has-xv' : ''}" style="--a:${g.a}"${xvData}>
@@ -200,15 +217,18 @@ const xvSymbols = `<svg width="0" height="0" style="position:absolute" aria-hidd
 </defs></svg>`
 const xvOverlay = `<div id="xv" class="xv" hidden role="dialog" aria-modal="true" aria-labelledby="xvt">
 <div class="xv-bg"></div>
+<div class="xv-bg2"></div>
 <button type="button" class="xv-x" aria-label="${esc('Bezár / Close / Fermer')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
 <div class="xv-head"><h3 id="xvt"></h3></div>
 <div class="xv-stage" id="xvs">
   <div class="xv-3dhost" id="xv3"></div>
   <div class="xv-layers"></div>
+  <div class="xv-sq" id="xvq" hidden aria-hidden="true"><canvas></canvas><img alt="" draggable="false"><i class="xv-sqbar"></i></div>
   <img class="xv-glass" alt="">
   <div class="xv-labels" id="xvl"></div>
 </div>
 <p class="xv-tip" hidden>${L3('Húzd az ujjad a forgatáshoz', 'Drag to rotate', 'Glissez pour faire tourner')}</p>
+<p class="xv-tip xv-tipq" hidden>${L3('Húzd az ujjad fel vagy le', 'Drag up or down', 'Glissez vers le haut ou le bas')}</p>
 <button type="button" class="xv-tg" hidden aria-pressed="false"><span class="t-ex">${L3('Szétszed', 'Explode', 'Décomposer')}</span><span class="t-re">${L3('Összerak', 'Reassemble', 'Reconstituer')}</span></button>
 </div>`
 

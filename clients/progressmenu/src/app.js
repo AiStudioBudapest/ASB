@@ -82,6 +82,7 @@
     function lang() { return de.getAttribute('data-l') || 'hu' }
     function play(el, kf, o) { var a = el.animate(kf, o); st.anims.push(a); return a }
     function stopAll() { st.anims.forEach(function (a) { try { a.cancel() } catch (e) {} }); st.anims = [] }
+    function cancelOn(el) { st.anims = st.anims.filter(function (a) { if (a.effect && a.effect.target === el) { try { a.cancel() } catch (e) {} return false } return true }) }
 
     // dessins des couches (viewBox 200 x 64), vus en légère perspective
     var TOP = 'M8 20a92 18 0 0 1 184 0a92 18 0 0 1-184 0Z'
@@ -168,6 +169,212 @@
 
     // ----- 3D (Three.js, chargé seulement au premier besoin) -----
     var host3 = d.getElementById('xv3'), lab3 = d.getElementById('xvl'), tg = xv.querySelector('.xv-tg'), tip = xv.querySelector('.xv-tip')
+
+    // ----- vue éclatée « photo » : séquence d'images pré-calculées dans Blender (data-xv > q), lue dans un canvas -----
+    // Le dessin de la carte se pose sur le verre de la photo, se fond dans la photo du cocktail assemblé, puis la
+    // séquence joue l'éclatement. Glisser vers le haut ou le bas fait avancer ou reculer l'animation.
+    // En cas d'échec (réseau), retour à la vue 3D, puis à la version dessinée.
+    var sqHost = d.getElementById('xvq'), bg2 = xv.querySelector('.xv-bg2'), tipQ = xv.querySelector('.xv-tipq')
+    var sqCv = sqHost && sqHost.querySelector('canvas'), sqA = sqHost && sqHost.querySelector('img'), sqBar = sqHost && sqHost.querySelector('.xv-sqbar')
+    var SQC = {}, sqFree = 0, sq = null
+    function seqOk(q) {
+      if (!q || !sqHost || !sqCv.getContext || !window.fetch || !window.Promise || !q.n || !q.w || !q.w.length) return false
+      var c = navigator.connection
+      return !(c && c.saveData)
+    }
+    function sqPickW(q) {
+      var ws = q.w.slice().sort(function (a, b) { return a - b })
+      if (Math.min(screen.width || 1e4, screen.height || 1e4) < 520) return ws[0] // téléphone : la plus petite série (mémoire)
+      var H = Math.min(innerHeight - 170, 940), iw = Math.min(H / q.r, innerWidth * .94 / .66)
+      var need = iw * Math.min(window.devicePixelRatio || 1, 2) * .9
+      for (var i = 0; i < ws.length; i++) if (ws[i] >= need) return ws[i]
+      return ws[ws.length - 1]
+    }
+    function sqUrl(q, w, name) { return q.p + w + '/' + name + '.webp?v=' + q.v }
+    function sqLoad(q, w) {
+      var key = sqUrl(q, w, '')
+      if (SQC[key]) return SQC[key]
+      var c = SQC[key] = { frames: new Array(q.n), done: 0, onprog: null }
+      // image 0 : le cocktail assemblé, affiché pendant que le reste arrive
+      c.a = new Promise(function (res, rej) {
+        var im = new Image()
+        im.onload = function () { (im.decode ? im.decode() : Promise.resolve()).then(function () { res(im) }, function () { res(im) }) }
+        im.onerror = function () { rej(new Error('image 0')) }
+        im.src = sqUrl(q, w, 'a')
+      })
+      function bitmap(b) {
+        if (window.createImageBitmap) return createImageBitmap(b)
+        return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im) }; im.onerror = rej; im.src = URL.createObjectURL(b) })
+      }
+      var ps = []
+      for (var i = 0; i < q.n; i++) (function (i) {
+        ps.push(fetch(sqUrl(q, w, (i < 10 ? '0' : '') + i)).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob() }).then(bitmap).then(function (b) {
+          c.frames[i] = b; c.done++
+          if (c.onprog) c.onprog(c.done / q.n)
+        }))
+      })(i)
+      c.all = Promise.all(ps)
+      function forget() { if (SQC[key] === c) delete SQC[key] } // un nouvel essai repartira de zéro
+      c.all.catch(forget); c.a.catch(forget)
+      return c
+    }
+    function sqRelease() { // libère la mémoire des images décodées (30 s après la fermeture)
+      Object.keys(SQC).forEach(function (k) {
+        var c = SQC[k]
+        c.all.then(function () { c.frames.forEach(function (b) { if (b && b.close) b.close() }) }, function () {})
+        delete SQC[k]
+      })
+    }
+    function sqGeom(q) {
+      // la photo occupe toute la hauteur de la scène ; sur téléphone ses bords (fond noir) sortent de l'écran
+      var W = stage.clientWidth, H = stage.clientHeight, ih = H, iw = ih / q.r
+      if (iw * .66 > W) { iw = W / .66; ih = iw * q.r }
+      var sr = stage.getBoundingClientRect(), vw = xv.clientWidth || innerWidth
+      return { W: W, H: H, iw: iw, ih: ih, ix: (W - iw) / 2, iy: (H - ih) / 2, vl: 12 - sr.left, vr: vw - sr.left - 12 }
+    }
+    function sqBegin(q, data) {
+      clearTimeout(sqFree)
+      sq = { q: q, p: 0, dir: 1, fi: -1, labels: [], shown: false, ready: false, aOn: true, tok: 0, raf: 0 }
+      var w = sqPickW(q)
+      sqCv.width = w; sqCv.height = Math.round(w * q.r)
+      sq.ctx = sqCv.getContext('2d', { alpha: false }) || sqCv.getContext('2d')
+      sq.set = sqLoad(q, w)
+      sqLabels(data)
+      sqLayout()
+    }
+    function sqLayout() {
+      if (!sq) return
+      var q = sq.q, g = sq.g = sqGeom(q)
+      sqHost.style.left = g.ix + 'px'; sqHost.style.top = g.iy + 'px'; sqHost.style.width = g.iw + 'px'; sqHost.style.height = g.ih + 'px'
+      // l'illustration de la carte se pose exactement sur le verre de la photo (même largeur, même base)
+      var b = q.g, c = q.c || [.2217, .86, .7667]
+      var cw = (b[2] - b[0]) * g.iw / (c[2] - c[0]), ch = cw * 4 / 3
+      glass.style.width = cw + 'px'; glass.style.height = ch + 'px'
+      glass.style.left = (g.ix + (b[0] + b[2]) / 2 * g.iw - (c[0] + c[2]) / 2 * cw) + 'px'
+      glass.style.top = (g.iy + b[3] * g.ih - c[1] * ch) + 'px'
+      sqLabelsLayout()
+    }
+    function sqLabels(layers) {
+      var L = lang()
+      lab3.innerHTML = ''
+      sq.labels = sq.q.l.map(function (l) {
+        var x = null
+        layers.forEach(function (y) { if (y.t === l.k) x = y })
+        var el = d.createElement('div'); el.className = 'xsl ' + (l.s === 'l' ? 'xsl-l' : 'xsl-r')
+        el.innerHTML = '<i></i><b></b><span></span>'
+        el.lastChild.textContent = !x ? l.k : typeof x.n === 'string' ? x.n : (x.n[L] || x.n.en || x.n.hu)
+        lab3.appendChild(el)
+        return { el: el, l: l, on: false }
+      })
+    }
+    function sqLabelsLayout() {
+      var g = sq.g
+      lab3.style.setProperty('--fs', Math.max(10, Math.min(14, g.ih * .0175)).toFixed(1) + 'px')
+      var gap = Math.max(5, g.iw * .012), seg = Math.max(16, g.iw * .045), tg = 8
+      // une colonne de noms par côté, alignée juste après la pièce la plus large de ce côté (comme sur l'image imprimée)
+      var xr = -1e9, xl = 1e9
+      sq.labels.forEach(function (o) { var x = g.ix + o.l.a[0] * g.iw; if (o.l.s === 'l') xl = Math.min(xl, x); else xr = Math.max(xr, x) })
+      xr += gap + seg; xl -= gap + seg
+      sq.labels.forEach(function (o) {
+        var ax = g.ix + o.l.a[0] * g.iw, ay = g.iy + o.l.a[1] * g.ih, left = o.l.s === 'l'
+        var x0 = left ? ax - gap : ax + gap, x1 = left ? xl : xr
+        var line = o.el.firstChild, dot = line.nextSibling, sp = o.el.lastChild
+        o.el.style.transform = 'translateY(' + ay.toFixed(1) + 'px)'
+        dot.style.left = x0.toFixed(1) + 'px'
+        line.style.left = Math.min(x0, x1).toFixed(1) + 'px'; line.style.width = Math.abs(x1 - x0).toFixed(1) + 'px'
+        if (left) { sp.style.left = 'auto'; sp.style.right = (g.W - x1 + tg).toFixed(1) + 'px'; sp.style.maxWidth = Math.max(40, x1 - tg - g.vl).toFixed(0) + 'px' }
+        else { sp.style.right = 'auto'; sp.style.left = (x1 + tg).toFixed(1) + 'px'; sp.style.maxWidth = Math.max(40, g.vr - x1 - tg).toFixed(0) + 'px' }
+      })
+    }
+    function sqDraw(p) {
+      var n = sq.q.n, i = Math.max(0, Math.min(n - 1, Math.round(p * (n - 1)))), f = sq.set.frames[i]
+      if (i !== sq.fi && f) { sq.ctx.drawImage(f, 0, 0, sqCv.width, sqCv.height); sq.fi = i }
+      sq.p = p
+      var show = st.exploded && sq.dir >= 0
+      sq.labels.forEach(function (o) { var on = show && p >= o.l.at - 1e-3; if (on !== o.on) { o.on = on; o.el.classList.toggle('on', on) } })
+    }
+    function sqRun(to, ms) { // joue la séquence jusqu'à « to » (0 ou 1) ; ms = durée d'un parcours complet
+      cancelAnimationFrame(sq.raf)
+      var s0 = sq, from = sq.p, span = Math.abs(to - from), tok = ++sq.tok
+      if (to !== from) sq.dir = to > from ? 1 : -1
+      if (!span || reduce || !ms) { sqDraw(to); return Promise.resolve() }
+      var dur = ms * span, t0 = 0
+      return new Promise(function (res) {
+        function step(t) {
+          if (sq !== s0 || s0.tok !== tok) return res()
+          if (!t0) t0 = t
+          var u = Math.min(1, (t - t0) / dur)
+          sqDraw(from + (to - from) * u)
+          if (u < 1) s0.raf = requestAnimationFrame(step); else res()
+        }
+        s0.raf = requestAnimationFrame(step)
+      })
+    }
+    function sqShowA(on) { if (sq.aOn !== on) { sq.aOn = on; sqA.style.opacity = on ? 1 : 0 } }
+    function sqSet(on) { // décomposer (on) ou reconstituer la boisson
+      if (!sq || !sq.ready || st.closing) return
+      st.exploded = on
+      tg.classList.toggle('ex', on); tg.setAttribute('aria-pressed', String(on))
+      var s0 = sq
+      if (on) {
+        sqShowA(false) // le cocktail assemblé se fond dans la pile de pièces, qui s'écartent aussitôt
+        sqRun(sq.p, 0)
+        wait(reduce || sq.p > 0 ? 0 : 160).then(function () { if (sq === s0 && st.exploded) sqRun(1, 2300) })
+        return
+      }
+      sqRun(0, 1700).then(function () { if (sq === s0 && !st.exploded && sq.p === 0 && !st.closing) sqShowA(true) })
+    }
+    function sqHide() { // retire la photo (repli ou fermeture)
+      if (!sqHost) return
+      if (sq) { cancelAnimationFrame(sq.raf); sq.tok++ }
+      sqHost.hidden = true; sqA.style.opacity = ''; sqA.removeAttribute('src'); sqBar.classList.remove('on'); sqBar.style.transform = ''
+      tipQ.hidden = true
+    }
+    function runSeq(intro, raw, data, kind, token) {
+      var q = raw.q, c = sq.set, s0 = sq
+      function ok() { return st.open && !st.closing && st.token === token && sq === s0 }
+      var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')) }, 12000) })
+      var loading = setTimeout(function () { if (ok()) glass.classList.add('xv-wait') }, 900)
+      Promise.all([intro, Promise.race([c.a, timeout])]).then(function (r) {
+        clearTimeout(loading); glass.classList.remove('xv-wait')
+        if (!ok()) return
+        // 2) le dessin devient photo : fondu enchaîné pendant que la lumière baisse
+        sqA.src = r[1].src; sqA.style.opacity = 1; sq.aOn = true
+        sqHost.hidden = false; sq.shown = true
+        var f = reduce ? 1 : 0
+        play(sqHost, [{ opacity: 0 }, { opacity: 1 }], { duration: f || 560, fill: 'forwards', easing: 'ease-in-out' })
+        play(bg2, [{ opacity: 0 }, { opacity: 1 }], { duration: f || 600, fill: 'forwards', easing: 'ease-in-out' })
+        play(glass, [{ opacity: 1 }, { opacity: 0 }], { duration: f || 520, delay: f ? 0 : 80, fill: 'both', easing: 'ease-in-out' })
+        var barT = setTimeout(function () { if (ok() && !sq.ready) sqBar.classList.add('on') }, 800)
+        c.onprog = function (x) { sqBar.style.transform = 'scaleX(' + x.toFixed(3) + ')' }
+        c.onprog(c.done / q.n)
+        return Promise.all([wait(reduce ? 0 : 760), c.all]).then(function () {
+          clearTimeout(barT); sqBar.classList.remove('on'); c.onprog = null
+          if (!ok()) return
+          // 3) la boisson se décompose
+          sq.ready = true; sq.fi = -1; sqDraw(0)
+          tg.hidden = false; tipQ.hidden = false
+          return wait(reduce ? 0 : 200).then(function () { if (ok() && !st.exploded) sqSet(true) })
+        })
+      }).catch(function (e) {
+        try { console.warn('vue éclatée photo indisponible, vue 3D :', e && e.message) } catch (x) {}
+        clearTimeout(loading); glass.classList.remove('xv-wait')
+        if (!ok()) return
+        // repli : l'illustration revient au centre, puis la vue 3D (ou dessinée) prend le relais
+        var shown = sq.shown
+        sqHide(); sq = null
+        cancelOn(glass)
+        if (shown) { cancelOn(bg2); play(bg2, [{ opacity: 1 }, { opacity: 0 }], { duration: reduce ? 1 : 420, fill: 'forwards' }) }
+        var r0 = glass.getBoundingClientRect()
+        layout()
+        var r1 = glass.getBoundingClientRect()
+        var fl = done(play(glass, [{ opacity: shown ? 0 : 1, transform: 'translate(' + (r0.left - r1.left) + 'px,' + (r0.top - r1.top) + 'px) scale(' + (r0.width / r1.width) + ')' }, { opacity: 1, transform: 'none' }], { duration: reduce ? 1 : 460, easing: EASE }))
+        if (!glOk()) { st.mode = 'svg'; box.hidden = false; lab3.hidden = true; lab3.innerHTML = ''; fl.then(function () { if (st.open && !st.closing && st.token === token) playSvg(0) }); return }
+        st.mode = '3d'
+        var useGlb = !!raw.g && !glbBad
+        run3d(fl, load3d(raw), useGlb, data, kind, token)
+      })
+    }
     var modP = null, scene = null, hasGL = null
     function glOk() {
       if (hasGL !== null) return hasGL
@@ -264,20 +471,20 @@
       var img = card.querySelector('.ph img'); if (!img) return
       var data, kind, raw; try { raw = JSON.parse(card.getAttribute('data-xv')); data = raw.l; kind = raw.s } catch (e) { return }
       st.open = true; st.closing = false; st.img = img; st.btn = btn; st.exploded = false; st.data = data; st.glb = raw.g || null
+      var q = seqOk(raw.q) ? raw.q : null
       var try3d = glOk()
-      st.mode = try3d ? '3d' : 'svg'
+      st.mode = q ? 'seq' : try3d ? '3d' : 'svg'
       var useGlb = try3d && !!raw.g && !glbBad
-      var mp = !try3d ? null : useGlb
-        ? loadGlb(raw.g).catch(function (e) { glbBad = true; try { console.warn('modèle 3D indisponible, expérience actuelle conservée :', e && e.message) } catch (x) {} return warm() })
-        : warm()
+      var mp = q || !try3d ? null : load3d(raw)
       var first = img.getBoundingClientRect()
       glass.src = img.currentSrc || img.src
       build(data, card.querySelector('h4').innerHTML)
       xv.hidden = false
       de.style.overflow = 'hidden'; main.inert = true
       try { history.pushState({ xv: 1 }, '') } catch (e) {}
-      box.hidden = try3d; lab3.hidden = !try3d; tg.hidden = true; tip.hidden = true
+      box.hidden = st.mode !== 'svg'; lab3.hidden = st.mode === 'svg'; tg.hidden = true; tip.hidden = true; tipQ.hidden = true
       layout()
+      if (q) sqBegin(q, data) // l'illustration se posera directement sur le verre de la photo
       var last = glass.getBoundingClientRect()
       img.style.visibility = 'hidden'
       st.anims = []
@@ -295,9 +502,18 @@
         intro = done(play(glass, [{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }, { transform: 'none' }], { duration: 640, easing: EASE }))
       }
       xbtn.focus({ preventScroll: true })
-      if (!try3d) { if (reduce) { glass.style.opacity = 0; st.items.forEach(function (it) { play(it.art, fade, { duration: 160, fill: 'forwards' }); play(it.t, fade, { duration: 160, fill: 'forwards' }) }) } else playSvg(0); return }
-      // 2) la 3D remplace l'illustration puis la boisson se désassemble
       var token = st.token = (st.token || 0) + 1
+      if (q) { runSeq(intro, raw, data, kind, token); return }
+      if (!try3d) { if (reduce) { glass.style.opacity = 0; st.items.forEach(function (it) { play(it.art, fade, { duration: 160, fill: 'forwards' }); play(it.t, fade, { duration: 160, fill: 'forwards' }) }) } else playSvg(0); return }
+      run3d(intro, mp, useGlb, data, kind, token)
+    }
+    function load3d(raw) {
+      return raw.g && !glbBad
+        ? loadGlb(raw.g).catch(function (e) { glbBad = true; try { console.warn('modèle 3D indisponible, expérience actuelle conservée :', e && e.message) } catch (x) {} return warm() })
+        : warm()
+    }
+    function run3d(intro, mp, useGlb, data, kind, token) {
+      // 2) la 3D remplace l'illustration puis la boisson se désassemble
       var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')) }, useGlb ? 25000 : 9000) })
       var loading = setTimeout(function () { if (st.open && st.token === token) glass.classList.add('xv-wait') }, 900)
       Promise.all([intro, Promise.race([mp, timeout])]).then(function (r) {
@@ -324,6 +540,7 @@
       glass.style.opacity = ''; glass.classList.remove('xv-wait')
       host3.classList.remove('on'); tg.hidden = true; tip.hidden = true
       if (scene) scene.stop()
+      if (sq) { sqHide(); sq = null; clearTimeout(sqFree); sqFree = setTimeout(sqRelease, 30000) }
       if (st.img) st.img.style.visibility = ''
       st.open = false; st.closing = false
       if (st.btn) try { st.btn.focus({ preventScroll: true }) } catch (e) {}
@@ -333,6 +550,18 @@
       st.closing = true; st.token = (st.token || 0) + 1
       if (!st.fromPop && history.state && history.state.xv) { try { history.back() } catch (e) {} }
       st.fromPop = false
+      if (st.mode === 'seq' && sq) {
+        tg.hidden = true; tipQ.hidden = true; st.exploded = false
+        sq.dir = -1; sqDraw(sq.p)
+        if (!sq.ready) { back('seq'); return }
+        var s0 = sq
+        sqRun(0, reduce ? 0 : 950).then(function () {
+          if (sq !== s0) return
+          sqShowA(true)
+          return wait(reduce ? 0 : 420).then(function () { if (sq === s0) back('seq') })
+        })
+        return
+      }
       if (st.mode === '3d' && scene && host3.classList.contains('on')) {
         // reconstitution fluide de la boisson, puis retour de l'illustration vers sa carte
         tg.hidden = true; tip.hidden = true
@@ -354,7 +583,14 @@
       var out = { duration: 260, fill: 'forwards', easing: 'ease-in' }
       play(head, [{ opacity: 1 }, { opacity: 0 }], out); play(xbtn, [{ opacity: 1 }, { opacity: 0 }], out)
       var n = st.items.length
-      if (threeD) {
+      var photo = threeD === 'seq'
+      if (photo) {
+        if (sq && sq.shown) {
+          play(sqHost, [{ opacity: 1 }, { opacity: 0 }], { duration: 380, fill: 'forwards', easing: 'ease-in-out' })
+          play(bg2, [{ opacity: 1 }, { opacity: 0 }], { duration: 560, fill: 'forwards', easing: 'ease-in-out' })
+          play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 380, fill: 'forwards', easing: 'ease-in-out' })
+        }
+      } else if (threeD) {
         host3.classList.remove('on')
         play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 320, fill: 'forwards' })
       } else {
@@ -366,7 +602,7 @@
         play(glass, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 240, fill: 'forwards' })
       }
       // l'illustration retourne dans sa carte
-      var base = threeD ? 300 : 380
+      var base = photo ? (sq && sq.shown ? 360 : 0) : threeD ? 300 : 380
       var dx = bk.left - cur.left, dy = bk.top - cur.top, s = bk.width / cur.width
       var a = play(glass, [{ transform: 'none' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')' }], { duration: 560, delay: base, fill: 'forwards', easing: EASE })
       play(bg, [{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: base + 60, fill: 'forwards' })
@@ -377,15 +613,67 @@
       var b = c.querySelector('.xv-open')
       if (b) {
         b.addEventListener('click', function () { open(c, b) })
-        ;['pointerenter', 'touchstart', 'focus'].forEach(function (ev) { b.addEventListener(ev, function () { warm(); try { if (JSON.parse(b.closest('.card').getAttribute('data-xv')).g) warmGlb() } catch (e) {} }, { passive: true, once: true }) })
+        var raw = {}
+        try { raw = JSON.parse(c.getAttribute('data-xv')) || {} } catch (e) {}
+        var q = seqOk(raw.q) ? raw.q : null
+        // préchargement : vue 3D au survol ou au toucher ; images de la photo seulement au survol à la souris (pas au défilement sur téléphone)
+        ;['pointerenter', 'touchstart', 'focus'].forEach(function (ev) {
+          b.addEventListener(ev, function h(e) {
+            if (!q) { warm(); if (raw.g) warmGlb() } else if (ev === 'focus' || e.pointerType === 'mouse') sqLoad(q, sqPickW(q)); else return
+            b.removeEventListener(ev, h)
+          }, { passive: true })
+        })
+        if (q && 'IntersectionObserver' in window) {
+          var pio = new IntersectionObserver(function (es) {
+            if (!es.some(function (x) { return x.isIntersecting })) return
+            pio.disconnect(); new Image().src = sqUrl(q, sqPickW(q), 'a')
+          }, { rootMargin: '400px 0px' })
+          pio.observe(c)
+        }
       }
     })
-    tg.addEventListener('click', function () { if (st.open && !st.closing && st.mode === '3d' && scene) setExploded(!st.exploded) })
+    tg.addEventListener('click', function () {
+      if (!st.open || st.closing) return
+      if (st.mode === 'seq') sqSet(!st.exploded)
+      else if (st.mode === '3d' && scene) setExploded(!st.exploded)
+    })
+    // photo : toucher = décomposer / reconstituer ; glisser vers le haut ou le bas = avancer / reculer l'animation
+    if (sqHost) (function () {
+      var dr = null
+      sqHost.addEventListener('pointerdown', function (e) {
+        if (!sq || !sq.ready || st.closing || (e.pointerType === 'mouse' && e.button !== 0)) return
+        dr = { id: e.pointerId, y: e.clientY, p: sq.p, moved: false }
+        try { sqHost.setPointerCapture(e.pointerId) } catch (x) {}
+      })
+      sqHost.addEventListener('pointermove', function (e) {
+        if (!dr || e.pointerId !== dr.id || !sq) return
+        var dy = dr.y - e.clientY
+        if (!dr.moved) {
+          if (Math.abs(dy) < 8) return
+          dr.moved = true; dr.y = e.clientY; dr.p = sq.p; dy = 0
+          cancelAnimationFrame(sq.raf); sq.tok++
+          sqShowA(false); st.exploded = true
+          tg.classList.add('ex'); tg.setAttribute('aria-pressed', 'true')
+        }
+        var p = Math.max(0, Math.min(1, dr.p + dy / (sq.g.ih * .5)))
+        if (p !== sq.p) sq.dir = p > sq.p ? 1 : -1
+        sqDraw(p)
+      })
+      function end(e) {
+        if (!dr || e.pointerId !== dr.id) return
+        var r = dr; dr = null
+        if (!sq || !sq.ready || st.closing) return
+        if (!r.moved) { if (e.type === 'pointerup') sqSet(!st.exploded); return }
+        sqSet(sq.dir > 0 ? sq.p > .2 : sq.p > .8) // l'animation se termine dans le sens du geste
+      }
+      sqHost.addEventListener('pointerup', end); sqHost.addEventListener('pointercancel', end)
+      sqHost.addEventListener('dragstart', function (e) { e.preventDefault() })
+    })()
     xbtn.addEventListener('click', close)
-    xv.addEventListener('click', function (e) { if (e.target === xv || e.target === bg || e.target === stage || e.target === box) close() })
+    xv.addEventListener('click', function (e) { if (e.target === xv || e.target === bg || e.target === bg2 || e.target === stage || e.target === box) close() })
     addEventListener('keydown', function (e) { if (st.open && (e.key === 'Escape' || e.key === 'Esc')) close() })
     addEventListener('popstate', function () { if (st.open && !st.closing) { st.fromPop = true; close() } })
     var rt
-    addEventListener('resize', function () { if (!st.open || st.closing) return; clearTimeout(rt); rt = setTimeout(function () { layout(); sizeScene() }, 120) })
+    addEventListener('resize', function () { if (!st.open || st.closing) return; clearTimeout(rt); rt = setTimeout(function () { layout(); sizeScene(); sqLayout() }, 120) })
   })()
 })()
