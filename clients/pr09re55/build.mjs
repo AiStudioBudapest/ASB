@@ -545,11 +545,7 @@ function cocktailsPage(l) {
     <a class="btn btn-solid btn-lg" href="${SITE.progressMenuUrl}" target="_blank" rel="noopener">${esc(t.ckMenuBtn)} ${ICON.arrow}</a>
   </div>
 </section>
-<section class="cg wrap" aria-labelledby="cgT">
-  <h2 id="cgT" class="h-small">${esc(t.cocktailsFull)}</h2>
-  ${groups.map((g, gi) => `<div class="cg-group cg-g${gi}"><h3 class="cg-title">${esc(g.title)}</h3><ul class="cg-grid">${g.items.map((it, n) => card(it, n)).join('')}</ul></div>`).join('')}
-  <p class="cg-link"><a class="tlink" href="${link(path, ROUTES.menu[l])}">${esc(t.menuAll)} ${ICON.arrow}</a></p>
-</section>`;
+`;
   return page({ l, key: 'cocktails', path, alt: ROUTES.cocktails, title: t.meta.cocktails[0], desc: t.meta.cocktails[1], body });
 }
 

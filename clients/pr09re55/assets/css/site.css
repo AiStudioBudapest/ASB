@@ -1001,7 +1001,7 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
 }
 
 /* Bouton « Toute la carte des cocktails » (page Cocktails) */
-.ck-cta{padding-bottom:clamp(60px,8vw,110px)}
+.ck-cta{padding-bottom:clamp(70px,9vw,130px)}
 .ck-cta-box{position:relative;overflow:hidden;isolation:isolate;background:#0f0f0f;color:#fff;border-radius:calc(var(--r) + 8px);padding:clamp(34px,6vw,84px) clamp(22px,5vw,72px);display:grid;justify-items:center;text-align:center;gap:clamp(14px,2vw,22px)}
 .ck-cta-box::before{content:"";position:absolute;z-index:-1;inset:auto -10% -55% -10%;height:90%;background:radial-gradient(60% 60% at 30% 50%,rgba(60,240,164,.45),transparent 70%),radial-gradient(50% 60% at 75% 55%,rgba(255,140,198,.4),transparent 70%),radial-gradient(40% 50% at 55% 40%,rgba(246,232,58,.28),transparent 70%)}
 .ck-cta-box .kicker,.ck-cta-box .lede{color:rgba(255,255,255,.82)}
