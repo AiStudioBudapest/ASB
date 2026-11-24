@@ -538,10 +538,12 @@ function cocktailsPage(l) {
   </article>`).join('')}
 </section>
 <section class="ck-cta wrap" aria-labelledby="ckCtaT">
-  <div class="ck-cta-box">
-    <p class="kicker">${tri()} Progress menu</p>
-    <h2 id="ckCtaT" class="display">${esc(t.ckMenuKicker)}</h2>
-    <p class="lede">${esc(t.ckMenuText)}</p>
+  <div class="ck-cta-in">
+    <div class="ck-cta-txt">
+      <p class="kicker">${tri()} Progress menu</p>
+      <h2 id="ckCtaT" class="h-small"><span>${esc(t.ckMenuKicker)}</span></h2>
+      <p class="lede">${esc(t.ckMenuText)}</p>
+    </div>
     <a class="btn btn-solid btn-lg" href="${SITE.progressMenuUrl}" target="_blank" rel="noopener">${esc(t.ckMenuBtn)} ${ICON.arrow}</a>
   </div>
 </section>
