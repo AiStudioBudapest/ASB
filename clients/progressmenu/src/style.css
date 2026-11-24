@@ -248,3 +248,9 @@ html{scrollbar-gutter:stable}
 .xsl.on b{opacity:.94}
 .xsl.on span{opacity:.94;transform:translate(0,-50%)}
 @media (prefers-reduced-motion:reduce){.xv-sq img,.xsl i,.xsl b,.xsl span,.xv-sqbar{transition:none}}
+
+/* Bouton vers le site principal (pied de page) */
+.site-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:52px;max-width:100%;padding:0 28px;margin-bottom:22px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-weight:600;font-size:.95rem;letter-spacing:.04em;text-decoration:none;text-align:center;transition:background .3s,color .3s,transform .3s}
+.site-btn svg{width:20px;height:20px;flex:none;transition:transform .3s}
+.site-btn:active{transform:scale(.97)}
+@media (hover:hover){.site-btn:hover{background:#fff;color:#0f0f0f}.site-btn:hover svg{transform:translateX(4px)}}
