@@ -953,6 +953,36 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
 }
 .hc-shop img{object-position:50% 38%}
 
+/* ---------------- Menu book on a phone held upright: the whole page fits the screen, no scrolling ----------------
+   The title block is kept for screen readers and search engines only; the book fills what is left under the
+   header (100svh = the screen with the browser bars showing, so nothing jumps when they slide away).
+   site.js shrinks the text of a page just enough to fit (never below 10px) and, if that is not enough,
+   continues the list on a second page ("· 2"). Short or landscape screens keep the earlier behaviour. */
+.mp-title[data-part]::after{content:" · " attr(data-part)}
+@media (max-width:899px) and (min-height:520px){
+  .is-menu .menu-head{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .menu-book.lock{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;height:calc(100svh - var(--mh,72px));padding-bottom:0}
+  .menu-book.lock .book-toc{margin:0}
+  .menu-book.lock .book-toc .label{display:none}
+  .menu-book.lock .book-stage{min-height:0;padding:4px 0 6px}
+  .menu-book.lock .book.is-live.single{height:100%}
+  .menu-book.lock .mp-brand{display:none}
+  .menu-book.lock .mp-title{font-size:1.9em;margin-bottom:.45em}
+  .menu-book.lock .mpage{padding:5% 6% 3%}
+  .menu-book.lock .mp-body{gap:.7em}
+  .menu-book.lock .ms li{padding:.12em 0}
+  .menu-book.lock .mp-foot{padding-top:.3em}
+  .menu-book.lock .book-ctrl{position:static;box-shadow:none;background:none;padding:2px 0 0}
+  .menu-book.lock .book-hint{display:none}
+  .menu-book.lock .book-meta{margin:0;padding:2px 0 calc(6px + env(safe-area-inset-bottom));font-size:11px;line-height:1.3}
+}
+.mpage[data-cont] .mp-letter > p:first-of-type::first-letter{float:none;font:inherit;padding:0;color:inherit}
+@media (max-width:899px) and (min-height:520px){
+  .menu-book.lock .mp-cover{padding-top:3%}
+  .menu-book.lock .mp-cover-logo{margin-bottom:1.1em}
+  .menu-book.lock .mp-cats{padding:1em 0}
+  .menu-book.lock .mp-tag{font-size:2em}
+}
 /* Butik highlight: nagy fotós blokkok a lista előtt (fotó 4:5 + angol szöveg) */
 .hl-feats{display:grid;gap:clamp(48px,7vw,110px);padding-bottom:clamp(50px,6vw,90px)}
 .hl-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,72px);align-items:center}
