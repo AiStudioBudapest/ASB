@@ -255,8 +255,8 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>pr09re55 · Itallap / Menu</title>
-<meta name="description" content="pr09re55 itallap · drinks menu · carte des boissons — Pozsonyi út 43, Budapest.">
+<title>pr09re55 · Koktélkártya / Menu</title>
+<meta name="description" content="pr09re55 koktélkártya · cocktail menu · carte des cocktails — Pozsonyi út 43, Budapest.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#073b2d">
 <link rel="preload" href="assets/fonts/prata-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -272,7 +272,7 @@ ${xvSymbols}
   <div class="topbar"><span class="brand" role="img" aria-label="pr09re55"></span>
     <div class="lang" role="group" aria-label="Language / Nyelv / Langue"><button type="button" data-set-l="hu">HU</button><button type="button" data-set-l="en">EN</button><button type="button" data-set-l="fr">FR</button></div></div>
   <p class="kick">${L3('Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest')}</p>
-  <h1>${L3('Itallap', 'The drinks menu', 'La carte des boissons')}</h1>
+  <h1>${L3('Koktélkártya', 'The cocktail menu', 'La carte des cocktails')}</h1>
   <p class="lede">${L3('Koktélok, long drinkek és nyári ajánlat.', 'Cocktails, long drinks and summer specials.', 'Cocktails, long drinks et spécialités d’été.')}</p>
   <a class="go" href="#cocktails">${L3('Nézzük meg', 'Let’s explore', 'Découvrir')}<span aria-hidden="true">↓</span></a>
 </header>
