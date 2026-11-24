@@ -952,3 +952,20 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
   html.menu-open .drawer{position:fixed;top:0;left:0;right:0;bottom:auto;inset:0;height:100vh;height:100dvh;z-index:50;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
 }
 .hc-shop img{object-position:50% 38%}
+
+/* Butik highlight: nagy fotós blokkok a lista előtt (fotó 4:5 + angol szöveg) */
+.hl-feats{display:grid;gap:clamp(48px,7vw,110px);padding-bottom:clamp(50px,6vw,90px)}
+.hl-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,72px);align-items:center}
+.hl-feat:nth-child(even) figure{order:2}
+.hl-feat figure{margin:0}
+.hl-feat img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r);filter:none}
+.hl-feat-txt{max-width:34em}
+.hl-feat-txt h2{font:400 clamp(34px,3.6vw,56px)/.95 var(--cond);letter-spacing:.01em;text-transform:uppercase;margin-bottom:18px}
+.hl-feat-txt p:not(.hl-kicker){font-size:clamp(15.5px,1.15vw,17.5px);line-height:1.7;color:var(--ink-2);margin-bottom:14px}
+.hl-notes{margin-top:22px;display:grid;gap:12px}
+.hl-notes dt{font:700 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hl-notes dd{margin:2px 0 0;font-size:16px;line-height:1.5}
+@media (max-width:820px){
+  .hl-feat{grid-template-columns:minmax(0,1fr);gap:20px}
+  .hl-feat:nth-child(even) figure{order:0}
+}
