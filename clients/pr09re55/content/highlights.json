@@ -76,19 +76,19 @@
     {
       "image": "hl-chope",
       "alt": {
-        "hu": "Koktél rézbögrében, arany szívószállal",
-        "en": "Cocktail in a copper mug with a golden straw",
-        "fr": "Cocktail dans une chope en cuivre avec une paille dorée"
+        "hu": "Moscow Mule rézbögrében, arany szívószállal",
+        "en": "Moscow Mule in a copper mug with a golden straw",
+        "fr": "Moscow Mule dans une chope en cuivre avec une paille dorée"
       },
       "paras": {
         "hu": [
-          "Ez a koktél egy szép rézbögrében érkezik, bőven jéggel megtöltve. Szárított narancskarikát és egy csillagánizst teszünk bele, ami kis fűszeres ízt ad. Frissítő, könnyű és könnyen iható. Arany szívószállal isszuk, a szem örömére."
+          "A réz csillog, a jég ropog, és a gyömbér felébred. A Moscow Mule nem csupán egy koktél: a frissesség szikrája, az elegancia ígérete. Minden kortynál életre kel az este."
         ],
         "en": [
-          "This cocktail is served in a beautiful copper mug, generously filled with ice. We add a slice of dried orange and a star anise, which gives a little hint of spice. It is fresh, light and easy to drink. It is enjoyed with a golden straw, for the pleasure of the eyes."
+          "The copper gleams, the ice crackles, and the ginger awakens. The Moscow Mule is more than a cocktail: it is a spark of freshness, a promise of elegance. With every sip, the evening comes alive."
         ],
         "fr": [
-          "Ce cocktail se sert dans une belle chope en cuivre, bien remplie de glace. On y ajoute une tranche d'orange séchée et une étoile de badiane, qui donne un petit goût d'épice. C'est frais, léger et facile à boire. On le boit avec une paille dorée, pour le plaisir des yeux."
+          "Le cuivre étincelle, la glace crépite, et le gingembre s'éveille. Le Moscow Mule n'est pas qu'un cocktail : c'est un éclat de fraîcheur, une promesse d'élégance. À chaque gorgée, la soirée prend vie."
         ]
       }
     },
@@ -101,13 +101,13 @@
       },
       "paras": {
         "hu": [
-          "Ezt a vörösbort Kandúrnak hívják, a Kuppert pincészetből, 2022-es évjárat. Diósviszló faluból származik. Az asztalnál töltjük, nagy poharakba, hogy barátokkal osszuk meg. Olyan bor, amit lassan iszunk, időt hagyva magunknak."
+          "Egy szál rubinvörös bársony, és az asztal felragyog. A Kuppert pincészet 2022-es Kandúrja, amely Diósviszlón született, nem csak inni való: élvezni, mesélni, megosztani kell. Minden pohár meghívás arra, hogy időt szánjunk magunkra."
         ],
         "en": [
-          "This red wine is called Kandúr, from the Kuppert winery, vintage 2022. It comes from the village of Diósviszló. It is poured at the table, into large glasses, to be shared with friends. It is a wine to sip slowly, taking your time."
+          "A thread of ruby velvet, and the table lights up. The 2022 Kandúr from the Kuppert winery, born in Diósviszló, is not simply drunk: it is savoured, it is talked about, it is shared. Every glass is an invitation to take your time."
         ],
         "fr": [
-          "Ce vin rouge s'appelle Kandúr, de la cave Kuppert, année 2022. Il vient du village de Diósviszló. On le verse à table, dans de grands verres, pour le partager avec les amis. C'est un vin qui se boit doucement, en prenant son temps."
+          "Un filet de velours rubis, et la table s'illumine. Le Kandúr 2022 de la cave Kuppert, né à Diósviszló, ne se boit pas : il se savoure, il se raconte, il se partage. Chaque verre est une invitation à prendre le temps."
         ]
       }
     }
