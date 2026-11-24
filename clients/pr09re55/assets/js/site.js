@@ -180,23 +180,96 @@
     var tocLinks = $$('[data-goto]', bookRoot), wide = matchMedia('(min-width: 900px)');
     var leaves = [], flips = 0, per = 2, queue = null, word = bookRoot.getAttribute('data-l-page');
 
-    var build = function(){
-      per = wide.matches ? 2 : 1;
+    var lockMq = matchMedia('(max-width: 899px) and (min-height: 520px)'); // phone held upright: the whole book must fit the screen
+    var FLOOR = 10;                                   // smallest text size (px) before a page is split in two
+    var origPages = pages.slice(), snaps = pages.map(function(p){ return p.innerHTML; });
+    var baseOf = function(p){ return p._base || p; };
+
+    var mount = function(list){
       leaves = [];
       var frag = document.createDocumentFragment();
-      for(var i = 0; i < pages.length; i += per){
+      for(var i = 0; i < list.length; i += per){
         var leaf = document.createElement('div'), front = document.createElement('div'), back = document.createElement('div');
         leaf.className = 'leaf'; front.className = 'face front'; back.className = 'face back';
-        front.appendChild(pages[i]);
-        if(per === 2 && pages[i + 1]) back.appendChild(pages[i + 1]);
+        front.appendChild(list[i]);
+        if(per === 2 && list[i + 1]) back.appendChild(list[i + 1]);
         leaf.appendChild(front); leaf.appendChild(back); frag.appendChild(leaf); leaves.push(leaf);
       }
       book.replaceChildren(frag);
+    };
+    var overflows = function(p){ return p.scrollHeight > p.clientHeight + 1; };
+    // Largest text size at which the page fits without scrolling (never below FLOOR); false if even FLOOR is too big.
+    var fitFont = function(p, floor){
+      p.style.removeProperty('--fs');
+      if(!overflows(p)) return true;
+      var hi = parseFloat(getComputedStyle(p).fontSize) || 14, lo = floor || FLOOR;
+      p.style.setProperty('--fs', lo + 'px');
+      if(overflows(p)) return false;
+      for(var k = 0; k < 7; k++){ var mid = (lo + hi) / 2; p.style.setProperty('--fs', mid + 'px'); if(overflows(p)) hi = mid; else lo = mid; }
+      p.style.setProperty('--fs', lo + 'px');
+      return true;
+    };
+    var isLetter = function(p){ return !!$('.mp-letter', p); };
+    var itemsOf = function(p){ return isLetter(p) ? $$('.mp-letter > p:not(.mp-sign)', p) : $$('.mp-body .ms li', p); };
+    // Move the last n items of a list page into a new continuation page (same sections, same column headings).
+    var splitTail = function(p, n){
+      var next = p.cloneNode(true), body = $('.mp-body', next) || $('.mp-letter', next), part = (p._part || 1) + 1;
+      $$('.ms, p', body).forEach(function(x){ x.parentNode.removeChild(x); });
+      next._base = baseOf(p); next._part = part;
+      next.id = baseOf(p).id + '-' + part; next.setAttribute('data-cont', '');
+      var h = $('.mp-title', next) || $('h2', next); h.id = next.id + '-h'; h.setAttribute('data-part', part); next.setAttribute('aria-labelledby', h.id);
+      var moved = {}, lis = itemsOf(p).slice(-n);
+      if(isLetter(p)){ // a letter is cut between paragraphs; the signature goes with the last one
+        lis.forEach(function(x){ body.appendChild(x); });
+        var sg = $('.mp-sign', p); if(sg) body.appendChild(sg);
+        p.parentNode.insertBefore(next, p.nextSibling);
+        return next;
+      }
+      lis.forEach(function(li){
+        var sec = li.closest('.ms'), si = $$('.ms', p).indexOf(sec), tgt = moved[si];
+        if(!tgt){
+          tgt = sec.cloneNode(false);
+          var hd = $('.ms-head', sec); if(hd) tgt.appendChild(hd.cloneNode(true));
+          tgt.appendChild($('ul', sec).cloneNode(false));
+          body.appendChild(tgt); moved[si] = tgt; tgt._src = sec;
+        }
+        $('ul', tgt).appendChild(li);
+      });
+      Object.keys(moved).forEach(function(si){
+        var src = moved[si]._src, note = $('.ms-note', src);
+        if(note) moved[si].appendChild(note);
+        if(!$('li', src)) src.parentNode.removeChild(src);
+      });
+      p.parentNode.insertBefore(next, p.nextSibling);
+      return next;
+    };
+    // A list page that cannot fit even at the smallest text size becomes two (or more) pages, cut in the middle.
+    var splitPage = function(p){
+      if(fitFont(p)) return [p];
+      var n = itemsOf(p).length;
+      if(n < 2) return [p];
+      var next = splitTail(p, Math.ceil(n / 2));
+      return splitPage(p).concat(splitPage(next));
+    };
+    var build = function(){
+      per = wide.matches ? 2 : 1;
+      var locked = per === 1 && lockMq.matches;
+      origPages.forEach(function(p, i){ p.innerHTML = snaps[i]; p.style.removeProperty('--fs'); });
+      pages = origPages.slice();
       book.classList.add('is-live');
       book.classList.toggle('single', per === 1);
+      bookRoot.classList.toggle('lock', locked);
+      bookRoot.style.setProperty('--mh', mh.offsetHeight + 'px');
+      mount(pages);
       ctrl.hidden = false; $('.book-hint', bookRoot).hidden = false;
+      if(locked){
+        var all = [];
+        origPages.forEach(function(p){ all = all.concat($('.mp-body, .mp-letter', p) ? splitPage(p) : (fitFont(p, 8.5), [p])); });
+        pages = all; mount(pages);
+        pages.forEach(function(p, i){ var f = $('.mp-foot', p); if(f) f.textContent = i; });
+      }
     };
-    // A page never scrolls inside itself: if the longest page needs more room, the whole book grows a little.
+    // Desktop: if the longest page needs more room, the whole book grows a little.
     var fit = function(){
       book.style.height = '';
       if(per === 1) return;
@@ -225,7 +298,7 @@
       prevB.disabled = flips === 0; nextB.disabled = flips >= maxFlips();
       count.textContent = vis.map(function(p){ return p + 1; }).join('–') + ' / ' + pages.length + ' ' + word;
       var cur = vis[vis.length - 1], chapter = -1;
-      tocLinks.forEach(function(a, k){ if(+a.getAttribute('data-goto') <= cur) chapter = k; });
+      tocLinks.forEach(function(a, k){ if(pages.indexOf(origPages[+a.getAttribute('data-goto')]) <= cur) chapter = k; });
       tocLinks.forEach(function(a, k){ a.setAttribute('aria-current', k === chapter ? 'true' : 'false'); });
     };
     var turn = function(dir){ // one leaf, with its own z-order while it moves
@@ -247,12 +320,17 @@
       var top = book.getBoundingClientRect().top, mhH = mh.offsetHeight;
       if(top < mhH) scrollTo({top: scrollY + top - mhH - 16, behavior: reduce ? 'auto' : 'smooth'});
     };
-    var setHash = function(){ toTop(); var p = pages[visible().slice(-1)[0]]; if(p && history.replaceState) history.replaceState(null, '', '#' + p.id); };
+    var setHash = function(){ toTop(); var p = pages[visible().slice(-1)[0]]; if(p && history.replaceState) history.replaceState(null, '', '#' + baseOf(p).id); };
+    var relayout = function(){ // rebuild for the current screen, staying on the same page
+      var p = pages[visible().slice(-1)[0]], base = p ? baseOf(p) : null;
+      build(); fit();
+      flips = flipsFor(Math.max(0, base ? pages.indexOf(base) : 0)); paint();
+    };
 
     build(); fit();
-    if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
     var lastW = innerWidth;
-    addEventListener('resize', function(){ if(innerWidth !== lastW){ lastW = innerWidth; fit(); } });
+    addEventListener('resize', function(){ if(innerWidth !== lastW){ lastW = innerWidth; relayout(); } });
     var start = location.hash && document.getElementById(location.hash.slice(1));
     flips = start && pages.indexOf(start) > -1 ? flipsFor(pages.indexOf(start)) : 0;
     paint();
@@ -262,7 +340,7 @@
     prevB.addEventListener('click', function(){ goTo(flips - 1); setHash(); });
     tocLinks.forEach(function(a){
       a.addEventListener('click', function(e){
-        e.preventDefault(); goTo(flipsFor(+a.getAttribute('data-goto')));
+        e.preventDefault(); goTo(flipsFor(pages.indexOf(origPages[+a.getAttribute('data-goto')])));
         if(history.replaceState) history.replaceState(null, '', a.getAttribute('href'));
       });
     });
@@ -285,11 +363,8 @@
       if(e.key === 'ArrowRight') { goTo(flips + 1); setHash(); }
       else if(e.key === 'ArrowLeft') { goTo(flips - 1); setHash(); }
     });
-    var onMode = function(){ // keep the same page in view when the layout switches between one and two pages
-      var cur = visible().slice(-1)[0] || 0;
-      build(); fit(); flips = flipsFor(cur); paint();
-    };
-    if(wide.addEventListener) wide.addEventListener('change', onMode); else wide.addListener(onMode);
+    // keep the same page in view when the layout switches between one and two pages (or the screen becomes too short to lock)
+    [wide, lockMq].forEach(function(mq){ if(mq.addEventListener) mq.addEventListener('change', relayout); else mq.addListener(relayout); });
   }
 
   /* Reserve online, collect and pay in the shop. The bag lives only in this browser (slug -> quantity);
