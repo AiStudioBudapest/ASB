@@ -1,15 +1,15 @@
 {
-  "_info": "A koktélok neve, összetevői és ára a nyomtatott itallapból jön (menu.json). Itt csak a fotók vannak: az első 3 koktél nagy képei.",
+  "_info": "A koktélok neve, összetevői és ára a nyomtatott itallapból jön (menu.json). Itt csak a képek vannak: az első 3 koktél rajza (a Progress menüből, pasztell háttéren).",
   "demo": false,
   "items": [
     {
-      "image": "asztal-poharak.webp"
+      "image": "ck-negroni.webp"
     },
     {
-      "image": "mag-barkocsi.webp"
+      "image": "ck-sbagliato.webp"
     },
     {
-      "image": "mag-pezsgo.webp"
+      "image": "ck-french-75.webp"
     }
   ],
   "_classicsInfo": "A főoldal 3 klasszikusa: [itallap-oldal slugja, koktél neve a menu.json szerint]. Az ügyféllel megerősítendő (2026-10-31).",

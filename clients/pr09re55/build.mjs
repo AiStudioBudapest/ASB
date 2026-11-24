@@ -55,6 +55,7 @@ for (const c of CATS) { img(c.image); for (const l of LANGS) if (!/^[a-z0-9-]+$/
 for (const p of PRODUCTS) if (!CATS.some(c => c.key === p.category)) throw new Error(`products.json: "${p.slug}" has an unknown category "${p.category}"`);
 for (const h of HL.shop) { img(h.image); if (!slugs.has(h.product)) throw new Error(`highlights.json: unknown product "${h.product}"`); }
 for (const h of HL.drinks) { img(h.image); menuItem(h.menu); }
+for (const f of [...(HL.shopFeatures || []), ...(HL.drinksFeatures || [])]) { img(f.image + '.webp'); img(f.image + '-640.webp'); }
 for (const c of COCKTAILS.classics) menuItem(c);
 
 
@@ -339,7 +340,7 @@ function home(l) {
     <a class="tlink" href="${link(path, ROUTES.cocktails[l])}">${esc(t.cocktailsAll)} ${ICON.arrow}</a>
   </header>
   <div class="ck-row">${COCKTAILS.classics.map((ref, i) => { const { it } = menuItem(ref); const im = COCKTAILS.items[i]?.image || 'asztal-poharak.webp'; return `<article class="ck ck-${i}">
-    <figure class="reveal-img"><img src="${asset(path, 'img/' + im)}" alt="" loading="lazy"></figure>
+    <figure class="reveal-img"><img src="${asset(path, 'img/' + im)}" alt="${esc(tx(it.name, l))}" loading="lazy"></figure>
     <p class="ck-n">N° ${i + 1}</p><h3>${esc(tx(it.name, l))}</h3>${it.desc ? `<p>${esc(tx(it.desc, l))}</p>` : ''}<p class="ck-price">${menuNum(it.prices[0])} Ft</p>
   </article>`; }).join('')}</div>
 </section>
@@ -425,18 +426,32 @@ function hlPage(kind, l) {
     ? HL.shop.map(h => { const p = PRODUCTS.find(x => x.slug === h.product); return { href: link(path, productRoute(p.slug)[l]), image: h.image, kicker: p.brand, name: p.name[l], sub: t.cats[p.category], price: p.price ? fmtPrice(p.price, l) : t.priceOnRequest }; })
     : HL.drinks.map(h => { const { it, sec, pg } = menuItem(h.menu); return { href: link(path, ROUTES.menu[l], '#lap-' + pg.slug), image: h.image, kicker: tx(sec.title || pg.toc || pg.title, l), name: tx(it.name, l), sub: it.desc ? tx(it.desc, l) : '', price: it.prices.map((n, k) => (sec.cols ? tx(sec.cols[k], l) + ' ' : '') + menuNum(n) + ' Ft').join(' · ') }; });
   const all = kind === 'shop' ? ROUTES.shop : ROUTES.menu;
+  const feats = kind === 'shop' ? HL.shopFeatures : HL.drinksFeatures;
+  const loc = v => (Array.isArray(v) || typeof v === 'string' ? v : v[l]);
+  const features = feats?.length ? `
+<section class="hl-feats wrap" aria-label="${esc(t.hlKicker)}">
+  ${feats.map((f, i) => { const paras = loc(f.paras || []), notes = f.notes || [], alt = loc(f.alt); return `<article class="hl-feat">
+    <figure class="reveal-img"><img src="${asset(path, 'img/' + f.image + '.webp')}" srcset="${asset(path, 'img/' + f.image + '-640.webp')} 640w, ${asset(path, 'img/' + f.image + '.webp')} 1080w" sizes="(min-width:821px) 46vw, 92vw" width="1080" height="1350" alt="${esc(alt)}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async"></figure>
+    ${f.title || paras.length ? `<div class="hl-feat-txt"${kind === 'shop' ? ' lang="en"' : ''}>
+      ${f.brand ? `<p class="hl-kicker">${esc(f.brand)}</p>` : ''}
+      ${f.title ? `<h2>${esc(f.title)}</h2>` : ''}
+      ${paras.map(x => `<p>${esc(x)}</p>`).join('')}
+      ${notes.length ? `<dl class="hl-notes">${notes.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>` : ''}
+    </div>` : ''}
+  </article>`; }).join('')}
+</section>` : '';
   const body = `
 <section class="page-head wrap">
   <p class="kicker">${tri()} ${esc(t.hlKicker)} · ${esc(HL.season[l])} ${HL.demo ? demoTag(t) : ''}</p>
   <h1 class="display">${esc(kind === 'shop' ? t.heroShop : t.heroDrinks)}</h1>
   <p class="lede">${esc(kind === 'shop' ? t.hlShopIntro : t.hlDrinksIntro)}</p>
-</section>
-<section class="hl-grid wrap" aria-label="${esc(t.hlKicker)}">
+</section>${features}
+${features ? '' : `<section class="hl-grid wrap" aria-label="${esc(t.hlKicker)}">
   ${cards.map((c, i) => `<a class="hl-card hl-${i}" href="${c.href}">
     <figure class="reveal-img"><img src="${asset(path, 'img/' + c.image)}" alt="" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async"></figure>
     <p class="hl-kicker">${esc(c.kicker)}</p><h2>${esc(c.name)}</h2>${c.sub ? `<p class="hl-sub">${esc(c.sub)}</p>` : ''}<p class="hl-price">${esc(c.price)}</p>
   </a>`).join('')}
-</section>
+</section>`}
 <p class="center hl-all"><a class="btn btn-solid" href="${link(path, all[l])}">${esc(t.hlSeeAll)} ${ICON.arrow}</a></p>`;
   return page({ l, key, path, alt: ROUTES[key], title: t.meta[key][0], desc: t.meta[key][1], body });
 }
@@ -518,7 +533,7 @@ function cocktailsPage(l) {
 </section>
 <section class="ck-spreads wrap">
   ${featured.map((c, i) => `<article class="spread ${i % 2 ? 'spread-r' : ''}">
-    <figure class="reveal-img"><img src="${asset(path, 'img/' + c.image)}" alt="" loading="lazy"></figure>
+    <figure class="reveal-img"><img src="${asset(path, 'img/' + c.image)}" alt="${esc(tx(c.name, l))}" loading="lazy"></figure>
     <div><p class="ck-n">N° ${i + 1}</p><h2>${esc(tx(c.name, l))}</h2>${c.desc ? `<p class="label">${esc(t.ingredients)}</p><p class="lede">${esc(tx(c.desc, l))}</p>` : ''}<p class="ck-price">${menuNum(c.prices[0])} Ft</p></div>
   </article>`).join('')}
 </section>
