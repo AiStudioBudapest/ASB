@@ -53,5 +53,51 @@
       ],
       "image": "interieur.webp"
     }
+  ],
+  "_info2": "shopFeatures: a Butik highlight oldal tetején megjelenő nagy fotós blokkok (a szöveg az ügyfél által megadott angol, minden nyelven változatlanul jelenik meg). paras = bekezdések, notes = [címke, érték] listák. Szöveg nélküli blokk is lehet.",
+  "shopFeatures": [
+    {
+      "image": "hl-goossens",
+      "alt": "Goossens Paris, Riviera Collection",
+      "brand": "Goossens Paris",
+      "title": "The Riviera Collection",
+      "paras": [
+        "Baroque freshwater pearls with pearly whiteness, paired with gold-toned metal pearls, a signature of the Maison, shape this new wardrobe of timeless pieces and invite layering. Like a delicate stream of pearls brushing the wrist or ear, the Riviera collection’s jewelry can be worn day or night.",
+        "24k gold plated, light, elegant, and easy to wear, these pieces, rings, necklaces, earrings, or bracelets naturally lend themselves to stacking. Some evoke a refined nest cradling a precious pearl, while others are perfect for layering with Goossens iconics collections."
+      ],
+      "notes": []
+    },
+    {
+      "image": "hl-trudon",
+      "alt": "Trudon, Figuerie Collection",
+      "brand": "Trudon",
+      "title": "The Figuerie Collection",
+      "paras": [
+        "Inspired by the Figuerie of the royal kitchen garden in Versailles, the collection captures the scent of a fig tree at the first light of spring.",
+        "Fresh fig leaves and vegetal notes meet deeper woody and earthy accords, reflecting the contrast between sunlight and the shaded greenhouses of the royal gardens."
+      ],
+      "notes": [
+        [
+          "Head notes",
+          "Humus Ether, Cedar Leaves, Fig Leaves"
+        ],
+        [
+          "Heart notes",
+          "Copahu, Hyacinth, Green Bouquet"
+        ],
+        [
+          "Base notes",
+          "Tasuki Patchouli, Moss Crystals, Sandalwood, Tonka Bean"
+        ]
+      ]
+    },
+    {
+      "image": "hl-sous-le-manteau",
+      "alt": "Sous le manteau",
+      "brand": "Sous le manteau",
+      "title": "",
+      "paras": [],
+      "notes": []
+    }
   ]
 }
