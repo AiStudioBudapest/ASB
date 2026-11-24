@@ -339,7 +339,7 @@ function home(l) {
     <a class="tlink" href="${link(path, ROUTES.cocktails[l])}">${esc(t.cocktailsAll)} ${ICON.arrow}</a>
   </header>
   <div class="ck-row">${COCKTAILS.classics.map((ref, i) => { const { it } = menuItem(ref); const im = COCKTAILS.items[i]?.image || 'asztal-poharak.webp'; return `<article class="ck ck-${i}">
-    <figure class="reveal-img"><img src="${asset(path, 'img/' + im)}" alt="" loading="lazy"></figure>
+    <figure class="reveal-img"><img src="${asset(path, 'img/' + im)}" alt="${esc(tx(it.name, l))}" loading="lazy"></figure>
     <p class="ck-n">N° ${i + 1}</p><h3>${esc(tx(it.name, l))}</h3>${it.desc ? `<p>${esc(tx(it.desc, l))}</p>` : ''}<p class="ck-price">${menuNum(it.prices[0])} Ft</p>
   </article>`; }).join('')}</div>
 </section>
@@ -518,7 +518,7 @@ function cocktailsPage(l) {
 </section>
 <section class="ck-spreads wrap">
   ${featured.map((c, i) => `<article class="spread ${i % 2 ? 'spread-r' : ''}">
-    <figure class="reveal-img"><img src="${asset(path, 'img/' + c.image)}" alt="" loading="lazy"></figure>
+    <figure class="reveal-img"><img src="${asset(path, 'img/' + c.image)}" alt="${esc(tx(c.name, l))}" loading="lazy"></figure>
     <div><p class="ck-n">N° ${i + 1}</p><h2>${esc(tx(c.name, l))}</h2>${c.desc ? `<p class="label">${esc(t.ingredients)}</p><p class="lede">${esc(tx(c.desc, l))}</p>` : ''}<p class="ck-price">${menuNum(c.prices[0])} Ft</p></div>
   </article>`).join('')}
 </section>
