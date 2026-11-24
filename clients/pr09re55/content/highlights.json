@@ -24,36 +24,7 @@
       "image": "trudon-elae.webp"
     }
   ],
-  "drinks": [
-    {
-      "menu": [
-        "koktelok",
-        "pr09re55 Sbagliato"
-      ],
-      "image": "asztal-poharak.webp"
-    },
-    {
-      "menu": [
-        "koktelok",
-        "French 75"
-      ],
-      "image": "mag-pezsgo.webp"
-    },
-    {
-      "menu": [
-        "pezsgok",
-        "Ruinart Blanc de Blancs"
-      ],
-      "image": "asztal-logo.webp"
-    },
-    {
-      "menu": [
-        "roze-voros",
-        "Whispering Angel, Côtes de Provence ’24"
-      ],
-      "image": "interieur.webp"
-    }
-  ],
+  "drinks": [],
   "_info2": "shopFeatures: a Butik highlight oldal tetején megjelenő nagy fotós blokkok (a szöveg az ügyfél által megadott angol, minden nyelven változatlanul jelenik meg). paras = bekezdések, notes = [címke, érték] listák. Szöveg nélküli blokk is lehet.",
   "shopFeatures": [
     {
@@ -98,6 +69,47 @@
       "title": "",
       "paras": [],
       "notes": []
+    }
+  ],
+  "_info3": "drinksFeatures: Bar highlight, ugyanaz a nagy fotós elrendezés, de a szöveg nyelvenként (hu/en/fr). Ár nincs kiírva (az ügyfél kérése). A régi kártyás italok listája (drinks) üres.",
+  "drinksFeatures": [
+    {
+      "image": "hl-chope",
+      "alt": {
+        "hu": "Koktél rézbögrében, arany szívószállal",
+        "en": "Cocktail in a copper mug with a golden straw",
+        "fr": "Cocktail dans une chope en cuivre avec une paille dorée"
+      },
+      "paras": {
+        "hu": [
+          "Ez a koktél egy szép rézbögrében érkezik, bőven jéggel megtöltve. Szárított narancskarikát és egy csillagánizst teszünk bele, ami kis fűszeres ízt ad. Frissítő, könnyű és könnyen iható. Arany szívószállal isszuk, a szem örömére."
+        ],
+        "en": [
+          "This cocktail is served in a beautiful copper mug, generously filled with ice. We add a slice of dried orange and a star anise, which gives a little hint of spice. It is fresh, light and easy to drink. It is enjoyed with a golden straw, for the pleasure of the eyes."
+        ],
+        "fr": [
+          "Ce cocktail se sert dans une belle chope en cuivre, bien remplie de glace. On y ajoute une tranche d'orange séchée et une étoile de badiane, qui donne un petit goût d'épice. C'est frais, léger et facile à boire. On le boit avec une paille dorée, pour le plaisir des yeux."
+        ]
+      }
+    },
+    {
+      "image": "hl-kandur",
+      "alt": {
+        "hu": "Kuppert Kandúr vörösbor töltése pohárba",
+        "en": "Kuppert Kandúr red wine being poured",
+        "fr": "Vin rouge Kuppert Kandúr versé dans un verre"
+      },
+      "paras": {
+        "hu": [
+          "Ezt a vörösbort Kandúrnak hívják, a Kuppert pincészetből, 2022-es évjárat. Diósviszló faluból származik. Az asztalnál töltjük, nagy poharakba, hogy barátokkal osszuk meg. Olyan bor, amit lassan iszunk, időt hagyva magunknak."
+        ],
+        "en": [
+          "This red wine is called Kandúr, from the Kuppert winery, vintage 2022. It comes from the village of Diósviszló. It is poured at the table, into large glasses, to be shared with friends. It is a wine to sip slowly, taking your time."
+        ],
+        "fr": [
+          "Ce vin rouge s'appelle Kandúr, de la cave Kuppert, année 2022. Il vient du village de Diósviszló. On le verse à table, dans de grands verres, pour le partager avec les amis. C'est un vin qui se boit doucement, en prenant son temps."
+        ]
+      }
     }
   ]
 }
