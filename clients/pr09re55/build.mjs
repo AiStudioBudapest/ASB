@@ -537,6 +537,16 @@ function cocktailsPage(l) {
     <div><p class="ck-n">N° ${i + 1}</p><h2>${esc(tx(c.name, l))}</h2>${c.desc ? `<p class="label">${esc(t.ingredients)}</p><p class="lede">${esc(tx(c.desc, l))}</p>` : ''}<p class="ck-price">${menuNum(c.prices[0])} Ft</p></div>
   </article>`).join('')}
 </section>
+<section class="ck-cta wrap" aria-labelledby="ckCtaT">
+  <div class="ck-cta-in">
+    <div class="ck-cta-txt">
+      <p class="kicker">${tri()} Progress menu</p>
+      <h2 id="ckCtaT" class="h-small"><span>${esc(t.ckMenuKicker)}</span></h2>
+      <p class="lede">${esc(t.ckMenuText)}</p>
+    </div>
+    <a class="btn btn-solid btn-lg" href="${SITE.progressMenuUrl}" target="_blank" rel="noopener">${esc(t.ckMenuBtn)} ${ICON.arrow}</a>
+  </div>
+</section>
 <section class="cg wrap" aria-labelledby="cgT">
   <h2 id="cgT" class="h-small">${esc(t.cocktailsFull)}</h2>
   ${groups.map((g, gi) => `<div class="cg-group cg-g${gi}"><h3 class="cg-title">${esc(g.title)}</h3><ul class="cg-grid">${g.items.map((it, n) => card(it, n)).join('')}</ul></div>`).join('')}

@@ -9,6 +9,7 @@
     "city": "Budapest",
     "country": "HU"
   },
+  "progressMenuUrl": "https://pr09re55menu.vercel.app/#long",
   "mapsUrl": "https://www.google.com/maps/search/?api=1&query=pr09re55%20Pozsonyi%20%C3%BAt%2043%20Budapest",
   "phone": "+36 20 391 9739",
   "phoneHref": "tel:+36203919739",

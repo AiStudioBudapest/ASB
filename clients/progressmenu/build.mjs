@@ -280,7 +280,7 @@ ${xvSymbols}
 <div class="wrap">
 ${sections}
 </div>
-<footer class="foot"><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
+<footer class="foot"><a class="site-btn" href="https://pr09re55.vercel.app/fr/"><span>${L3('A pr09re55 weboldala', 'Visit our website', 'Découvrir notre site')}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
 </main>
 ${xvOverlay}
 <script>${js}</script>
