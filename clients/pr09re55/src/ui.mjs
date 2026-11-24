@@ -66,7 +66,7 @@ export const UI = {
     menuBook: 'Az itallap, lapozható', menuToc: 'Tartalom', menuPage: 'oldal', menuEnd: 'Az itallap hátsó borítója', menuClose: 'Az itallap becsukása', menuPrev: 'Előző oldal', menuNext: 'Következő oldal',
     menuHint: 'Lapozz a nyilakkal, húzással, vagy kattints a lap szélére.', menuPrices: 'Az árak forintban értendők.',
     storyTitle: 'Történet', storyIntro: 'Hogyan lett egy párizsi divatévekből egy budapesti szalon.',
-    storySource: 'Forrás', storyTbc: 'Az ügyféllel megerősítendő', storyMissing: 'Hiányzó információ',
+    storySource: 'Forrás', storyTbc: 'Megerősítendő', storyMissing: 'Hiányzó információ',
     notFound: 'Az oldal nem található', home: 'Főoldal',
     meta: {
       home: ['pr09re55 · Cocktail Lounge & Concept Store, Budapest', 'Bor, pezsgő, signature koktélok, niche parfümök és válogatott tárgyak a Pozsonyi út 43. alatt, Budapesten.'],
@@ -146,7 +146,7 @@ export const UI = {
     menuBook: 'The menu, page by page', menuToc: 'Contents', menuPage: 'page', menuEnd: 'The back cover of the menu', menuClose: 'Close the menu', menuPrev: 'Previous page', menuNext: 'Next page',
     menuHint: 'Turn the pages with the arrows, by swiping, or by clicking the edge of a page.', menuPrices: 'Prices in Hungarian forints (HUF).',
     storyTitle: 'Story', storyIntro: 'How years of Paris fashion became a Budapest salon.',
-    storySource: 'Source', storyTbc: 'To be confirmed with the client', storyMissing: 'Missing information',
+    storySource: 'Source', storyTbc: 'To be confirmed', storyMissing: 'Missing information',
     notFound: 'Page not found', home: 'Home',
     meta: {
       home: ['pr09re55 · Cocktail Lounge & Concept Store, Budapest', 'Wine, bubbles, signature cocktails, niche perfume and chosen objects at Pozsonyi út 43, Budapest.'],
@@ -226,7 +226,7 @@ export const UI = {
     menuBook: 'La carte, page par page', menuToc: 'Sommaire', menuPage: 'page', menuEnd: 'La quatrième de couverture de la carte', menuClose: 'Fermer la carte', menuPrev: 'Page précédente', menuNext: 'Page suivante',
     menuHint: 'Tournez les pages avec les flèches, en glissant, ou en cliquant sur le bord d’une page.', menuPrices: 'Prix en forints hongrois (HUF).',
     storyTitle: 'Histoire', storyIntro: 'Comment des années de mode parisienne sont devenues un salon budapestois.',
-    storySource: 'Source', storyTbc: 'À confirmer avec le client', storyMissing: 'Information manquante',
+    storySource: 'Source', storyTbc: 'À confirmer', storyMissing: 'Information manquante',
     notFound: 'Page introuvable', home: 'Accueil',
     meta: {
       home: ['pr09re55 · Cocktail Lounge & Concept Store, Budapest', 'Vin, bulles, cocktails signature, parfums de niche et objets choisis au 43 Pozsonyi út, Budapest.'],
