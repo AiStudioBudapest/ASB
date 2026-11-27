@@ -431,7 +431,7 @@ function hlPage(kind, l) {
   const features = feats?.length ? `
 <section class="hl-feats wrap" aria-label="${esc(t.hlKicker)}">
   ${feats.map((f, i) => { const paras = loc(f.paras || []), notes = f.notes || [], alt = loc(f.alt); return `<article class="hl-feat">
-    <figure class="reveal-img"><img src="${asset(path, 'img/' + f.image + '.webp')}" srcset="${asset(path, 'img/' + f.image + '-640.webp')} 640w, ${asset(path, 'img/' + f.image + '.webp')} 1080w" sizes="(min-width:821px) 46vw, 92vw" width="1080" height="1350" alt="${esc(alt)}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async"></figure>
+    <figure class="reveal-img"><img src="${asset(path, 'img/' + f.image + '.webp')}" srcset="${asset(path, 'img/' + f.image + '-640.webp')} 800w, ${asset(path, 'img/' + f.image + '.webp')} 1620w" sizes="(min-width:821px) 46vw, 92vw" width="1620" height="2025" alt="${esc(alt)}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async"></figure>
     ${f.title || paras.length ? `<div class="hl-feat-txt"${kind === 'shop' ? ' lang="en"' : ''}>
       ${f.brand ? `<p class="hl-kicker">${esc(f.brand)}</p>` : ''}
       ${f.title ? `<h2>${esc(f.title)}</h2>` : ''}

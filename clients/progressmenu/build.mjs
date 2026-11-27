@@ -255,7 +255,7 @@ const html = `<!doctype html>
 <meta name="theme-color" content="#efefed">
 <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
-<script>(function(){var d=document.documentElement,l;try{l=localStorage.getItem('pm_lang')}catch(e){}if(!/^(hu|en|fr)$/.test(l||'')){var n=(navigator.language||'hu').slice(0,2).toLowerCase();l=n==='hu'?'hu':n==='fr'?'fr':'en'}d.setAttribute('data-l',l);d.lang=l})()</script>
+<script>document.documentElement.setAttribute('data-l','hu');document.documentElement.lang='hu';try{localStorage.removeItem('pm_lang')}catch(e){}</script>
 <style>${css}</style>
 </head>
 <body>
@@ -274,7 +274,7 @@ ${xvSymbols}
 <div class="wrap">
 ${sections}
 </div>
-<footer class="foot"><a class="site-btn" href="https://pr09re55.vercel.app/fr/"><span>${L3('A pr09re55 weboldala', 'Visit our website', 'Découvrir notre site')}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
+<footer class="foot"><a class="site-btn" href="https://pr09re55.vercel.app/" data-site-btn><span>${L3('A pr09re55 weboldala', 'Visit our website', 'Découvrir notre site')}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
 </main>
 ${xvOverlay}
 <script>${js}</script>
