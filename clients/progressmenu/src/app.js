@@ -5,12 +5,14 @@
 
   // langue
   var btns = [].slice.call(d.querySelectorAll('[data-set-l]'))
-  function mark() { btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-set-l') === de.getAttribute('data-l'))) }) }
+  var siteBtn = d.querySelector('[data-site-btn]'), SITE = { hu: 'https://pr09re55.vercel.app/', en: 'https://pr09re55.vercel.app/en/', fr: 'https://pr09re55.vercel.app/fr/' }
+  function mark() {
+    if (siteBtn) siteBtn.href = SITE[de.getAttribute('data-l')] || SITE.hu
+ btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-set-l') === de.getAttribute('data-l'))) }) }
   btns.forEach(function (b) {
     b.addEventListener('click', function () {
       var l = b.getAttribute('data-set-l')
       de.setAttribute('data-l', l); de.lang = l
-      try { localStorage.setItem('pm_lang', l) } catch (e) {}
       mark()
     })
   })
