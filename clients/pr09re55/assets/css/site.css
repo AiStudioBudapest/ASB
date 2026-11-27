@@ -999,3 +999,15 @@ h1,h2,h3,h4,p,li,a,figcaption,.pcard-name{overflow-wrap:anywhere}
   .hl-feat{grid-template-columns:minmax(0,1fr);gap:20px}
   .hl-feat:nth-child(even) figure{order:0}
 }
+
+/* Bloc « Toute la carte des cocktails » (page Cocktails) : même fond, mêmes polices, même style que le reste de la page */
+.ck-cta{padding-bottom:clamp(70px,9vw,130px)}
+.ck-cta-in{border-top:2px solid var(--ink);padding-top:clamp(26px,3.4vw,48px);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:clamp(22px,4vw,64px)}
+.ck-cta-txt{display:grid;gap:20px;min-width:0}
+.ck-cta-txt .kicker,.ck-cta-txt .lede,.ck-cta-txt .h-small{margin:0}
+.ck-cta-txt .h-small{font-family:var(--cond);font-weight:400;text-transform:uppercase;letter-spacing:.01em;font-size:clamp(40px,6.4vw,92px);line-height:.95;overflow-wrap:anywhere}
+.ck-cta-txt .h-small span{position:relative;isolation:isolate;display:inline}
+.ck-cta-txt .h-small span::after{content:"";position:absolute;z-index:-1;left:-.1em;right:-.1em;bottom:.04em;height:.42em;background:var(--mint);mix-blend-mode:multiply}
+.ck-cta-txt .lede{max-width:48ch}
+.ck-cta-in .btn{min-height:58px;padding:0 34px;font-size:13px;white-space:nowrap}
+@media (max-width:760px){.ck-cta-in{grid-template-columns:minmax(0,1fr);align-items:start}.ck-cta-in .btn{justify-content:center;width:100%;white-space:normal;text-align:center}}

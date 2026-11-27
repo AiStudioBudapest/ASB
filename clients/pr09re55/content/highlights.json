@@ -71,43 +71,62 @@
       "notes": []
     }
   ],
-  "_info3": "drinksFeatures: Bar highlight, ugyanaz a nagy fotós elrendezés, de a szöveg nyelvenként (hu/en/fr). Ár nincs kiírva (az ügyfél kérése). A régi kártyás italok listája (drinks) üres.",
+  "_info3": "drinksFeatures: Bar highlight, nagy fotós elrendezés (Manhattan, Negroni, Espresso Martini), a szöveg nyelvenként (hu/en/fr). Ár nincs kiírva (az ügyfél kérése).",
   "drinksFeatures": [
     {
-      "image": "hl-chope",
+      "image": "hl-manhattan",
       "alt": {
-        "hu": "Moscow Mule rézbögrében, arany szívószállal",
-        "en": "Moscow Mule in a copper mug with a golden straw",
-        "fr": "Moscow Mule dans une chope en cuivre avec une paille dorée"
+        "hu": "Manhattan coupe-pohárban, mögötte arany agárszobor",
+        "en": "Manhattan in a coupe, a golden greyhound behind it",
+        "fr": "Manhattan dans une coupe, un lévrier doré en arrière-plan"
       },
       "paras": {
         "hu": [
-          "A réz csillog, a jég ropog, és a gyömbér felébred. A Moscow Mule nem csupán egy koktél: a frissesség szikrája, az elegancia ígérete. Minden kortynál életre kel az este."
+          "Mély mahagóni szín, egyetlen sötét cseresznye, és a félhomályban egy arany agár őrködik. A Manhattan a lassú esték koktélja: elegáns, szenvedélyes, rendíthetetlenül klasszikus. Nincs benne semmi felesleges, csak a tökéletes pillanat."
         ],
         "en": [
-          "The copper gleams, the ice crackles, and the ginger awakens. The Moscow Mule is more than a cocktail: it is a spark of freshness, a promise of elegance. With every sip, the evening comes alive."
+          "Deep mahogany, a single dark cherry, and a golden greyhound keeping watch in the half-light. The Manhattan is the cocktail of slow evenings: elegant, soulful, unshakably classic. Nothing superfluous, only the perfect moment."
         ],
         "fr": [
-          "Le cuivre étincelle, la glace crépite, et le gingembre s'éveille. Le Moscow Mule n'est pas qu'un cocktail : c'est un éclat de fraîcheur, une promesse d'élégance. À chaque gorgée, la soirée prend vie."
+          "Un acajou profond, une seule cerise sombre, et un lévrier doré qui veille dans la pénombre. Le Manhattan est le cocktail des soirées lentes : élégant, passionné, résolument classique. Rien de superflu, seulement l’instant parfait."
         ]
       }
     },
     {
-      "image": "hl-kandur",
+      "image": "hl-negroni",
       "alt": {
-        "hu": "Kuppert Kandúr vörösbor töltése pohárba",
-        "en": "Kuppert Kandúr red wine being poured",
-        "fr": "Vin rouge Kuppert Kandúr versé dans un verre"
+        "hu": "Negroni bordázott pohárban, szárított narancskarikával és virágokkal",
+        "en": "Negroni in a fluted glass with a dried orange slice and flowers",
+        "fr": "Negroni dans un verre cannelé, avec une tranche d’orange séchée et des fleurs"
       },
       "paras": {
         "hu": [
-          "Egy szál rubinvörös bársony, és az asztal felragyog. A Kuppert pincészet 2022-es Kandúrja, amely Diósviszlón született, nem csak inni való: élvezni, mesélni, megosztani kell. Minden pohár meghívás arra, hogy időt szánjunk magunkra."
+          "Borostyánszín, jég, egy szárított narancskarika, mintha napfényt tartana a kezében. A Negroni keserédes, szikrázó és magabiztos, olyan, mint egy jó beszélgetés a nap végén. Egy pohár, amely sosem megy ki a divatból."
         ],
         "en": [
-          "A thread of ruby velvet, and the table lights up. The 2022 Kandúr from the Kuppert winery, born in Diósviszló, is not simply drunk: it is savoured, it is talked about, it is shared. Every glass is an invitation to take your time."
+          "Amber and ice, a dried orange slice held up like a piece of captured sunlight. The Negroni is bittersweet, bright and self-assured, like a good conversation at the end of the day. A glass that never goes out of style."
         ],
         "fr": [
-          "Un filet de velours rubis, et la table s'illumine. Le Kandúr 2022 de la cave Kuppert, né à Diósviszló, ne se boit pas : il se savoure, il se raconte, il se partage. Chaque verre est une invitation à prendre le temps."
+          "De l’ambre et de la glace, une tranche d’orange séchée dressée comme un morceau de soleil capturé. Le Negroni est doux-amer, éclatant et sûr de lui, comme une belle conversation en fin de journée. Un verre qui ne se démode jamais."
+        ]
+      }
+    },
+    {
+      "image": "hl-espresso",
+      "alt": {
+        "hu": "Espresso Martini kristálycsillár előtt",
+        "en": "Espresso Martini in front of a crystal chandelier",
+        "fr": "Espresso Martini devant un lustre en cristal"
+      },
+      "paras": {
+        "hu": [
+          "Sötét, mint az éjszaka, habja selymes, és körülötte ezer kristály csillog. Az Espresso Martini az este második szele: felébreszt, elbűvöl, és még egy órával tovább marasztal. Ünnepi pillanat egyetlen pohárban."
+        ],
+        "en": [
+          "Dark as the night, crowned with a silky crest of foam, and a thousand crystals sparkling around it. The Espresso Martini is the evening’s second wind: it wakes you up, charms you, and keeps you there one more hour. A celebration in a single glass."
+        ],
+        "fr": [
+          "Sombre comme la nuit, couronné d’une mousse soyeuse, entouré de mille cristaux scintillants. L’Espresso Martini est le second souffle de la soirée : il réveille, enchante et retient une heure de plus. Une fête dans un seul verre."
         ]
       }
     }

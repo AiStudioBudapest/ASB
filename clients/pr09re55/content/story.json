@@ -15,7 +15,7 @@
         "en": "Zita Mészáros spent more than twenty years in Paris fashion: a Lanvin model and Alber Elbaz’s last muse, then twelve years with Chloé. pr09re55 is her Budapest jewelbox, where she brings everything she knows about French chic.",
         "fr": "Zita Mészáros a passé plus de vingt ans dans la mode parisienne : mannequin chez Lanvin et dernière muse d’Alber Elbaz, puis douze ans chez Chloé. pr09re55 est son écrin budapestois, où elle apporte tout ce qu’elle sait du chic français."
       },
-      "image": "interieur.webp"
+      "image": "zita-bar.webp"
     },
     {
       "key": "philosophy",
@@ -67,16 +67,17 @@
     },
     {
       "key": "evolution",
-      "status": "missing",
+      "status": "verified",
+      "source": "Mészáros Zita",
       "title": {
         "hu": "Az évek",
         "en": "The years",
         "fr": "Les années"
       },
       "text": {
-        "hu": "Helyőrző: a nyitás pontos dátuma és a hely története az ügyféltől érkezik. Annyi biztos, hogy 2021 novemberében már nyitva volt.",
-        "en": "Placeholder: the exact opening date and the story of the place will come from the client. What is certain is that it was already open in November 2021.",
-        "fr": "Texte provisoire : la date d’ouverture exacte et l’histoire du lieu viendront du client. Ce qui est certain, c’est que le lieu était déjà ouvert en novembre 2021."
+        "hu": "A pr09re55 2021. július 14-én nyitotta meg kapuit. Születésnapját azóta minden évben október 20-án ünnepli.",
+        "en": "pr09re55 opened its doors on 14 July 2021. Its birthday has been celebrated every year since, on 20 October.",
+        "fr": "pr09re55 a ouvert ses portes le 14 juillet 2021. Son anniversaire est fêté chaque année, le 20 octobre."
       },
       "image": "mag-terasz.webp"
     }

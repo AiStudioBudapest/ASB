@@ -53,9 +53,9 @@ function imageFor(name) {
 // ---------- groupes de la carte ----------
 const T = (hu, en, fr) => ({ hu, en, fr })
 const GROUPS = [
-  { id: 'cocktails', pages: ['koktelok'], icon: 'coupe', a: '255 107 94', title: T('Koktélok', 'Cocktails', 'Cocktails') },
-  { id: 'long', pages: ['long-drinks'], icon: 'tumbler', a: '56 220 205', title: T('Long drinkek', 'Long drinks', 'Long drinks') },
-  { id: 'summer', pages: ['nyari'], icon: 'coupe', a: '255 200 61', title: T('Nyári ajánlat és snackek', 'Summer specials & snacks', 'Spécialités d’été et en-cas') },
+  { id: 'cocktails', pages: ['koktelok'], icon: 'coupe', a: '60 240 164', title: T('Koktélok', 'Cocktails', 'Cocktails') },
+  { id: 'long', pages: ['long-drinks'], icon: 'tumbler', a: '125 149 255', title: T('Long drinkek', 'Long drinks', 'Long drinks') },
+  { id: 'summer', pages: ['nyari'], icon: 'coupe', a: '255 140 198', hide: ['Bloody Mary', 'Mimosa', 'Hugo Deluxe', 'Noam Bavaria Berlin'], title: T('Snackek', 'Snacks', 'En-cas') },
   // Décision du 19/11/2026 : le menu ne montre QUE cocktails, long drinks et offre d'été + snacks.
   // Les autres familles (bulles, vins, spiritueux, café, sans alcool) restent dans content/menu.json, non affichées.
 ]
@@ -156,7 +156,9 @@ function section(g, pg, sec, idx) {
 
 const sections = GROUPS.map(g => {
   const keep = g.only ? new Set(g.only.map(norm)) : null
+  const hide = new Set((g.hide || []).map(norm))
   const body = g.pages.map(slug => PAGE[slug].sections.map((s, i) => {
+    if (hide.size) { s = { ...s, items: s.items.filter(it => !hide.has(norm(tx(it.name, 'en')))) }; if (!s.items.length) return '' }
     if (!keep) return section(g, PAGE[slug], s, i)
     const items = s.items.filter(it => keep.has(norm(tx(it.name, 'en'))))
     return items.length ? section(g, PAGE[slug], { ...s, title: null, items }, i) : ''
@@ -193,14 +195,14 @@ function frond() {
       paths.push(`<path d="M${f(bx)} ${f(by)}Q${f(qa[0])} ${f(qa[1])} ${f(ex)} ${f(ey)}Q${f(qb[0])} ${f(qb[1])} ${f(bx)} ${f(by)}Z"${s < 0 ? ' opacity=".78"' : ''}/>`)
     }
   }
-  return `<symbol id="frond" viewBox="-40 -230 780 520"><g fill="currentColor">${paths.join('')}</g><path d="M0 0Q300-150 620 60" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/></symbol>`
+  return `<symbol id="frond" viewBox="-40 -230 780 520"><g fill="currentColor">${paths.join('')}</g><path d="M0 0Q300-150 620 60" fill="none" stroke="#111" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/></symbol>`
 }
 const glyphs = `
-<symbol id="g-coupe" viewBox="0 0 100 150"><path d="M10 28h80c0 30-22 52-40 52S10 58 10 28Z" fill="currentColor" fill-opacity=".8" stroke="#fff" stroke-opacity=".7" stroke-width="2.5"/><path d="M50 80v52M30 134h40" stroke="#fff" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M20 36h60" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/><circle cx="64" cy="18" r="9" fill="currentColor" stroke="#fff" stroke-opacity=".7" stroke-width="2"/></symbol>
-<symbol id="g-tumbler" viewBox="0 0 100 150"><path d="M22 22h56l-6 106a8 8 0 0 1-8 7H36a8 8 0 0 1-8-7Z" fill="currentColor" fill-opacity=".55" stroke="#fff" stroke-opacity=".75" stroke-width="2.5"/><path d="M26 54h48l-3 74a8 8 0 0 1-8 7H37a8 8 0 0 1-8-7Z" fill="currentColor" fill-opacity=".85"/><rect x="34" y="62" width="17" height="17" rx="3" fill="#fff" fill-opacity=".35"/><rect x="52" y="84" width="15" height="15" rx="3" fill="#fff" fill-opacity=".3"/><path d="M62 4 54 56" stroke="#fff" stroke-opacity=".85" stroke-width="4" stroke-linecap="round"/></symbol>
-<symbol id="g-flute" viewBox="0 0 100 150"><path d="M36 14h28l-3 78c-.5 8-6 12-11 12s-10.500-4-11-12Z" fill="currentColor" fill-opacity=".7" stroke="#fff" stroke-opacity=".75" stroke-width="2.5"/><path d="M50 104v28M32 136h36" stroke="#fff" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="46" cy="64" r="2.500" fill="#fff" fill-opacity=".8"/><circle cx="54" cy="46" r="3" fill="#fff" fill-opacity=".8"/><circle cx="47" cy="30" r="2" fill="#fff" fill-opacity=".8"/></symbol>
-<symbol id="g-wine" viewBox="0 0 100 150"><path d="M28 14h44c4 40-6 70-22 70S24 54 28 14Z" fill="currentColor" fill-opacity=".7" stroke="#fff" stroke-opacity=".75" stroke-width="2.5"/><path d="M50 84v48M30 136h40" stroke="#fff" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/></symbol>
-<symbol id="g-cup" viewBox="0 0 100 150"><path d="M16 50h58v34c0 16-12 28-29 28S16 100 16 84Z" fill="currentColor" fill-opacity=".8" stroke="#fff" stroke-opacity=".75" stroke-width="2.5"/><path d="M74 60h8a10 10 0 0 1 0 22h-9" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"/><path d="M34 40c-5-7 5-11 0-18M52 40c-5-7 5-11 0-18" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="45" cy="124" rx="38" ry="6" fill="#fff" fill-opacity=".25"/></symbol>`
+<symbol id="g-coupe" viewBox="0 0 100 150"><path d="M10 28h80c0 30-22 52-40 52S10 58 10 28Z" fill="currentColor" fill-opacity=".8" stroke="#111" stroke-opacity=".7" stroke-width="2.5"/><path d="M50 80v52M30 134h40" stroke="#111" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M20 36h60" stroke="#111" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/><circle cx="64" cy="18" r="9" fill="currentColor" stroke="#111" stroke-opacity=".7" stroke-width="2"/></symbol>
+<symbol id="g-tumbler" viewBox="0 0 100 150"><path d="M22 22h56l-6 106a8 8 0 0 1-8 7H36a8 8 0 0 1-8-7Z" fill="currentColor" fill-opacity=".55" stroke="#111" stroke-opacity=".75" stroke-width="2.5"/><path d="M26 54h48l-3 74a8 8 0 0 1-8 7H37a8 8 0 0 1-8-7Z" fill="currentColor" fill-opacity=".85"/><rect x="34" y="62" width="17" height="17" rx="3" fill="#fff" fill-opacity=".35"/><rect x="52" y="84" width="15" height="15" rx="3" fill="#fff" fill-opacity=".3"/><path d="M62 4 54 56" stroke="#111" stroke-opacity=".85" stroke-width="4" stroke-linecap="round"/></symbol>
+<symbol id="g-flute" viewBox="0 0 100 150"><path d="M36 14h28l-3 78c-.5 8-6 12-11 12s-10.500-4-11-12Z" fill="currentColor" fill-opacity=".7" stroke="#111" stroke-opacity=".75" stroke-width="2.5"/><path d="M50 104v28M32 136h36" stroke="#111" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="46" cy="64" r="2.500" fill="#fff" fill-opacity=".8"/><circle cx="54" cy="46" r="3" fill="#fff" fill-opacity=".8"/><circle cx="47" cy="30" r="2" fill="#fff" fill-opacity=".8"/></symbol>
+<symbol id="g-wine" viewBox="0 0 100 150"><path d="M28 14h44c4 40-6 70-22 70S24 54 28 14Z" fill="currentColor" fill-opacity=".7" stroke="#111" stroke-opacity=".75" stroke-width="2.5"/><path d="M50 84v48M30 136h40" stroke="#111" stroke-opacity=".8" stroke-width="4" stroke-linecap="round" fill="none"/></symbol>
+<symbol id="g-cup" viewBox="0 0 100 150"><path d="M16 50h58v34c0 16-12 28-29 28S16 100 16 84Z" fill="currentColor" fill-opacity=".8" stroke="#111" stroke-opacity=".75" stroke-width="2.5"/><path d="M74 60h8a10 10 0 0 1 0 22h-9" fill="none" stroke="#111" stroke-opacity=".75" stroke-width="4"/><path d="M34 40c-5-7 5-11 0-18M52 40c-5-7 5-11 0-18" stroke="#111" stroke-opacity=".6" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="45" cy="124" rx="38" ry="6" fill="#fff" fill-opacity=".25"/></symbol>`
 
 const xvSymbols = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <linearGradient id="xg-gin-t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4fffd"/><stop offset="1" stop-color="#b9ece4"/></linearGradient>
@@ -233,15 +235,7 @@ const xvOverlay = `<div id="xv" class="xv" hidden role="dialog" aria-modal="true
 </div>`
 
 const use = (c, cls, style) => (style = style.replace(/width:(\d+)%/, (m, p) => `width:min(${p}%,${Math.round(p * 7.5)}px)`), `<svg class="leaf ${cls}" viewBox="-40 -230 780 520" style="color:${c};${style}" aria-hidden="true"><use href="#frond"/></svg>`)
-const jungle = `
-<div class="bg" aria-hidden="true">
-<svg width="0" height="0" style="position:absolute"><defs>${frond()}${glyphs}</defs></svg>
-<div class="rays"></div>
-<div class="lyr l1" data-p=".10">${use('#0d6a4c', 'sway', 'left:-30%;top:2%;width:110%;--r:18deg')}${use('#0a5a43', 'sway s2', 'right:-45%;top:30%;width:120%;--r:-205deg')}${use('#117a56', 'sway', 'left:-40%;top:62%;width:115%;--r:-12deg')}</div>
-<div class="lyr l2" data-p=".22">${use('#17935f', 'sway s2', 'right:-35%;top:-6%;width:105%;--r:200deg')}${use('#1ba56c', 'sway', 'left:-50%;top:44%;width:105%;--r:8deg')}${use('#139058', 'sway s3', 'right:-40%;top:78%;width:110%;--r:-170deg')}</div>
-<div class="lyr l3" data-p=".40">${use('#052e22', 'sway s3', 'left:-62%;top:18%;width:125%;--r:-18deg')}${use('#06382a', 'sway', 'right:-70%;top:56%;width:130%;--r:192deg')}</div>
-<i class="bk b1"></i><i class="bk b2"></i><i class="bk b3"></i><i class="bk b4"></i><i class="bk b5"></i>
-</div>`
+const jungle = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${glyphs}</defs></svg>`
 
 // ---------- page ----------
 const css = read('src/style.css')
@@ -258,9 +252,9 @@ const html = `<!doctype html>
 <title>pr09re55 · Koktélkártya / Menu</title>
 <meta name="description" content="pr09re55 koktélkártya · cocktail menu · carte des cocktails — Pozsonyi út 43, Budapest.">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#073b2d">
-<link rel="preload" href="assets/fonts/prata-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#efefed">
+<link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>
 <script>(function(){var d=document.documentElement,l;try{l=localStorage.getItem('pm_lang')}catch(e){}if(!/^(hu|en|fr)$/.test(l||'')){var n=(navigator.language||'hu').slice(0,2).toLowerCase();l=n==='hu'?'hu':n==='fr'?'fr':'en'}d.setAttribute('data-l',l);d.lang=l})()</script>
 <style>${css}</style>
 </head>
@@ -273,14 +267,14 @@ ${xvSymbols}
     <div class="lang" role="group" aria-label="Language / Nyelv / Langue"><button type="button" data-set-l="hu">HU</button><button type="button" data-set-l="en">EN</button><button type="button" data-set-l="fr">FR</button></div></div>
   <p class="kick">${L3('Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest', 'Pozsonyi út 43 · Budapest')}</p>
   <h1>${L3('Koktélkártya', 'The cocktail menu', 'La carte des cocktails')}</h1>
-  <p class="lede">${L3('Koktélok, long drinkek és nyári ajánlat.', 'Cocktails, long drinks and summer specials.', 'Cocktails, long drinks et spécialités d’été.')}</p>
+  <p class="lede">${L3('Koktélok, long drinkek és snackek.', 'Cocktails, long drinks and snacks.', 'Cocktails, long drinks et en-cas.')}</p>
   <a class="go" href="#cocktails">${L3('Nézzük meg', 'Let’s explore', 'Découvrir')}<span aria-hidden="true">↓</span></a>
 </header>
 <nav class="chips" aria-label="${esc('Menu')}"><div class="chips-in">${chips}</div></nav>
 <div class="wrap">
 ${sections}
 </div>
-<footer class="foot"><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
+<footer class="foot"><a class="site-btn" href="https://pr09re55.vercel.app/fr/"><span>${L3('A pr09re55 weboldala', 'Visit our website', 'Découvrir notre site')}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a><p>${esc(addr)}</p><p>${insta ? esc(insta) : ''}</p></footer>
 </main>
 ${xvOverlay}
 <script>${js}</script>
